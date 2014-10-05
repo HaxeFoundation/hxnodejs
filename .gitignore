@@ -1,3 +1,4 @@
 *.hxproj
-
+Main.hx
+bin/
 
