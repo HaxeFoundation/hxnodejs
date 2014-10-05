@@ -27,10 +27,10 @@ class NodeJS
 
 	/**
 	 * Fetches a library and returns the reference to it.
-	 * @param	p_lib
+	 * @param	lib
 	 * @return
 	 */
-	static public function require(p_lib : String):Dynamic { return untyped __js__("require(p_lib)"); }	
+	static public function require(lib : String):Dynamic { return untyped __js__("require(lib)"); }	
 	
 	/**
 	 * The process object is a global object and can be accessed from anywhere. It is an instance of EventEmitter.

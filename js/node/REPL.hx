@@ -24,10 +24,10 @@ extern class REPL extends EventEmitter
 	
 	/**
 	 * Returns and starts a REPLServer instance. Accepts an "options" Object that takes the following values:
-	 * @param	p_options
+	 * @param	options
 	 * @return
 	 */
-	function start(p_options:REPLOption): EventEmitter;
+	function start(options:REPLOption): EventEmitter;
 	
 }
 

@@ -198,34 +198,34 @@ extern class HTTP
 	
 	/**
 	 * This function is deprecated; please use http.request() instead. Constructs a new HTTP client. port and host refer to the server to be connected to.
-	 * @param	p_port
-	 * @param	p_host
+	 * @param	port
+	 * @param	host
 	 * @return
 	 */
 	@:overload(function():Dynamic{})
-	@:overload(function(p_port:Int):Dynamic{})
-	static function createClient(p_port:Int,p_host:String):Dynamic;
+	@:overload(function(port:Int):Dynamic{})
+	static function createClient(port:Int,host:String):Dynamic;
 	
 	
 	/**
 	 * Node maintains several connections per server to make HTTP requests. This function allows one to transparently issue requests.
-	 * @param	p_options
-	 * @param	p_callback
+	 * @param	options
+	 * @param	callback
 	 */
-	@:overload(function(p_options:String, p_callback : ServerResponse -> Void):HTTPClientRequest { } )
-	@:overload(function(p_options:String):HTTPClientRequest{})
-	@:overload(function(p_options:HTTPRequestOptions):HTTPClientRequest{})
-	static function request(p_options : HTTPRequestOptions, p_callback : ServerResponse -> Void):HTTPClientRequest;
+	@:overload(function(options:String, callback : ServerResponse -> Void):HTTPClientRequest { } )
+	@:overload(function(options:String):HTTPClientRequest{})
+	@:overload(function(options:HTTPRequestOptions):HTTPClientRequest{})
+	static function request(options : HTTPRequestOptions, callback : ServerResponse -> Void):HTTPClientRequest;
 	
 	/**
 	 * Since most requests are GET requests without bodies, Node provides this convenience method. The only difference between this method and http.request() is that it sets the method to GET and calls req.end() automatically.
-	 * @param	p_options
-	 * @param	p_callback
+	 * @param	options
+	 * @param	callback
 	 */
-	@:overload(function(p_options:String, p_callback : ServerResponse -> Void):HTTPClientRequest { } )
-	@:overload(function(p_options:String):HTTPClientRequest{})
-	@:overload(function (p_options : HTTPRequestOptions):HTTPClientRequest{})
-	static function get(p_options : HTTPRequestOptions, p_callback : ServerResponse -> Void):HTTPClientRequest;
+	@:overload(function(options:String, callback : ServerResponse -> Void):HTTPClientRequest { } )
+	@:overload(function(options:String):HTTPClientRequest{})
+	@:overload(function (options : HTTPRequestOptions):HTTPClientRequest{})
+	static function get(options : HTTPRequestOptions, callback : ServerResponse -> Void):HTTPClientRequest;
 	
 	
 }

@@ -69,10 +69,10 @@ extern class TCPServer extends EventEmitter
 	 * Stops the server from accepting new connections and keeps existing connections. 
 	 * This function is asynchronous, the server is finally closed when all connections are ended and the server emits a 'close' event.
 	 * Optionally, you can pass a callback to listen for the 'close' event.
-	 * @param	p_callback
+	 * @param	callback
 	 */
 	@:overload(function():Void { })
-	function close(p_callback:Void->Void):Void;
+	function close(callback:Void->Void):Void;
 	
 	/**
 	 * Returns the bound address, the address family name and port of the server as reported by the operating system.
@@ -98,9 +98,9 @@ extern class TCPServer extends EventEmitter
 	 * Asynchronously get the number of concurrent connections on the server. Works when sockets were sent to forks.
 	 * Callback should take two arguments err and count.
 	 * net.Server is an EventEmitter with the following events:
-	 * @param	p_callback
+	 * @param	callback
 	 */
 	@:overload(function():Int{})
-	function getConnections(p_callback : Error -> Int):Void;
+	function getConnections(callback : Error -> Int):Void;
 	
 }

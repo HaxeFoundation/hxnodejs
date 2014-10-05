@@ -157,10 +157,10 @@ extern class MultipartForm extends EventEmitter
 	
 	/**
 	 * Creates a new form.
-	 * @param	p_options
+	 * @param	options
 	 */
 	@:overload(function():Void { } )	
-	function new(p_options:MultipartFormOption):Void;
+	function new(options:MultipartFormOption):Void;
 	/**
 	 * Parses an incoming node.js request containing form data. If cb is provided, autoFields and autoFiles are set to true and all fields and files are collected and passed to the callback:
 	 */

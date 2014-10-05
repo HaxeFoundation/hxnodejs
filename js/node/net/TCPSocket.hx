@@ -114,7 +114,7 @@ extern class TCPSocket extends Duplex
 	 * Construct a new socket object.
 	 */
 	@:overload(function():Void{})
-	function new(p_options : TCPSocketOption):Void;
+	function new(options : TCPSocketOption):Void;
 	
 	/**
 	 * The string representation of the local IP address the remote client is connecting on. 
@@ -170,15 +170,15 @@ extern class TCPSocket extends Duplex
 	 * Normally this method is not needed, as net.createConnection opens the socket. Use this only if you are implementing a custom Socket.
 	 * This function is asynchronous. When the 'connect' event is emitted the socket is established. If there is a problem connecting, the 'connect' event will not be emitted, the 'error' event will be emitted with the exception.
 	 * The connectListener parameter will be added as an listener for the 'connect' event.
-	 * @param	p_port
-	 * @param	p_host
-	 * @param	p_connectListener
+	 * @param	port
+	 * @param	host
+	 * @param	connectListener
 	 */	
-	@:overload(function(p_path:String, p_connectListener:Dynamic):Void { } )
-	@:overload(function(p_path:String):Void { } )
-	@:overload(function(p_port : Int):Void { } )	
-	@:overload(function(p_port : Int, p_host : String):Void { } )	
-	function connect(p_port : Int, p_host : String, p_connectListener : Dynamic):Void;
+	@:overload(function(path:String, connectListener:Dynamic):Void { } )
+	@:overload(function(path:String):Void { } )
+	@:overload(function(port : Int):Void { } )	
+	@:overload(function(port : Int, host : String):Void { } )	
+	function connect(port : Int, host : String, connectListener : Dynamic):Void;
 	
 	
 	/**
@@ -196,28 +196,28 @@ extern class TCPSocket extends Duplex
 	 * When an idle timeout is triggered the socket will receive a 'timeout' event but the connection will not be severed. The user must manually end() or destroy() the socket.
 	 * If timeout is 0, then the existing idle timeout is disabled.
 	 * The optional callback parameter will be added as a one time listener for the 'timeout' event.
-	 * @param	p_timeout
-	 * @param	p_callback
+	 * @param	timeout
+	 * @param	callback
 	 */
-	@:overload(function(p_timeout:Int):Void{})
-	function setTimeout(p_timeout:Int, p_callback:Void->Void):Void;
+	@:overload(function(timeout:Int):Void{})
+	function setTimeout(timeout:Int, callback:Void->Void):Void;
 		
 	/**
 	 * Disables the Nagle algorithm. By default TCP connections use the Nagle algorithm, they buffer data before sending it off. Setting true for noDelay will immediately fire off data each time socket.write() is called. noDelay defaults to true.
-	 * @param	p_nodelay
+	 * @param	nodelay
 	 */
 	@:overload(function():Void { } )
-	function setNoDelay(p_nodelay:Bool):Void;
+	function setNoDelay(nodelay:Bool):Void;
 	
 	/**
 	 * Enable/disable keep-alive functionality, and optionally set the initial delay before the first keepalive probe is sent on an idle socket. enable defaults to false.
 	 * Set initialDelay (in milliseconds) to set the delay between the last data packet received and the first keepalive probe. 
 	 * Setting 0 for initialDelay will leave the value unchanged from the default (or previous) setting. Defaults to 0.
-	 * @param	p_enable
-	 * @param	p_initialDelay
+	 * @param	enable
+	 * @param	initialDelay
 	 */
 	@:overload(function():Void { } )
-	@:overload(function(p_enable : Bool):Void { } )	
-	function setKeepAlive(p_enable : Bool, p_initialDelay:Int):Void;
+	@:overload(function(enable : Bool):Void { } )	
+	function setKeepAlive(enable : Bool, initialDelay:Int):Void;
 	
 }

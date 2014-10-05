@@ -10,17 +10,17 @@ extern class StringDecoder
 	
 	/**
 	 * Accepts a single argument, encoding which defaults to utf8.
-	 * @param	p_encoding
+	 * @param	encoding
 	 */
 	@:overload(function():Void { } )	
-	function new(p_encoding:String):Void;
+	function new(encoding:String):Void;
 
 	/**
 	 * Returns a decoded string.
-	 * @param	p_buffer
+	 * @param	buffer
 	 * @return
 	 */
-	function write(p_buffer:Buffer):String;
+	function write(buffer:Buffer):String;
 	
 	/**
 	 * Returns any trailing bytes that were left in the buffer.

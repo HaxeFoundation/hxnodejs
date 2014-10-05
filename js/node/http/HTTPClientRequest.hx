@@ -65,26 +65,26 @@ extern class HTTPClientRequest extends Writable
 	
 	/**
 	 * Once a socket is assigned to this request and is connected socket.setTimeout() will be called.
-	 * @param	p_timeout
-	 * @param	p_callback
+	 * @param	timeout
+	 * @param	callback
 	 */
-	@:overload(function(p_timeout:Int):Void{})
-	function setTimeout(p_timeout:Int, p_callback:Dynamic):Void;
+	@:overload(function(timeout:Int):Void{})
+	function setTimeout(timeout:Int, callback:Dynamic):Void;
 		
 	/**
 	 * Once a socket is assigned to this request and is connected socket.setNoDelay() will be called.
-	 * @param	p_nodelay
+	 * @param	nodelay
 	 */
 	@:overload(function():Void { } )
-	function setNoDelay(p_nodelay:Bool):Void;
+	function setNoDelay(nodelay:Bool):Void;
 	
 	/**
 	 * Once a socket is assigned to this request and is connected socket.setKeepAlive() will be called.
-	 * @param	p_enable
-	 * @param	p_initialDelay
+	 * @param	enable
+	 * @param	initialDelay
 	 */
 	@:overload(function():Void { } )
-	@:overload(function(p_enable : Bool):Void { } )	
-	function setKeepAlive(p_enable : Bool, p_initialDelay:Int):Void;
+	@:overload(function(enable : Bool):Void { } )	
+	function setKeepAlive(enable : Bool, initialDelay:Int):Void;
 	
 }

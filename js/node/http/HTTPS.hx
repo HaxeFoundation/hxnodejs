@@ -30,23 +30,23 @@ extern class HTTPS
 	
 	/**
 	 * Node maintains several connections per server to make HTTP requests. This function allows one to transparently issue requests.
-	 * @param	p_options
-	 * @param	p_callback
+	 * @param	options
+	 * @param	callback
 	 */
-	@:overload(function(p_options:String, p_callback : ServerResponse -> Void):HTTPClientRequest { } )
-	@:overload(function(p_options:String):HTTPClientRequest{})
-	@:overload(function(p_options:HTTPRequestOptions):HTTPClientRequest{})
-	static function request(p_options : HTTPRequestOptions, p_callback : ServerResponse -> Void):HTTPClientRequest;
+	@:overload(function(options:String, callback : ServerResponse -> Void):HTTPClientRequest { } )
+	@:overload(function(options:String):HTTPClientRequest{})
+	@:overload(function(options:HTTPRequestOptions):HTTPClientRequest{})
+	static function request(options : HTTPRequestOptions, callback : ServerResponse -> Void):HTTPClientRequest;
 	
 	/**
 	 * Since most requests are GET requests without bodies, Node provides this convenience method. The only difference between this method and http.request() is that it sets the method to GET and calls req.end() automatically.
-	 * @param	p_options
-	 * @param	p_callback
+	 * @param	options
+	 * @param	callback
 	 */
-	@:overload(function(p_options:String, p_callback : ServerResponse -> Void):HTTPClientRequest { } )
-	@:overload(function(p_options:String):HTTPClientRequest{})
-	@:overload(function (p_options : HTTPRequestOptions):HTTPClientRequest{})
-	static function get(p_options : HTTPRequestOptions, p_callback : ServerResponse -> Void):HTTPClientRequest; 
+	@:overload(function(options:String, callback : ServerResponse -> Void):HTTPClientRequest { } )
+	@:overload(function(options:String):HTTPClientRequest{})
+	@:overload(function (options : HTTPRequestOptions):HTTPClientRequest{})
+	static function get(options : HTTPRequestOptions, callback : ServerResponse -> Void):HTTPClientRequest; 
 	
 	
 }

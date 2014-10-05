@@ -63,7 +63,7 @@ extern class IncomingMessage extends ReadStream
 	/**
 	 * Calls message.connection.setTimeout(msecs, callback).
 	 */
-	function setTimeout(msecs : Int, p_callback : Dynamic):Void;
+	function setTimeout(msecs : Int, callback : Dynamic):Void;
 	
 	/**
 	 * The request/response headers object.

@@ -62,12 +62,12 @@ extern class UDP
 	 * Call socket.bind if you want to receive datagrams. 
 	 * socket.bind() will bind to the "all interfaces" address on a random port (it does the right thing for both udp4 and udp6 sockets).
 	 * You can then retrieve the address and port with socket.address().address and socket.address().port.
-	 * @param	p_type
-	 * @param	p_callback
+	 * @param	type
+	 * @param	callback
 	 * @return
 	 */
-	@:overload(function createSocket(p_type : String):UDPSocket { } )	
-	static function createSocket(p_type : String, p_callback : Buffer -> Dynamic->Void):UDPSocket;
+	@:overload(function createSocket(type : String):UDPSocket { } )	
+	static function createSocket(type : String, callback : Buffer -> Dynamic->Void):UDPSocket;
 }
 
 /**

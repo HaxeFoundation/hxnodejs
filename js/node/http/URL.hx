@@ -13,9 +13,9 @@ import js.node.NodeJS;
  */
 class URL
 {
-	static private var url(get_url, null) : Dynamic;
-	static private function get_url():Dynamic { return m_url == null ? (m_url = NodeJS.require("url")) : m_url; }
-	static private var m_url : Dynamic;
+	static private var m_url(get_m_url, null) : Dynamic;
+	static private function get_m_url():Dynamic { return __url == null ? (__url = NodeJS.require("url")) : __url; }
+	static private var __url : Dynamic;
 	
 	static private var qs(get_qs, null) : Dynamic;
 	static private function get_qs():Dynamic { return m_qs == null ? (m_qs = NodeJS.require("querystring")) : m_qs; }
@@ -28,12 +28,12 @@ class URL
 	
 	/**
 	 * Parse the string and extract URLData from it.
-	 * @param	p_url
+	 * @param	url
 	 * @return
 	 */
-	static public function Parse(p_url:String):URLData
+	static public function Parse(url:String):URLData
 	{
-		var d : URLData = url.parse(p_url);
+		var d : URLData = m_url.parse(url);
 		return d;
 	}
 	
@@ -41,48 +41,48 @@ class URL
 	/**
 	 * Deserialize a query string to an object. Optionally override the default separator ('&') and assignment ('=') characters.
 	 * MaxKeys is equal to 1000 by default, it'll be used to limit processed keys. Set it to 0 to remove key count limitation.
-	 * @param	p_query
+	 * @param	query
 	 * @return
 	 */
-	static public function ParseQuery(p_query : String,p_separator:String="&",p_assigment:String="=",p_max_keys:Int=1000):Dynamic
+	static public function ParseQuery(query : String,separator:String="&",assigment:String="=",max_keys:Int=1000):Dynamic
 	{
-		if (p_query == null) return { };
-		if (p_query == "")   return { };
-		return qs.parse(p_query, p_separator, p_assigment, { maxKeys: p_max_keys } );
+		if (query == null) return { };
+		if (query == "")   return { };
+		return qs.parse(query, separator, assigment, { maxKeys: max_keys } );
 	}
 	
 	/**
 	 * Serialize an object to a query string. Optionally override the default separator ('&') and assignment ('=') characters.
-	 * @param	p_target
-	 * @param	p_separator
-	 * @param	p_assigment
+	 * @param	target
+	 * @param	separator
+	 * @param	assigment
 	 * @return
 	 */
-	static public function ToQuery(p_target : Dynamic, p_separator:String = "&", p_assigment:String = "="):String
+	static public function ToQuery(target : Dynamic, separator:String = "&", assigment:String = "="):String
 	{
-		if (p_target == null) return "null";
-		return qs.stringify(p_target, p_separator, p_assigment);
+		if (target == null) return "null";
+		return qs.stringify(target, separator, assigment);
 	}
 	
 	/**
 	 * 
-	 * @param	p_request
-	 * @param	p_callback
-	 * @param	p_options
+	 * @param	request
+	 * @param	callback
+	 * @param	options
 	 * @return
 	 */
-	static public function ParseMultipart(p_request : IncomingMessage,p_callback: String -> Dynamic -> Dynamic -> Void=null,p_options : MultipartFormOption=null):MultipartForm
+	static public function ParseMultipart(request : IncomingMessage,callback: String -> Dynamic -> Dynamic -> Void=null,options : MultipartFormOption=null):MultipartForm
 	{		
-		var opt 		: MultipartFormOption 	= p_options == null ? (cast { } ) : p_options;		
+		var opt 		: MultipartFormOption 	= options == null ? (cast { } ) : options;		
 		var multipart 	: Dynamic 				= mp;
 		var options 	: Dynamic 				= opt;
 		var f : MultipartForm = untyped __js__ ("new multipart.Form(opt)");		
 		
-		if (p_callback == null)
+		if (callback == null)
 		{
 			try
 			{				
-				f.parse(p_request); 
+				f.parse(request); 
 			}
 			catch (e:Error) { trace("URL> " + e+"\n\t"+e.stack); }
 		}
@@ -90,7 +90,7 @@ class URL
 		{
 			try
 			{				
-				f.parse(p_request,p_callback); 
+				f.parse(request,callback); 
 			}
 			catch (e:Dynamic) { trace("!!! " + e); }
 		}
@@ -99,13 +99,13 @@ class URL
 	
 	/**
 	 * 
-	 * @param	p_from
-	 * @param	p_to
+	 * @param	from
+	 * @param	to
 	 * @return
 	 */
-	static public function Resolve(p_from:String,p_to:String):String
+	static public function Resolve(from:String,to:String):String
 	{		
-		return url.resolve(p_from, p_to);
+		return m_url.resolve(from, to);
 	}
 	
 	

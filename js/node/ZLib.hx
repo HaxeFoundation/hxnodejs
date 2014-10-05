@@ -35,9 +35,9 @@ extern class BaseZLib
 {
 	/**
 	 * Flush pending data. Don't call this frivolously, premature flushes negatively impact the effectiveness of the compression algorithm.
-	 * @param	p_callback
+	 * @param	callback
 	 */
-	function flush(p_callback:Dynamic):Void;
+	function flush(callback:Dynamic):Void;
 
 	/**
 	 * Reset the compressor/decompressor to factory defaults. Only applicable to the inflate and deflate algorithms.

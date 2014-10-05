@@ -102,7 +102,7 @@ extern class Process extends EventEmitter
 	 * user is a user name or user ID. extra_group is a group name or group ID.
 	 * Some care needs to be taken when dropping privileges. 
 	 */
-	function initgroups(p_user:String,p_extra_group:Int):Void;
+	function initgroups(user:String,extra_group:Int):Void;
 	
 	/**
 	 * Note: this function is only available on POSIX platforms (i.e. not Windows)
@@ -152,9 +152,9 @@ extern class Process extends EventEmitter
 	
 	/**
 	 * Ends the process with the specified code. If omitted, exit uses the 'success' code 0.
-	 * @param	p_code
+	 * @param	code
 	 */
-	function exit(p_code:Int):Void;
+	function exit(code:Int):Void;
 	
 	/**
 	 * This causes node to emit an abort. This will cause node to exit and generate a core file.
@@ -186,7 +186,7 @@ extern class Process extends EventEmitter
 	 * This is not a simple alias to setTimeout(fn, 0), it's much more efficient. 
 	 * It typically runs before any other I/O events fire, but there are some exceptions. 
 	 */
-	function nextTick(p_callback : Void->Void):Void;
+	function nextTick(callback : Void->Void):Void;
 	
 	
 	/**
@@ -222,11 +222,11 @@ extern class Process extends EventEmitter
 	 * If omitted, the signal will be 'SIGTERM'. See Signal Events and kill(2) for more information.
 	 * Will throw an error if target does not exist, and as a special case, a signal of 0 can be used to test for the existence of a process.
 	 * Note that just because the name of this function is process.kill, it is really just a signal sender, like the kill system call. The signal sent may do something other than kill the target process.
-	 * @param	p_pid
-	 * @param	p_signal
+	 * @param	pid
+	 * @param	signal
 	 */
-	@:overload(function(p_id:Int):Void{})
-	function kill(p_pid:Int, p_signal:String):Void;
+	@:overload(function(id:Int):Void{})
+	function kill(pid:Int, signal:String):Void;
 	
 	/**
 	 * Returns an object describing the memory usage of the Node process measured in bytes. 

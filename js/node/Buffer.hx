@@ -26,45 +26,45 @@ extern class Buffer implements ArrayAccess<Int>
 	
 	/**
 	 * 
-	 * @param	p_encoding
+	 * @param	encoding
 	 * @return
 	 */
-	static function isEncoding(p_encoding:String):Bool;
+	static function isEncoding(encoding:String):Bool;
 	
 	/**
 	 * 
-	 * @param	p_obj
+	 * @param	obj
 	 * @return
 	 */
-	static function isBuffer(p_obj:Dynamic):Bool;
+	static function isBuffer(obj:Dynamic):Bool;
 	
 	/**
 	 * 
-	 * @param	p_string
-	 * @param	p_encoding
+	 * @param	string
+	 * @param	encoding
 	 * @return
 	 */
-	@:overload(function (p_string:String):Int{})
-	static function byteLength(p_string:String, p_encoding:String):Int;
+	@:overload(function (string:String):Int{})
+	static function byteLength(string:String, encoding:String):Int;
 	
 	
 	/**
 	 * 
-	 * @param	p_list
-	 * @param	p_total_length
+	 * @param	list
+	 * @param	total_length
 	 * @return
 	 */
-	@:overload(function (p_list:Array<Dynamic>):Int{})
-	static function concat(p_list:Array<Dynamic>, p_total_length:Int):Dynamic;
+	@:overload(function (list:Array<Dynamic>):Int{})
+	static function concat(list:Array<Dynamic>, total_length:Int):Dynamic;
 	
 	/**
 	 * 
-	 * @param	p_size
+	 * @param	size
 	 */
-	@:overload(function(p_string:String):Void{})
-	@:overload(function(p_string:String,p_encoding:String):Void{})
-	@:overload(function(p_array:ArrayBufferView):Void{})
-	function new(p_size:Int):Void;
+	@:overload(function(string:String):Void{})
+	@:overload(function(string:String,encoding:String):Void{})
+	@:overload(function(array:ArrayBufferView):Void{})
+	function new(size:Int):Void;
 	
 	/**
 	 * 

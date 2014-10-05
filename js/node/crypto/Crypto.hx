@@ -200,7 +200,7 @@ extern class Crypto
 	 * @param	prime_length
 	 * @return
 	 */
-	@:overload(function (prime_length : Int,p_encoding:String) : Dynamic {})
+	@:overload(function (prime_length : Int,encoding:String) : Dynamic {})
 	static function createDiffieHellman(prime_length : Int) : Dynamic;
 	
 	/**
