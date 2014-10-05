@@ -1,4 +1,3 @@
-![](http://nodejs.org/images/logo.svg)
 # Haxe NodeJS
 
 ### Overview
