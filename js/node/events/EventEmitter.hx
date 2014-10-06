@@ -2,22 +2,28 @@ package js.node.events;
 
 import haxe.Constraints.Function;
 
-class EventEmitterEventType
-{
+@:enum abstract EventEmitterEvent(String) to String {
 	/**
-	 * event String The event name
-	 * listener Function The event handler function
-	 * This event is emitted any time someone adds a new listener. It is unspecified if listener is in the list returned by emitter.listeners(event).
-	 */
-	static public var NewListener : String = "newListener";
+		This event is emitted any time someone adds a new listener.
+
+		Listener arguments:
+			event:String - The event name
+			listener:Function - The event handler function
+
+		It is unspecified if listener is in the list returned by emitter.listeners(event).
+	**/
+	var NewListener = "newListener";
 
 	/**
-	 * event String The event name
-	 * listener Function The event handler function
-	 * This event is emitted any time someone removes a listener. It is unspecified if listener is in the list returned by emitter.listeners(event).
-	 */
-	static public var RemoveListener : String = "removeListener";
+		This event is emitted any time someone removes a listener.
 
+		Listener arguments:
+			event:String - The event name
+			listener:Function - The event handler function
+
+		It is unspecified if listener is in the list returned by emitter.listeners(event).
+	**/
+	var RemoveListener = "removeListener";
 }
 
 /**
