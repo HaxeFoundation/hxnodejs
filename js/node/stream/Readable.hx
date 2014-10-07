@@ -1,7 +1,7 @@
 package js.node.stream;
 
-import js.node.events.EventEmitter;
 import js.node.Buffer;
+import js.node.events.EventEmitter;
 
 /**
 	Enumeration for Readable class events.
