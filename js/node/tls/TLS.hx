@@ -14,11 +14,10 @@ extern class TLS
 	 * Don't change the defaults unless you know what you are doing.
 	 */
 	static var SLAB_BUFFER_SIZE  : Int;
-	
+
 	static var getCiphers			: Dynamic;//		()
 	static var createServer			: Dynamic;//		(options, [secureConnectionListener])
-	static var connect				: Dynamic;//		(options, [callback])
 	static var connect				: Dynamic;//		(port, [host], [options], [callback])
 	static var createSecurePair		: Dynamic;//		([credentials], [isServer], [requestCert], [rejectUnauthorized])
-	
+
 }
