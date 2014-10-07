@@ -1,8 +1,9 @@
-package js.node.fs;
+package js.node;
 
 import js.Error;
 import js.html.Event;
 import js.node.Buffer;
+import js.node.fs.*;
 
 
 /**
@@ -171,7 +172,7 @@ class FileIOFlag
  * @author Eduardo Pons - eduardo@thelaborat.org
  */
 @:jsRequire("fs")
-extern class File
+extern class Fs
 {
 	/**
 		Asynchronous rename(2).
