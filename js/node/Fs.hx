@@ -177,28 +177,28 @@ extern class Fs
 	/**
 		Asynchronous rename(2).
 	**/
-	static function rename(oldPath : String, newPath : String, callback : Error -> Void):Void;
+	static function rename(oldPath:String, newPath:String, callback:Error->Void):Void;
 
 
 	/**
 		Synchronous rename(2).
 	**/
-	static function renameSync(oldPath : String, newPath : String) : Void;
+	static function renameSync(oldPath:String, newPath:String):Void;
 
 	/**
 		Asynchronous ftruncate(2).
 	**/
-	static function ftruncate(fd : Int, len : Int, callback : Error -> Void):Void;
+	static function ftruncate(fd:Int, len:Int, callback:Error->Void):Void;
 
 	/**
 		Synchronous ftruncate(2).
 	**/
-	static function ftruncateSync(fd : Int, len : Int) : Void;
+	static function ftruncateSync(fd:Int, len:Int):Void;
 
 	/**
 		Asynchronous truncate(2).
 	**/
-	static function truncate(path : String, len : Int, callback : Error->Void):Void;
+	static function truncate(path:String, len:Int, callback:Error->Void):Void;
 
 	/**
 		Synchronous truncate(2).
@@ -269,7 +269,7 @@ extern class Fs
 	/**
 		Asynchronous stat(2).
 	 */
-	static function stat(path:String, callback:Error->FileStats->Void):Void;
+	static function stat(path:String, callback:Error->Stats->Void):Void;
 
 	/**
 		Asynchronous lstat(2).
@@ -277,7 +277,7 @@ extern class Fs
 		lstat() is identical to stat(), except that if path is a symbolic link,
 		then the link itself is stat-ed, not the file that it refers to.
 	**/
-	static function lstat(path:String, callback:Error->FileStats->Void):Void;
+	static function lstat(path:String, callback:Error->Stats->Void):Void;
 
 	/**
 		Asynchronous fstat(2).
@@ -285,22 +285,22 @@ extern class Fs
 		fstat() is identical to stat(), except that the file to be stat-ed
 		is specified by the file descriptor fd.
 	**/
-	static function fstat(fd:Int, callback:Error->FileStats->Void):Void;
+	static function fstat(fd:Int, callback:Error->Stats->Void):Void;
 
 	/**
 		Synchronous stat(2).
 	**/
-	static function statSync(path:String):FileStats;
+	static function statSync(path:String):Stats;
 
 	/**
 		Synchronous lstat(2).
 	**/
-	static function lstatSync(path:String):FileStats;
+	static function lstatSync(path:String):Stats;
 
 	/**
 		Synchronous fstat(2).
 	**/
-	static function fstatSync(fd:Int):FileStats;
+	static function fstatSync(fd:Int):Stats;
 
 	/**
 		Asynchronous link(2).
@@ -616,8 +616,8 @@ extern class Fs
 	 * @param	options
 	 * @param	listener
 	 */
-	@:overload(function (filename : String, listener:FileStats->FileStats->Void):Void { } )
-	static function watchFile(filename : String, options:FileWatchOption, listener:FileStats->FileStats->Void):Void;
+	@:overload(function (filename : String, listener:Stats->Stats->Void):Void { } )
+	static function watchFile(filename : String, options:FileWatchOption, listener:Stats->Stats->Void):Void;
 
 	/**
 	 * Stop watching for changes on filename.
@@ -628,7 +628,7 @@ extern class Fs
 	 * @param	listener
 	 */
 	@:overload(function (filename : String):Void{})
-	static function unwatchFile(filename : String, listener:FileStats->FileStats->Void):Void;
+	static function unwatchFile(filename : String, listener:Stats->Stats->Void):Void;
 
 	/**
 	* Watch for changes on filename, where filename is either a file or a directory. The returned object is a fs.FSWatcher.
@@ -641,7 +641,7 @@ extern class Fs
 	 * @param	listener
 	 */
 	@:overload(function (filename : String):FSWatcher{})
-	@:overload(function (filename : String, listener:FileStats->FileStats->Void):FSWatcher { } )
+	@:overload(function (filename : String, listener:Stats->Stats->Void):FSWatcher { } )
 	static function watch(filename : String, options:FileWatchOption, listener:Event->String->Void):FSWatcher;
 
 	/**
