@@ -267,6 +267,20 @@ extern class Process extends EventEmitter {
 	**/
 	@:overload(function(prev:Array<Float>):Array<Float> {})
 	function hrtime():Array<Float>;
+
+	/**
+		Send a message to the parent process.
+
+		Only available for child processes. See `ChildProcess.send`.
+	**/
+	function send(message:Dynamic):Void;
+
+	/**
+		Close the IPC channel to parent process.
+
+		Only available for child processes. See `ChildProcess.disconnect`.
+	**/
+	function disconnect():Void;
 }
 
 typedef MemoryUsage = {
