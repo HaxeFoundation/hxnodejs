@@ -1,75 +1,68 @@
 package js.node;
 
 /**
- * For printing to stdout and stderr. Similar to the console object functions provided by most web browsers, here the output is sent to stdout or stderr.
- * The console functions are synchronous when the destination is a terminal or a file (to avoid lost messages in case of premature exit) and asynchronous 
- * when it's a pipe (to avoid blocking for long periods of time).
- * That is, in the following example, stdout is non-blocking while stderr is blocking:
- * @author Eduardo Pons - eduardo@thelaborat.org
- */
+	For printing to stdout and stderr.
+
+	Similar to the console object functions provided by most web browsers, here the output is sent to stdout or stderr.
+
+	The console functions are synchronous when the destination is a terminal or a file (to avoid lost messages in case of premature exit
+	and asynchronous  when it's a pipe (to avoid blocking for long periods of time).
+**/
 @:native("console")
-extern class Console
-{	
+extern class Console {
 	/**
-	 * Prints to stdout with newline. This function can take multiple arguments in a printf()-like way. Example:
-	 * console.log('count: %d', count);
-	 * If formatting elements are not found in the first string then util.inspect is used on each argument. See util.format() for more information.
-	 * @param	msg
-	 */
-	@:overload(function(msg:String, ?a0:Dynamic, ?a1:Dynamic, ?a2:Dynamic, ?a3:Dynamic, ?a4:Dynamic, ?a5:Dynamic, ?a6:Dynamic, ?a7:Dynamic, ?a8:Dynamic, ?a9:Dynamic):Void { } )	
-	static function log(msg:String):Void;
-	
+		Prints to stdout with newline. This function can take multiple arguments in a printf()-like way.
+		Example: console.log('count: %d', count);
+		If formatting elements are not found in the first string then `Util.inspect` is used on each argument.
+		See `Util.format` for more information.
+	**/
+	@:overload(function(args:haxe.Rest<Dynamic>):Void {})
+	static function log(data:String, args:haxe.Rest<Dynamic>):Void;
+
 	/**
-	 * Same as console.log.
-	 * @param	msg
-	 */
-	@:overload(function(msg:String, ?a0:Dynamic, ?a1:Dynamic, ?a2:Dynamic, ?a3:Dynamic, ?a4:Dynamic, ?a5:Dynamic, ?a6:Dynamic, ?a7:Dynamic, ?a8:Dynamic, ?a9:Dynamic):Void { } )		
-	static function info(msg:String):Void;
-	
+		Same as `log`.
+	**/
+	@:overload(function(args:haxe.Rest<Dynamic>):Void {})
+	static function info(data:String, args:haxe.Rest<Dynamic>):Void;
+
 	/**
-	 * Same as console.log but prints to stderr.
-	 * @param	msg
-	 */
-	@:overload(function(msg:String, ?a0:Dynamic, ?a1:Dynamic, ?a2:Dynamic, ?a3:Dynamic, ?a4:Dynamic, ?a5:Dynamic, ?a6:Dynamic, ?a7:Dynamic, ?a8:Dynamic, ?a9:Dynamic):Void { } )		
-	static function error(msg:String):Void;
-	
+		Same as `log` but prints to stderr.
+	**/
+	@:overload(function(args:haxe.Rest<Dynamic>):Void {})
+	static function error(data:String, args:haxe.Rest<Dynamic>):Void;
+
 	/**
-	 * Same as console.error.
-	 * @param	msg
-	 */
-	@:overload(function(msg:String, ?a0:Dynamic, ?a1:Dynamic, ?a2:Dynamic, ?a3:Dynamic, ?a4:Dynamic, ?a5:Dynamic, ?a6:Dynamic, ?a7:Dynamic, ?a8:Dynamic, ?a9:Dynamic):Void { } )		
-	static function warn(msg:String):Void;
-	
+		Same as `error`.
+	**/
+	@:overload(function(args:haxe.Rest<Dynamic>):Void {})
+	static function warn(data:String, args:haxe.Rest<Dynamic>):Void;
+
 	/**
-	 * Uses util.inspect on obj and prints resulting string to stdout.
-	 * @param	msg
-	 */
+		Uses util.inspect on obj and prints resulting string to stdout.
+	**/
 	static function dir(obj:Dynamic):Void;
-		
+
 	/**
-	 * Mark a time. Finish with 'timeEnd'
-	 * @param	label
-	 */
+		Mark a time with `label`.
+		Finish with `timeEnd`
+	**/
 	static function time(label:String):Void;
-	
+
 	/**
-	 * Finish timer, record output. Example:
-	 * @param	label
-	 */
+		Finish timer marked with `label`, record output.
+	**/
 	static function timeEnd(label:String):Void;
-	
+
 	/**
-	 * Print a stack trace to stderr of the current position.
-	 * @param	label
-	 */
-	static function trace(label:String):Void;
-	
+		Print to stderr 'Trace :', followed by the formatted message and stack trace to the current position.
+	**/
+	@:overload(function(args:haxe.Rest<Dynamic>):Void {})
+	static function trace(message:String, args:haxe.Rest<Dynamic>):Void;
+
 	/**
-	 * Same as assert.ok() where if the expression evaluates as false throw an AssertionError with message.
-	 * @param	expression
-	 * @param	[message]
-	 */
-	static function assert(expression :Bool, ? message:String):Void;
-	
-	
+		Similar to `Assert.ok`, but the error message is formatted as `Util.format(message...)`.
+	**/
+	@:overload(function(value:Bool, args:haxe.Rest<Dynamic>):Void {})
+	@:overload(function(value:Bool, message:String, args:haxe.Rest<Dynamic>):Void {})
+	static function assert(value:Bool):Void;
 }
