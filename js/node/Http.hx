@@ -1,9 +1,7 @@
-package js.node.http;
-import js.node.net.TCPSocket;
-import js.html.ArrayBufferView;
+package js.node;
 
-extern class HTTPRequestOptions
-{
+extern class HttpRequestOptions {
+	
 	/**
 	 *  A domain name or IP address of the server to issue the request to. Defaults to 'localhost'.
 	 */
@@ -63,8 +61,8 @@ extern class HTTPRequestOptions
  * Class that describes the http methods defined by W3C.
  * http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
  */
-class HTTPMethod
-{
+class HttpMethod {
+	
 	/**
 	 * The GET method means retrieve whatever information (in the form of an entity) is identified by the Request-URI. If the Request-URI refers to a data-producing process, it is the produced data which shall be returned as the entity in the response and not the source text of the process, unless that text happens to be the output of the process.
 	 * The semantics of the GET method change to a "conditional GET" if the request message includes an If-Modified-Since, If-Unmodified-Since, If-Match, If-None-Match, or If-Range header field. A conditional GET method requests that the entity be transferred only under the circumstances described by the conditional header field(s). The conditional GET method is intended to reduce unnecessary network usage by allowing cached entities to be refreshed without requiring multiple requests or transferring data already held by the client.
@@ -174,9 +172,9 @@ class HTTPMethod
  * In particular, large, possibly chunk-encoded, messages. The interface is careful to never buffer entire requests or responses--the user is able to stream data.
  * @author Eduardo Pons - eduardo@thelaborat.org
  */
-@:native("(require('http'))")
-extern class HTTP
-{
+@:jsRequire("http")
+extern class Http {
+	
 	/**
 	 * A collection of all the standard HTTP response status codes, and the short description of each. For example, http.STATUS_CODES[404] === 'Not Found'.
 	 */
@@ -185,7 +183,7 @@ extern class HTTP
 	/**
 	 * Global instance of Agent which is used as the default for all http client requests.
 	 */
-	static var globalAgent : HTTPAgent;
+	static var globalAgent : HttpAgent;
 	
 	/**
 	 * Returns a new web server object.
@@ -193,8 +191,8 @@ extern class HTTP
 	 * @param	listener
 	 * @return
 	 */
-	@:overload(function():HTTPServer { } )	
-	static function createServer(listener : IncomingMessage -> ServerResponse -> Void):HTTPServer;
+	@:overload(function():js.node.http.HttpServer { } )	
+	static function createServer(listener : js.node.http.IncomingMessage -> js.node.http.ServerResponse -> Void):js.node.http.HttpServer;
 	
 	/**
 	 * This function is deprecated; please use http.request() instead. Constructs a new HTTP client. port and host refer to the server to be connected to.
@@ -212,20 +210,20 @@ extern class HTTP
 	 * @param	options
 	 * @param	callback
 	 */
-	@:overload(function(options:String, callback : ServerResponse -> Void):HTTPClientRequest { } )
-	@:overload(function(options:String):HTTPClientRequest{})
-	@:overload(function(options:HTTPRequestOptions):HTTPClientRequest{})
-	static function request(options : HTTPRequestOptions, callback : ServerResponse -> Void):HTTPClientRequest;
+	@:overload(function(options:String, callback : ServerResponse -> Void):js.node.http.HttpClientRequest { } )
+	@:overload(function(options:String):js.node.http.HttpClientRequest{})
+	@:overload(function(options:HttpRequestOptions):js.node.http.HttpClientRequest{})
+	static function request(options : HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.HttpClientRequest;
 	
 	/**
 	 * Since most requests are GET requests without bodies, Node provides this convenience method. The only difference between this method and http.request() is that it sets the method to GET and calls req.end() automatically.
 	 * @param	options
 	 * @param	callback
 	 */
-	@:overload(function(options:String, callback : ServerResponse -> Void):HTTPClientRequest { } )
-	@:overload(function(options:String):HTTPClientRequest{})
-	@:overload(function (options : HTTPRequestOptions):HTTPClientRequest{})
-	static function get(options : HTTPRequestOptions, callback : ServerResponse -> Void):HTTPClientRequest;
+	@:overload(function(options:String, callback : ServerResponse -> Void):js.node.http.HttpClientRequest { } )
+	@:overload(function(options:String):js.node.http.HttpClientRequest{})
+	@:overload(function (options : HttpRequestOptions):js.node.http.HttpClientRequest{})
+	static function get(options : HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.HttpClientRequest;
 	
 	
 }
@@ -238,8 +236,8 @@ extern class HTTP
  * Sockets are removed from the agent's pool when the socket emits either a "close" event or a special "agentRemove" event. This means that if you intend to keep one HTTP request open for a long time and don't want it to stay in the pool you can do something along the lines of:
  */
 
-extern class HTTPAgent
-{
+extern class HttpAgent {
+	
 	/**
 	 * By default set to 5. Determines how many concurrent sockets the agent can have open per origin. Origin is either a 'host:port' or 'host:port:localAddress' combination.
 	 */
@@ -248,7 +246,7 @@ extern class HTTPAgent
 	/**
 	 * An object which contains arrays of sockets currently in use by the Agent. Do not modify.
 	 */
-	var sockets : Array<TCPSocket>;
+	var sockets : Array<js.node.net.TCPSocket>;
 	
 	/**
 	 * An object which contains queues of requests that have not yet been assigned to sockets. Do not modify.

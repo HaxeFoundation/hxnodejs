@@ -1,12 +1,10 @@
 package js.node.http;
-import js.node.events.EventEmitter;
-import js.node.stream.Writable;
 
 /**
  * 
  */
-class HTTPClientRequestEventType
-{
+class HttpClientRequestEventType {
+	
 	/**	 
 	 * Emitted when a response is received to this request. This event is emitted only once. The response argument will be an instance of http.IncomingMessage.
 	 * function (response) { }
@@ -55,8 +53,7 @@ class HTTPClientRequestEventType
  * 
  * @author Eduardo Pons - eduardo@thelaborat.org
  */
-extern class HTTPClientRequest extends Writable
-{
+extern class HttpClientRequest extends js.node.stream.Writable {
 	
 	/**
 	 * Aborts a request. (New since v0.3.8.)

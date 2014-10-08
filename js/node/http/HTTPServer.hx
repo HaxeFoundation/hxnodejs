@@ -1,14 +1,10 @@
 package js.node.http;
-import js.node.net.TCPServer;
-
-import js.html.ArrayBufferView;
-import js.node.events.EventEmitter;
 
 /**
  * Enum with the events supported by the Server class.
  */
-class HTTPServerEventType
-{
+class HttpServerEventType {
+
 	/**
 	 * Emitted when the server has been bound after calling server.listen.
 	 */
@@ -75,8 +71,7 @@ class HTTPServerEventType
  * HTTP Server EventEmitter. This class is used to create a TCP or UNIX server.
  * @author Eduardo Pons - eduardo@thelaborat.org
  */
-extern class HTTPServer extends TCPServer
-{	
+extern class HttpServer extends js.node.net.TCPServer {	
 	
 	/**
 	 * Limits maximum incoming headers count, equal to 1000 by default. If set to 0 - no limit will be applied.
