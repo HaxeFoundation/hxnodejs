@@ -26,7 +26,14 @@ import js.node.stream.Writable;
 	var UncaughtException = "uncaughtException";
 }
 
+@:native("process")
 extern class Process extends EventEmitter {
+
+	/**
+		A reference to the global `Process` object.
+		It can be imported into module namespace by using: "import js.node.Process.instance in process"
+	**/
+	public static inline var instance:Process = cast Process;
 
 	/**
 		A Writable Stream to stdout.
