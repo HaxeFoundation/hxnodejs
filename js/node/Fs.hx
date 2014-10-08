@@ -318,7 +318,7 @@ extern class Fs
 		Synchronous realpath(2).
 		Returns the resolved path.
 	**/
-	@:overloa(function realpathSync(path:String):String {})
+	@:overload(function(path:String):String {})
 	static function realpathSync(path:String, cache:Dynamic<String>):String;
 
 	/**
