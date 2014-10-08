@@ -1,8 +1,4 @@
 package js.node;
-import haxe.Json;
-import js.node.http.HTTP.HTTPAgent;
-
-
 
 /**
  * Wrapper for the global context of js.node.
