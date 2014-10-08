@@ -1,18 +1,6 @@
 package js.node;
 
 /**
-	Work around for the INSPECT_MAX_BYTES attribute.
-**/
-@:native("(require('buffer'))")
-extern class BufferConst {
-	/**
-		How many bytes will be returned when `buffer.inspect()` is called. This can be overridden by user modules.
-		Default: 50
-	**/
-	static var INSPECT_MAX_BYTES : Int;
-}
-
-/**
 	The Buffer class is a global type for dealing with binary data directly. It can be constructed in a variety of ways.
 
 	It supports array access syntax to get and set the octet at index. The values refer to individual bytes,
@@ -20,6 +8,19 @@ extern class BufferConst {
 **/
 @:jsRequire("buffer", "Buffer")
 extern class Buffer implements ArrayAccess<Int> {
+
+	/**
+		How many bytes will be returned when `buffer.inspect()` is called.
+		This can be overridden by user modules.
+		Default: 50
+	**/
+    public static var INSPECT_MAX_BYTES(get,set):Int;
+    private inline static function get_INSPECT_MAX_BYTES():Int {
+        return js.Lib.require("buffer").INSPECT_MAX_BYTES;
+    }
+    private inline static function set_INSPECT_MAX_BYTES(value:Int):Int {
+        return js.Lib.require("buffer").INSPECT_MAX_BYTES = value;
+    }
 
 	/**
 		Returns `true` if the encoding is a valid encoding argument, or `false` otherwise.
