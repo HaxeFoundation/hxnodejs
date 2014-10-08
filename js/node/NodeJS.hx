@@ -1,9 +1,16 @@
 package js.node;
+import haxe.Json;
+import js.node.http.HTTP.HTTPAgent;
+
+
 
 /**
-	Wrapper for the global context of js.node.
-**/
-class NodeJS {
+ * Wrapper for the global context of js.node.
+ * @author Eduardo Pons - eduardo@thelaborat.org
+ */
+class NodeJS
+{
+
 	/**
 	 * The name of the directory that the currently executing script resides in.
 	 */
@@ -17,6 +24,19 @@ class NodeJS {
 	 */
 	static public var filename(get_filename, never):String;
 	static private function get_filename():String { return untyped __js__("__filename"); }
+
+	/**
+	 * Fetches a library and returns the reference to it.
+	 * @param	lib
+	 * @return
+	 */
+	static public function require(lib : String):Dynamic { return untyped __js__("require(lib)"); }
+
+	/**
+	 * The process object is a global object and can be accessed from anywhere. It is an instance of EventEmitter.
+	 */
+	static public var process(get_process, null):Process;
+	static private inline function get_process():Process {  return untyped __js__("process"); }
 
 	/**
 	 * Run callback cb after at least ms milliseconds. The actual delay depends on external factors like OS timer granularity and system load.
@@ -125,4 +145,5 @@ class NodeJS {
 	setImmediate(callback, [arg], [...])
 	clearImmediate(immediateObject)
 	//*/
+
 }
