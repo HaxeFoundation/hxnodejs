@@ -1,145 +1,167 @@
 package js.node;
 
+import haxe.Constraints.Function;
+
 /**
  * Wrapper for the global context of js.node.
  * @author Eduardo Pons - eduardo@thelaborat.org
  */
-class NodeJS
-{
+@:native("global")
+extern class NodeJS {
+	/**
+		The global namespace object.
+	**/
+	static inline var global:Dynamic<Dynamic> = cast NodeJS;
 
 	/**
-	 * The name of the directory that the currently executing script resides in.
+		The process object.
 	 */
-	static public var dirname(get_dirname, never):String;
-	static private function get_dirname():String { return untyped __js__("__dirname"); }
+	static var process(default,null):Process; // TODO: avoid global.process lookup?
 
 	/**
-	 * The filename of the code being executed. This is the resolved absolute path of this code file.
-	 * For a main program this is not necessarily the same filename used in the command line.
-	 * The value inside a module is the path to that module file.
-	 */
-	static public var filename(get_filename, never):String;
-	static private function get_filename():String { return untyped __js__("__filename"); }
+		Used to print to stdout and stderr.
+	**/
+	static var console(default,null):Console; // TODO: avoid global.console lookup?
+
+
+	// TODO: handle this better way
+	/**
+		Fetches a library and returns the reference to it.
+	**/
+	public static inline function require(module:String):Dynamic return js.Lib.require(module);
 
 	/**
-	 * Fetches a library and returns the reference to it.
-	 * @param	lib
-	 * @return
-	 */
-	static public function require(lib : String):Dynamic { return untyped __js__("require(lib)"); }
+		Use the internal `require` machinery to look up the location of a module,
+		but rather than loading the module, just return the resolved filename.
+	**/
+	static inline function require_resolve(module:String):String return untyped __js__("require.resolve({0})", module);
 
 	/**
-	 * The process object is a global object and can be accessed from anywhere. It is an instance of EventEmitter.
-	 */
-	static public var process(get_process, null):Process;
-	static private inline function get_process():Process {  return untyped __js__("process"); }
+		Modules are cached in this object when they are required.
+		By deleting a key value from this object, the next require will reload the module.
+	**/
+	static var require_cache(get,never):Dynamic<Module>;
+	private static inline function get_require_cache():Dynamic<Module> return untyped __js__("require.cache");
 
 	/**
-	 * Run callback cb after at least ms milliseconds. The actual delay depends on external factors like OS timer granularity and system load.
-	 * The timeout must be in the range of 1-2,147,483,647 inclusive. If the value is outside that range, it's changed to 1 millisecond.
-	 * Broadly speaking, a timer cannot span more than 24.8 days.
-	 * Returns an opaque value that represents the timer.
-	 * @param	cb
-	 * @param	ms
-	 * @return
-	 */
-	static public function setTimeout(cb : Void->Void, ms : Int) : Dynamic { return untyped __js__("setTimeout(cb,ms)"); }
+		Instruct require on how to handle certain file extensions.
+
+		Deprecated: In the past, this list has been used to load non-JavaScript modules into Node by compiling them on-demand.
+		However, in practice, there are much better ways to do this, such as loading modules via some other Node program,
+		or compiling them to JavaScript ahead of time.
+
+		Since the `Module` system is locked, this feature will probably never go away. However, it may have subtle bugs
+		and complexities that are best left untouched.
+	**/
+	static var require_extensions(get,never):Dynamic<Dynamic>;
+	private static inline function get_require_extensions():Dynamic<Dynamic> return untyped __js__("require.extensions");
+
 
 	/**
-	 * Stop a timer that was previously created with setTimeout(). The callback will not execute.
-	 * @param	t
-	 */
-	static public function clearTimeout(t : Dynamic) : Void { return untyped __js__("clearTimeout(t)"); }
+		The name of the directory that the currently executing script resides in.
+	**/
+	static var __dirname(get,never):String;
+	private static inline function get___dirname():String return untyped __js__("__dirname");
 
 	/**
-	 * Run callback cb repeatedly every ms milliseconds. Note that the actual interval may vary, depending on external factors like OS timer granularity and system load.
-	 * It's never less than ms but it may be longer.
-	 * The interval must be in the range of 1-2,147,483,647 inclusive. If the value is outside that range, it's changed to 1 millisecond.
-	 * Broadly speaking, a timer cannot span more than 24.8 days.
-	 * Returns an opaque value that represents the timer.
-	 * @param	cb
-	 * @param	ms
-	 * @return
-	 */
-	static public function setInterval(cb : Void->Void, ms : Int) : Dynamic { return untyped __js__("setInterval(cb,ms)"); }
+		The filename of the code being executed. This is the resolved absolute path of this code file.
+		For a main program this is not necessarily the same filename used in the command line.
+		The value inside a module is the path to that module file.
+	**/
+	static var __filename(get,never):String;
+	private static inline function get___filename():String return untyped __js__("__filename");
 
 	/**
-	 * Stop a timer that was previously created with setInterval(). The callback will not execute.
-	 * The timer functions are global variables. See the timers section.
-	 * @param	t
-	 */
-	static public function clearInterval(t : Dynamic) : Void { return untyped __js__("clearInterval(t)"); }
+		A reference to the current module.
+		In particular `module.exports` is used for defining what a module exports and makes available through `require`.
+		`module` isn't actually a global but rather local to each module.
+	**/
+	static var module(get,never):Module;
+	private static inline function get_module():Module return untyped __js__("module");
 
 	/**
-	 * Tests if value is truthy.
-	 * @param	value
-	 * @param	message
-	 */
-	static public function assert(value:Dynamic, message:String) : Void { untyped __js__("require('assert')(value,message)"); }
+		A reference to the module.exports that is shorter to type.
+		See module system documentation for details on when to use exports and when to use `module.exports`.
+		`exports` isn't actually a global but rather local to each module.
+	**/
+	static var exports(get,never):Dynamic<Dynamic>;
+	private static inline function get_exports():Dynamic<Dynamic> return module.exports;
+
 
 	/**
-	 * In browsers, the top-level scope is the global scope.
-	 * That means that in browsers if you're in the global scope var something will define a global variable.
-	 * In Node this is different. The top-level scope is not the global scope; var something inside a Node module will be local to that module.
-	 */
-	static public var global(get_global, null):Dynamic;
-	static private function get_global():Dynamic {  return untyped __js__("global"); }
+		To schedule execution of a one-time `callback` after `delay` milliseconds.
+		Returns a `TimeoutObject` for possible use with `clearTimeout`.
+		Optionally you can also pass arguments to the `callback`.
+	**/
+	static function setTimeout(callback:Function, delay:Int, args:haxe.Rest<Dynamic>):TimeoutObject;
 
 	/**
-	 * Use the internal require() machinery to look up the location of a module, but rather than loading the module, just return the resolved filename.
-	 * @return
-	 */
-	static public function resolve():String {  return untyped __js__("require.resolve()"); }
+		Prevents a timeout from triggering.
+	**/
+	static function clearTimeout(timeoutObject:TimeoutObject):Void;
 
 	/**
-	 * Modules are cached in this object when they are required. By deleting a key value from this object, the next require will reload the module.
-	 */
-	static public var cache(get_cache, null):Dynamic;
-	static private function get_cache():Dynamic {  return untyped __js__("require.cache"); }
+		To schedule the repeated execution of `callback` every `delay` milliseconds.
+		Returns a `IntervalObject` for possible use with `clearInterval`.
+		Optionally you can also pass arguments to the `callback`.
+	**/
+	static function setInterval(callback:Function, delay:Int, args:haxe.Rest<Dynamic>):IntervalObject;
 
 	/**
-	 * Instruct require on how to handle certain file extensions.
-	 * Process files with the extension .sjs as .js:
-	 * Deprecated In the past, this list has been used to load non-JavaScript modules into Node by compiling them on-demand. However,
-	 * in practice, there are much better ways to do this, such as loading modules via some other Node program, or compiling them to JavaScript ahead of time.
-	 * Since the Module system is locked, this feature will probably never go away. However, it may have subtle bugs and complexities that are best left untouched.
-	 */
-	static public var extensions(get_extensions, null):Dynamic;
-	static private function get_extensions():Dynamic {  return untyped __js__("require.extensions"); }
+		Stops a interval from triggering.
+	**/
+	static function clearInterval(intervalObject:IntervalObject):Void;
 
 	/**
-	 * A reference to the current module. In particular module.exports is used for defining what a module exports and makes available through require().
-	 * module isn't actually a global but rather local to each module.
-	 */
-	static public var module(get_module, null):Module;
-	static private function get_module():Module {  return untyped __js__("module"); }
+		To schedule the "immediate" execution of `callback` after I/O events callbacks and before `setTimeout` and `setInterval`.
+		Returns an `ImmediateObject` for possible use with `clearImmediate`.
+		Optionally you can also pass arguments to the `callback`.
+
+		Immediates are queued in the order created, and are popped off the queue once per loop iteration.
+		This is different from `Process.nextTick` which will execute `Process.maxTickDepth` queued callbacks per iteration.
+		`setImmediate` will yield to the event loop after firing a queued callback to make sure I/O is not being starved.
+		While order is preserved for execution, other I/O events may fire between any two scheduled immediate callbacks.
+	**/
+	static function setImmediate(callback:Function, args:haxe.Rest<Dynamic>):ImmediateObject;
 
 	/**
-	 * A reference to the module.exports that is shorter to type.
-	 * See module system documentation for details on when to use exports and when to use module.exports.
-	 * exports isn't actually a global but rather local to each module.
-	 */
-	static public var exports(get_exports, null):Dynamic;
-	static private function get_exports():Dynamic {  return untyped __js__("exports"); }
-
-	/**
-	 * Returns a new Domain object.
-	 * See: http://js.node.org/api/domain.html#domain_domain_create
-	 */
-	static public var domain(get_domain, null):Domain;
-	static private function get_domain():Domain {  return untyped __js__("domain.create()"); }
-
-	/**
-	 * A Read-Eval-Print-Loop (REPL) is available both as a standalone program and easily includable in other programs. The REPL provides a way to interactively run JavaScript and see the results. It can be used for debugging, testing, or just trying things out.
-	 */
-	static public var repl(get_repl, null):REPL;
-	static private function get_repl():REPL {  return untyped __js__("require('repl')"); }
-
-	/*
-	unref()
-	ref()
-	setImmediate(callback, [arg], [...])
-	clearImmediate(immediateObject)
-	//*/
-
+		Stops an immediate from triggering.
+	**/
+	static function clearImmediate(immediateObject:ImmediateObject):Void;
 }
+
+/**
+	Base class for the opaque value returned by `setTimeout` and `setInterval`.
+	See `TimeoutObject` and `IntervalObject` concrete classes.
+**/
+extern class TimerObject {
+	/**
+		Makes the event loop won't keep the program running if a timer is active but is the only item left in the loop.
+		If the timer is already `unref`d calling `unref` again will have no effect.
+
+		In the case of `setTimeout` when you `unref` you create a separate timer that will wakeup the event loop,
+		creating too many of these may adversely effect event loop performance -- use wisely.
+	**/
+	function unref():Void;
+
+	/**
+		If you had previously `unref`d a timer you can call `ref` to explicitly request the timer hold the program open.
+		If the timer is already `ref`d calling `ref` again will have no effect.
+	**/
+	function ref():Void;
+}
+
+/**
+	Object returned by `setTimeout`.
+**/
+extern class TimeoutObject extends TimerObject {}
+
+/**
+	Object returned by `setInterval`.
+**/
+extern class IntervalObject extends TimerObject {}
+
+/**
+	Object returned by `setImmediate`.
+**/
+extern class ImmediateObject {}
