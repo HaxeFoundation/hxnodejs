@@ -1,4 +1,7 @@
 package js.node;
+import js.node.http.HTTPClientRequest.HttpClientRequest;
+import js.node.http.IncomingMessage;
+import js.node.http.ServerResponse;
 
 extern class HttpRequestOptions {
 	
