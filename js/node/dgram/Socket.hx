@@ -75,7 +75,7 @@ extern class UDP
  * @author Eduardo Pons - eduardo@thelaborat.org
  */
 @:native("(require('dgram').Socket)")
-extern class UDPSocket
+extern class Socket
 {
 	var send					: Dynamic;//	(buf, offset, length, port, address, [callback])
 	var bind					: Dynamic;//	(port, [address], [callback])
