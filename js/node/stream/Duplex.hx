@@ -2,6 +2,8 @@ package js.node.stream;
 
 import js.node.Buffer;
 import js.node.events.EventEmitter;
+import js.node.stream.Writable;
+import js.node.stream.Readable;
 
 /**
 	Duplex streams are streams that implement both the `Readable` and `Writable` interfaces.
