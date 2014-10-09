@@ -112,6 +112,10 @@ typedef UrlData = {
 	/**
 		Either the 'params' portion of the query string, or a querystring - parsed object.
 		Example: 'query=string' or {'query':'string'}
+
+		The type of this field can be implicitly converted to String or Dynamic<String>,
+		where either one is expected, so if you know the actual type, just assign it
+		to properly typed variable (e.g. var s:String = url.query)
 	**/
 	@:optional var query:EitherType<String,Dynamic<String>>;
 
