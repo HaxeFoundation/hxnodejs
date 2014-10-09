@@ -14,7 +14,7 @@ import js.node.events.EventEmitter;
 		- crypto streams
 **/
 @:jsRequire("stream", "Duplex")
-extern class Duplex extends EventEmitter
+extern class Duplex extends EventEmitter implements IWritable implements IReadable
 {
 	// --------- Readable ---------
 
@@ -70,14 +70,14 @@ extern class Duplex extends EventEmitter
 		By default `end()` is called on the destination when the source stream emits `end`,
 		so that destination is no longer writable. Pass `{ end: false }` as `options` to keep the destination stream open.
 	**/
-	function pipe<T:Writable>(destination:T, ?options:{end:Bool}):T;
+	function pipe<T:IWritable>(destination:T, ?options:{end:Bool}):T;
 
 	/**
 		This method will remove the hooks set up for a previous pipe() call.
 		If the destination is not specified, then all pipes are removed.
 		If the destination is specified, but no pipe is set up for it, then this is a no-op.
 	**/
-	function unpipe(?destination:Writable):Void;
+	function unpipe(?destination:IWritable):Void;
 
 	/**
 		This is useful in certain cases where a stream is being consumed by a parser,

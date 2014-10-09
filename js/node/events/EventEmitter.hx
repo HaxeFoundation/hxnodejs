@@ -41,7 +41,7 @@ import haxe.Constraints.Function;
 	All EventEmitters emit the event `newListener` when new listeners are added and `removeListener` when a listener is removed.
 **/
 @:jsRequire("events", "EventEmitter")
-extern class EventEmitter {
+extern class EventEmitter implements IEventEmitter {
 
 	function new();
 
