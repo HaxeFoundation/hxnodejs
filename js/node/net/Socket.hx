@@ -3,7 +3,7 @@ package js.node.net;
 /**
     Enumeration of events for `Socket` objects.
 **/
-@:enum abstract SocketEvent {
+@:enum abstract SocketEvent(String) to String {
     /**
         Emitted when a socket connection is successfully established. See `Socket.connect`.
     **/
