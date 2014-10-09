@@ -1,3 +1,5 @@
---macro ImportAll.run("js")
 -js no-output
 --no-output
+--each
+--next
+--macro ImportAll.run("js")
