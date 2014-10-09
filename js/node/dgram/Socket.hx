@@ -1,4 +1,4 @@
-package js.node.net;
+package js.node.dgram;
 import js.html.webgl.Buffer;
 
 /**
@@ -66,8 +66,8 @@ extern class UDP
 	 * @param	callback
 	 * @return
 	 */
-	@:overload(function(type : String):UDPSocket { } )
-	static function createSocket(type : String, callback : Buffer -> Dynamic->Void):UDPSocket;
+	@:overload(function(type : String):Socket { } )
+	static function createSocket(type : String, callback : Buffer -> Dynamic->Void):Socket;
 }
 
 /**

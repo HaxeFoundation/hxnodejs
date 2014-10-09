@@ -1,7 +1,7 @@
 package js.node.http;
 import js.node.events.EventEmitter;
 import js.node.fs.ReadStream;
-import js.node.net.TCPSocket;
+import js.node.net.Socket;
 // import js.node.stream.Readable.ReadableEventType;
 
 /**
@@ -53,7 +53,7 @@ extern class IncomingMessage extends ReadStream
 	/**
 	 * The net.Socket object associated with the connection.
 	 */
-	var socket:TCPSocket;
+	var socket:Socket;
 
 	/**
 	 * The request method as a string. Read only. Example: 'GET', 'DELETE'.
