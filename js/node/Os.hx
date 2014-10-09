@@ -56,7 +56,7 @@ typedef NetworkInterfaceAddressInfo = {
 	Provides a few basic operating-system related utility functions.
 **/
 @:jsRequire("os")
-extern class OS {
+extern class Os {
 
 	/**
 		A constant defining the appropriate End-of-line marker for the operating system.
