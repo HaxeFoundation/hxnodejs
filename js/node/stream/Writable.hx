@@ -71,6 +71,7 @@ extern class Writable extends EventEmitter {
 		Instead, wait for the `drain` event before writing more data.
 	**/
 	@:overload(function(chunk:Buffer, ?callback:Void->Void):Bool {})
+	@:overload(function(chunk:String, ?callback:Void->Void):Bool {})
 	function write(chunk:String, encoding:String, ?callback:Void->Void):Bool;
 
 	/**
