@@ -12,7 +12,7 @@ class ImportAll {
             } else if (Path.extension(path) == "hx") {
                 var moduleName = Path.withoutExtension(acc[acc.length - 1]);
                 var modulePath = acc.slice(0, acc.length - 1);
-                Context.getModule(modulePath.join(".") + "." + moduleName);
+                Context.getType(modulePath.join(".") + "." + moduleName);
             }
         }
         loop([root]);
