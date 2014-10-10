@@ -29,20 +29,20 @@ extern class Https {
 	 * @param	options
 	 * @param	callback
 	 */
-	@:overload(function(options:String, callback : ServerResponse -> Void):js.node.http.HttpClientRequest { } )
-	@:overload(function(options:String):js.node.http.HttpClientRequest{})
-	@:overload(function(options:js.node.Http.HttpRequestOptions):js.node.http.HttpClientRequest{})
-	static function request(options : js.node.Http.HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.HttpClientRequest;
+	@:overload(function(options:String, callback : ServerResponse -> Void):js.node.http.ClientRequest { } )
+	@:overload(function(options:String):js.node.http.ClientRequest{})
+	@:overload(function(options:js.node.Http.HttpRequestOptions):js.node.http.ClientRequest{})
+	static function request(options : js.node.Http.HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.ClientRequest;
 
 	/**
 	 * Since most requests are GET requests without bodies, Node provides this convenience method. The only difference between this method and http.request() is that it sets the method to GET and calls req.end() automatically.
 	 * @param	options
 	 * @param	callback
 	 */
-	@:overload(function(options:String, callback : ServerResponse -> Void):js.node.http.HttpClientRequest { } )
-	@:overload(function(options:String):js.node.http.HttpClientRequest{})
-	@:overload(function (options : js.node.Http.HttpRequestOptions):js.node.http.HttpClientRequest{})
-	static function get(options : js.node.Http.HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.HttpClientRequest;
+	@:overload(function(options:String, callback : ServerResponse -> Void):js.node.http.ClientRequest { } )
+	@:overload(function(options:String):js.node.http.ClientRequest{})
+	@:overload(function (options : js.node.Http.HttpRequestOptions):js.node.http.ClientRequest{})
+	static function get(options : js.node.Http.HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.ClientRequest;
 
 
 }

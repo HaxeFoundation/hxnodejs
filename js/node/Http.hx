@@ -1,5 +1,5 @@
 package js.node;
-import js.node.http.HttpClientRequest;
+import js.node.http.ClientRequest;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import js.node.http.Agent;
@@ -207,8 +207,8 @@ extern class Http {
 	 * @param	listener
 	 * @return
 	 */
-	@:overload(function():js.node.http.HttpServer { } )
-	static function createServer(listener : js.node.http.IncomingMessage -> js.node.http.ServerResponse -> Void):js.node.http.HttpServer;
+	@:overload(function():js.node.http.Server { } )
+	static function createServer(listener : js.node.http.IncomingMessage -> js.node.http.ServerResponse -> Void):js.node.http.Server;
 
 	/**
 	 * This function is deprecated; please use http.request() instead. Constructs a new HTTP client. port and host refer to the server to be connected to.
@@ -226,20 +226,20 @@ extern class Http {
 	 * @param	options
 	 * @param	callback
 	 */
-	@:overload(function(options:String, callback : ServerResponse -> Void):js.node.http.HttpClientRequest { } )
-	@:overload(function(options:String):js.node.http.HttpClientRequest{})
-	@:overload(function(options:HttpRequestOptions):js.node.http.HttpClientRequest{})
-	static function request(options : HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.HttpClientRequest;
+	@:overload(function(options:String, callback : ServerResponse -> Void):js.node.http.ClientRequest { } )
+	@:overload(function(options:String):js.node.http.ClientRequest{})
+	@:overload(function(options:HttpRequestOptions):js.node.http.ClientRequest{})
+	static function request(options : HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.ClientRequest;
 
 	/**
 	 * Since most requests are GET requests without bodies, Node provides this convenience method. The only difference between this method and http.request() is that it sets the method to GET and calls req.end() automatically.
 	 * @param	options
 	 * @param	callback
 	 */
-	@:overload(function(options:String, callback : ServerResponse -> Void):js.node.http.HttpClientRequest { } )
-	@:overload(function(options:String):js.node.http.HttpClientRequest{})
-	@:overload(function (options : HttpRequestOptions):js.node.http.HttpClientRequest{})
-	static function get(options : HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.HttpClientRequest;
+	@:overload(function(options:String, callback : ServerResponse -> Void):js.node.http.ClientRequest { } )
+	@:overload(function(options:String):js.node.http.ClientRequest{})
+	@:overload(function (options : HttpRequestOptions):js.node.http.ClientRequest{})
+	static function get(options : HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.ClientRequest;
 
 
 }
