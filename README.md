@@ -10,3 +10,36 @@ Full documentation can be found in the **[Node.JS API Docs](http://nodejs.org/ap
 ## Status
 
 This library is currently **incomplete and of work-in-progress quality**, however testing and contributions are welcome. See [current issues](https://github.com/HaxeFoundation/hxnodejs/issues). After it's finished, it will either be included in Haxe standard library or released as a separate haxelib.
+
+| module            | status | comment                  |
+|-------------------|--------|--------------------------|
+| assert            | done   |                          |
+| Buffer            | done   |                          |
+| child_processes   | done   |                          |
+| cluster           | done   |                          |
+| console           | done   |                          |
+| crypto            | wip    |                          |
+| dns               | done   |                          |
+| domain            | wip    |                          |
+| events            | done   |                          |
+| fs                | done   |                          |
+| Globals           | wip    | see NodeJS class         |
+| http              | wip    |                          |
+| https             | wip    |                          |
+| net               | done   |                          |
+| os                | done   |                          |
+| path              | done   |                          |
+| process           | done   |                          |
+| punycode          | done   |                          |
+| querystring       | wip    |                          |
+| readline          | wip    |                          |
+| repl              | done   |                          |
+| stream            | done   |                          |
+| string_decoder    | done   |                          |
+| tls               | wip    |                          |
+| tty               | wip    |                          |
+| dgram             | done   |                          |
+| url               | done   |                          |
+| util              | done   |                          |
+| vm                | done   |                          |
+| zlib              | wip    |                          |
