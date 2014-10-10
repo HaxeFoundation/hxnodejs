@@ -1,6 +1,5 @@
 package js.node;
 
-import js.node.EitherType;
 import js.node.events.EventEmitter;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
@@ -130,7 +129,7 @@ typedef ChildProcessSpawnOptions = {
 			* null - Use default value. For stdio fds 0, 1 and 2 (in other words, stdin, stdout, and stderr) a pipe is created.
 			         For fd 3 and up, the default is 'ignore'.
 	**/
-	?stdio:EitherType<ChildProcessStdioConfig,Array<Dynamic>>, // TODO: type properly
+	?stdio:haxe.EitherType<ChildProcessStdioConfig,Array<Dynamic>>, // TODO: type properly
 
 	/**
 		The child will be a process group leader.

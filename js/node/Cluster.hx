@@ -81,7 +81,7 @@ typedef ListeningEventAddress = {
 	var addressType:ListeningEventAddressType;
 }
 
-@:enum abstract ListeningEventAddressType(EitherType<Int,String>) to EitherType<Int,String> {
+@:enum abstract ListeningEventAddressType(haxe.EitherType<Int,String>) to haxe.EitherType<Int,String> {
 	var TCPv4 = 4;
 	var TCPv6 = 6;
 	var Unix = -1;

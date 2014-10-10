@@ -1,7 +1,5 @@
 package js.node;
 
-import js.node.EitherType;
-
 /**
 	Enumeration of possible `family` values for `Dns.lookup`.
 **/
@@ -60,7 +58,7 @@ import js.node.EitherType;
 **/
 typedef DnsResolvedAddressMX = {priority:Int, exchange:String};
 typedef DnsResolvedAddressSRV = {priority:Int, weight:Int, port:Int, name:String};
-typedef DnsResolvedAddress = EitherType<String,EitherType<DnsResolvedAddressMX,DnsResolvedAddressSRV>>;
+typedef DnsResolvedAddress = haxe.EitherType<String,haxe.EitherType<DnsResolvedAddressMX,DnsResolvedAddressSRV>>;
 
 /**
 	Error objects returned by dns lookups are of this type

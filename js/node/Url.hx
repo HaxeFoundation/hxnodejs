@@ -1,7 +1,5 @@
 package js.node;
 
-import js.node.EitherType;
-
 /**
 	This module has utilities for URL resolution and parsing.
 **/
@@ -117,7 +115,7 @@ typedef UrlData = {
 		where either one is expected, so if you know the actual type, just assign it
 		to properly typed variable (e.g. var s:String = url.query)
 	**/
-	@:optional var query:EitherType<String,Dynamic<String>>;
+	@:optional var query:haxe.EitherType<String,Dynamic<String>>;
 
 	/**
 		The 'fragment' portion of the URL including the pound - sign.

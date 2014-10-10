@@ -1,7 +1,6 @@
 package js.node.net;
 
 import js.Error;
-import js.node.EitherType;
 import js.node.events.EventEmitter;
 import js.node.net.Socket.NetworkAdress;
 
@@ -53,7 +52,7 @@ extern class Server extends EventEmitter {
 		The last parameter `callback` will be added as an listener for the 'listening' event.
 	**/
 	@:overload(function(path:String, ?callback:Void->Void):Void {}) // TOOD: document that
-	@:overload(function(handle:EitherType<Dynamic,{fd:Int}>, ?callback:Void->Void):Void {}) // TODO: according to docs, Dynamic should be either a server or socket, but i'm not sure if it's EitherType<Socket,Server>. Also, document that
+	@:overload(function(handle:haxe.EitherType<Dynamic,{fd:Int}>, ?callback:Void->Void):Void {}) // TODO: according to docs, Dynamic should be either a server or socket, but i'm not sure if it's EitherType<Socket,Server>. Also, document that
 	@:overload(function(port:Int, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, backlog:Int, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, host:String, ?callback:Void->Void):Void {})
