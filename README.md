@@ -31,7 +31,7 @@ This library is currently **incomplete and of work-in-progress quality**, howeve
 | path              | done   |                          |
 | process           | done   |                          |
 | punycode          | done   |                          |
-| querystring       | wip    |                          |
+| querystring       | done   |                          |
 | readline          | wip    |                          |
 | repl              | done   |                          |
 | stream            | done   |                          |
