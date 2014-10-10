@@ -11,6 +11,8 @@ Full documentation can be found in the **[Node.JS API Docs](http://nodejs.org/ap
 
 This library is currently **incomplete and of work-in-progress quality**, however testing and contributions are welcome. See [current issues](https://github.com/HaxeFoundation/hxnodejs/issues). After it's finished, it will either be included in Haxe standard library or released as a separate haxelib.
 
+Requires latest GIT version of Haxe (builds available at http://builds.haxe.org/)
+
 | module            | status | comment                  |
 |-------------------|--------|--------------------------|
 | assert            | done   |                          |
