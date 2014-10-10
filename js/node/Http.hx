@@ -2,6 +2,7 @@ package js.node;
 import js.node.http.HttpClientRequest;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
+import js.node.http.Agent;
 
 extern class HttpRequestOptions {
 
@@ -170,23 +171,35 @@ class HttpMethod {
 }
 
 /**
- * To use the HTTP server and client one must require('http').
- * The HTTP interfaces in Node are designed to support many features of the protocol which have been traditionally difficult to use.
- * In particular, large, possibly chunk-encoded, messages. The interface is careful to never buffer entire requests or responses--the user is able to stream data.
- * @author Eduardo Pons - eduardo@thelaborat.org
- */
+	The HTTP interfaces in Node are designed to support many features of the protocol
+	which have been traditionally difficult to use.
+
+	In particular, large, possibly chunk-encoded, messages. The interface is careful to never buffer entire requests
+	or responses--the user is able to stream data.
+
+	HTTP message headers are represented by an object like this:
+
+		{ 'content-length': '123',
+		  'content-type': 'text/plain',
+		  'connection': 'keep-alive' }
+	Keys are lowercased. Values are not modified.
+
+	In order to support the full spectrum of possible HTTP applications, Node's HTTP API is very low-level.
+	It deals with stream handling and message parsing only. It parses a message into headers and body but
+	it does not parse the actual headers or the body.
+**/
 @:jsRequire("http")
 extern class Http {
+	/**
+		A collection of all the standard HTTP response status codes, and the short description of each.
+		For example, http.STATUS_CODES[404] === 'Not Found'.
+	**/
+	static var STATUS_CODES(default,null):Dynamic<String>;
 
 	/**
-	 * A collection of all the standard HTTP response status codes, and the short description of each. For example, http.STATUS_CODES[404] === 'Not Found'.
-	 */
-	static var STATUS_CODES : Dynamic;
-
-	/**
-	 * Global instance of Agent which is used as the default for all http client requests.
-	 */
-	static var globalAgent : HttpAgent;
+		Global instance of Agent which is used as the default for all http client requests.
+	**/
+	static var globalAgent:Agent;
 
 	/**
 	 * Returns a new web server object.
@@ -229,30 +242,4 @@ extern class Http {
 	static function get(options : HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.HttpClientRequest;
 
 
-}
-
-
-/**
- * In node 0.5.3+ there is a new implementation of the HTTP Agent which is used for pooling sockets used in HTTP client requests.
- * Previously, a single agent instance helped pool for a single host+port. The current implementation now holds sockets for any number of hosts.
- * The current HTTP Agent also defaults client requests to using Connection:keep-alive. If no pending HTTP requests are waiting on a socket to become free the socket is closed. This means that node's pool has the benefit of keep-alive when under load but still does not require developers to manually close the HTTP clients using keep-alive.
- * Sockets are removed from the agent's pool when the socket emits either a "close" event or a special "agentRemove" event. This means that if you intend to keep one HTTP request open for a long time and don't want it to stay in the pool you can do something along the lines of:
- */
-
-extern class HttpAgent {
-
-	/**
-	 * By default set to 5. Determines how many concurrent sockets the agent can have open per origin. Origin is either a 'host:port' or 'host:port:localAddress' combination.
-	 */
-	var maxSockets : Int;
-
-	/**
-	 * An object which contains arrays of sockets currently in use by the Agent. Do not modify.
-	 */
-	var sockets : Array<js.node.net.Socket>;
-
-	/**
-	 * An object which contains queues of requests that have not yet been assigned to sockets. Do not modify.
-	 */
-	var requests : Array<IncomingMessage>;
 }
