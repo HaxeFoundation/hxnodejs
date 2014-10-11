@@ -1,96 +1,105 @@
 package js.node.http;
-import js.node.events.EventEmitter;
-import js.node.fs.ReadStream;
+
+import js.node.stream.Readable;
 import js.node.net.Socket;
-// import js.node.stream.Readable.ReadableEventType;
 
-/**
- *
- */
-class IncomingMessageEventType/* extends ReadableEventType*/
-{
+// TODO: these actually (partially) duplicate ReadableEvent
+@:enum abstract IncomingMessageEvent(String) to String {
+	/**
+		Listener argument:
+			- chunk (Buffer or String) - The chunk of data.
+
+		If you attach a `data` event listener, then it will switch the stream into flowing mode,
+		and data will be passed to your handler as soon as it is available.
+	**/
+	var Data = "data";
 
 	/**
-	 * chunk Buffer | String The chunk of data.
-	 * If you attach a data event listener, then it will switch the stream into flowing mode, and data will be passed to your handler as soon as it is available.
-	 * If you just want to get all the data out of the stream as fast as possible, this is the best way to do so.
-	 */
-	static public var 	Data	 : String = "data";
+		Indicates that the underlaying connection was closed.
+		Just like 'end', this event occurs only once per response.
+	**/
+	var Close = "close";
 
 	/**
-	 * Emitted when the underlying resource (for example, the backing file descriptor) has been closed. Not all streams will emit this.
-	 */
-	static public var 	Close	 : String = "close";
+		This event fires when there will be no more data to read.
 
-
-	/**
-	 * This event fires when no more data will be provided.
-	 * Note that the end event will not fire unless the data is completely consumed.
-	 * This can be done by switching into flowing mode, or by calling read() repeatedly until you get to the end.
-	 */
-	static public var	End	  	 : String = "end";
-
-
+		Note that the end event will not fire unless the data is completely consumed.
+		This can be done by switching into flowing mode, or by calling read() repeatedly until you get to the end.
+	**/
+	var End = "end";
 }
 
 /**
- * Wrapper class for the 'request' data that came from the 'http' createServer listener.
- * @author Eduardo Pons - eduardo@thelaborat.org
- */
-extern class IncomingMessage extends ReadStream
-{
+	An `IncomingMessage` object is created by `Server` or `ClientRequest` and passed as the first
+	argument to the 'request' and 'response' event respectively.
+	It may be used to access response status, headers and data.
+**/
+extern class IncomingMessage extends Readable {
+	/**
+		In case of server request, the HTTP version sent by the client.
+		In the case of client response, the HTTP version of the connected-to server.
+		Probably either '1.1' or '1.0'.
+	**/
+	var httpVersion(default,null):String;
 
 	/**
-	 * Request URL string. This contains only the URL that is present in the actual HTTP request. If the request is:
-	 */
-	var url : String;
+		HTTP Version first integer
+	**/
+	var httpVersionMajor:Int;
 
 	/**
-	 * The 3-digit HTTP response status code. E.G. 404.
-	 */
-	var statusCode:Int;
+		HTTP Version second integer
+	**/
+	var httpVersionMinor:Int;
 
 	/**
-	 * The net.Socket object associated with the connection.
-	 */
-	var socket:Socket;
+		The request/response headers object.
+		Read only map of header names and values. Header names are lower-cased
+	**/
+	var headers(default,null):Dynamic<String>;
 
 	/**
-	 * The request method as a string. Read only. Example: 'GET', 'DELETE'.
-	 */
-	var method : String;
+		The request/response trailers object.
+		Only populated after the 'end' event.
+	**/
+	var trailers(default,null):Dynamic<String>;
 
 	/**
-	 * Calls message.connection.setTimeout(msecs, callback).
-	 */
-	function setTimeout(msecs : Int, callback : Dynamic):Void;
+		Calls `setTimeout` on the `socket` object.
+	**/
+	function setTimeout(msecs:Int, ?callback:Void->Void):Void;
 
 	/**
-	 * The request/response headers object.
-	 * Read only map of header names and values. Header names are lower-cased
-	 */
-	var headers: Dynamic;
+		Only valid for request obtained from `Server`.
+
+		The request method as a string.
+		Read only. Example: 'GET', 'DELETE'.
+	**/
+	var method(default,null):Method;
 
 	/**
-	 * The request/response trailers object. Only populated after the 'end' event.
-	 */
-	var trailers:Dynamic;
+		Only valid for request obtained from `Server`.
 
-
-	/**
-	 * In case of server request, the HTTP version sent by the client. In the case of client response, the HTTP version of the connected-to server. Probably either '1.1' or '1.0'.
-	 */
-	var httpVersion:String;
+		Request URL string. This contains only the URL that is present in the actual HTTP request.
+	**/
+	var url(default,null):String;
 
 	/**
-	 * HTTP Version first integer
-	 */
-	var httpVersionMajor :Int;
+		Only valid for response obtained from `ClientRequest`.
+		The 3-digit HTTP response status code. E.G. 404.
+	**/
+	var statusCode(default,null):Int;
 
 	/**
-	 * HTTP Version second integer
-	 */
-	var httpVersionMinor :Int;
+		The `Socket` object associated with the connection.
 
+		With HTTPS support, use `socket.verifyPeer` and `socket.getPeerCertificate`
+		to obtain the client's authentication details. // TODO: we should add these to `js.node.net.Socket` i suppose
+	**/
+	var socket(default,null):Socket;
 
+	/**
+		Alias for `socket`.
+	**/
+	var connection(default,null):Socket;
 }
