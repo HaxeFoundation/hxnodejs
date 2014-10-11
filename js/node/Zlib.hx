@@ -1,12 +1,108 @@
 package js.node;
 
+import js.node.Buffer;
+
+typedef ZlibOptions = {
+	/**
+		default: `Zlib.Z_NO_FLUSH`
+	**/
+	@:optional var flush:Int;
+
+	/**
+		default: 16*1024
+	**/
+	@:optional var chunkSize:Int;
+
+	@:optional var windowBits:Int;
+
+	/**
+		compression only
+	**/
+	@:optional var level:Int;
+
+	/**
+		compression only
+	**/
+	@:optional var memLevel:Int;
+
+	/**
+		compression only
+	**/
+	@:optional var strategy:Int;
+
+	/**
+		deflate/inflate only, empty dictionary by default
+	**/
+	@:optional var dictionary:Buffer;
+}
+
 /**
- * This provides bindings to Gzip/Gunzip, Deflate/Inflate, and DeflateRaw/InflateRaw classes. Each class takes the same options, and is a readable/writable Stream.
- * @author Eduardo Pons - eduardo@thelaborat.org
- */
-@:native("(require('zlib'))")
-extern class Zlib
-{
+	This provides bindings to Gzip/Gunzip, Deflate/Inflate, and DeflateRaw/InflateRaw classes.
+	Each class takes the same options, and is a readable/writable Stream.
+**/
+@:jsRequire("zlib")
+extern class Zlib {
+
+	/**
+		Allowed `flush` values.
+	**/
+	static var Z_NO_FLUSH(default,null):Int;
+	static var Z_PARTIAL_FLUSH(default,null):Int;
+	static var Z_SYNC_FLUSH(default,null):Int;
+	static var Z_FULL_FLUSH(default,null):Int;
+	static var Z_FINISH(default,null):Int;
+	static var Z_BLOCK(default,null):Int;
+	static var Z_TREES(default,null):Int;
+
+	/**
+		Return codes for the compression/decompression functions.
+		Negative values are errors, positive values are used for special but normal events.
+	**/
+	static var Z_OK(default,null):Int;
+	static var Z_STREAM_END(default,null):Int;
+	static var Z_NEED_DICT(default,null):Int;
+	static var Z_ERRNO(default,null):Int;
+	static var Z_STREAM_ERROR(default,null):Int;
+	static var Z_DATA_ERROR(default,null):Int;
+	static var Z_MEM_ERROR(default,null):Int;
+	static var Z_BUF_ERROR(default,null):Int;
+	static var Z_VERSION_ERROR(default,null):Int;
+
+	/**
+		Compression levels.
+	**/
+	static var Z_NO_COMPRESSION(default,null):Int;
+	static var Z_BEST_SPEED(default,null):Int;
+	static var Z_BEST_COMPRESSION(default,null):Int;
+	static var Z_DEFAULT_COMPRESSION(default,null):Int;
+
+	/**
+		Compression strategy.
+	**/
+	static var Z_FILTERED(default,null):Int;
+	static var Z_HUFFMAN_ONLY(default,null):Int;
+	static var Z_RLE(default,null):Int;
+	static var Z_FIXED(default,null):Int;
+	static var Z_DEFAULT_STRATEGY(default,null):Int;
+
+	/**
+		Possible values of the data_type field.
+	**/
+	static var Z_BINARY(default,null):Int;
+	static var Z_TEXT(default,null):Int;
+	static var Z_ASCII(default,null):Int;
+	static var Z_UNKNOWN(default,null):Int;
+
+	/**
+		The deflate compression method (the only one supported in this version).
+	**/
+	static var Z_DEFLATED(default,null):Int;
+
+	/**
+		For initializing zalloc, zfree, opaque.
+	**/
+	static var Z_NULL(default,null):Int;
+
 	static var createGzip			: Dynamic;//	([options])
 	static var createGunzip			: Dynamic;//	([options])
 	static var createDeflate		: Dynamic;//	([options])
