@@ -3,6 +3,7 @@ package js.node;
 import haxe.EitherType;
 
 import js.node.Buffer;
+import js.node.net.Socket;
 import js.node.tls.CleartextStream;
 import js.node.tls.Server;
 import js.node.tls.SecureContext;
@@ -69,7 +70,7 @@ typedef TlsOptions = {
 	/**
 		possible NPN protocols. (Protocols should be ordered by their priority).
 	**/
-	@:optional var NPNProtocols:EitherType<Array<Dynamic>,Buffer>;
+	@:optional var NPNProtocols:Array<EitherType<String,Buffer>>;
 
 	/**
 		A function that will be called if client supports SNI TLS extension.
@@ -132,6 +133,92 @@ typedef TlsOptionsPem = {
 }
 
 
+typedef TlsConnectOptions = {
+	/**
+		Host the client should connect to.
+		Defaults to 'localhost'
+	**/
+	@:optional var host:String;
+
+	/**
+		Port the client should connect to
+	**/
+	@:optional var port:Int;
+
+	/**
+		Establish secure connection on a given socket rather than creating a new socket.
+		If this option is specified, `host` and `port` are ignored.
+	**/
+	@:optional var socket:Socket;
+
+	/**
+		passphrase for the private key or pfx.
+	**/
+	@:optional var passphrase:String;
+
+	/**
+		If true, the server certificate is verified against the list of supplied CAs.
+		An 'error' event is emitted if verification fails. Default: true.
+	**/
+	@:optional var rejectUnauthorized:Bool;
+
+	/**
+		supported NPN protocols.
+		Buffers should have following format: 0x05hello0x05world, where first byte is next protocol name's length.
+		Passing array of strings should usually be much simpler: ['hello', 'world'].
+	**/
+	@:optional var NPNProtocols:Array<EitherType<String,Buffer>>;
+
+	/**
+		Servername for SNI (Server Name Indication) TLS extension.
+	**/
+	@:optional var servername:String;
+
+	/**
+		The SSL method to use, e.g. SSLv3_method to force SSL version 3.
+		The possible values depend on your installation of OpenSSL and are defined in the constant SSL_METHODS.
+		TODO: make an abstract enum for that
+	**/
+	@:optional var secureProtocol:String;
+}
+
+/**
+	Structure to use to configure pfx
+**/
+typedef TlsConnectOptionsPfx = {
+	>TlsConnectOptions,
+
+	/**
+		private key, certificate and CA certs of the client in PFX or PKCS12 format.
+	**/
+	var pfx:EitherType<String,Buffer>;
+}
+
+/**
+	Structure to use to configure PEM
+**/
+typedef TlsConnectOptionsPem = {
+	>TlsConnectOptions,
+
+	/**
+		private key of the client in PEM format.
+	**/
+	var key:EitherType<String,Buffer>;
+
+	/**
+		certificate key of the client in PEM format.
+	**/
+	var cert:EitherType<String,Buffer>;
+
+	/**
+		trusted certificates in PEM format.
+		If this is omitted several well known "root" CAs will be used, like VeriSign.
+		These are used to authorize connections.
+	**/
+	@:optional var ca:Array<EitherType<String,Buffer>>;
+}
+
+
 /**
 	The tls module uses OpenSSL to provide Transport Layer Security
 	and/or Secure Socket Layer: encrypted stream communication.
@@ -167,7 +254,17 @@ extern class Tls {
 	**/
 	static function createServer(options:EitherType<TlsOptionsPem,TlsOptionsPfx>, ?secureConnectionListener:CleartextStream->Void):Server;
 
-	static var connect				: Dynamic;//		(port, [host], [options], [callback])
+	/**
+		Creates a new client connection to the given `port` and `host` (old API) or `options.port` and `options.host`.
+		If `host` is omitted, it defaults to 'localhost'.
+	**/
+	@:overload(function(port:Int, ?callback:Void->Void):CleartextStream {})
+	@:overload(function(port:Int, options:TlsConnectOptions, ?callback:Void->Void):CleartextStream {})
+	@:overload(function(port:Int, host:String, ?callback:Void->Void):CleartextStream {})
+	@:overload(function(port:Int, host:String, options:TlsConnectOptions, ?callback:Void->Void):CleartextStream {})
+	static function connect(options:TlsConnectOptions, ?callback:Void->Void):CleartextStream;
+
+
 	static var createSecurePair		: Dynamic;//		([credentials], [isServer], [requestCert], [rejectUnauthorized])
 
 }
