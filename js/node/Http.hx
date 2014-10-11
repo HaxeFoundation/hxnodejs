@@ -5,6 +5,7 @@ import js.node.http.Agent;
 import js.node.http.ClientRequest;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
+import js.node.http.Method;
 
 /**
 	Type of the options object passed to `Http.request`.
@@ -41,7 +42,7 @@ typedef HttpRequestOptions = {
 		A string specifying the HTTP request method.
 		Defaults to 'GET'.
 	**/
-	@:optional var method:HttpMethod;
+	@:optional var method:Method;
 
 	/**
 		Request path.
@@ -83,21 +84,6 @@ typedef HttpRequestOptions = {
 			false: opts out of connection pooling with an `Agent`, defaults request to Connection: close.
 	**/
 	@:optional var agent:haxe.EitherType<Agent,Bool>;
-}
-
-/**
-	Enumeration of possible HTTP methods as described in
-	http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
-**/
-@:enum abstract HttpMethod(String) from String to String {
-	var Get = "GET";
-	var Post = "POST";
-	var Head = "HEAD";
-	var Options = "OPTIONS";
-	var Put = "PUT";
-	var Delete = "DELETE";
-	var Trace = "TRACE";
-	var Connect = "CONNECT";
 }
 
 /**
