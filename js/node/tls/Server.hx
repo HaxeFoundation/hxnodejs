@@ -1,5 +1,4 @@
 package js.node.tls;
-import js.node.net.Server;
 
 /**
  *
@@ -45,7 +44,7 @@ class TLSServerEventType
  * This class is a subclass of net.Server and has the same methods on it. Instead of accepting just raw TCP connections, this accepts encrypted connections using TLS or SSL.
  * @author Eduardo Pons - eduardo@thelaborat.org
  */
-extern class TLSServer extends Server
+extern class Server extends js.node.net.Server
 {
 
 	var addContext : Dynamic; //(hostname, credentials)
