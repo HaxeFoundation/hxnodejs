@@ -5,7 +5,7 @@ package js.node;
  * @author Eduardo Pons - eduardo@thelaborat.org
  */
 @:native("(require('zlib'))")
-extern class ZLib
+extern class Zlib
 {
 	static var createGzip			: Dynamic;//	([options])
 	static var createGunzip			: Dynamic;//	([options])
@@ -14,8 +14,8 @@ extern class ZLib
 	static var createDeflateRaw		: Dynamic;//	([options])
 	static var createInflateRaw		: Dynamic;//	([options])
 	static var createUnzip			: Dynamic;//	([options])
-	
-	
+
+
 	static var deflate			: Dynamic;//	(buf, callback)
 	static var deflateRaw		: Dynamic;//	(buf, callback)
 	static var gzip				: Dynamic;//	(buf, callback)
@@ -23,8 +23,8 @@ extern class ZLib
 	static var inflate			: Dynamic;//	(buf, callback)
 	static var inflateRaw		: Dynamic;//	(buf, callback)
 	static var unzip			: Dynamic;//	(buf, callback)
-		
-	
+
+
 }
 
 
