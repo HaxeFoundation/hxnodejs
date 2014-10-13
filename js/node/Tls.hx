@@ -3,9 +3,11 @@ package js.node;
 import haxe.EitherType;
 
 import js.node.Buffer;
-import js.node.net.Socket;
+import js.node.crypto.Credentials;
 import js.node.crypto.SecureContext;
+import js.node.net.Socket;
 import js.node.tls.CleartextStream;
+import js.node.tls.SecurePair;
 import js.node.tls.Server;
 
 /**
@@ -264,7 +266,21 @@ extern class Tls {
 	@:overload(function(port:Int, host:String, options:TlsConnectOptions, ?callback:Void->Void):CleartextStream {})
 	static function connect(options:TlsConnectOptions, ?callback:Void->Void):CleartextStream;
 
+	/**
+		Creates a new secure pair object with two streams, one of which reads/writes encrypted data,
+		and one reads/writes cleartext data. Generally the encrypted one is piped to/from an incoming
+		encrypted data stream, and the cleartext one is used as a replacement for the initial encrypted stream.
 
-	static var createSecurePair		: Dynamic;//		([credentials], [isServer], [requestCert], [rejectUnauthorized])
+		`credentials`: A credentials object from `Crypto.createCredentials()`
 
+		`isServer`: A boolean indicating whether this tls connection should be opened as a server or a client.
+
+		`requestCert`: A boolean indicating whether a server should request a certificate from a connecting client.
+		Only applies to server connections.
+
+		`rejectUnauthorized`: A boolean indicating whether a server should automatically reject clients with invalid certificates.
+		 Only applies to servers with `requestCert` enabled.
+	**/
+	@:overload(function(?credentials:Credentials, ?isServer:Bool, ?requestCert:Bool, ?rejectUnauthorized:Bool):SecurePair {})
+	static function createSecurePair(?credentials:Credentials, ?isServer:Bool):SecurePair;
 }
