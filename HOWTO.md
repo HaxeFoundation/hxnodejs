@@ -175,6 +175,24 @@ static function doStuff(a:Int, b:String):Void;
 
 Note that node.js API documentation often describes types of variables which is mostly redundant in Haxe, so these parts can be removed.
 
+## Deprecated API
+
+Use `@:deprecated` metadata for upstream API that is deprecated. That way compiler will emit a warning when using deprecated API.
+
+Example:
+```haxe
+@:deprecated // default warning message
+extern class DeprecatedClass {
+}
+
+extern class NotSoDeprecated {
+	@:deprecated("use otherMethod instead") // custom warning message
+	function deprecatedMethod():Void;
+	
+	function otherMethod():Void;
+}
+```
+
 ## Tricks and hints
 
 TODO (dealing with keywords, `untyped __js__`, inline methods and properties on extern classes)
