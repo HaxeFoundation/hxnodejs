@@ -53,7 +53,26 @@ All modules, classes, fields and functions arguments should be named after the o
 
 ## Events
 
-TODO (describe @:enum abstract, decide on https://github.com/HaxeFoundation/hxnodejs/issues/21)
+node.js event emitters takes strings as event names and we have no way to properly map a callback type to its event name
+at compile-time. However we do provide [@:enum abstract types](http://haxe.org/manual/types-abstract-enum.html) that enumerate possible event names for a given event emitter.
+They are purely advisory, but they are good for both documentation and holding constant event names.
+
+For each `EventEmitter` subclass, an `@:enum abstract` type must be created with a `Event` postfix in its name. For example,
+if we have a `Process` class which is an `EventEmitter`, it should have a pairing `ProcessEvent` type in its module, i.e.:
+
+```haxe
+extern class Process extends EventEmitter {
+    // ...
+}
+
+@:enum abstract Process(String) to String {
+    var Exit = "exit";
+}
+```
+
+Note that the abstract type must have a `to String` cast so it can be used where a string is expected (because event names are strings).
+
+**TODO: decide on event inheritance https://github.com/HaxeFoundation/hxnodejs/issues/21**
 
 ## Method overloading and optional arguments
 
