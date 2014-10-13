@@ -34,7 +34,7 @@ Requires latest GIT version of Haxe (builds available at http://builds.haxe.org/
 | process           | done   |                          |
 | punycode          | done   |                          |
 | querystring       | done   |                          |
-| readline          | wip    |                          |
+| readline          | done   |                          |
 | repl              | done   |                          |
 | stream            | done   |                          |
 | string_decoder    | done   |                          |
