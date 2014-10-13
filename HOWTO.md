@@ -127,7 +127,7 @@ Here, the `SomeOptions.field` can be assigned to/from either a string or array o
 
 If a type can be of 3 and more types, nested `EitherType` can be used.
 
-### @:enum abstracts
+### Constant enumeration
 
 If there's a finite set of posible values for a function argument or object field, [@:enum abstract types](http://haxe.org/manual/types-abstract-enum.html) are used to enumerate those values.
 
