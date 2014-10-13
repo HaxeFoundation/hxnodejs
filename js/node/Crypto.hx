@@ -4,6 +4,7 @@ import haxe.EitherType;
 import js.Error;
 import js.node.Buffer;
 import js.node.crypto.*;
+import js.node.crypto.DiffieHellman.IDiffieHellman;
 
 /**
 	Enumerations of crypto algorighms to be used.
@@ -54,6 +55,20 @@ typedef CredentialOptions = {
 	**/
 	ciphers:String,
 
+}
+
+/**
+	Enumeration of supported group names for `Crypto.getDiffieHellman`.
+**/
+@:enum abstract DiffieHellmanGroupName(String) from String to String {
+	var Modp1 = "modp1";
+	var Modp2 = "modp2";
+	var Modp5 = "modp5";
+	var Modp14 = "modp14";
+	var Modp15 = "modp15";
+	var Modp16 = "modp16";
+	var Modp17 = "modp17";
+	var Modp18 = "modp18";
 }
 
 /**
@@ -147,83 +162,73 @@ extern class Crypto {
 
 
 	/**
-	 * Creates and returns a signing object, with the given algorithm.
-	 * On recent OpenSSL releases, openssl list-public-key-algorithms will display the available signing algorithms.
-	 * Examples are 'RSA-SHA256'.
-	 * @param	algorithm
-	 * @return
-	 */
-	static function createSign(algorithm : String) : Sign;
+		Creates and returns a signing object, with the given algorithm.
+		On recent OpenSSL releases, openssl list-public-key-algorithms will display the available signing algorithms.
+		Example: 'RSA-SHA256'.
+	**/
+	static function createSign(algorithm:String):Sign;
 
 	/**
-	 * Creates and returns a verification object, with the given algorithm. This is the mirror of the signing object above.
-	 * @param	algorithm
-	 * @return
-	 */
-	static function createVerify(algorithm : String) : Verify;
+		Creates and returns a verification object, with the given algorithm.
+		This is the mirror of the signing object above.
+	**/
+	static function createVerify(algorithm:String):Verify;
 
 
 	/**
-	 * Creates a Diffie-Hellman key exchange object using the supplied prime. The generator used is 2. Encoding can be 'binary', 'hex', or 'base64'. If no encoding is specified, then a buffer is expected.
-	 * @param	prime_length
-	 * @return
-	 */
-	@:overload(function (prime_length : Int,encoding:String) : Dynamic {})
-	static function createDiffieHellman(prime_length : Int) : Dynamic;
+		Creates a Diffie-Hellman key exchange object using the supplied `prime` or generated prime of given bit `prime_length`.
+		The generator used is 2. `encoding` can be 'binary', 'hex', or 'base64'.
+
+		Creates a Diffie-Hellman key exchange object and generates a prime of the given bit length. The generator used is 2.
+	**/
+	@:overload(function(prime_length:Int):DiffieHellman {})
+	@:overload(function(prime:Buffer):DiffieHellman {})
+	static function createDiffieHellman(prime:String, encoding:String):DiffieHellman;
 
 	/**
-	 * Creates a predefined Diffie-Hellman key exchange object.
-	 * The supported groups are: 'modp1', 'modp2', 'modp5' (defined in RFC 2412) and 'modp14', 'modp15', 'modp16', 'modp17', 'modp18' (defined in RFC 3526).
-	 * The returned object mimics the interface of objects created by crypto.createDiffieHellman() above,
-	 * but will not allow to change the keys (with diffieHellman.setPublicKey() for example).
-	 * The advantage of using this routine is that the parties don't have to generate nor exchange group modulus beforehand, saving both processor and communication time.
-	 * @param	group_name
-	 * @return
-	 */
-	static function getDiffieHellman(group_name : String) : DiffieHellman;
-
-
-	/**
-	 * Asynchronous PBKDF2 applies pseudorandom function HMAC-SHA1 to derive a key of given length from the given password, salt and iterations.
-	 * The callback gets two arguments (err, derivedKey).
-	 * @param	password
-	 * @param	salt
-	 * @param	iterations
-	 * @param	keylen
-	 * @param	callback
-	 * @return
-	 */
-	static function pbkdf2(password : String, salt : Dynamic, iterations : Int, keylen : Int, callback : String -> Dynamic -> Void) : Void;
-
-	/**
-	 * Synchronous PBKDF2 function. Returns derivedKey or throws error.
-	 * @param	password
-	 * @param	salt
-	 * @param	iterations
-	 * @param	keylen
-	 * @return
-	 */
-	static function pbkdf2Sync(password : String, salt : Dynamic, iterations : Int, keylen : Int) : Dynamic;
+		Creates a predefined Diffie-Hellman key exchange object.
+		The supported groups are: 'modp1', 'modp2', 'modp5' (defined in RFC 2412) and 'modp14', 'modp15', 'modp16', 'modp17', 'modp18' (defined in RFC 3526).
+		The returned object mimics the interface of objects created by `createDiffieHellman` above,
+		but will not allow to change the keys (with setPublicKey() for example).
+		The advantage of using this routine is that the parties don't have to generate nor exchange group modulus beforehand,
+		saving both processor and communication time.
+	**/
+	static function getDiffieHellman(group_name:DiffieHellmanGroupName):IDiffieHellman;
 
 
 	/**
-	 * Generates cryptographically strong pseudo-random data.
-	 * @param	size
-	 * @param	[callback]
-	 * @return
-	 */
-	@:overload(function(size:Int,callback : Error -> Buffer -> Void):Void{})
-	static function randomBytes(size : Int) : Buffer;
+		Asynchronous PBKDF2 applies pseudorandom function HMAC-SHA1 to derive a key of given length
+		from the given password, salt and iterations.
+	**/
+	static function pbkdf2(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, callback:Error->String->Void):Void;
 
 	/**
-	 * Generates non-cryptographically strong pseudo-random data.
-	 * The data returned will be unique if it is sufficiently long, but is not necessarily unpredictable.
-	 * For this reason, the output of this function should never be used where unpredictability is important, such as in the generation of encryption keys.
-	 * @param	size
-	 * @param	[callback]
-	 * @return
-	 */
-	@:overload(function(size:Int,callback : Error -> Buffer -> Void):Void{})
-	static function pseudoRandomBytes(size : Int) : Buffer;
+		Synchronous PBKDF2 function. Returns derivedKey or throws error.
+	**/
+	static function pbkdf2Sync(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int):String;
 
+	/**
+		Generates cryptographically strong pseudo-random data.
+
+		If `callback` is specified, the function runs asynchronously, otherwise it will block and synchronously
+		return random bytes.
+
+		NOTE: Will throw error or invoke callback with error, if there is not enough accumulated entropy
+		to generate cryptographically strong data. In other words, `randomBytes` without callback will not
+		block even if all entropy sources are drained.
+	**/
+	@:overload(function(size:Int, callback:Error->Buffer->Void):Void {})
+	static function randomBytes(size:Int):Buffer;
+
+	/**
+		Generates non-cryptographically strong pseudo-random data.
+
+		The data returned will be unique if it is sufficiently long, but is not necessarily unpredictable.
+		For this reason, the output of this function should never be used where unpredictability is important,
+		such as in the generation of encryption keys.
+
+		Usage is otherwise identical to `randomBytes`.
+	**/
+	@:overload(function(size:Int, callback:Error->Buffer->Void):Void {})
+	static function pseudoRandomBytes(size:Int):Buffer;
 }
