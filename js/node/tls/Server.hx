@@ -1,52 +1,61 @@
 package js.node.tls;
 
+import js.node.Crypto.CredentialOptions;
+
 /**
- *
- */
-class TLSServerEventType
-{
+	Enumeration of events emitted by `Server` in addition to its parent classes.
+**/
+@:enum abstract ServerEvent(String) to String {
 	/**
-	 * function (cleartextStream) {}
-	 * This event is emitted after a new connection has been successfully handshaked.
-	 * The argument is a instance of CleartextStream.
-	 * It has all the common stream methods and events.
-	 * cleartextStream.authorized is a boolean value which indicates if the client has verified by one of the supplied certificate authorities for the server.
-	 * If cleartextStream.authorized is false, then cleartextStream.authorizationError is set to describe how authorization failed.
-	 * Implied but worth mentioning: depending on the settings of the TLS server, you unauthorized connections may be accepted.
-	 * cleartextStream.npnProtocol is a string containing selected NPN protocol. cleartextStream.servername is a string containing servername requested with SNI.
-	 */
-	static var SecureConnection : String = "secureConnection";
+		This event is emitted after a new connection has been successfully handshaked.
+
+		Listener arguments:
+			cleartextStream : ClearTextStream
+	**/
+	var SecureConnection = "secureConnection";
 
 	/**
-	 * function (exception, securePair) { }
-	 * When a client connection emits an 'error' event before secure connection is established - it will be forwarded here.
-	 * securePair is the tls.SecurePair that the error originated from.
-	 */
-	static var ClientError 		: String = "clientError";
+		When a client connection emits an 'error' event before secure connection is established -
+		it will be forwarded here.
+
+		Listener arguments:
+			exception - error object
+			securePair : SecurePair - a secure pair that the error originated from
+	**/
+	var ClientError = "clientError";
 
 	/**
-	 * function (sessionId, sessionData) { }
-	 * Emitted on creation of TLS session. May be used to store sessions in external storage.
-	 */
-	static var NewSession 		: String = "newSession";
+		Emitted on creation of TLS session.
+		May be used to store sessions in external storage.
+
+		Listener arguments:
+			sessionId : Buffer
+			sessionData : Buffer
+	**/
+	var NewSession = "newSession";
 
 	/**
-	 * function (sessionId, callback) { }
-	 * Emitted when client wants to resume previous TLS session.
-	 * Event listener may perform lookup in external storage using given sessionId, and invoke callback(null, sessionData) once finished.
-	 * If session can't be resumed (i.e. doesn't exist in storage) one may call callback(null, null).
-	 * Calling callback(err) will terminate incoming connection and destroy socket.
-	 */
-	static var ResumeSession 	: String = "resumeSession";
+		Emitted when client wants to resume previous TLS session.
+		Event listener may perform lookup in external storage using given sessionId,
+		and invoke callback(null, sessionData) once finished.
+		If session can't be resumed (i.e. doesn't exist in storage) one may call callback(null, null).
+		Calling callback(err) will terminate incoming connection and destroy socket.
+
+		Listener arguments:
+			sessionId : Buffer
+			callback : Error->?Buffer->Void
+	**/
+	var ResumeSession = "resumeSession";
 }
 
 /**
- * This class is a subclass of net.Server and has the same methods on it. Instead of accepting just raw TCP connections, this accepts encrypted connections using TLS or SSL.
- * @author Eduardo Pons - eduardo@thelaborat.org
- */
-extern class Server extends js.node.net.Server
-{
-
-	var addContext : Dynamic; //(hostname, credentials)
-
+	This class is a subclass of `net.Server` and has the same methods on it.
+	Instead of accepting just raw TCP connections, this accepts encrypted connections using TLS or SSL.
+**/
+extern class Server extends js.node.net.Server {
+	/**
+		Add secure context that will be used if client request's SNI hostname
+		is matching passed hostname (wildcards can be used).
+	**/
+	function addContext(hostname:String, credentials:CredentialOptions):Void;
 }
