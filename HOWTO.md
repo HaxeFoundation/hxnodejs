@@ -88,7 +88,20 @@ TODO (describe how to deal with multiple inheritance using interfaces, as we do 
 
 ### Object structures
 
-TODO (describe structure typedefs, their naming and extending structures)
+When a function takes/returns an object with predefined fields (e.g. options argument in many node.js methods), [anonymous structures](http://haxe.org/manual/types-anonymous-structure.html) are used along with `typedef`s.
+
+Example:
+```haxe
+typedef FileOptions = {
+    var path:String;
+    @:optional var encoding:String;
+    @:optional var mode:Int;
+}
+
+function readFile(options:FileOptions):Void;
+```
+
+**TODO describe typedef naming**
 
 ### Dynamic objects
 
