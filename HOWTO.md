@@ -98,7 +98,7 @@ TODO (describe DynamicAccess, see https://github.com/HaxeFoundation/haxe/pull/34
 
 If a function accepts different types for a single argument, at the most times it is better to use `@:overload` do describe that. However there are cases where it is not sufficient, for example: a collection can contain elements of different (but limited) types or an options object field can be of either type.
 
-In these cases Haxe provides the `haxe.EitherType<T1,T2>` type that is an abstract over `Dynamic` that can be implicitly casted from and to both `T1` and `T2`.
+To deal with that Haxe provides the `haxe.EitherType<T1,T2>` type that is an abstract over `Dynamic` that can be implicitly casted from and to both `T1` and `T2`.
 
 Example:
 ```haxe
