@@ -21,7 +21,7 @@ class CleartextStreamEventType
  * A ClearTextStream is the clear member of a SecurePair object.
  * @author Eduardo Pons - eduardo@thelaborat.org
  */
-extern class CleartextStream extends EventEmitter
+extern class CleartextStream extends CryptoStream
 {
 
 	/**
