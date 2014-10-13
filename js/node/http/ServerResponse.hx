@@ -1,5 +1,6 @@
 package js.node.http;
 
+import haxe.DynamicAccess;
 import js.node.stream.Writable;
 
 /**
@@ -46,8 +47,8 @@ extern class ServerResponse extends Writable {
 
 		Note: that Content-Length is given in bytes not characters.
 	**/
-	@:overload(function(statusCode:Int, ?headers:Dynamic<String>):Void {})
-	function writeHead(statusCode:Int, reasonPhrase:String, ?headers:Dynamic<String>):Void;
+	@:overload(function(statusCode:Int, ?headers:DynamicAccess<String>):Void {})
+	function writeHead(statusCode:Int, reasonPhrase:String, ?headers:DynamicAccess<String>):Void;
 
 	/**
 		Sets the `Socket`'s timeout value to `msecs`.
@@ -108,5 +109,5 @@ extern class ServerResponse extends Writable {
 		Note that HTTP requires the 'Trailer' header to be sent if you intend to emit trailers,
 		with a list of the header fields in its value.
 	**/
-    function addTrailers(headers:Dynamic<String>):Void;
+    function addTrailers(headers:DynamicAccess<String>):Void;
 }

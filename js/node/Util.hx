@@ -1,5 +1,6 @@
 package js.node;
 
+import haxe.DynamicAccess;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
 
@@ -77,17 +78,17 @@ extern class Util {
 			special - only function at this time (cyan)
 			name (intentionally no styling)
 	**/
-	static var inspect_styles(get,set):Dynamic<String>;
-	private static inline function get_inspect_styles():Dynamic<String> return untyped inspect.styles;
-	private static inline function set_inspect_styles(value:Dynamic<String>):Dynamic<String> return untyped inspect.styles = value;
+	static var inspect_styles(get,set):DynamicAccess<String>;
+	private static inline function get_inspect_styles():DynamicAccess<String> return untyped inspect.styles;
+	private static inline function set_inspect_styles(value:DynamicAccess<String>):DynamicAccess<String> return untyped inspect.styles = value;
 
 	/**
 		Predefined color codes are: white, grey, black, blue, cyan, green, magenta, red and yellow.
 		There are also bold, italic, underline and inverse codes.
 	**/
-	static var inspect_colors(get,set):Dynamic<Array<Int>>; // TODO: these Arrays are supposed to have only 2 values, add Pair<Int> abstract?
-	private static inline function get_inspect_colors():Dynamic<Array<Int>> return untyped inspect.colors;
-	private static inline function set_inspect_colors(value:Dynamic<Array<Int>>):Dynamic<Array<Int>> return untyped inspect.colors = value;
+	static var inspect_colors(get,set):DynamicAccess<Array<Int>>; // TODO: these Arrays are supposed to have only 2 values, add Pair<Int> abstract?
+	private static inline function get_inspect_colors():DynamicAccess<Array<Int>> return untyped inspect.colors;
+	private static inline function set_inspect_colors(value:DynamicAccess<Array<Int>>):DynamicAccess<Array<Int>> return untyped inspect.colors = value;
 
 	/**
 		Returns true if the given "object" is an Array. false otherwise.

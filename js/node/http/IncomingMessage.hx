@@ -1,5 +1,6 @@
 package js.node.http;
 
+import haxe.DynamicAccess;
 import js.node.stream.Readable;
 import js.node.net.Socket;
 
@@ -56,13 +57,13 @@ extern class IncomingMessage extends Readable {
 		The request/response headers object.
 		Read only map of header names and values. Header names are lower-cased
 	**/
-	var headers(default,null):Dynamic<String>;
+	var headers(default,null):DynamicAccess<String>;
 
 	/**
 		The request/response trailers object.
 		Only populated after the 'end' event.
 	**/
-	var trailers(default,null):Dynamic<String>;
+	var trailers(default,null):DynamicAccess<String>;
 
 	/**
 		Calls `setTimeout` on the `socket` object.

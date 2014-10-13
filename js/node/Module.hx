@@ -1,5 +1,7 @@
 package js.node;
 
+import haxe.DynamicAccess;
+
 /**
 	In each module, the `module` free variable is a reference to the object representing the current module.
 	For convenience, `module.exports` is also accessible via the `exports` module-global.
@@ -13,7 +15,7 @@ extern class Module {
 		To do this assign the desired export object to module.exports.
 		Note that assigning the desired object to `exports` will simply rebind the local exports variable, which is probably not what you want to do.
 	**/
-	var exports:Dynamic<Dynamic>;
+	var exports:DynamicAccess<Dynamic>;
 
 	/**
 		Return `exports` from the resolved module
@@ -21,7 +23,7 @@ extern class Module {
 		Note that in order to do this, you must get a reference to the `module` object. Since `require` returns the `module.exports`,
 		and the `module` is typically only available within a specific module's code, it must be explicitly exported in order to be used.
 	**/
-	function require(id:String):Dynamic<Dynamic>;
+	function require(id:String):DynamicAccess<Dynamic>;
 
 	/**
 		The identifier for the module.

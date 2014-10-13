@@ -1,5 +1,6 @@
 package js.node;
 
+import haxe.DynamicAccess;
 import js.node.events.EventEmitter;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
@@ -94,7 +95,7 @@ extern class Process extends EventEmitter {
 	/**
 		An object containing the user environment. See environ(7).
 	**/
-	var env:Dynamic<String>;
+	var env:DynamicAccess<String>;
 
 	/**
 		Ends the process with the specified `code`. If omitted, exit uses the 'success' code 0.
@@ -170,7 +171,7 @@ extern class Process extends EventEmitter {
 	/**
 		A property exposing version strings of node and its dependencies.
 	**/
-	var versions:Dynamic<String>;
+	var versions:DynamicAccess<String>;
 
 	/**
 		An Object containing the JavaScript representation of the configure options that were used to compile the current node executable.

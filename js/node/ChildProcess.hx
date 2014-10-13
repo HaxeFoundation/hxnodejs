@@ -1,5 +1,6 @@
 package js.node;
 
+import haxe.DynamicAccess;
 import js.node.events.EventEmitter;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
@@ -94,7 +95,7 @@ private typedef ChildProcessCommonOptions = {
 	/**
 		Environment key-value pairs
 	**/
-	?env:Dynamic<String>,
+	?env:DynamicAccess<String>,
 }
 
 typedef ChildProcessSpawnOptions = {

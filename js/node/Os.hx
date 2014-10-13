@@ -133,5 +133,5 @@ extern class Os {
 	/**
 		Get a list of network interfaces:
 	**/
-	static function networkInterfaces():Dynamic<NetworkInterface>;
+	static function networkInterfaces():haxe.DynamicAccess<NetworkInterface>;
 }

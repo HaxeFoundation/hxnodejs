@@ -1,6 +1,7 @@
 package js.node;
 
 import haxe.Constraints.Function;
+import haxe.DynamicAccess;
 
 /**
  * Wrapper for the global context of js.node.
@@ -40,8 +41,8 @@ extern class NodeJS {
 		Modules are cached in this object when they are required.
 		By deleting a key value from this object, the next require will reload the module.
 	**/
-	static var require_cache(get,never):Dynamic<Module>;
-	private static inline function get_require_cache():Dynamic<Module> return untyped __js__("require.cache");
+	static var require_cache(get,never):DynamicAccess<Module>;
+	private static inline function get_require_cache():DynamicAccess<Module> return untyped __js__("require.cache");
 
 	/**
 		Instruct require on how to handle certain file extensions.
@@ -53,8 +54,8 @@ extern class NodeJS {
 		Since the `Module` system is locked, this feature will probably never go away. However, it may have subtle bugs
 		and complexities that are best left untouched.
 	**/
-	static var require_extensions(get,never):Dynamic<Dynamic>;
-	private static inline function get_require_extensions():Dynamic<Dynamic> return untyped __js__("require.extensions");
+	static var require_extensions(get,never):DynamicAccess<Dynamic>;
+	private static inline function get_require_extensions():DynamicAccess<Dynamic> return untyped __js__("require.extensions");
 
 
 	/**

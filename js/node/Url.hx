@@ -1,5 +1,7 @@
 package js.node;
 
+import haxe.DynamicAccess;
+
 /**
 	This module has utilities for URL resolution and parsing.
 **/
@@ -111,11 +113,11 @@ typedef UrlData = {
 		Either the 'params' portion of the query string, or a querystring - parsed object.
 		Example: 'query=string' or {'query':'string'}
 
-		The type of this field can be implicitly converted to String or Dynamic<String>,
+		The type of this field can be implicitly converted to String or DynamicAccess<String>,
 		where either one is expected, so if you know the actual type, just assign it
 		to properly typed variable (e.g. var s:String = url.query)
 	**/
-	@:optional var query:haxe.EitherType<String,Dynamic<String>>;
+	@:optional var query:haxe.EitherType<String,DynamicAccess<String>>;
 
 	/**
 		The 'fragment' portion of the URL including the pound - sign.

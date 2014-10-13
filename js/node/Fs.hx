@@ -1,5 +1,6 @@
 package js.node;
 
+import haxe.DynamicAccess;
 import js.Error;
 import js.node.Buffer;
 import js.node.fs.Stats;
@@ -312,14 +313,14 @@ extern class Fs
 		a specific path resolution or avoid additional `stat` calls for known real paths.
 	**/
 	@:overload(function(path:String, callback:Error->String->Void):Void {})
-	static function realpath(path:String, cache:Dynamic<String>, callback:Error->String->Void):Void;
+	static function realpath(path:String, cache:DynamicAccess<String>, callback:Error->String->Void):Void;
 
 	/**
 		Synchronous realpath(2).
 		Returns the resolved path.
 	**/
 	@:overload(function(path:String):String {})
-	static function realpathSync(path:String, cache:Dynamic<String>):String;
+	static function realpathSync(path:String, cache:DynamicAccess<String>):String;
 
 	/**
 		Asynchronous unlink(2).

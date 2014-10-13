@@ -1,5 +1,7 @@
 package js.node;
 
+import haxe.DynamicAccess;
+
 /**
 	This module provides utilities for dealing with query strings.
 **/
@@ -18,9 +20,9 @@ extern class Querystring {
 		Options object may contain `maxKeys` property (equal to 1000 by default), it'll be used to limit processed keys.
 		Set it to 0 to remove key count limitation.
 	**/
-	@:overload(function(str:String, ?options:{maxKeys:Int}):Dynamic<String> {})
-	@:overload(function(str:String, sep:String, ?options:{maxKeys:Int}):Dynamic<String> {})
-	static function parse(str:String, ?sep:String, ?eq:String):Dynamic<String>;
+	@:overload(function(str:String, ?options:{maxKeys:Int}):DynamicAccess<String> {})
+	@:overload(function(str:String, sep:String, ?options:{maxKeys:Int}):DynamicAccess<String> {})
+	static function parse(str:String, ?sep:String, ?eq:String):DynamicAccess<String>;
 
 	/**
 		The escape function used by `Querystring.stringify`, provided so that it could be overridden if necessary.

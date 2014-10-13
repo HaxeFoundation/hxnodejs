@@ -1,5 +1,6 @@
 package js.node;
 
+import haxe.DynamicAccess;
 import js.node.http.Server;
 import js.node.http.Agent;
 import js.node.http.ClientRequest;
@@ -67,7 +68,7 @@ typedef HttpRequestOptions = {
 
 			Sending an Authorization header will override using the auth option to compute basic authentication.
 	**/
-	@:optional var headers:Dynamic<String>;
+	@:optional var headers:DynamicAccess<String>;
 
 	/**
 		Basic authentication i.e. 'user:password' to compute an Authorization header.
@@ -106,9 +107,9 @@ extern class Http {
 
 	/**
 		A collection of all the standard HTTP response status codes, and the short description of each.
-		For example, http.STATUS_CODES[404] === 'Not Found'. // TODO: that's not really a haxe syntax, wait for DynamicAccess to land in std lib and change it
+		For example, http.STATUS_CODES["404"] == 'Not Found'.
 	**/
-	static var STATUS_CODES(default,null):Dynamic<String>;
+	static var STATUS_CODES(default,null):DynamicAccess<String>;
 
 	/**
 		Global instance of Agent which is used as the default for all http client requests.

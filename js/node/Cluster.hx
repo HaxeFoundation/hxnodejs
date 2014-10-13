@@ -1,5 +1,6 @@
 package js.node;
 
+import haxe.DynamicAccess;
 import js.node.events.EventEmitter;
 import js.node.cluster.Worker;
 
@@ -151,7 +152,7 @@ extern class Cluster extends EventEmitter
 
 		This can only be called from the master process.
 	**/
-	function fork(?enc:Dynamic<String>):Worker;
+	function fork(?env:DynamicAccess<String>):Worker;
 
 	/**
 		Calls `disconnect` on each worker in `workers`.
@@ -183,7 +184,7 @@ extern class Cluster extends EventEmitter
 		Should you wish to reference a worker over a communication channel, using the worker's unique `id`
 		is the easiest way to find the worker.
 	**/
-	var workers(default,null):Dynamic<Worker>;
+	var workers(default,null):DynamicAccess<Worker>;
 }
 
 typedef ClusterSettings = {
