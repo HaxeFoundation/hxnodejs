@@ -109,7 +109,9 @@ function readFile(options:FileOptions):Void;
 
 ### Dynamic objects
 
-TODO (describe DynamicAccess, see https://github.com/HaxeFoundation/haxe/pull/3464)
+If a JavaScript object is intended to be used as a *keyed collection* of values and thus doesn't have a predefined structure (e.g. `process.env`), use `haxe.DynamicAccess<T>`. It's a special abstract type designed just for that. It provides `Map`-like API for iterating over its keys and working with values.
+
+Note that in some cases, an object doesn't have a predefined structure, but neither is a *collection*. In those cases, use simple `Dynamic<Dynamic>`.
 
 ### Either types
 
