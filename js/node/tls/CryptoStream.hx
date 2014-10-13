@@ -1,7 +1,7 @@
 package js.node.tls;
 
 /**
-	This is an encrypted stream.
+	This is an encrypted stream. Base class for `CleartextStream` and `EncryptedStream`.
 **/
 extern class CryptoStream extends js.node.stream.Duplex {
 	/**

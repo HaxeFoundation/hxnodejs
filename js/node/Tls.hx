@@ -4,9 +4,9 @@ import haxe.EitherType;
 
 import js.node.Buffer;
 import js.node.net.Socket;
+import js.node.crypto.SecureContext;
 import js.node.tls.CleartextStream;
 import js.node.tls.Server;
-import js.node.tls.SecureContext;
 
 /**
 	Base structure for options object used in tls methods.
@@ -75,8 +75,8 @@ typedef TlsOptions = {
 	/**
 		A function that will be called if client supports SNI TLS extension.
 		Only one argument will be passed to it: `servername`.
-		And SNICallback should return SecureContext instance. (You can use crypto.createCredentials(...).context
-		to get proper SecureContext).
+		And SNICallback should return SecureContext instance.
+		(You can use `Crypto.createCredentials(...).context` to get proper `SecureContext`).
 		If SNICallback wasn't provided - default callback with high-level API will be used.
 	**/
 	@:optional var SNICallback:String->SecureContext;
