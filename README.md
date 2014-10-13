@@ -38,7 +38,7 @@ Requires latest GIT version of Haxe (builds available at http://builds.haxe.org/
 | repl              | done   |                          |
 | stream            | done   |                          |
 | string_decoder    | done   |                          |
-| tls               | wip    |                          |
+| tls               | done   |                          |
 | tty               | wip    |                          |
 | dgram             | done   |                          |
 | url               | done   |                          |
