@@ -84,7 +84,7 @@ TODO (describe the idea of maximum typing while keeping sanity)
 
 ### Multiple inheritance
 
-TODO (describe how to deal with multiple inheritance using interfaces, as we do with IReadable/IWritable streams).
+TODO (describe how to deal with multiple inheritance using interfaces, as we do with IReadable/IWritable streams, mention `@:remove` metadata for interfaces).
 
 ### Object structures
 
