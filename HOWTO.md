@@ -47,6 +47,10 @@ Example module layout:
      * FSWatcher.hx
    * Fs.hx
 
+### Imports
+
+It makes sense to use e.g. `import fs.*` in the `Fs.hx` so that all relevant classes are brought into context of the module static class. Other than that, usual import recommendations apply: import only what's necessary and remove unused imports.
+
 ## Naming
 
 All modules, classes, fields and functions arguments should be named after the official API documentation of the native module. Static classes representing node modules are capitalized as they are Haxe types and must follow haxe type naming requirements. Acronyms are NOT uppercased (i.e. `Json`, not `JSON`).
