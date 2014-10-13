@@ -11,6 +11,7 @@ import js.node.Crypto.CredentialOptions;
 
 		Listener arguments:
 			cleartextStream : ClearTextStream
+			encryptedStream : EncryptedStream
 	**/
 	var SecureConnection = "secureConnection";
 
