@@ -65,7 +65,7 @@ extern class Process extends EventEmitter {
     // ...
 }
 
-@:enum abstract Process(String) to String {
+@:enum abstract ProcessEvent(String) to String {
     var Exit = "exit";
 }
 ```
