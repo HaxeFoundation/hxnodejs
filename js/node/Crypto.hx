@@ -78,12 +78,16 @@ typedef CredentialOptions = {
 @:jsRequire("crypto")
 extern class Crypto {
 	/**
-	 * The default encoding to use for functions that can take either strings or buffers.
-	 * The default value is 'buffer', which makes it default to using Buffer objects.
-	 * This is here to make the crypto module more easily compatible with legacy programs that expected 'binary' to be the default encoding.
-	 * Note that new programs will probably expect buffers, so only use this as a temporary measure.
-	 */
-	static var DEFAULT_ENCODING : String;
+		The default encoding to use for functions that can take either strings or buffers.
+		The default value is 'buffer', which makes it default to using `Buffer` objects.
+		This is here to make the crypto module more easily compatible with legacy programs
+		that expected 'binary' to be the default encoding.
+
+		Note that new programs will probably expect buffers, so only use this as a temporary measure.
+
+		TODO: add @:deprecated meta here and to other deprecated things?
+	**/
+	static var DEFAULT_ENCODING:String;
 
 	/**
 		Returns an array with the names of the supported ciphers.
@@ -117,48 +121,44 @@ extern class Crypto {
 	@:overload(function(algorithm:CryptoAlgorithm, key:String):Hmac {})
 	static function createHmac(algorithm:CryptoAlgorithm, key:Buffer):Hmac;
 
+	/**
+		Creates and returns a cipher object, with the given algorithm and password.
+
+		`algorithm` is dependent on OpenSSL, examples are 'aes192', etc.
+		On recent releases, openssl list-cipher-algorithms will display the available cipher algorithms.
+
+		`password` is used to derive key and IV, which must be a 'binary' encoded string or a buffer.
+
+		It is a stream that is both readable and writable. The written data is used to compute the hash.
+		Once the writable side of the stream is ended, use the `read` method to get the computed hash digest.
+		The legacy `update` and `digest` methods are also supported.
+	**/
+	static function createCipher(algorithm:String, password:EitherType<String,Buffer>):Cipher;
 
 	/**
-	 * Creates and returns a cipher object, with the given algorithm and password.
-	 * algorithm is dependent on OpenSSL, examples are 'aes192', etc. On recent releases, openssl list-cipher-algorithms will display the available cipher algorithms.
-	 * password is used to derive key and IV, which must be a 'binary' encoded string or a buffer.
-	 * It is a stream that is both readable and writable. The written data is used to compute the hash. Once the writable side of the stream is ended, use the read() method to get the computed hash digest. The legacy update and digest methods are also supported.
-	 * @param	algorithm
-	 * @param	password
-	 * @return
-	 */
-	static function createCipher(algorithm : String, password : String) : Cipher;
+		Creates and returns a cipher object, with the given algorithm, key and iv.
 
+		`algorithm` is the same as the argument to `createCipher`.
 
-	/**
-	 * Creates and returns a cipher object, with the given algorithm, key and iv.
-	 * algorithm is the same as the argument to createCipher().
-	 * key is the raw key used by the algorithm.
-	 * iv is an initialization vector.
-	 * key and iv must be 'binary' encoded strings or buffers.
-	 * @param	algorithm
-	 * @param	key
-	 * @param	iv
-	 * @return
-	 */
-	static function createCipheriv(algorithm : String, key : Dynamic, iv:Dynamic) : Cipher;
+		`key` is the raw key used by the algorithm.
+
+		`iv` is an initialization vector.
+
+		`key` and `iv` must be 'binary' encoded strings or buffers.
+	**/
+	static function createCipheriv(algorithm:String, key:EitherType<String,Buffer>, iv:EitherType<String,Buffer>):Cipher;
 
 	/**
-	 * Creates and returns a decipher object, with the given algorithm and key. This is the mirror of the createCipher() above.
-	 * @param	algorithm
-	 * @param	password
-	 * @return
-	 */
-	static function createDecipher(algorithm : String, password : String) : Decipher;
+		Creates and returns a decipher object, with the given algorithm and key.
+		This is the mirror of the `createCipher` above.
+	**/
+	static function createDecipher(algorithm:String, password:EitherType<String,Buffer>):Decipher;
 
 	/**
-	 * Creates and returns a decipher object, with the given algorithm, key and iv. This is the mirror of the createCipheriv() above.
-	 * @param	algorithm
-	 * @param	key
-	 * @param	iv
-	 * @return
-	 */
-	static function createDecipheriv(algorithm : String, key : Dynamic, iv : Dynamic) : Decipher;
+		Creates and returns a decipher object, with the given algorithm, key and iv.
+		This is the mirror of the `createCipheriv` above.
+	**/
+	static function createDecipheriv(algorithm:String, key:EitherType<String,Buffer>, iv:EitherType<String,Buffer>):Decipher;
 
 
 	/**
