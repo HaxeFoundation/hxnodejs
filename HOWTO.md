@@ -158,6 +158,23 @@ Note that combined with `haxe.EitherType` (described above), `@:enum abstract`s 
 }
 ```
 
+## API Documenting
+
+We use API documentation style found in Haxe standard library and copy upstream API documentation text to externs (applying some minor editing/reformatting to it). 
+
+Example of Haxe standard library style:
+
+```haxe
+/**
+	Does that and returns this.
+	
+	Some more info about using argument `a` and `b`.
+**/
+static function doStuff(a:Int, b:String):Void;
+```
+
+Note that node.js API documentation often describes types of variables which is mostly redundant in Haxe, so these parts can be removed.
+
 ## Tricks and hints
 
 TODO (dealing with keywords, `untyped __js__`, inline methods and properties on extern classes)
