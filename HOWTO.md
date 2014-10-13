@@ -70,7 +70,7 @@ extern class Process extends EventEmitter {
 }
 ```
 
-Note that the abstract type must have a `to String` cast so it can be used where a string is expected (because event names are strings).
+Note that the abstract type must have a `to String` cast so it can be used where a string is expected (because event names are strings). Event constant names are `UpperCamelCase` and their values are actual event names.
 
 **TODO: decide on event inheritance https://github.com/HaxeFoundation/hxnodejs/issues/21**
 
@@ -112,7 +112,34 @@ If a type can be of 3 and more types, nested `EitherType` can be used.
 
 ### @:enum abstracts
 
-TODO (describe the idea of using those for finite sets of values and how it can be used with `haxe.EitherType`, define rules for `to/from`)
+If there's a finite set of posible values for a function argument or object field, [@:enum abstract types](http://haxe.org/manual/types-abstract-enum.html) are used to enumerate those values.
+
+Example:
+
+```haxe
+@:enum abstract SymlinkType(String) from String to String {
+    var File = "file";
+    var Dir = "dir";
+    var Junction = "junction";
+}
+```
+
+The `to` and `from` implicit cast must be added so user can use both enumeration constants and original values as documented in API documentation of native library, however `from` cast may be omitted if the type is used only for return values and is not supposed to be created by user.
+
+Constant names are `UpperCamelCase` and their values are actual values expected by native API.
+
+
+Note that combined with `haxe.EitherType` (described above), `@:enum abstract`s can handle even complicated cases where a value can be of different types, e.g.
+
+```haxe
+@:enum abstract ListeningEventAddressType(haxe.EitherType<Int,String>) to haxe.EitherType<Int,String> {
+	var TCPv4 = 4;
+	var TCPv6 = 6;
+	var Unix = -1;
+	var UDPv4 = "udp4";
+	var UDPv6 = "udp6";
+}
+```
 
 ## Tricks and hints
 
