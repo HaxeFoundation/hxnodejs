@@ -85,8 +85,8 @@ extern class NodeJS {
 		See module system documentation for details on when to use exports and when to use `module.exports`.
 		`exports` isn't actually a global but rather local to each module.
 	**/
-	static var exports(get,never):Dynamic<Dynamic>;
-	private static inline function get_exports():Dynamic<Dynamic> return module.exports;
+	static var exports(get,never):DynamicAccess<Dynamic>;
+	private static inline function get_exports():DynamicAccess<Dynamic> return module.exports;
 
 
 	/**
