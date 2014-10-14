@@ -199,7 +199,7 @@ typedef ChildProcessForkOptions = {
 	?silent:Bool
 }
 
-@:jsRequire("child_process")
+@:jsRequire("child_process") // TODO move ChildProcess (the class) to a package to comply with general guidelines?
 extern class ChildProcess extends EventEmitter {
 
 	/**
