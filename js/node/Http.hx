@@ -1,12 +1,7 @@
 package js.node;
 
 import haxe.DynamicAccess;
-import js.node.http.Server;
-import js.node.http.Agent;
-import js.node.http.ClientRequest;
-import js.node.http.IncomingMessage;
-import js.node.http.ServerResponse;
-import js.node.http.Method;
+import js.node.http.*;
 
 /**
 	Type of the options object passed to `Http.request`.
@@ -82,7 +77,7 @@ typedef HttpRequestOptions = {
 		Possible values:
 			null (default): use global `Agent` for this `host` and `port`.
 			`Agent` object: explicitly use the passed in `Agent`.
-			false: opts out of connection pooling with an `Agent`, defaults request to Connection: close.
+			false: opts out of connection pooling with an `Agent`, defaults request to 'Connection: close'.
 	**/
 	@:optional var agent:haxe.EitherType<Agent,Bool>;
 }
@@ -123,14 +118,14 @@ extern class Http {
 	**/
 	static function createServer(?requestListener:IncomingMessage->ServerResponse->Void):Server;
 
-
 	/**
 		This function is deprecated; please use `request` instead.
 
 		Constructs a new HTTP client.
 		`port` and `host` refer to the server to be connected to.
 	**/
-	static function createClient(?port:Int, ?host:String):Dynamic; // TODO: do we want to create an extern for deprecated+undocumented Client class?
+	@:deprecated("This function is deprecated; please use `request` instead.")
+	static function createClient(?port:Int, ?host:String):Client;
 
 	/**
 		Node maintains several connections per server to make HTTP requests.
