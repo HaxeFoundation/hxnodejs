@@ -1,7 +1,8 @@
 package js.node.http;
 
 /**
-	Enumeration of events emitted by the `Server` class.
+	Enumeration of events emitted by `http.Server` class in addition to
+	its parent `net.Server` class.
 **/
 @:enum abstract ServerEvent(String) to String {
 	/**
@@ -14,39 +15,6 @@ package js.node.http;
 			* response : ServerResponse
 	**/
 	var Request = "request";
-
-	/**
-		When a new TCP stream is established. Usually users will not want to access this event.
-		In particular, the socket will not emit readable events because of how the protocol parser attaches to the socket.
-
-		Listener arguments:
-			* socket : Socket
-	**/
-	var Connection = "connection";
-
-	/**
-		Emitted when the server closes.
-	**/
-	var Close = "close";
-
-	/**
-		Emitted when the server has been bound after calling `Server.listen`.
-	**/
-	var Listening = "listening";
-
-	/**
-		Emitted when an error occurs.
-		The 'close' event will be called directly following this event.
-	**/
-	var Error = "error";
-
-	/**
-		If a client connection emits an 'error' event - it will forwarded here.
-		Listener arguments:
-			exception : Error
-			socket : Socket
-	**/
-	var ClientError = "clientError";
 
 	/**
 		Emitted each time a request with an http Expect: 100-continue is received.
@@ -94,8 +62,19 @@ package js.node.http;
 		meaning you will need to bind to it in order to handle data sent to the server on that socket.
 	**/
 	var Upgrade = "upgrade";
+
+	/**
+		If a client connection emits an 'error' event - it will forwarded here.
+		Listener arguments:
+			exception : Error
+			socket : Socket
+	**/
+	var ClientError = "clientError";
 }
 
+/**
+	HTTP server
+**/
 extern class Server extends js.node.net.Server {
 	/**
 		Limits maximum incoming headers count, equal to 1000 by default.
