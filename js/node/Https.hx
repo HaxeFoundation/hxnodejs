@@ -1,19 +1,20 @@
 package js.node;
 import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
+import js.node.https.Agent;
 import js.node.https.Server;
 
 /**
- * HTTPS is the HTTP protocol over TLS/SSL. In Node this is implemented as a separate module.
- * @author Eduardo Pons - eduardo@thelaborat.org
- */
+	HTTPS is the HTTP protocol over TLS/SSL.
+	In Node this is implemented as a separate module.
+**/
 @:jsRequire("https")
 extern class Https {
 
 	/**
 	 *
 	 */
-	static var globalAgent : HttpsAgent;
+	static var globalAgent : Agent;
 
 	/**
 	 * Returns a new web server object.
@@ -45,25 +46,4 @@ extern class Https {
 	static function get(options : js.node.Http.HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.ClientRequest;
 
 
-}
-
-/**
- * An Agent object for HTTPS similar to http.Agent. See https.request() for more information.
- */
-extern class HttpsAgent {
-
-	/**
-	 * By default set to 5. Determines how many concurrent sockets the agent can have open per origin. Origin is either a 'host:port' or 'host:port:localAddress' combination.
-	 */
-	var maxSockets : Int;
-
-	/**
-	 * An object which contains arrays of sockets currently in use by the Agent. Do not modify.
-	 */
-	var sockets : Array<js.node.net.Socket>;
-
-	/**
-	 * An object which contains queues of requests that have not yet been assigned to sockets. Do not modify.
-	 */
-	var requests : Array<IncomingMessage>;
 }
