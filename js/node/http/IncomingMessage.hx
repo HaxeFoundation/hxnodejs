@@ -4,35 +4,9 @@ import haxe.DynamicAccess;
 import js.node.stream.Readable;
 import js.node.net.Socket;
 
-// TODO: these actually (partially) duplicate ReadableEvent
-@:enum abstract IncomingMessageEvent(String) to String {
-	/**
-		Listener argument:
-			- chunk (Buffer or String) - The chunk of data.
-
-		If you attach a `data` event listener, then it will switch the stream into flowing mode,
-		and data will be passed to your handler as soon as it is available.
-	**/
-	var Data = "data";
-
-	/**
-		Indicates that the underlaying connection was closed.
-		Just like 'end', this event occurs only once per response.
-	**/
-	var Close = "close";
-
-	/**
-		This event fires when there will be no more data to read.
-
-		Note that the end event will not fire unless the data is completely consumed.
-		This can be done by switching into flowing mode, or by calling read() repeatedly until you get to the end.
-	**/
-	var End = "end";
-}
-
 /**
-	An `IncomingMessage` object is created by `Server` or `ClientRequest` and passed as the first
-	argument to the 'request' and 'response' event respectively.
+	An `IncomingMessage` object is created by `Server` or `ClientRequest`
+	and passed as the first argument to the 'request' and 'response' event respectively.
 	It may be used to access response status, headers and data.
 **/
 extern class IncomingMessage extends Readable {
@@ -46,12 +20,12 @@ extern class IncomingMessage extends Readable {
 	/**
 		HTTP Version first integer
 	**/
-	var httpVersionMajor:Int;
+	var httpVersionMajor(default,null):Int;
 
 	/**
 		HTTP Version second integer
 	**/
-	var httpVersionMinor:Int;
+	var httpVersionMinor(default,null):Int;
 
 	/**
 		The request/response headers object.
@@ -93,9 +67,6 @@ extern class IncomingMessage extends Readable {
 
 	/**
 		The `Socket` object associated with the connection.
-
-		With HTTPS support, use `socket.verifyPeer` and `socket.getPeerCertificate`
-		to obtain the client's authentication details. // TODO: we should add these to `js.node.net.Socket` i suppose
 	**/
 	var socket(default,null):Socket;
 
