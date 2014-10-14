@@ -60,8 +60,8 @@ extern class Net {
 
 		The `connectionListener` argument is automatically set as a listener for the 'connection' event.
 	**/
-	@:overload(function(?connectionListener:Socket->Void):Server {})
-	static function createServer(options:SocketOptions, ?connectionListener:Socket->Void):Server;
+	@:overload(function(options:SocketOptions, ?connectionListener:Socket->Void):Server {})
+	static function createServer(?connectionListener:Socket->Void):Server;
 
 	/**
 		A factory method, which returns a new `Socket` and connects to the supplied address and port.
