@@ -20,7 +20,7 @@ Requires latest GIT version of Haxe (builds available at http://builds.haxe.org/
 | child_processes   | done   |                          |
 | cluster           | done   |                          |
 | console           | done   |                          |
-| crypto            | wip    |                          |
+| crypto            | done   |                          |
 | dns               | done   |                          |
 | domain            | wip    |                          |
 | events            | done   |                          |
