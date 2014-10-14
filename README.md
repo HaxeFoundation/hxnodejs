@@ -27,7 +27,7 @@ Requires latest GIT version of Haxe (builds available at http://builds.haxe.org/
 | fs                | done   |                          |
 | Globals           | wip    | see NodeJS class         |
 | http              | done   |                          |
-| https             | wip    |                          |
+| https             | done   |                          |
 | net               | done   |                          |
 | os                | done   |                          |
 | path              | done   |                          |
@@ -38,7 +38,7 @@ Requires latest GIT version of Haxe (builds available at http://builds.haxe.org/
 | repl              | done   |                          |
 | stream            | done   |                          |
 | string_decoder    | done   |                          |
-| tls               | done   |                          |
+| tls               | wip    |                          |
 | tty               | wip    |                          |
 | dgram             | done   |                          |
 | url               | done   |                          |

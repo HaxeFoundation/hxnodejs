@@ -10,6 +10,8 @@ import js.node.tls.CleartextStream;
 import js.node.tls.SecurePair;
 import js.node.tls.Server;
 
+// TODO: clean up these options structures keeping in mind that they are used by https as well
+
 /**
 	Base structure for options object used in tls methods.
 **/
@@ -134,6 +136,8 @@ typedef TlsOptionsPem = {
 	@:optional var ca:Array<EitherType<String,Buffer>>;
 }
 
+typedef TlsServerOptions = EitherType<TlsOptionsPem,TlsOptionsPfx>;
+
 
 typedef TlsConnectOptions = {
 	/**
@@ -254,7 +258,7 @@ extern class Tls {
 		Creates a new `Server`.
 		The `connectionListener` argument is automatically set as a listener for the 'secureConnection' event.
 	**/
-	static function createServer(options:EitherType<TlsOptionsPem,TlsOptionsPfx>, ?secureConnectionListener:CleartextStream->Void):Server;
+	static function createServer(options:TlsServerOptions, ?secureConnectionListener:CleartextStream->Void):Server;
 
 	/**
 		Creates a new client connection to the given `port` and `host` (old API) or `options.port` and `options.host`.

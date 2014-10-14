@@ -1,8 +1,16 @@
 package js.node;
+
 import js.node.http.IncomingMessage;
+import js.node.http.ClientRequest;
 import js.node.http.ServerResponse;
-import js.node.https.Agent;
-import js.node.https.Server;
+import js.node.https.*;
+import js.node.Tls.TlsServerOptions;
+import js.node.Tls.TlsConnectOptions;
+
+typedef HttpsRequestOptions = {
+	>js.node.Http.HttpRequestOptions,
+	>TlsConnectOptions, // TODO: clean those options up
+}
 
 /**
 	HTTPS is the HTTP protocol over TLS/SSL.
@@ -12,38 +20,30 @@ import js.node.https.Server;
 extern class Https {
 
 	/**
-	 *
-	 */
-	static var globalAgent : Agent;
+		Global instance of `Agent` for all HTTPS client requests.
+	**/
+	static var globalAgent:Agent;
 
 	/**
-	 * Returns a new web server object.
-	 * The requestListener is a function which is automatically added to the 'request' event.
-	 * @param	listener
-	 * @return
-	 */
-	@:overload(function():js.node.http.Server { } )
-	static function createServer(listener : js.node.http.IncomingMessage -> js.node.http.ServerResponse -> Void):Server;
+		Returns a new HTTPS web server object.
+		The options is similar to `Tls.createServer`.
+		The `requestListener` is a function which is automatically added to the 'request' event.
+	**/
+	static function createServer(options:TlsServerOptions, ?listener:IncomingMessage->ServerResponse->Void):Server;
 
 	/**
-	 * Node maintains several connections per server to make HTTP requests. This function allows one to transparently issue requests.
-	 * @param	options
-	 * @param	callback
-	 */
-	@:overload(function(options:String, callback : ServerResponse -> Void):js.node.http.ClientRequest { } )
-	@:overload(function(options:String):js.node.http.ClientRequest{})
-	@:overload(function(options:js.node.Http.HttpRequestOptions):js.node.http.ClientRequest{})
-	static function request(options : js.node.Http.HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.ClientRequest;
+		Makes a request to a secure web server.
+
+		`options` can be an object or a string. If `options` is a string, it is automatically parsed with `Url.parse`.
+
+		All options from `Http.request` are valid.
+	**/
+	@:overload(function(options:String, ?callback:IncomingMessage->Void):ClientRequest {})
+	static function request(options:HttpsRequestOptions, ?callback:IncomingMessage->Void):ClientRequest;
 
 	/**
-	 * Since most requests are GET requests without bodies, Node provides this convenience method. The only difference between this method and http.request() is that it sets the method to GET and calls req.end() automatically.
-	 * @param	options
-	 * @param	callback
-	 */
-	@:overload(function(options:String, callback : ServerResponse -> Void):js.node.http.ClientRequest { } )
-	@:overload(function(options:String):js.node.http.ClientRequest{})
-	@:overload(function (options : js.node.Http.HttpRequestOptions):js.node.http.ClientRequest{})
-	static function get(options : js.node.Http.HttpRequestOptions, callback : ServerResponse -> Void):js.node.http.ClientRequest;
-
-
+		Like `Http.get` but for HTTPS.
+	**/
+	@:overload(function(options:String, ?callback:IncomingMessage->Void):ClientRequest {})
+	static function get(options:HttpsRequestOptions, ?callback:IncomingMessage->Void):ClientRequest;
 }
