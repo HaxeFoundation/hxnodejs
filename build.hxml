@@ -3,3 +3,5 @@
 --each
 --next
 --macro ImportAll.run("js")
+--next
+--macro BuildExamples.run()
