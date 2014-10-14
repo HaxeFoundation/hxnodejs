@@ -44,4 +44,4 @@ Requires latest GIT version of Haxe (builds available at http://builds.haxe.org/
 | url               | done   |                          |
 | util              | done   |                          |
 | vm                | done   |                          |
-| zlib              | wip    |                          |
+| zlib              | done   |                          |

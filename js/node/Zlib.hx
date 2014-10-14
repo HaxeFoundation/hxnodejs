@@ -1,6 +1,8 @@
 package js.node;
 
+import js.Error;
 import js.node.Buffer;
+import js.node.zlib.*;
 
 typedef ZlibOptions = {
 	/**
@@ -103,50 +105,81 @@ extern class Zlib {
 	**/
 	static var Z_NULL(default,null):Int;
 
-	static var createGzip			: Dynamic;//	([options])
-	static var createGunzip			: Dynamic;//	([options])
-	static var createDeflate		: Dynamic;//	([options])
-	static var createInflate		: Dynamic;//	([options])
-	static var createDeflateRaw		: Dynamic;//	([options])
-	static var createInflateRaw		: Dynamic;//	([options])
-	static var createUnzip			: Dynamic;//	([options])
-
-
-	static var deflate			: Dynamic;//	(buf, callback)
-	static var deflateRaw		: Dynamic;//	(buf, callback)
-	static var gzip				: Dynamic;//	(buf, callback)
-	static var gunzip			: Dynamic;//	(buf, callback)
-	static var inflate			: Dynamic;//	(buf, callback)
-	static var inflateRaw		: Dynamic;//	(buf, callback)
-	static var unzip			: Dynamic;//	(buf, callback)
-
-
-}
-
-
-/**
- * Not exported by the zlib module. It is documented here because it is the base class of the compressor/decompressor classes.
- */
-extern class BaseZLib
-{
-	/**
-	 * Flush pending data. Don't call this frivolously, premature flushes negatively impact the effectiveness of the compression algorithm.
-	 * @param	callback
-	 */
-	function flush(callback:Dynamic):Void;
 
 	/**
-	 * Reset the compressor/decompressor to factory defaults. Only applicable to the inflate and deflate algorithms.
-	 */
-	function reset():Void;
+		Returns a new `Gzip` object with an `options`.
+	**/
+	static function createGzip(?options:ZlibOptions):Gzip;
+
+	/**
+		Returns a new `Gunzip` object with an `options`.
+	**/
+	static function createGunzip(?options:ZlibOptions):Gunzip;
+
+	/**
+		Returns a new `Deflate` object with an `options`.
+	**/
+	static function createDeflate(?options:ZlibOptions):Deflate;
+
+	/**
+		Returns a new `Inflate` object with an `options`.
+	**/
+	static function createInflate(?options:ZlibOptions):Inflate;
+
+	/**
+		Returns a new `DeflateRaw` object with an `options`.
+	**/
+	static function createDeflateRaw(?options:ZlibOptions):DeflateRaw;
+
+	/**
+		Returns a new `InflateRaw` object with an `options`.
+	**/
+	static function createInflateRaw(?options:ZlibOptions):InflateRaw;
+
+	/**
+		Returns a new `Unzip` object with an `options`.
+	**/
+	static function createUnzip(?options:ZlibOptions):Unzip;
+
+	/**
+		Compress a string with `Deflate`.
+	**/
+	@:overload(function(buf:Buffer, callback:Error->Buffer->Void):Void {})
+	static function deflate(buf:String, callback:Error->Buffer->Void):Void;
+
+	/**
+		Compress a string with `DeflateRaw`.
+	**/
+	@:overload(function(buf:Buffer, callback:Error->Buffer->Void):Void {})
+	static function deflateRaw(buf:String, callback:Error->Buffer->Void):Void;
+
+	/**
+		Compress a string with `Gzip`.
+	**/
+	@:overload(function(buf:Buffer, callback:Error->Buffer->Void):Void {})
+	static function gzip(buf:String, callback:Error->Buffer->Void):Void;
+
+	/**
+		Decompress a raw Buffer with `Gunzip`.
+	**/
+	@:overload(function(buf:Buffer, callback:Error->Buffer->Void):Void {})
+	static function gunzip(buf:String, callback:Error->Buffer->Void):Void;
+
+	/**
+		Decompress a raw Buffer with `Inflate`.
+	**/
+	@:overload(function(buf:Buffer, callback:Error->Buffer->Void):Void {})
+	static function inflate(buf:String, callback:Error->Buffer->Void):Void;
+
+	/**
+		Decompress a raw Buffer with `InflateRaw`.
+	**/
+	@:overload(function(buf:Buffer, callback:Error->Buffer->Void):Void {})
+	static function inflateRaw(buf:String, callback:Error->Buffer->Void):Void;
+
+	/**
+		Decompress a raw Buffer with `Unzip`.
+	**/
+	@:overload(function(buf:Buffer, callback:Error->Buffer->Void):Void {})
+	static function unzip(buf:String, callback:Error->Buffer->Void):Void;
 }
-
-
-@:native("(require('zlib')).GZip") 			extern class Gzip extends BaseZLib { }
-@:native("(require('zlib')).Gunzip") 		extern class Gunzip extends BaseZLib { }
-@:native("(require('zlib')).Deflate") 		extern class Deflate extends BaseZLib { }
-@:native("(require('zlib')).Inflate") 		extern class Inflate extends BaseZLib { }
-@:native("(require('zlib')).DeflateRaw") 	extern class DeflateRaw extends BaseZLib { }
-@:native("(require('zlib')).InflateRaw") 	extern class InflateRaw extends BaseZLib { }
-@:native("(require('zlib')).Unzip") 		extern class Unzip extends BaseZLib { }
-
