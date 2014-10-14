@@ -79,7 +79,8 @@ extern class Duplex extends EventEmitter implements IWritable implements IReadab
 		If the destination is not specified, then all pipes are removed.
 		If the destination is specified, but no pipe is set up for it, then this is a no-op.
 	**/
-	function unpipe(?destination:IWritable):Void;
+	@:overload(function():Void {})
+	function unpipe(destination:IWritable):Void;
 
 	/**
 		This is useful in certain cases where a stream is being consumed by a parser,
