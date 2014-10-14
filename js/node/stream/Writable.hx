@@ -82,6 +82,7 @@ extern class Writable extends EventEmitter implements IWritable {
 	**/
 	@:overload(function(?callback:Void->Void):Void {})
 	@:overload(function(chunk:Buffer, ?callback:Void->Void):Void {})
+	@:overload(function(chunk:String, ?callback:Void->Void):Void {})
 	function end(chunk:String, encoding:String, ?callback:Void->Void):Void; // TODO: string without encoding works?
 }
 
@@ -95,6 +96,7 @@ extern interface IWritable extends IEventEmitter {
 	@:overload(function(chunk:Buffer, ?callback:Void->Void):Bool {})
 	@:overload(function(chunk:String, ?callback:Void->Void):Bool {})
 	function write(chunk:String, encoding:String, ?callback:Void->Void):Bool;
+
 	@:overload(function(?callback:Void->Void):Void {})
 	@:overload(function(chunk:Buffer, ?callback:Void->Void):Void {})
 	@:overload(function(chunk:String, ?callback:Void->Void):Void {})
