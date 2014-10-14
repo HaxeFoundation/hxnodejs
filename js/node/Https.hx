@@ -1,7 +1,7 @@
 package js.node;
 import js.node.http.IncomingMessage;
-import js.node.http.HttpsServer;
 import js.node.http.ServerResponse;
+import js.node.https.Server;
 
 /**
  * HTTPS is the HTTP protocol over TLS/SSL. In Node this is implemented as a separate module.
@@ -21,8 +21,8 @@ extern class Https {
 	 * @param	listener
 	 * @return
 	 */
-	@:overload(function():js.node.http.HttpsServer { } )
-	static function createServer(listener : js.node.http.IncomingMessage -> js.node.http.ServerResponse -> Void):HttpsServer;
+	@:overload(function():js.node.http.Server { } )
+	static function createServer(listener : js.node.http.IncomingMessage -> js.node.http.ServerResponse -> Void):Server;
 
 	/**
 	 * Node maintains several connections per server to make HTTP requests. This function allows one to transparently issue requests.
