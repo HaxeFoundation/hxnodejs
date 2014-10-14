@@ -26,7 +26,7 @@ Requires latest GIT version of Haxe (builds available at http://builds.haxe.org/
 | events            | done   |                          |
 | fs                | done   |                          |
 | Globals           | wip    | see NodeJS class         |
-| http              | wip    |                          |
+| http              | done   |                          |
 | https             | wip    |                          |
 | net               | done   |                          |
 | os                | done   |                          |
