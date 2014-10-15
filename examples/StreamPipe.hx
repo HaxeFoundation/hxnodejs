@@ -1,6 +1,9 @@
 import js.node.Fs;
 import js.node.Zlib;
 
+/**
+    Pipe chaining example from the streams page
+**/
 class StreamPipe {
     static function main() {
         var r = Fs.createReadStream('file.txt');

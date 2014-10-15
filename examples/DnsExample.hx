@@ -1,6 +1,9 @@
 import js.node.Dns;
 import js.node.NodeJS.console;
 
+/**
+    An example from the dns page
+**/
 class DnsExample {
     static function main() {
         Dns.resolve4('www.google.com', function (err, addresses) {
