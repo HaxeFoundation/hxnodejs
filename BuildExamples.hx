@@ -13,6 +13,7 @@ class BuildExamples {
                     "-js", '$main.js',
                     "-D", "js-es5",
                     "-D", "js-flatten",
+                    "-dce", "full",
                 ]);
             }
         }
