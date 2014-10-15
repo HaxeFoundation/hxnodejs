@@ -30,7 +30,7 @@ extern class NodeJS {
 	/**
 		Fetches a library and returns the reference to it.
 	**/
-	public static inline function require(module:String):Dynamic return js.Lib.require(module);
+	static inline function require(module:String):Dynamic return js.Lib.require(module);
 
 	/**
 		Use the internal `require` machinery to look up the location of a module,
