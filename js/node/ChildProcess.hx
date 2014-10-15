@@ -200,7 +200,7 @@ typedef ChildProcessForkOptions = {
 }
 
 @:jsRequire("child_process") // TODO move ChildProcess (the class) to a package to comply with general guidelines?
-extern class ChildProcess extends EventEmitter {
+extern class ChildProcess extends EventEmitter<ChildProcess> {
 
 	/**
 		Launches a new process with the given `command`, with command line arguments in `args`.

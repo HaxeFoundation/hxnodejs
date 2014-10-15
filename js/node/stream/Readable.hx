@@ -74,7 +74,7 @@ import js.node.stream.Writable.IWritable;
 		- process.stdin
 **/
 @:jsRequire("stream", "Readable")
-extern class Readable extends EventEmitter implements IReadable {
+extern class Readable extends EventEmitter<Readable> implements IReadable {
 
 	/**
 		The `read` method pulls some data out of the internal buffer and returns it.

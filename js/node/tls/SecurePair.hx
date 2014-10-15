@@ -15,7 +15,7 @@ package js.node.tls;
 /**
 	Returned by `Tls.createSecurePair`.
 **/
-extern class SecurePair extends js.node.events.EventEmitter {
+extern class SecurePair extends js.node.events.EventEmitter<SecurePair> {
 	var cleartext:CleartextStream;
 	var encrypted:EncryptedStream;
 }

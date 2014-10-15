@@ -70,7 +70,7 @@ import js.node.events.EventEmitter;
 /**
 	The class that represents a readline interface with an input and output stream.
 **/
-extern class Interface extends EventEmitter {
+extern class Interface extends EventEmitter<Interface> {
 	/**
 		Sets the prompt, for example when you run node on the command line, you see > , which is node's prompt.
 	**/

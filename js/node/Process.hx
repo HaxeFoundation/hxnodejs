@@ -27,7 +27,7 @@ import js.node.stream.Writable;
 	var UncaughtException = "uncaughtException";
 }
 
-extern class Process extends EventEmitter {
+extern class Process extends EventEmitter<Process> {
 
 	/**
 		A Writable Stream to stdout.

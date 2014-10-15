@@ -62,7 +62,7 @@ typedef RemoteInfo = {
 /**
 	Encapsulates the datagram functionality. It should be created via `Dgram.createSocket`.
 **/
-extern class Socket extends EventEmitter {
+extern class Socket extends EventEmitter<Socket> {
 	/**
 		The destination `port` and `address` must be specified.
 		A string may be supplied for the `address` parameter, and it will be resolved with DNS.

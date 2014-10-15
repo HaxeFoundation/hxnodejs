@@ -29,7 +29,7 @@ extern class Repl {
 	/**
 		Returns and starts a REPLServer instance.
 	**/
-	static function start(options:ReplOptions):EventEmitter; // TODO: REPLServer extern?
+	static function start(options:ReplOptions):IEventEmitter; // TODO: REPLServer extern?
 }
 
 typedef ReplOptions = {

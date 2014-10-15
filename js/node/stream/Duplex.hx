@@ -16,7 +16,7 @@ import js.node.stream.Readable;
 		- crypto streams
 **/
 @:jsRequire("stream", "Duplex")
-extern class Duplex extends EventEmitter implements IWritable implements IReadable
+extern class Duplex extends EventEmitter<Duplex> implements IWritable implements IReadable
 {
 	// --------- Readable ---------
 

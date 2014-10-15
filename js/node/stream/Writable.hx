@@ -58,7 +58,7 @@ import js.node.events.EventEmitter;
 		- process.stdout, process.stderr
 **/
 @:jsRequire("stream", "Writable")
-extern class Writable extends EventEmitter implements IWritable {
+extern class Writable extends EventEmitter<Writable> implements IWritable {
 	/**
 		This method writes some data to the underlying system,
 		and calls the supplied callback once the data has been fully handled.

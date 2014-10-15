@@ -101,7 +101,7 @@ typedef ListeningEventAddress = {
 	Also note that, on Windows, it is not yet possible to set up a named pipe server in a worker.
 **/
 @:jsRequire("cluster")
-extern class Cluster extends EventEmitter
+extern class Cluster extends EventEmitter<Cluster>
 {
 	/**
 		A reference to the `Cluster` object returned by node.js module.

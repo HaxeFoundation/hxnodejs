@@ -10,19 +10,19 @@ extern class DomainError extends Error
 	/**
 	 * The domain that first handled the error.
 	 */
-	var domain 			: Domain;			
+	var domain 			: Domain;
 	/**
 	 * The event emitter that emitted an 'error' event with the error object.
 	 */
-	var domainEmitter 	: EventEmitter;		
+	var domainEmitter 	: IEventEmitter;
 	/**
 	 * The callback function which was bound to the domain, and passed an error as its first argument.
-	 */	
-	var domainBound 	: Dynamic; 			
+	 */
+	var domainBound 	: Dynamic;
 	/**
 	 * A boolean indicating whether the error was thrown, emitted, or passed to a bound callback function.
 	 */
-	var domainThrown 	: Bool; 			
+	var domainThrown 	: Bool;
 }
 
 /**
@@ -31,14 +31,14 @@ extern class DomainError extends Error
  * rather than losing the context of the error in the process.on('uncaughtException') handler, or causing the program to exit immediately with an error code.
  * @author Eduardo Pons - eduardo@thelaborat.org
  */
-extern class Domain extends EventEmitter
+extern class Domain extends EventEmitter<Domain>
 {
 	var members	    :Dynamic;
-	var run			:Dynamic;	//(fn)	
+	var run			:Dynamic;	//(fn)
 	var add			:Dynamic;	//(emitter)
 	var remove		:Dynamic;	//(emitter)
-	var bind		:Dynamic;	//(callback)	
-	var intercept	:Dynamic;	//(callback)	
+	var bind		:Dynamic;	//(callback)
+	var intercept	:Dynamic;	//(callback)
 	var enter		:Dynamic;	//()
 	var exit		:Dynamic;	//()
 	var dispose		:Dynamic;	//()

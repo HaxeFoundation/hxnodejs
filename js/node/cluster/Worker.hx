@@ -19,7 +19,7 @@ import js.node.events.EventEmitter;
 	In the master it can be obtained using `Cluster.workers`.
 	In a worker it can be obtained using `Cluster.worker`.
 **/
-extern class Worker extends EventEmitter {
+extern class Worker extends EventEmitter<Worker> {
 	/**
 		Each new worker is given its own unique id, this id is stored in the `id`.
 

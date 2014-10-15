@@ -38,7 +38,7 @@ import js.node.net.Socket.NetworkAdress;
 /**
 	This class is used to create a TCP or UNIX server.
 **/
-extern class Server extends EventEmitter {
+extern class Server extends EventEmitter<Server> {
 	/**
 		Begin accepting connections on the specified `port` and `host`.
 		If the `host` is omitted, the server will accept connections directed to any IPv4 address (INADDR_ANY).
