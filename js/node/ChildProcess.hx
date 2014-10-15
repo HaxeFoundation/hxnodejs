@@ -259,7 +259,7 @@ extern class ChildProcess extends EventEmitter<ChildProcess> {
 
 		If the child stdio streams are shared with the parent, then this will not be set.
 	**/
-	var stdin(default,null):Writable;
+	var stdin(default,null):IWritable;
 
 	/**
 		A Readable Stream that represents the child process's stdout.

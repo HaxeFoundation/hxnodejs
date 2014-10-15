@@ -13,7 +13,7 @@ import js.node.stream.Writable;
 
 	The legacy `update` method is also supported.
 **/
-extern class Sign extends Writable {
+extern class Sign extends Writable<Sign> {
 
 	/**
 		Updates the sign object with data.

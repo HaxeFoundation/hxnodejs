@@ -74,7 +74,7 @@ import js.node.stream.Writable;
 
 	Note: Node does not check whether 'Content-Length' and the length of the body which has been transmitted are equal or not.
 **/
-extern class ClientRequest extends Writable {
+extern class ClientRequest extends Writable<ClientRequest> {
 
 	/**
 		Get header value

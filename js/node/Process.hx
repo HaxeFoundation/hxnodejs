@@ -34,14 +34,14 @@ extern class Process extends EventEmitter<Process> {
 
 		`stderr` and `stdout` are unlike other streams in Node in that writes to them are usually blocking.
 	**/
-	var stdout:Writable;
+	var stdout:IWritable;
 
 	/**
 		A writable stream to stderr.
 
 		`stderr` and `stdout` are unlike other streams in Node in that writes to them are usually blocking.
 	**/
-	var stderr:Writable;
+	var stderr:IWritable;
 
 	/**
 		A Readable Stream for stdin.

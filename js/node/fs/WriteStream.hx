@@ -13,5 +13,5 @@ package js.node.fs;
 /**
     Writable file stream.
 **/
-extern class WriteStream extends js.node.stream.Writable {
+extern class WriteStream extends js.node.stream.Writable<WriteStream> {
 }

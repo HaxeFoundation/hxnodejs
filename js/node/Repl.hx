@@ -49,7 +49,7 @@ typedef ReplOptions = {
 		the writable stream to write readline data to.
 		Defaults to `Process.stdout`.
 	**/
-	@:optional var output:Writable;
+	@:optional var output:IWritable;
 
 	/**
 		pass `true` if the stream should be treated like a TTY, and have ANSI/VT100 escape codes written to it.

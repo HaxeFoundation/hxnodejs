@@ -39,7 +39,7 @@ import haxe.DynamicAccess;
 	This object is created internally by a HTTP server--not by the user.
 	It is passed as the second parameter to the 'request' event.
 **/
-extern class ServerResponse extends js.node.stream.Writable {
+extern class ServerResponse extends js.node.stream.Writable<ServerResponse> {
 
 	/**
 		Sends a HTTP/1.1 100 Continue message to the client, indicating that the request body should be sent.
