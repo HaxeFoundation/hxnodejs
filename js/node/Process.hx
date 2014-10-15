@@ -46,7 +46,7 @@ extern class Process extends EventEmitter<Process> {
 	/**
 		A Readable Stream for stdin.
 	**/
-	var stdin:Readable;
+	var stdin:IReadable;
 
 	/**
 		An array containing the command line arguments.

@@ -43,7 +43,7 @@ typedef ReplOptions = {
 		the readable stream to listen to.
 		Defaults to `Process.stdin`.
 	**/
-	@:optional var input:Readable;
+	@:optional var input:IReadable;
 
 	/**
 		the writable stream to write readline data to.

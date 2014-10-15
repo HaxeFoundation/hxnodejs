@@ -97,7 +97,7 @@ extern class Duplex extends EventEmitter<Duplex> implements IWritable implements
 		If you are using an older Node library that emits `data` events and has a `pause()` method that is advisory only,
 		then you can use the `wrap()` method to create a `Readable` stream that uses the old stream as its data source.
 	**/
-	function wrap(stream:Dynamic):Readable;
+	function wrap(stream:Dynamic):IReadable;
 
 
 	// --------- Writable ---------

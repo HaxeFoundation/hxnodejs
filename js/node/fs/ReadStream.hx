@@ -13,5 +13,5 @@ package js.node.fs;
 /**
     Readable file stream.
 **/
-extern class ReadStream extends js.node.stream.Readable {
+extern class ReadStream extends js.node.stream.Readable<ReadStream> {
 }

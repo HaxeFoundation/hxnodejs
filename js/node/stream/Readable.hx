@@ -74,7 +74,7 @@ import js.node.stream.Writable.IWritable;
 		- process.stdin
 **/
 @:jsRequire("stream", "Readable")
-extern class Readable extends EventEmitter<Readable> implements IReadable {
+extern class Readable<TSelf:Readable<TSelf>> extends EventEmitter<TSelf> implements IReadable {
 
 	/**
 		The `read` method pulls some data out of the internal buffer and returns it.
@@ -166,12 +166,13 @@ extern class Readable extends EventEmitter<Readable> implements IReadable {
 		If you are using an older Node library that emits 'data' events and has a 'pause' method that is advisory only,
 		then you can use the `wrap` method to create a `Readable` stream that uses the old stream as its data source.
 	**/
-	function wrap(stream:Dynamic):Readable;
+	function wrap(stream:Dynamic):IReadable;
 }
 
 
 /**
-    Readable interface used for type parameter constraints.
+    `IReadable` interface is used as "any Readable".
+
     See `Readable` for actual class documentation.
 **/
 @:remove

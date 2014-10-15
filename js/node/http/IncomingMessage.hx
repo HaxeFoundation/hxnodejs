@@ -9,7 +9,7 @@ import js.node.net.Socket;
 	and passed as the first argument to the 'request' and 'response' event respectively.
 	It may be used to access response status, headers and data.
 **/
-extern class IncomingMessage extends Readable {
+extern class IncomingMessage extends Readable<IncomingMessage> {
 	/**
 		In case of server request, the HTTP version sent by the client.
 		In the case of client response, the HTTP version of the connected-to server.
