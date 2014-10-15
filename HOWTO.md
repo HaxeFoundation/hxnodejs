@@ -90,6 +90,10 @@ TODO (describe the idea of maximum typing while keeping sanity)
 
 TODO (describe how to deal with multiple inheritance using interfaces, as we do with IReadable/IWritable streams, mention `@:remove` metadata for interfaces).
 
+### Chaining methods
+
+TODO (describe how to use type parameters + interface to properly type chaining methods)
+
 ### Object structures
 
 When a function takes/returns an object with predefined fields (e.g. options argument in many node.js methods), [anonymous structures](http://haxe.org/manual/types-anonymous-structure.html) are used along with `typedef`s.
@@ -162,14 +166,14 @@ Note that combined with `haxe.EitherType` (described above), `@:enum abstract`s 
 
 ## API Documenting
 
-We use API documentation style found in Haxe standard library and copy upstream API documentation text to externs (applying some minor editing/reformatting to it). 
+We use API documentation style found in Haxe standard library and copy upstream API documentation text to externs (applying some minor editing/reformatting to it).
 
 Example of Haxe standard library style:
 
 ```haxe
 /**
 	Does that and returns this.
-	
+
 	Some more info about using argument `a` and `b`.
 **/
 static function doStuff(a:Int, b:String):Void;
@@ -190,7 +194,7 @@ extern class DeprecatedClass {
 extern class NotSoDeprecated {
 	@:deprecated("use otherMethod instead") // custom warning message
 	function deprecatedMethod():Void;
-	
+
 	function otherMethod():Void;
 }
 ```
