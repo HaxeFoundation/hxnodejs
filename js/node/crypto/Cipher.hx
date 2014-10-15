@@ -12,7 +12,7 @@ import js.node.Buffer;
 
 	The legacy `update` and `final` methods are also supported.
 **/
-extern class Cipher extends js.node.stream.Transform {
+extern class Cipher extends js.node.stream.Transform<Cipher> {
 
 	/**
 		Updates the cipher with `data`, the encoding of which is given in `input_encoding`

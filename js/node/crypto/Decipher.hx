@@ -12,7 +12,7 @@ import js.node.Buffer;
 
 	The legacy `update` and `final` methods are also supported.
 **/
-extern class Decipher extends js.node.stream.Transform {
+extern class Decipher extends js.node.stream.Transform<Decipher> {
 
 	/**
 		Updates the decipher with `data`, which is encoded in 'binary', 'base64' or 'hex'.

@@ -111,7 +111,7 @@ typedef NetworkAdress = {
 }
 
 @:jsRequire("net", "Socket")
-extern class Socket extends js.node.stream.Duplex {
+extern class Socket extends js.node.stream.Duplex<Socket> {
     /**
         Construct a new socket object.
     **/

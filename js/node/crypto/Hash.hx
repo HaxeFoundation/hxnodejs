@@ -13,7 +13,7 @@ import js.node.Buffer;
 
 	Returned by `Crypto.createHash`.
 **/
-extern class Hash extends js.node.stream.Transform {
+extern class Hash extends js.node.stream.Transform<Hash> {
 	/**
 		Updates the hash content with the given `data`,
 

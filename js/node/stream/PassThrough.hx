@@ -6,4 +6,4 @@ package js.node.stream;
     as a building block for novel sorts of streams.
 **/
 @:jsRequire("stream", "PassThrough")
-extern class PassThrough extends Transform {}
+extern class PassThrough extends Transform<PassThrough> {}

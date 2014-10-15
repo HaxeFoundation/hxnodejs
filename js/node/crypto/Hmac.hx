@@ -12,7 +12,7 @@ import js.node.Buffer;
 
 	Returned by `Crypto.createHmac`.
 **/
-extern class Hmac extends js.node.stream.Transform {
+extern class Hmac extends js.node.stream.Transform<Hmac> {
 	/**
 		Update the hmac content with the given data.
 

@@ -10,4 +10,4 @@ package js.node.stream;
 		- crypto streams
 **/
 @:jsRequire("stream", "Transform")
-extern class Transform extends Duplex {}
+extern class Transform<TSelf:Transform<TSelf>> extends Duplex<TSelf> {}
