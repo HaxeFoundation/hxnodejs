@@ -22,7 +22,8 @@ extern class NodeJS {
 	/**
 		Used to print to stdout and stderr.
 	**/
-	static var console(default,null):Console; // TODO: avoid global.console lookup?
+	static var console(get,never):Console;
+	private static inline function get_console():Console return untyped __js__("console");
 
 
 	// TODO: handle this better way
