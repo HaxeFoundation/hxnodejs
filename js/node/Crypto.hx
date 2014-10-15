@@ -84,9 +84,8 @@ extern class Crypto {
 		that expected 'binary' to be the default encoding.
 
 		Note that new programs will probably expect buffers, so only use this as a temporary measure.
-
-		TODO: add @:deprecated meta here and to other deprecated things?
 	**/
+	@:deprecated
 	static var DEFAULT_ENCODING:String;
 
 	/**
