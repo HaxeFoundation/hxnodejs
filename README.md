@@ -22,7 +22,7 @@ Requires latest GIT version of Haxe (builds available at http://builds.haxe.org/
 | console           | done   |                          |
 | crypto            | done   |                          |
 | dns               | done   |                          |
-| domain            | wip    |                          |
+| domain            | done   |                          |
 | events            | done   |                          |
 | fs                | done   |                          |
 | Globals           | wip    | see NodeJS class         |
