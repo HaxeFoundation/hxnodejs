@@ -5,28 +5,28 @@ import haxe.Constraints.Function;
 /**
 	Enumeration of events emitted by all `EventEmitter` instances.
 **/
-@:enum abstract EventEmitterEvent(String) to String {
+@:enum abstract EventEmitterEvent<T:Function>(Event<T>) to Event<T> {
 	/**
 		This event is emitted any time someone adds a new listener.
 
 		Listener arguments:
-			event : String - The event name
-			listener : Function - The event handler function
+			event - The event name
+			listener - The event handler function
 
 		It is unspecified if listener is in the list returned by emitter.listeners(event).
 	**/
-	var NewListener = "newListener";
+	var NewListener : EventEmitterEvent<String->Function->Void> = "newListener";
 
 	/**
 		This event is emitted any time someone removes a listener.
 
 		Listener arguments:
-			event:String - The event name
-			listener:Function - The event handler function
+			event - The event name
+			listener - The event handler function
 
 		It is unspecified if listener is in the list returned by emitter.listeners(event).
 	**/
-	var RemoveListener = "removeListener";
+	var RemoveListener : EventEmitterEvent<String->Function->Void> = "removeListener";
 }
 
 /**
