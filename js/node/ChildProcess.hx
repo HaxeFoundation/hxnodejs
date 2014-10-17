@@ -5,29 +5,26 @@ import js.node.events.EventEmitter;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
 
-@:enum abstract ChildProcessEvent(String) to String  {
+@:enum abstract ChildProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T>  {
 	/**
 		Emitted when:
 			1. The process could not be spawned, or
 			2. The process could not be killed, or
 			3. Sending a message to the child process failed for whatever reason.
 
-		Listener arguments:
-			* err:Error - the error
-
 		Note that the exit-event may or may not fire after an error has occured.
 		If you are listening on both events to fire a function, remember to guard against calling your function twice.
 
 		See also `ChildProcess.kill` and `ChildProcess.send`.
 	**/
-	var Error = "error";
+	var Error : ChildProcessEvent<js.Error->Void> = "error";
 
 	/**
 		This event is emitted after the child process ends.
 
 		Listener arguments:
-			* code:Int - the exit code, if it exited normally.
-			* signal:String - the signal passed to kill the child process, if it was killed by the parent.
+			code - the exit code, if it exited normally.
+			signal - the signal passed to kill the child process, if it was killed by the parent.
 
 		If the process terminated normally, `code` is the final exit code of the process, otherwise null.
 		If the process terminated due to receipt of a signal, `signal` is the string name of the signal, otherwise null.
@@ -38,32 +35,32 @@ import js.node.stream.Writable;
 		so it will not terminate due to receipt of those signals, it will exit.
 		See waitpid(2).
 	**/
-	var Exit = "exit";
+	var Exit : ChildProcessEvent<Int->String->Void> = "exit";
 
 	/**
 		This event is emitted when the stdio streams of a child process have all terminated.
 		This is distinct from `Exit`, since multiple processes might share the same stdio streams.
 
 		Listener arguments:
-			* code:Int - the exit code, if it exited normally.
-			* signal:String - the signal passed to kill the child process, if it was killed by the parent.
+			code - the exit code, if it exited normally.
+			signal - the signal passed to kill the child process, if it was killed by the parent.
 	**/
-	var Close = "close";
+	var Close : ChildProcessEvent<Int->String->Void> = "close";
 
 	/**
 		This event is emitted after calling the `disconnect` method in the parent or in the child.
 		After disconnecting it is no longer possible to send messages, and the `connected` property is false.
 	**/
-	var Disconnect = "disconnect";
+	var Disconnect : ChildProcessEvent<Void->Void> = "disconnect";
 
 	/**
 		Messages send by `send` are obtained using the message event.
 
 		Listener arguments:
-			* message:Dynamic - a parsed JSON object or primitive value
-			* sendHandle:Dynamic - a Socket or Server object
+			message - a parsed JSON object or primitive value
+			sendHandle - a Socket or Server object
 	**/
-	var Message = "message";
+	var Message : ChildProcessEvent<Dynamic->Dynamic->Void> = "message";
 }
 
 /**
