@@ -1,13 +1,15 @@
 package js.node.net;
 
+import js.node.events.EventEmitter.Event;
+
 /**
     Enumeration of events for `Socket` objects.
 **/
-@:enum abstract SocketEvent(String) to String {
+@:enum abstract SocketEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
     /**
         Emitted when a socket connection is successfully established. See `Socket.connect`.
     **/
-    var Connect = "connect";
+    var Connect : SocketEvent<Void->Void> = "connect";
 
     /**
         Emitted when data is received.
@@ -15,11 +17,8 @@ package js.node.net;
         Encoding of data is set by `Socket.setEncoding`.
 
         Note that the data will be lost if there is no listener when a Socket emits a 'data' event.
-
-        Listener arguments:
-            chunk : Buffer or String - received data
     **/
-    var Data = "data";
+    var Data : SocketEvent<haxe.EitherType<Buffer,String>->Void> = "data";
 
     /**
         Emitted when the other end of the socket sends a FIN packet.
@@ -29,7 +28,7 @@ package js.node.net;
         the socket will not automatically `end` its side allowing the user to write arbitrary amounts of data,
         with the caveat that the user is required to `end` their side now.
     **/
-    var End = "end";
+    var End : SocketEvent<Void->Void> = "end";
 
     /**
         Emitted if the socket times out from inactivity.
@@ -37,30 +36,27 @@ package js.node.net;
         The user must manually close the connection.
         See also: `Socket.setTimeout`
     **/
-    var Timeout = "timeout";
+    var Timeout : SocketEvent<Void->Void> = "timeout";
 
     /**
         Emitted when the write buffer becomes empty. Can be used to throttle uploads.
         See also: the return values of `Socket.write`
     **/
-    var Drain = "drain";
+    var Drain : SocketEvent<Void->Void> = "drain";
 
     /**
         Emitted when an error occurs. The 'close' event will be called directly following this event.
-
-        Listener arguments:
-            error - Error object
     **/
-    var Error = "error";
+    var Error : SocketEvent<js.Error->Void> = "error";
 
     /**
         Emitted once the socket is fully closed.
         The argument `had_error` is a boolean which says if the socket was closed due to a transmission error.
 
         Listener arguments:
-            had_error : Bool - true if the socket had a transmission error
+            had_error - true if the socket had a transmission error
     **/
-    var Close = "close";
+    var Close : SocketEvent<Bool->Void> = "close";
 }
 
 /**

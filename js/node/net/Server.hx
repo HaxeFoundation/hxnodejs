@@ -7,32 +7,28 @@ import js.node.net.Socket.NetworkAdress;
 /**
 	Enumeration of events emitted by the `Server` objects
 **/
-@:enum abstract ServerEvent(String) to String {
+@:enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when the server has been bound after calling `Server.listen`.
 	**/
-	var Listening = "listening";
+	var Listening : ServerEvent<Void->Void> = "listening";
 
 	/**
 		Emitted when a new connection is made.
-		Listener arguments:
-			* socket:Socket - The connection object
 	**/
-	var Connection = "connection";
+	var Connection : ServerEvent<Socket->Void> = "connection";
 
 	/**
 		Emitted when the server closes.
 		Note that if connections exist, this event is not emitted until all connections are ended.
 	**/
-	var Close = "close";
+	var Close : ServerEvent<Void->Void> = "close";
 
 	/**
 		Emitted when an error occurs.
 		The 'close' event will be called directly following this event. See example in discussion of server.listen.
-		Listener arguments:
-			* error - Error object
 	**/
-	var Error = "error";
+	var Error : ServerEvent<Error->Void> = "error";
 }
 
 /**
