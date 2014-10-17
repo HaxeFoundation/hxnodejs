@@ -30,6 +30,12 @@ import haxe.Constraints.Function;
 }
 
 /**
+	Abstract type for events. Its type parameter is a signature
+	of a listener for a concrete event.
+**/
+abstract Event<T:Function>(String) from String to String {}
+
+/**
 	All objects which emit events are instances of `EventEmitter`.
 
 	Typically, event names are represented by a camel-cased string, however,
@@ -53,27 +59,27 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	/**
 		Adds a `listener` to the end of the listeners array for the specified `event`.
 	**/
-	function addListener(event:String, listener:Function):TSelf;
-	function on(event:String, listener:Function):TSelf;
+	function addListener<T:Function>(event:Event<T>, listener:T):TSelf;
+	function on<T:Function>(event:Event<T>, listener:T):TSelf;
 
 	/**
 		Adds a one time `listener` for the `event`.
 
 		This listener is invoked only the next time the event is fired, after which it is removed.
 	**/
-	function once(event:String, listener:Function):TSelf;
+	function once<T:Function>(event:Event<T>, listener:T):TSelf;
 
 	/**
 		Remove a `listener` from the listener array for the specified `event`.
 
 		Caution: changes array indices in the listener array behind the listener.
 	**/
-	function removeListener(event:String, listener:Function):TSelf;
+	function removeListener<T:Function>(event:Event<T>, listener:T):TSelf;
 
 	/**
 		Removes all listeners, or those of the specified `event`.
 	**/
-	function removeAllListeners(?event:String):TSelf;
+	function removeAllListeners<T:Function>(?event:Event<T>):TSelf;
 
 	/**
 		By default `EventEmitter`s will print a warning if more than 10 listeners are added for a particular event.
@@ -87,18 +93,18 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	/**
 		Returns an array of listeners for the specified event.
 	**/
-	function listeners(event:String):Array<Function>;
+	function listeners<T:Function>(event:Event<T>):Array<T>;
 
 	/**
 		Execute each of the listeners in order with the supplied arguments.
 		Returns true if event had listeners, false otherwise.
 	**/
-	function emit(event:String, args:haxe.Rest<Dynamic>):Bool;
+	function emit<T:Function>(event:Event<T>, args:haxe.Rest<Dynamic>):Bool;
 
 	/**
 		Return the number of listeners for a given event.
 	**/
-	static function listenerCount(emitter:IEventEmitter, event:String):Int;
+	static function listenerCount<T:Function>(emitter:IEventEmitter, event:Event<T>):Int;
 }
 
 
@@ -109,12 +115,12 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 **/
 @:remove
 extern interface IEventEmitter {
-    function addListener(event:String, listener:Function):IEventEmitter;
-    function on(event:String, listener:Function):IEventEmitter;
-    function once(event:String, listener:Function):IEventEmitter;
-    function removeListener(event:String, listener:Function):IEventEmitter;
-    function removeAllListeners(?event:String):IEventEmitter;
+    function addListener<T:Function>(event:Event<T>, listener:T):IEventEmitter;
+    function on<T:Function>(event:Event<T>, listener:T):IEventEmitter;
+    function once<T:Function>(event:Event<T>, listener:T):IEventEmitter;
+    function removeListener<T:Function>(event:Event<T>, listener:T):IEventEmitter;
+    function removeAllListeners<T:Function>(?event:Event<T>):IEventEmitter;
     function setMaxListeners(n:Int):Void;
-    function listeners(event:String):Array<Function>;
-    function emit(event:String, args:haxe.Rest<Dynamic>):Bool;
+    function listeners<T:Function>(event:Event<T>):Array<T>;
+    function emit<T:Function>(event:Event<T>, args:haxe.Rest<Dynamic>):Bool;
 }
