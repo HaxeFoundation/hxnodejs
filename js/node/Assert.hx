@@ -1,5 +1,7 @@
 package js.node;
 
+import haxe.EitherType;
+
 /**
 	This module is used for writing unit tests for your applications
 **/
@@ -52,10 +54,10 @@ extern class Assert {
 
 	/**
 		Expects block to throw an error.
-		`error` can be constructor, regexp or validation function.
+		`error` can be a class, javascript RegExp or a validation function.
 	**/
-	@:overload(function(block:Void->Void, error:Dynamic, message:String):Void {})
-	static function throws(block:Void->Void, ?error:Dynamic):Void; // TODO: type `error` with `EitherType` (also provide access to JS regexp?)
+	@:overload(function(block:Void->Void, error:ThrowsExpectedError, message:String):Void {})
+	static function throws(block:Void->Void, ?error:ThrowsExpectedError):Void;
 
 	/**
 		Expects block not to throw an error, see `throws` for details.
@@ -71,3 +73,8 @@ extern class Assert {
 	**/
 	static function ifError(value:Dynamic):Void;
 }
+
+/**
+	a class, RegExp or function.
+**/
+private typedef ThrowsExpectedError = EitherType<Class<Dynamic>, EitherType<js.RegExp, Dynamic->Void>>;
