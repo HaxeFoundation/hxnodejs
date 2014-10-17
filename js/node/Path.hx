@@ -1,13 +1,12 @@
 package js.node;
 
 /**
- * This module contains utilities for handling and transforming file paths.
- * Almost all these methods perform only string transformations.
- * The file system is not consulted to check whether paths are valid.
- */
+	This module contains utilities for handling and transforming file paths.
+	Almost all these methods perform only string transformations.
+	The file system is not consulted to check whether paths are valid.
+**/
 @:jsRequire("path")
-extern class Path
-{
+extern class Path {
 	/**
 		Normalize a string path, taking care of '..' and '.' parts.
 
@@ -32,7 +31,7 @@ extern class Path
 		normalized, and trailing slashes are removed unless the path gets resolved to the
 		root directory.
 	**/
-	@:overload(function(args:haxe.Rest<String>):String {}) // TODO: (it's actually "from:haxe.Rest<String>, to:String")
+	@:overload(function(args:haxe.Rest<String>):String {})
 	@:overload(function(from:String, to:String):String {})
 	static function resolve(to:String):String;
 
