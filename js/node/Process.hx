@@ -8,7 +8,7 @@ import js.node.stream.Writable;
 /**
 	Enumeration of events emitted by the Process class.
 **/
-@:enum abstract ProcessEvent(String) to String {
+@:enum abstract ProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when the process is about to exit.
 		There is no way to prevent the exiting of the event loop at this point,
@@ -17,14 +17,14 @@ import js.node.stream.Writable;
 		This is a good hook to perform checks on the module's state (like for unit tests).
 		The callback takes one argument, the code the process is exiting with.
 	**/
-	var Exit = "exit";
+	var Exit : ProcessEvent<Int->Void> = "exit";
 
 	/**
 		Emitted when an exception bubbles all the way back to the event loop.
 		If a listener is added for this exception, the default action (which is to print a stack trace and exit)
 		will not occur.
 	**/
-	var UncaughtException = "uncaughtException";
+	var UncaughtException : ProcessEvent<js.Error->Void> = "uncaughtException";
 }
 
 extern class Process extends EventEmitter<Process> {
