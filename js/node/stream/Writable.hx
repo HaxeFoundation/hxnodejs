@@ -2,46 +2,46 @@ package js.node.stream;
 
 import js.node.Buffer;
 import js.node.events.EventEmitter;
+import js.node.stream.Readable.IReadable;
 
 /**
 	Enumeration for `Writable` class events.
 **/
-@:enum abstract WritableEvent(String) to String {
+@:enum abstract WritableEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 
 	/**
 		If a `writable.write(chunk)` call returns `false`, then the `drain` event will indicate
 		when it is appropriate to begin writing more data to the stream.
 	**/
-	var Drain = "drain";
+	var Drain : WritableEvent<Void->Void> = "drain";
 
 	/**
 		When the `end()` method has been called, and all data has been flushed to the underlying system, this event is emitted.
 	**/
-	var Finish = "finish";
+	var Finish : WritableEvent<Void->Void> = "finish";
 
 	/**
 		Lister arguments:
-			- src (Readable Stream) - source stream that is piping to `this` writable
+			src - source stream that is piping to `this` writable
 
-		This is emitted whenever the `pipe()` method is called on a readable stream, adding `this` writable to its set of destinations.
+		This is emitted whenever the `pipe()` method is called on a readable stream,
+		adding `this` writable to its set of destinations.
 	**/
-	var Pipe = "pipe";
+	var Pipe : WritableEvent<IReadable->Void> = "pipe";
 
 	/**
 		Listener arguments:
-			- src (Readable Stream) - source stream that unpiped `this` writable
+			src - source stream that unpiped `this` writable
 
-		This is emitted whenever the `unpipe()` method is called on a readable stream, removing `this` writable from its set of destinations.
+		This is emitted whenever the `unpipe()` method is called on a readable stream,
+		removing `this` writable from its set of destinations.
 	**/
-	var Unpipe = "unpipe";
+	var Unpipe : WritableEvent<IReadable->Void> = "unpipe";
 
 	/**
-		Listener arguments:
-			- error (Error) - error object
-
 		Emitted if there was an error when writing or piping data.
 	**/
-	var Error = "error";
+	var Error : WritableEvent<js.Error->Void> = "error";
 }
 
 /**

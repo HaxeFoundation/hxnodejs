@@ -7,7 +7,7 @@ import js.node.stream.Writable.IWritable;
 /**
 	Enumeration of events emitted by the `Readable` class.
 **/
-@:enum abstract ReadableEvent(String) to String {
+@:enum abstract ReadableEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		When a chunk of data can be read from the stream, it will emit a `readable` event.
 
@@ -16,18 +16,15 @@ import js.node.stream.Writable.IWritable;
 
 		Once the internal buffer is drained, a 'readable' event will fire again when more data is available.
 	**/
-	var Readable = "readable";
+	var Readable : ReadableEvent<Void->Void> = "readable";
 
 	/**
-		Listener argument:
-			* chunk : EitherType<Buffer,String> - The chunk of data.
-
 		If you attach a 'data' event listener, then it will switch the stream into flowing mode,
 		and data will be passed to your handler as soon as it is available.
 
 		If you just want to get all the data out of the stream as fast as possible, this is the best way to do so.
 	**/
-	var Data = "data";
+	var Data : ReadableEvent<haxe.EitherType<Buffer,String>->Void> = "data";
 
 	/**
 		This event fires when there will be no more data to read.
@@ -35,22 +32,19 @@ import js.node.stream.Writable.IWritable;
 		Note that the 'end' event will not fire unless the data is completely consumed.
 		This can be done by switching into flowing mode, or by calling 'read' repeatedly until you get to the end.
 	**/
-	var End = "end";
+	var End : ReadableEvent<Void->Void> = "end";
 
 	/**
 		Emitted when the underlying resource (for example, the backing file descriptor) has been closed.
 
 		Not all streams will emit this.
 	**/
-	var Close = "close";
+	var Close : ReadableEvent<Void->Void> = "close";
 
 	/**
 		Emitted if there was an error receiving data.
-
-		Listener argument:
-			* error : Error
 	**/
-	var Error = "error";
+	var Error : ReadableEvent<js.Error->Void> = "error";
 }
 
 /**
