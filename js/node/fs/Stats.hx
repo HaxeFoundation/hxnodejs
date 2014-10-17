@@ -1,7 +1,7 @@
 package js.node.fs;
 
 /**
-	Objects returned from fs.stat(), fs.lstat() and fs.fstat() and their synchronous counterparts are of this type.
+	Objects returned from `Fs.stat`, `Fs.lstat` and `Fs.fstat` and their synchronous counterparts are of this type.
 **/
 extern class Stats {
 	var dev:Int;

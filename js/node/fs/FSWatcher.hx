@@ -3,34 +3,30 @@ package js.node.fs;
 import js.node.events.EventEmitter;
 
 /**
+	Enumeration of possible types of changes for 'change' event.
+**/
+@:enum abstract FSWatcherChangeType(String) to String {
+	var Change = "change";
+	var Rename = "rename";
+}
+
+/**
 	Enumeration of the events emitted by `FSWatcher`.
 **/
-@:enum abstract FSWatcherEvent(String) to String {
+@:enum abstract FSWatcherEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when something changes in a watched directory or file. See more details in `Fs.watch`.
 
 		Listener arguments:
-			* event:String - The type of fs change
-			* filename:String - The filename that changed (if relevant/available)
+			event - The type of fs change
+			filename - The filename that changed (if relevant/available)
 	**/
-	var Change = "change";
-
-	/**
-		Emitted when something changes in a watched directory or file. See more details in `Fs.watch`.
-
-		Listener arguments:
-			* event:String - The type of fs change
-			* filename:String - The filename that changed (if relevant/available)
-	**/
-	var Rename = "rename";
+	var Change : FSWatcherEvent<FSWatcherChangeType->String->Void> = "change";
 
 	/**
 		Emitted when an error occurs.
-
-		Listener arguments:
-			* error - Error object
 	**/
-	var Error = "error";
+	var Error : FSWatcherEvent<js.Error->Void> = "error";
 }
 
 /**

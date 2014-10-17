@@ -567,8 +567,8 @@ extern class Fs
 		is the name of the file which triggered the event.
 	**/
 	@:overload(function(filename:String):FSWatcher {})
-	@:overload(function(filename:String, listener:FSWatcherEvent->String->Void):FSWatcher {})
-	static function watch(filename:String, options:{persistent:Bool}, listener:FSWatcherEvent->String->Void):FSWatcher;
+	@:overload(function(filename:String, listener:FSWatcherChangeType->String->Void):FSWatcher {})
+	static function watch(filename:String, options:{persistent:Bool}, listener:FSWatcherChangeType->String->Void):FSWatcher;
 
 	/**
 		Test whether or not the given `path` exists by checking with the file system.

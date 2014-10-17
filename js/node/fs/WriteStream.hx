@@ -1,13 +1,15 @@
 package js.node.fs;
 
-@:enum abstract WriteStreamEvent(String) to String {
+import js.node.events.EventEmitter.Event;
+
+@:enum abstract WriteStreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
         Emitted when the `WriteStream`'s file is opened.
 
         Listener arguments:
-            * fd - Integer file descriptor used by the `WriteStream`.
+            fd - file descriptor used by the `WriteStream`.
     **/
-	static public var Open : String = "open";
+	var Open : WriteStreamEvent<Int->Void> = "open";
 }
 
 /**
