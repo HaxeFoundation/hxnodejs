@@ -5,33 +5,31 @@ import js.node.events.EventEmitter;
 /**
 	Enumeration of events for the `Socket` object.
 **/
-@:enum abstract SocketEvent(String) to String {
+@:enum abstract SocketEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when a new datagram is available on a socket.
 		Listener arguments:
-			* msg:Buffer - received data
-			* rinfo:RemoteInfo - sender's address information and the number of bytes in the datagram
+			msg - received data
+			rinfo - sender's address information and the number of bytes in the datagram
 	**/
-	var Message = "message";
+	var Message : SocketEvent<Buffer->RemoteInfo> = "message";
 
 	/**
 		Emitted when a socket starts listening for datagrams.
 		This happens as soon as UDP sockets are created.
 	**/
-	var Listening = "listening";
+	var Listening : SocketEvent<Void->Void> = "listening";
 
 	/**
 		Emitted when a socket is closed with `close`.
 		No new message events will be emitted on this socket.
 	**/
-	var Close = "close";
+	var Close : SocketEvent<Void->Void> = "close";
 
 	/**
 		Emitted when an error occurs.
-		Listener arguments:
-			* exception - error object
 	**/
-	var Error = "error";
+	var Error : SocketEvent<js.Error->Void>= "error";
 }
 
 /**
