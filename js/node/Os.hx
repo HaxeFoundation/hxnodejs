@@ -23,12 +23,12 @@ typedef CPU = {
 	/**
 		MHz Speed
 	**/
-	var speed : Int;
+	var speed:Int;
 
 	/**
 		CPUTime data.
 	**/
-	var times : CPUTime;
+	var times:CPUTime;
 }
 
 /**
@@ -52,6 +52,11 @@ typedef NetworkInterfaceAddressInfo = {
 	var internal:Bool;
 }
 
+@:enum abstract Endianness(String) to String {
+	var BigEndian = "BE";
+	var LittleEndian = "LE";
+}
+
 /**
 	Provides a few basic operating-system related utility functions.
 **/
@@ -71,7 +76,7 @@ extern class Os {
 	/**
 		Returns the endianness of the CPU. Possible values are "BE" or "LE".
 	**/
-	static function endianness():String;
+	static function endianness():Endianness;
 
 	/**
 		Returns the hostname of the operating system.
