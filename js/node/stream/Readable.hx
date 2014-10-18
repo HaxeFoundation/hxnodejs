@@ -1,7 +1,8 @@
 package js.node.stream;
 
 import js.node.Buffer;
-import js.node.events.EventEmitter;
+import js.node.events.EventEmitter.Event;
+import js.node.Stream;
 import js.node.stream.Writable.IWritable;
 
 /**
@@ -68,7 +69,7 @@ import js.node.stream.Writable.IWritable;
 		- process.stdin
 **/
 @:jsRequire("stream", "Readable")
-extern class Readable<TSelf:Readable<TSelf>> extends EventEmitter<TSelf> implements IReadable {
+extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IReadable {
 
 	/**
 		The `read` method pulls some data out of the internal buffer and returns it.
@@ -170,7 +171,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends EventEmitter<TSelf> impleme
     See `Readable` for actual class documentation.
 **/
 @:remove
-extern interface IReadable extends IEventEmitter {
+extern interface IReadable extends IStream {
     @:overload(function(?size:Int):Null<Buffer> {})
     function read(?size:Int):Null<String>;
 

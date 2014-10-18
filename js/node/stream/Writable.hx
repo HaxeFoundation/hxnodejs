@@ -1,7 +1,8 @@
 package js.node.stream;
 
 import js.node.Buffer;
-import js.node.events.EventEmitter;
+import js.node.events.EventEmitter.Event;
+import js.node.Stream;
 import js.node.stream.Readable.IReadable;
 
 /**
@@ -58,7 +59,7 @@ import js.node.stream.Readable.IReadable;
 		- process.stdout, process.stderr
 **/
 @:jsRequire("stream", "Writable")
-extern class Writable<TSelf:Writable<TSelf>> extends EventEmitter<TSelf> implements IWritable {
+extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IWritable {
 	/**
 		This method writes some data to the underlying system,
 		and calls the supplied callback once the data has been fully handled.
@@ -98,7 +99,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends EventEmitter<TSelf> impleme
     See `Writable` for actual class documentation.
 **/
 @:remove
-extern interface IWritable extends IEventEmitter {
+extern interface IWritable extends IStream {
 	@:overload(function(chunk:Buffer, ?callback:Void->Void):Bool {})
 	@:overload(function(chunk:String, ?callback:Void->Void):Bool {})
 	function write(chunk:String, encoding:String, ?callback:Void->Void):Bool;
