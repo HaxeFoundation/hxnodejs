@@ -1,20 +1,33 @@
 package js.node.http;
 
+import js.node.Buffer;
+import js.node.events.EventEmitter.Event;
+import js.node.net.Socket;
+
 /**
 	Enumeration of events emitted by `http.Server` class in addition to
 	its parent `net.Server` class.
 **/
-@:enum abstract ServerEvent(String) to String {
+@:enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted each time there is a request.
 
 		Note that there may be multiple requests per connection (in the case of keep-alive connections).
-
-		Listener arguments:
-			* request : IncomingMessage
-			* response : ServerResponse
 	**/
-	var Request = "request";
+	var Request : ServerEvent<IncomingMessage->ServerResponse->Void> = "request";
+
+	/**
+		When a new TCP stream is established.
+		Usually users will not want to access this event.
+		In particular, the socket will not emit readable events because of how the protocol parser attaches to the socket.
+		The socket can also be accessed at request.socket.
+	**/
+	var Connection : ServerEvent<Socket->Void> = "connection";
+
+	/**
+		Emitted when the server closes.
+	**/
+	var Close : ServerEvent<Void->Void> = "close";
 
 	/**
 		Emitted each time a request with an http Expect: 100-continue is received.
@@ -26,12 +39,8 @@ package js.node.http;
 		should not continue to send the request body.
 
 		Note that when this event is emitted and handled, the 'request' event will not be emitted.
-
-		Listener arguments:
-			* request : IncomingMessage
-			* response : ServerResponse
 	**/
-	var CheckContinue = "checkContinue";
+	var CheckContinue : ServerEvent<IncomingMessage->ServerResponse->Void> = "checkContinue";
 
 	/**
 		Emitted each time a client requests a http CONNECT method.
@@ -39,14 +48,14 @@ package js.node.http;
 		If this event isn't listened for, then clients requesting a CONNECT method will have their connections closed.
 
 		Listener arguments:
-			* request : IncomingMessage - arguments for the http request, as it is in the request event
-			* socket : Socket - network socket between the server and client
-			* head : Buffer - instance of Buffer, the first packet of the tunneling stream, this may be empty
+			request - arguments for the http request, as it is in the request event
+			socket - network socket between the server and client
+			head - the first packet of the tunneling stream, this may be empty
 
 		After this event is emitted, the request's socket will not have a 'data' event listener,
 		meaning you will need to bind to it in order to handle data sent to the server on that socket.
 	**/
-	var Connect = "connect";
+	var Connect : ServerEvent<IncomingMessage->Socket->Buffer->Void> = "connect";
 
 	/**
 		Emitted each time a client requests a http upgrade.
@@ -54,27 +63,25 @@ package js.node.http;
 		If this event isn't listened for, then clients requesting an upgrade will have their connections closed.
 
 		Listener arguments:
-			* request : IncomingMessage - arguments for the http request, as it is in the request event
-			* socket : Socket - network socket between the server and client
-			* head : Buffer - instance of Buffer, the first packet of the tunneling stream, this may be empty
+			request - arguments for the http request, as it is in the request event
+			socket - network socket between the server and client
+			head - the first packet of the tunneling stream, this may be empty
 
 		After this event is emitted, the request's socket will not have a data event listener,
 		meaning you will need to bind to it in order to handle data sent to the server on that socket.
 	**/
-	var Upgrade = "upgrade";
+	var Upgrade : ServerEvent<IncomingMessage->Socket->Buffer->Void> = "upgrade";
 
 	/**
 		If a client connection emits an 'error' event - it will forwarded here.
-		Listener arguments:
-			exception : Error
-			socket : Socket
 	**/
-	var ClientError = "clientError";
+	var ClientError : ServerEvent<js.Error->Socket->Void> = "clientError";
 }
 
 /**
 	HTTP server
 **/
+@:jsRequire("http", "Server")
 extern class Server extends js.node.net.Server {
 	/**
 		Limits maximum incoming headers count, equal to 1000 by default.

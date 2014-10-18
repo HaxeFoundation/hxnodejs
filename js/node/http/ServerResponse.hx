@@ -2,14 +2,17 @@ package js.node.http;
 
 import haxe.DynamicAccess;
 
+import js.node.events.EventEmitter.Event;
+import js.node.stream.Writable;
+
 /**
-	Enumeration of events emitted by the `ServerResponse` objects.
+	Enumeration of events emitted by the `ServerResponse` objects in addition to its parent class events.
 **/
-@:enum abstract ServerResponseEvent(String) to String {
+@:enum abstract ServerResponseEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Indicates that the underlying connection was terminated before `end` was called or able to flush.
 	**/
-	var Close = "close";
+	var Close : ServerResponseEvent<Void->Void> = "close";
 
 	/**
 		Emitted when the response has been sent. More specifically, this event is emitted when
@@ -18,28 +21,15 @@ import haxe.DynamicAccess;
 
 		After this event, no more events will be emitted on the response object.
 	**/
-	var Finish = "finish";
-
-	/**
-		Fired when the incoming stream is 'Transfer-Encoding: chunked' and the stream has been parsed successfully
-		but there are trailing bytes at the end of the response.
-
-		The callback is passed the bytes that were not successfully parsed.
-
-		For backwards compatibility, if there is no listener attached to this event, an Error will be emitted
-		on the request side of this request/response pair.
-
-		Listener arguments:
-			* buff : Buffer
-	**/
-	var ChunkedRemainingBytes = "chunkedRemainingBytes";
+	var Finish : ServerResponseEvent<Void->Void> = "finish";
 }
 
 /**
 	This object is created internally by a HTTP server--not by the user.
 	It is passed as the second parameter to the 'request' event.
 **/
-extern class ServerResponse extends js.node.stream.Writable<ServerResponse> {
+@:jsRequire("http", "ServerResponse")
+extern class ServerResponse extends Writable<ServerResponse> {
 
 	/**
 		Sends a HTTP/1.1 100 Continue message to the client, indicating that the request body should be sent.

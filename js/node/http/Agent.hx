@@ -1,6 +1,7 @@
 package js.node.http;
 
 import haxe.DynamicAccess;
+
 import js.node.net.Socket;
 
 /**
@@ -18,6 +19,7 @@ import js.node.net.Socket;
 	Sockets are removed from the agent's pool when the socket emits either a "close" event
 	or a special "agentRemove" event.
 **/
+@:jsRequire("http", "Agent")
 extern class Agent {
 	/**
 		By default set to 5.

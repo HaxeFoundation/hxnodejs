@@ -1,55 +1,44 @@
 package js.node.http;
 
+import js.node.Buffer;
+import js.node.events.EventEmitter.Event;
+import js.node.net.Socket;
 import js.node.stream.Writable;
 
 /**
 	Enumeration of events emitted by `ClientRequest`
 **/
-@:enum abstract ClientRequestEvent(String) to String {
+@:enum abstract ClientRequestEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when a response is received to this request. This event is emitted only once.
-		Listener arguments:
-			* response : IncomingMessage
 	**/
-	var Response = "response";
+	var Response : ClientRequestEvent<IncomingMessage->Void> = "response";
 
 	/**
 		Emitted after a socket is assigned to this request.
-		Listener arguments:
-			* socket : Socket
 	**/
-	var Socket = "socket";
+	var Socket : ClientRequestEvent<Socket->Void> = "socket";
 
 	/**
 		Emitted each time a server responds to a request with a CONNECT method.
 		If this event isn't being listened for, clients receiving a CONNECT method
 		will have their connections closed.
-
-		Listener arguments:
-			* response : IncomingMessage
-			* socket : Socket
-			* head : Buffer
 	**/
-	var Connect = "connect";
+	var Connect : ClientRequestEvent<IncomingMessage->Socket->Buffer->Void> = "connect";
 
 	/**
 		Emitted each time a server responds to a request with an upgrade.
 		If this event isn't being listened for, clients receiving an upgrade header
 		will have their connections closed.
-
-		Listener argument:
-			* response : IncomingMessage
-			* socket : Socket
-			* head : Buffer
 	**/
-	var Upgrade = "upgrade";
+	var Upgrade : ClientRequestEvent<IncomingMessage->Socket->Buffer->Void> = "upgrade";
 
 	/**
 		Emitted when the server sends a '100 Continue' HTTP response,
 		usually because the request contained 'Expect: 100-continue'.
 		This is an instruction that the client should send the request body.
 	**/
-	var Continue = "continue";
+	var Continue : ClientRequestEvent<Void->Void> = "continue";
 }
 
 /**
@@ -74,6 +63,7 @@ import js.node.stream.Writable;
 
 	Note: Node does not check whether 'Content-Length' and the length of the body which has been transmitted are equal or not.
 **/
+@:jsRequire("http", "ClientRequest")
 extern class ClientRequest extends Writable<ClientRequest> {
 
 	/**
