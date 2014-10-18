@@ -100,6 +100,11 @@ extern class ChildProcess extends EventEmitter<ChildProcess> {
     var stderr(default,null):IReadable;
 
     /**
+        The parent end of the stdio pipes.
+    **/
+    var stdio(default,null):Array<IStream>;
+
+    /**
         The PID of the child process.
     **/
     var pid(default,null):Int;

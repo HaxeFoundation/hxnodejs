@@ -121,8 +121,6 @@ typedef ChildProcessSpawnOptionsStdio = EitherType<ChildProcessSpawnOptionsStdio
 		Create a pipe between the child process and the parent process.
 		The parent end of the pipe is exposed to the parent as a property on the child_process object as ChildProcess.stdio[fd].
 		Pipes created for fds 0 - 2 are also available as ChildProcess.stdin, ChildProcess.stdout and ChildProcess.stderr, respectively.
-
-		TODO: add those
 	**/
 	var Pipe = "pipe";
 
@@ -137,8 +135,6 @@ typedef ChildProcessSpawnOptionsStdio = EitherType<ChildProcessSpawnOptionsStdio
 
 		If the child is a Node.js program, then the presence of an IPC channel will
 		enable process.send() and process.on('message').
-
-		TODO: add those
 	**/
 	var Ipc = "ipc";
 
