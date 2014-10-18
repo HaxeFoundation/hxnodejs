@@ -1,7 +1,9 @@
 package js.node;
 
 import haxe.DynamicAccess;
+import haxe.EitherType;
 import js.node.events.EventEmitter;
+import js.node.Stream;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
 
@@ -66,7 +68,7 @@ import js.node.stream.Writable;
 /**
 	A shorthand for the `stdio` argument in `ChildProcessSpawnOptions`
 **/
-@:enum abstract ChildProcessStdioConfig(String) from String to String {
+@:enum abstract ChildProcessStdioConfigSimple(String) from String to String {
 	/**
 		Equivalent to ['ignore', 'ignore', 'ignore']
 	**/
@@ -82,6 +84,46 @@ import js.node.stream.Writable;
 	**/
 	var Inherit = "inherit";
 }
+
+@:enum abstract ChildProcessStdioConfigType(String) from String to String {
+	/**
+		Create a pipe between the child process and the parent process.
+		The parent end of the pipe is exposed to the parent as a property on the child_process object as ChildProcess.stdio[fd].
+		Pipes created for fds 0 - 2 are also available as ChildProcess.stdin, ChildProcess.stdout and ChildProcess.stderr, respectively.
+
+		TODO: add those
+	**/
+	var Pipe = "pipe";
+
+	/**
+		Create an IPC channel for passing messages/file descriptors between parent and child.
+		A ChildProcess may have at most one IPC stdio file descriptor.
+
+		Setting this option enables the ChildProcess.send() method.
+
+		If the child writes JSON messages to this file descriptor, then this will trigger
+		ChildProcess.on('message').
+
+		If the child is a Node.js program, then the presence of an IPC channel will
+		enable process.send() and process.on('message').
+
+		TODO: add those
+	**/
+	var Ipc = "ipc";
+
+	/**
+		Do not set this file descriptor in the child.
+		Note that Node will always open fd 0 - 2 for the processes it spawns.
+		When any of these is ignored node will open /dev/null and attach it to the child's fd.
+	**/
+	var Ignore = "ignore";
+}
+
+// see https://github.com/HaxeFoundation/haxe/issues/3494
+//typedef ChildProcessStdioConfigFull = Array<EitherType<ChildProcessStdioConfigType,EitherType<IStream,Int>>>;
+typedef ChildProcessStdioConfigFull = Array<Dynamic>;
+
+typedef ChildProcessStdioConfig = EitherType<ChildProcessStdioConfigSimple,ChildProcessStdioConfigFull>;
 
 private typedef ChildProcessCommonOptions = {
 	/**
@@ -127,7 +169,7 @@ typedef ChildProcessSpawnOptions = {
 			* null - Use default value. For stdio fds 0, 1 and 2 (in other words, stdin, stdout, and stderr) a pipe is created.
 			         For fd 3 and up, the default is 'ignore'.
 	**/
-	?stdio:haxe.EitherType<ChildProcessStdioConfig,Array<Dynamic>>, // TODO: type properly
+	?stdio:ChildProcessStdioConfig, // TODO: type properly
 
 	/**
 		The child will be a process group leader.
@@ -211,9 +253,7 @@ extern class ChildProcess extends EventEmitter<ChildProcess> {
 		Note that if spawn receives an empty options object, it will result in spawning the process with an empty
 		environment rather than using `process.env`. This due to backwards compatibility issues with a deprecated API.
 	**/
-	@:overload(function(command:String, args:Array<String>, options:ChildProcessSpawnOptions):ChildProcess {})
-	@:overload(function(command:String, options:ChildProcessSpawnOptions):ChildProcess {})
-	static function spawn(command:String, ?args:Array<String>):ChildProcess;
+	static function spawn(command:String, ?args:Array<String>, ?options:ChildProcessSpawnOptions):ChildProcess;
 
 	/**
 		Runs a command in a shell and buffers the output.
