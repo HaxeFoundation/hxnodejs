@@ -55,6 +55,17 @@ It makes sense to use e.g. `import fs.*` in the `Fs.hx` so that all relevant cla
 
 All modules, classes, fields and functions arguments should be named after the official API documentation of the native module. Static classes representing node modules are capitalized as they are Haxe types and must follow haxe type naming requirements. Acronyms are NOT uppercased (i.e. `Json`, not `JSON`).
 
+In case Haxe name for a node.js module matches the name of its inner class, that class is imported into module using `import as`, adding `Object` as a postfix. For example:
+
+```haxe
+import js.node.child_process.ChildProcess as ChildProcessObject; // class representing node.js inner class
+
+@:jsRequire("child_process") // class representing node.js module
+extern class ChildProcess {
+    static function spawn(/*...*/):ChildProcessObject;
+}
+```
+
 ## Events
 
 node.js event emitters takes strings as event names and we have no way to properly map a callback type to its event name
