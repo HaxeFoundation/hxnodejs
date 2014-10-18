@@ -68,7 +68,7 @@ extern class ChildProcess {
 
 ## Events
 
-Node.js event emitters take strings as event names and doesn't check listener signatures in any way. The hxnodejs extern for `EventEmitter` supports that behaviour for convenience of copy-pasting JavaScript code. However it also provides a way to type-check event listeners.
+Node.js event emitters take strings as event names and don't check listener signatures in any way. The hxnodejs extern for `EventEmitter` supports that behaviour for convenience of copy-pasting JavaScript code. However it also provides a way to type-check event listeners.
 
 If you provide an instance of `Event<T>` abstract string type where an event name is expected in any `EventEmitter` method, then the listener type will be unified with `T` and thus provide type checking and inference for the listener function.
 
