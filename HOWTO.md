@@ -68,26 +68,25 @@ extern class ChildProcess {
 
 ## Events
 
-node.js event emitters takes strings as event names and we have no way to properly map a callback type to its event name
-at compile-time. However we do provide [@:enum abstract types](http://haxe.org/manual/types-abstract-enum.html) that enumerate possible event names for a given event emitter.
-They are purely advisory, but they are good for both documentation and holding constant event names.
+Node.js event emitters take strings as event names and doesn't check listener signatures in any way. The hxnodejs extern for `EventEmitter` supports that behaviour for convenience of copy-pasting JavaScript code. However it also provides a way to type-check event listeners.
 
-For each `EventEmitter` subclass, an `@:enum abstract` type must be created with a `Event` postfix in its name. For example,
-if we have a `Process` class which is an `EventEmitter`, it should have a pairing `ProcessEvent` type in its module, i.e.:
+If you provide an instance of `Event<T>` abstract string type where an event name is expected in any `EventEmitter` method, then the listener type will be unified with `T` and thus provide type checking and inference for the listener function.
+
+We provide [@:enum abstract types](http://haxe.org/manual/types-abstract-enum.html) that enumerate possible event names for a given event emitter. They are implicitly castable to `Event<T>` and can be used for type-checking listener functions as described above. For each `EventEmitter` subclass, an `@:enum abstract` type must be created with a `Event` postfix in its name. For example, if we have a `Process` class which is an `EventEmitter`, it should have a pairing `ProcessEvent` type in its module, i.e.:
 
 ```haxe
 extern class Process extends EventEmitter {
     // ...
 }
 
-@:enum abstract ProcessEvent(String) to String {
-    var Exit = "exit";
+@:enum abstract ProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
+    var Exit : ProcessEvent<Int->Void> = "exit";
 }
 ```
 
-Note that the abstract type must have a `to String` cast so it can be used where a string is expected (because event names are strings). Event constant names are `UpperCamelCase` and their values are actual event names.
+In the example above, the listener type for the 'exit' event is `Int->Void` which means it takes `Int` as its first argument and returns nothing.
 
-**TODO: decide on event inheritance https://github.com/HaxeFoundation/hxnodejs/issues/21**
+Event constant names are `UpperCamelCase` and their values are actual event names.
 
 ## Method overloading and optional arguments
 
