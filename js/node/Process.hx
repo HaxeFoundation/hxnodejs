@@ -1,6 +1,8 @@
 package js.node;
 
 import haxe.DynamicAccess;
+import haxe.EitherType;
+
 import js.node.events.EventEmitter;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
@@ -148,9 +150,7 @@ extern class Process extends EventEmitter<Process> {
 		Note: this function is only available on POSIX platforms (i.e. not Windows)
 		The list can contain group IDs, group names or both.
 	**/
-	@:overload(function(groups:Array<Dynamic>):Void {}) // TODO: Array<Either<String,Int>> ?
-	@:overload(function(groups:Array<String>):Void {})
-	function setgroups(groups:Array<Int>):Void;
+	function setgroups(groups:Array<EitherType<String,Int>>):Void;
 
 	/**
 		Reads /etc/group and initializes the group access list, using all groups of which the user is a member.
@@ -158,10 +158,7 @@ extern class Process extends EventEmitter<Process> {
 
 		Note: this function is only available on POSIX platforms (i.e. not Windows)
 	**/
-	@:overload(function(user:String, extra_group:Int):Void {}) // TODO: use Either<String,Int>?
-	@:overload(function(user:Int, extra_group:String):Void {})
-	@:overload(function(user:String, extra_group:String):Void {})
-	function initgroups(user:Int, extra_group:Int):Void;
+	function initgroups(user:EitherType<String,Int>, extra_group:EitherType<String,Int>):Void;
 
 	/**
 		A compiled-in property that exposes NODE_VERSION.
