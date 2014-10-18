@@ -84,6 +84,12 @@ extern class Writable<TSelf:Writable<TSelf>> extends EventEmitter<TSelf> impleme
 	@:overload(function(chunk:Buffer, ?callback:Void->Void):Void {})
 	@:overload(function(chunk:String, ?callback:Void->Void):Void {})
 	function end(chunk:String, encoding:String, ?callback:Void->Void):Void; // TODO: string without encoding works?
+
+	/**
+		Terminal write streams (i.e. process.stdout) have this property set to true.
+		It is false for any other write streams.
+	**/
+	var isTTY(default,null):Bool;
 }
 
 
@@ -101,4 +107,6 @@ extern interface IWritable extends IEventEmitter {
 	@:overload(function(chunk:Buffer, ?callback:Void->Void):Void {})
 	@:overload(function(chunk:String, ?callback:Void->Void):Void {})
 	function end(chunk:String, encoding:String, ?callback:Void->Void):Void;
+
+	var isTTY(default,null):Bool;
 }
