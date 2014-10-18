@@ -94,7 +94,9 @@ TODO (describe the difference of overloading/optional argument concepts and advi
 
 ## Typing
 
-TODO (describe the idea of maximum typing while keeping sanity)
+The whole idea of haxe externs is provide a fully type-checked access to external API. Considering that, we must avoid the need for use `Dynamic` type or `cast` and think of a way to properly express type restrictions.
+
+On the other hand, we want developers to be able to copy-paste node.js code into haxe with minimal modification and have it compiling. For that reason we have to weaken some typing restrictions, for example adding implicit cast `from String` for our `@:enum abstract` types.
 
 ### Multiple inheritance
 
