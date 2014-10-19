@@ -11,7 +11,7 @@ import js.node.events.EventEmitter.Event;
 	/**
 		This event is emitted after a new connection has been successfully handshaked.
 	**/
-	var SecureConnection : ServerEvent<CleartextStream->EncryptedStream->Void> = "secureConnection";
+	var SecureConnection : ServerEvent<CleartextStream->Void> = "secureConnection";
 
 	/**
 		When a client connection emits an 'error' event before secure connection is established -
