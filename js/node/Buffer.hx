@@ -68,7 +68,7 @@ extern class Buffer implements ArrayAccess<Int> {
 		`length` refers to the amount of memory allocated for the buffer object.
 		It does not change when the contents of the buffer are changed.
 	**/
-	var length : Int;
+	var length:Int;
 
 	/**
 		Returns a JSON-representation of the `Buffer` instance,
