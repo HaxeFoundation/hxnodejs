@@ -210,9 +210,8 @@ typedef ChildProcessForkOptions = {
 
 /**
 	An error passed to the `ChildProcess.exec` callback.
-
-	TODO: this is not a real class, should we care about Std.is and friends?
 **/
+@:native("Error")
 extern class ChildProcessExecError extends js.Error {
 	/**
 		the exit code of the child proces.
