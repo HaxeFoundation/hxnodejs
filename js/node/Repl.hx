@@ -1,20 +1,8 @@
 package js.node;
 
-import js.node.events.EventEmitter;
-import js.node.stream.Readable;
-import js.node.stream.Writable;
-
-/**
-	Enumeration for REPL event strings.
-**/
-@:enum abstract ReplEvent(String) to String {
-	/**
-		Emitted when the user exits the REPL in any of the defined ways.
-		Namely, typing .exit at the repl, pressing Ctrl+C twice to signal SIGINT,
-		or pressing Ctrl+D to signal "end" on the input stream.
-	**/
-	var Exit = "exit";
-}
+import js.node.stream.Readable.IReadable;
+import js.node.stream.Writable.IWritable;
+import js.node.repl.REPLServer;
 
 /**
 	A Read-Eval-Print-Loop (REPL) is available both as a standalone program and easily includable in other programs.
@@ -29,9 +17,12 @@ extern class Repl {
 	/**
 		Returns and starts a REPLServer instance.
 	**/
-	static function start(options:ReplOptions):IEventEmitter; // TODO: REPLServer extern?
+	static function start(options:ReplOptions):REPLServer;
 }
 
+/**
+	Options for `Repl.start` method.
+**/
 typedef ReplOptions = {
 	/**
 		The prompt and stream for all I/O.
@@ -81,6 +72,8 @@ typedef ReplOptions = {
 	/**
 		if set to `true`, then the repl will not output the return value of command if it's `undefined`.
 		Defaults to `false`.
+
+		JavaScript `undefined` value is available in Haxe using `js.Lib.undefined`.
 	**/
 	@:optional var ignoreUndefined:Bool;
 
