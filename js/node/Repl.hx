@@ -82,7 +82,7 @@ typedef ReplOptions = {
 		if set to `true`, then the repl will not output the return value of command if it's `undefined`.
 		Defaults to `false`.
 	**/
-	@:optional var ignoreUndefined:Bool; // TODO: provide access to JS undefined via something like (untyped __js__("undefined"));
+	@:optional var ignoreUndefined:Bool;
 
 	/**
 		the function to invoke for each command that gets evaluated which returns the formatting (including coloring) to display.

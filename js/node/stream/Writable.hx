@@ -84,7 +84,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 	@:overload(function(?callback:Void->Void):Void {})
 	@:overload(function(chunk:Buffer, ?callback:Void->Void):Void {})
 	@:overload(function(chunk:String, ?callback:Void->Void):Void {})
-	function end(chunk:String, encoding:String, ?callback:Void->Void):Void; // TODO: string without encoding works?
+	function end(chunk:String, encoding:String, ?callback:Void->Void):Void;
 
 	/**
 		Terminal write streams (i.e. process.stdout) have this property set to true.
