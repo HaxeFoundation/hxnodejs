@@ -45,7 +45,9 @@ typedef CreateReadStreamOptions = {
 	  mode: 0666 }
 **/
 typedef CreateWriteStreamOptions = {
-	>WriteFileOptions,
+	?flags:FileOpenFlag,
+	?encoding:String,
+	?mode:Int,
 	?start:Int
 }
 
@@ -602,7 +604,7 @@ extern class Fs
 		It is your responsiblity to close it and make sure there's no file descriptor leak.
 		If `autoClose` is set to true (default behavior), on error or end the file descriptor will be closed automatically.
 	**/
-	static function createReadStream(path:String, ?options:WriteFileOptions):ReadStream;
+	static function createReadStream(path:String, ?options:CreateReadStreamOptions):ReadStream;
 
 	/**
 		Returns a new WriteStream object (See Writable Stream).
@@ -611,5 +613,5 @@ extern class Fs
 
 		Modifying a file rather than replacing it may require a flags mode of r+ rather than the default mode w.
 	**/
-	static function createWriteStream(path:String, ?options:WriteFileOptions):WriteStream;
+	static function createWriteStream(path:String, ?options:CreateWriteStreamOptions):WriteStream;
 }
