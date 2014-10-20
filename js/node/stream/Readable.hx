@@ -166,7 +166,8 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	// --------- API for stream implementors - see node.js API documentation ---------
 	private function new(?options:ReadableNewOptions);
 	private function _read(size:Int):Void;
-	private function push(chunk:Dynamic, encoding:String):Bool;
+	@:overload(function(chunk:Buffer):Bool {})
+	private function push(chunk:String, encoding:String):Bool;
 }
 
 /**

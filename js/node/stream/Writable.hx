@@ -95,7 +95,8 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 	// --------- API for stream implementors - see node.js API documentation ---------
 	private function new(?options:WritableNewOptions);
-	private function _write(chunk:Dynamic, encoding:String, callback:js.Error->Void):Void;
+	@:overload(function(chunk:String, encoding:String, callback:js.Error->Void):Void {})
+	private function _write(chunk:Buffer, encoding:String, callback:js.Error->Void):Void;
 }
 
 /**

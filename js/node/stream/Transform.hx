@@ -1,5 +1,7 @@
 package js.node.stream;
 
+import haxe.EitherType;
+
 /**
 	Transform streams are `Duplex` streams where the output is in some way computed from the input.
 	They implement both the `Readable` and `Writable` interfaces.
@@ -13,6 +15,7 @@ package js.node.stream;
 extern class Transform<TSelf:Transform<TSelf>> extends Duplex<TSelf> {
     // --------- API for stream implementors - see node.js API documentation ---------
     private function new(?options:Duplex.DuplexNewOptions);
-    private function _transform(chunk:Dynamic, encoding:String, callback:js.Error->Dynamic->Void):Void;
+    @:overload(function(chunk:String, encoding:String, callback:js.Error->EitherType<String,Buffer>->Void):Void {})
+    private function _transform(chunk:Buffer, encoding:String, callback:js.Error->EitherType<String,Buffer>->Void):Void;
     private function _flush(callback:js.Error->Void):Void;
 }
