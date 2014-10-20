@@ -58,6 +58,13 @@ extern class NodeJS {
 	static var require_extensions(get,never):DynamicAccess<Dynamic>;
 	private static inline function get_require_extensions():DynamicAccess<Dynamic> return untyped __js__("require.extensions");
 
+	/**
+		When a file is run directly from Node, `require_main` is set to its module.
+		That means that you can determine whether a file has been run directly by testing `require_main == module`.
+	**/
+	static var require_main(get,never):Module;
+	private static inline function get_require_main():Module return untyped __js__("require.main");
+
 
 	/**
 		The name of the directory that the currently executing script resides in.
