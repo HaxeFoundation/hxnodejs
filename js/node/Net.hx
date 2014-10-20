@@ -76,18 +76,18 @@ extern class Net {
 
 		Otherwise `options` argument should be provided.
 	**/
-	@:overload(function(path:String, ?connectListener :Void->Void):Socket {})
+	@:overload(function(path:String, ?connectListener:Void->Void):Socket {})
 	@:overload(function(port:Int, ?connectListener :Void->Void):Socket {})
-	@:overload(function(port:Int, host:String, ?connectListener :Void->Void):Socket {})
-	static function connect(options:haxe.EitherType<TCPConnectOptions,UnixConnectOptions>, ?connectListener :Void->Void):Socket;
+	@:overload(function(port:Int, host:String, ?connectListener:Void->Void):Socket {})
+	static function connect(options:haxe.EitherType<TCPConnectOptions,UnixConnectOptions>, ?connectListener:Void->Void):Socket;
 
 	/**
 		Same as `connect`.
 	**/
-	@:overload(function(path:String, ?connectListener :Void->Void):Socket {})
-	@:overload(function(port:Int, ?connectListener :Void->Void):Socket {})
-	@:overload(function(port:Int, host:String, ?connectListener :Void->Void):Socket {})
-	static function createConnection(options:haxe.EitherType<TCPConnectOptions,UnixConnectOptions>, ?connectListener :Void->Void):Socket;
+	@:overload(function(path:String, ?connectListener:Void->Void):Socket {})
+	@:overload(function(port:Int, ?connectListener:Void->Void):Socket {})
+	@:overload(function(port:Int, host:String, ?connectListener:Void->Void):Socket {})
+	static function createConnection(options:haxe.EitherType<TCPConnectOptions,UnixConnectOptions>, ?connectListener:Void->Void):Socket;
 
 	/**
 		Tests if input is an IP address.
