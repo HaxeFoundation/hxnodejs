@@ -1,5 +1,6 @@
 package js.node.stream;
 
+import haxe.EitherType;
 import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
 import js.node.Stream;
@@ -82,8 +83,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 		This method should only be called in non-flowing mode.
 		In flowing-mode, this method is called automatically until the internal buffer is drained.
 	**/
-	@:overload(function(?size:Int):Null<Buffer> {})
-	function read(?size:Int):Null<String>;
+	function read(?size:Int):Null<EitherType<String,Buffer>>;
 
 	/**
 		Call this function to cause the stream to return strings of the specified encoding instead of `Buffer` objects.
@@ -187,8 +187,7 @@ typedef ReadableNewOptions = {
 **/
 @:remove
 extern interface IReadable extends IStream {
-    @:overload(function(?size:Int):Null<Buffer> {})
-    function read(?size:Int):Null<String>;
+    function read(?size:Int):Null<EitherType<String,Buffer>>;
 
     function setEncoding(encoding:String):Void;
 
