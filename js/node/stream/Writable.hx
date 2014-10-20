@@ -91,6 +91,21 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 		It is false for any other write streams.
 	**/
 	var isTTY(default,null):Bool;
+
+
+	// --------- API for stream implementors - see node.js API documentation ---------
+	private function new(?options:WritableNewOptions);
+	private function _write(chunk:Dynamic, encoding:String, callback:js.Error->Void):Void;
+}
+
+/**
+	Options for `Writable` private constructor.
+	For stream implementors only, see node.js API documentation
+**/
+typedef WritableNewOptions = {
+	@:optional var highWaterMark:Int;
+	@:optional var decodeStrings:Bool;
+	@:optional var objectMode:Bool;
 }
 
 

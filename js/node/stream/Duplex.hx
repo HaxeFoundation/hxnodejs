@@ -14,7 +14,6 @@ import js.node.Buffer;
 **/
 @:jsRequire("stream", "Duplex")
 extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements Writable.IWritable {
-
 	// --------- Writable interface implementation ---------
 
 	/**
@@ -47,4 +46,18 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements Writ
 		It is false for any other write streams.
 	**/
 	var isTTY(default,null):Bool;
+
+	// --------- API for stream implementors - see node.js API documentation ---------
+	private function new(?options:DuplexNewOptions);
+	private function _write(chunk:Dynamic, encoding:String, callback:js.Error->Void):Void;
+}
+
+/**
+	Options for `Duplex` private constructor.
+	For stream implementors only, see node.js API documentation
+**/
+typedef DuplexNewOptions = {
+	>Readable.ReadableNewOptions,
+	>Writable.WritableNewOptions,
+	@:optional var allowHalfOpen:Bool;
 }

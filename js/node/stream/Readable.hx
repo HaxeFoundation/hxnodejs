@@ -70,7 +70,6 @@ import js.node.stream.Writable.IWritable;
 **/
 @:jsRequire("stream", "Readable")
 extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IReadable {
-
 	/**
 		The `read` method pulls some data out of the internal buffer and returns it.
 		If there is no data available, then it will return null.
@@ -162,8 +161,23 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 		then you can use the `wrap` method to create a `Readable` stream that uses the old stream as its data source.
 	**/
 	function wrap(stream:Dynamic):IReadable;
+
+
+	// --------- API for stream implementors - see node.js API documentation ---------
+	private function new(?options:ReadableNewOptions);
+	private function _read(size:Int):Void;
+	private function push(chunk:Dynamic, encoding:String):Bool;
 }
 
+/**
+	Options for `Readable` private constructor.
+	For stream implementors only, see node.js API documentation
+**/
+typedef ReadableNewOptions = {
+	@:optional var highWaterMark:Int;
+	@:optional var encoding:String;
+	@:optional var objectMode:Bool;
+}
 
 /**
     `IReadable` interface is used as "any Readable".
