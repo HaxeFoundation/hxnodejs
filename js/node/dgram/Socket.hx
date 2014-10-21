@@ -12,7 +12,7 @@ import js.node.events.EventEmitter;
 			msg - received data
 			rinfo - sender's address information and the number of bytes in the datagram
 	**/
-	var Message : SocketEvent<Buffer->RemoteInfo> = "message";
+	var Message : SocketEvent<MessageListener> = "message";
 
 	/**
 		Emitted when a socket starts listening for datagrams.
@@ -32,6 +32,8 @@ import js.node.events.EventEmitter;
 	var Error : SocketEvent<js.Error->Void>= "error";
 }
 
+typedef MessageListener = Buffer->MessageInfo->Void;
+
 /**
 	Information about socket address.
 **/
@@ -44,7 +46,7 @@ typedef AddressInfo = {
 /**
     A structure passed to the callback of the 'message' event.
 **/
-typedef RemoteInfo = {
+typedef MessageInfo = {
 	>AddressInfo,
     var size:Int;
 }
@@ -53,8 +55,8 @@ typedef RemoteInfo = {
     Enumeration of possible datagram socket types
 **/
 @:enum abstract SocketType(String) from String to String {
-    var UDPv4 = "udp4";
-    var UDPv6 = "udp6";
+    var Udp4 = "udp4";
+    var Udp6 = "udp6";
 }
 
 /**
@@ -77,7 +79,6 @@ extern class Socket extends EventEmitter<Socket> {
 		to reuse the buf object. Note that DNS lookups delay the time to send for at least one tick.
 		The only way to know for sure that the datagram has been sent is by using a `callback`.
 	**/
-	@:overload(function(buf:Buffer, offset:Int, length:Int, port:Int, ?callback:Error->Int->Void):Void {})
 	function send(buf:Buffer, offset:Int, length:Int, port:Int, address:String, ?callback:Error->Int->Void):Void;
 
 	/**
