@@ -60,6 +60,7 @@ typedef RemoteInfo = {
 /**
 	Encapsulates the datagram functionality. It should be created via `Dgram.createSocket`.
 **/
+@:jsRequire("dgram", "Socket")
 extern class Socket extends EventEmitter<Socket> {
 	/**
 		The destination `port` and `address` must be specified.
