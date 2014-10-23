@@ -77,4 +77,4 @@ extern class Assert {
 /**
 	a class, RegExp or function.
 **/
-private typedef ThrowsExpectedError = EitherType<Class<Dynamic>, EitherType<js.RegExp, Dynamic->Void>>;
+private typedef ThrowsExpectedError = EitherType<Class<Dynamic>, EitherType<js.RegExp, Dynamic->Bool>>;
