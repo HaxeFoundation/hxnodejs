@@ -3,7 +3,7 @@ package js.node.domain;
 import haxe.Constraints.Function;
 
 import js.node.events.EventEmitter;
-import js.node.NodeJS.TimerObject;
+import js.Node.TimerObject;
 
 /**
 	Enumeration of events emitted by `Domain` objects.

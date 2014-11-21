@@ -1,7 +1,7 @@
 import js.node.Cluster.instance as cluster;
 import js.node.Http;
 import js.node.Os;
-import js.node.NodeJS.console;
+import js.Node.console;
 
 /**
 	Example from the cluster api doc

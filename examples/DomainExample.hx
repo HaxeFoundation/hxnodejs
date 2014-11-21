@@ -1,6 +1,6 @@
 import js.node.Cluster.instance as cluster;
 import js.node.Domain;
-import js.node.NodeJS.*;
+import js.Node.*;
 import js.node.Http;
 import js.node.http.IncomingMessage;
 import js.node.http.Server;

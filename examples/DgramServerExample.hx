@@ -1,5 +1,5 @@
 import js.node.Dgram;
-import js.node.NodeJS.console;
+import js.Node.console;
 
 class DgramServerExample {
 	static function main() {

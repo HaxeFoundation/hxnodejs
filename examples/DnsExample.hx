@@ -1,5 +1,5 @@
 import js.node.Dns;
-import js.node.NodeJS.console;
+import js.Node.console;
 
 /**
     An example from the dns page

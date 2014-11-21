@@ -1,7 +1,7 @@
 import js.node.Crypto;
 import js.node.Fs;
-import js.node.NodeJS.process;
-import js.node.NodeJS.console;
+import js.Node.process;
+import js.Node.console;
 
 /**
     Sha1 hash example from the crypto page

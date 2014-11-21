@@ -1,6 +1,6 @@
 import js.node.Net;
 import js.node.Repl;
-import js.node.NodeJS.process;
+import js.Node.process;
 
 /**
 	Example from the REPL page

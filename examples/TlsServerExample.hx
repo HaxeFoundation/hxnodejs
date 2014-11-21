@@ -1,6 +1,6 @@
 import js.node.Fs;
 import js.node.Tls;
-import js.node.NodeJS.console;
+import js.Node.console;
 
 /**
 	example from the tls.createServer documentation

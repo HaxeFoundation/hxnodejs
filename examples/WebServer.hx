@@ -1,5 +1,5 @@
 import js.node.Http;
-import js.node.NodeJS.console;
+import js.Node.console;
 
 /**
     Example web server from the node.js main page

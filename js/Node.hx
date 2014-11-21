@@ -1,18 +1,20 @@
-package js.node;
+package js;
 
 import haxe.Constraints.Function;
 import haxe.DynamicAccess;
+
+import js.node.*;
 
 /**
  * Wrapper for the global context of js.node.
  * @author Eduardo Pons - eduardo@thelaborat.org
  */
 @:native("global")
-extern class NodeJS {
+extern class Node {
 	/**
 		The global namespace object.
 	**/
-	static inline var global:Dynamic<Dynamic> = cast NodeJS;
+	static inline var global:Dynamic<Dynamic> = cast Node;
 
 	/**
 		The process object.

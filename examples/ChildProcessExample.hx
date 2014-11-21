@@ -1,5 +1,5 @@
 import js.node.ChildProcess.spawn;
-import js.node.NodeJS.console;
+import js.Node.console;
 
 /**
     child_process.spawn example from child process page

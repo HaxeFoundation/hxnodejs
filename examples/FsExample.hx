@@ -1,5 +1,5 @@
 import js.node.Fs;
-import js.node.NodeJS.console;
+import js.Node.console;
 
 /**
 	Example from fs API page.
