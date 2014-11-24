@@ -1,6 +1,7 @@
 package js.node;
 
 import haxe.DynamicAccess;
+import haxe.EitherType;
 import js.Error;
 import js.node.Buffer;
 import js.node.fs.Stats;
@@ -25,6 +26,12 @@ typedef FsWatchFileOptions = {
 }
 
 /**
+	The `mode` argument used by `Fs.open` and related functions
+	can be either an integer or a string with octal number.
+**/
+typedef FsMode = EitherType<Int,String>;
+
+/**
 	Possible options for `Fs.writeFile` and `Fs.appendFile`.
 **/
 typedef FsWriteFileOptions = {
@@ -38,7 +45,7 @@ typedef FsWriteFileOptions = {
 	/**
 		default = 438 (aka 0666 in Octal)
 	**/
-	@:optional var mode:Int;
+	@:optional var mode:FsMode;
 
 	/**
 		default: 'w' for `Fs.writeFile`, 'a' for `Fs.appendFile`
@@ -78,7 +85,7 @@ typedef FsCreateReadStreamOptions = {
 	/**
 		default: 0666
 	**/
-	@:optional var mode:Int;
+	@:optional var mode:FsMode;
 
 	/**
 		If autoClose is false, then the file descriptor won't be closed, even if there's an error.
@@ -117,7 +124,7 @@ typedef FsCreateWriteStreamOptions = {
 	/**
 		default: 0666
 	**/
-	@:optional var mode:Int;
+	@:optional var mode:FsMode;
 
 	/**
 		position to write data the beginning of the file.
@@ -297,33 +304,33 @@ extern class Fs {
 	/**
 		Asynchronous chmod(2).
 	**/
-	static function chmod(path:String, mode:String, callback:Error->Void):Void;
+	static function chmod(path:String, mode:FsMode, callback:Error->Void):Void;
 
 	/**
 		Synchronous chmod(2).
 	**/
-	static function chmodSync(path:String, mode:String):Void;
+	static function chmodSync(path:String, mode:FsMode):Void;
 
 	/**
 		Asynchronous fchmod(2).
 	**/
-	static function fchmod(fd:Int, mode:String, callback:Error->Void):Void;
+	static function fchmod(fd:Int, mode:FsMode, callback:Error->Void):Void;
 
 	/**
 		Synchronous fchmod(2).
 	**/
-	static function fchmodSync(fd:Int, mode:String):Void;
+	static function fchmodSync(fd:Int, mode:FsMode):Void;
 
 	/**
 		Asynchronous lchmod(2).
 		Only available on Mac OS X.
 	**/
-	static function lchmod(path:String, mode:String, callback:Error->Void):Void;
+	static function lchmod(path:String, mode:FsMode, callback:Error->Void):Void;
 
 	/**
 		Synchronous lchmod(2).
 	**/
-	static function lchmodSync(path:String, mode:String):Void;
+	static function lchmodSync(path:String, mode:FsMode):Void;
 
 	/**
 		Asynchronous stat(2).
@@ -444,12 +451,12 @@ extern class Fs {
 		`mode` defaults to 0777.
 	**/
 	@:overload(function(path:String, callback:Error->Void):Void {})
-	static function mkdir(path:String, mode:String, callback:Error->Void):Void;
+	static function mkdir(path:String, mode:FsMode, callback:Error->Void):Void;
 
 	/**
 		Synchronous mkdir(2).
 	**/
-	static function mkdirSync(path:String, ?mode:String):Void;
+	static function mkdirSync(path:String, ?mode:FsMode):Void;
 
 	/**
 		Asynchronous readdir(3).
@@ -487,13 +494,13 @@ extern class Fs {
 		The `callback` gets two arguments (err, fd).
 	**/
 	@:overload(function(path:String, flags:FsOpenFlag, callback:Error->Int->Void):Void {})
-	static function open(path:String, flags:FsOpenFlag, mode:String, callback:Error->Int->Void):Void;
+	static function open(path:String, flags:FsOpenFlag, mode:FsMode, callback:Error->Int->Void):Void;
 
 	/**
 		Synchronous version of open().
 	**/
 	@:overload(function(path:String, flags:FsOpenFlag):Void {})
-	static function openSync(path:String, flags:FsOpenFlag, mode:String):Void;
+	static function openSync(path:String, flags:FsOpenFlag, mode:FsMode):Void;
 
 	/**
 		Change file timestamps of the file referenced by the supplied path.
