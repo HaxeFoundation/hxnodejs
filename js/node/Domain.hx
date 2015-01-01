@@ -11,6 +11,7 @@ import js.node.domain.Domain as DomainObject;
 	then the domain object will be notified, rather than losing the context of the error in the process.on('uncaughtException') handler,
 	or causing the program to exit immediately with an error code.
 **/
+@:jsRequire("domain")
 extern class Domain {
 	/**
 		Returns a new Domain object.
