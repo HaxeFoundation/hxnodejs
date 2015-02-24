@@ -248,7 +248,8 @@ extern class ChildProcess {
 		Note that if spawn receives an empty options object, it will result in spawning the process with an empty
 		environment rather than using `process.env`. This due to backwards compatibility issues with a deprecated API.
 	**/
-	static function spawn(command:String, ?args:Array<String>, ?options:ChildProcessSpawnOptions):ChildProcessObject;
+	@:overload(function(command:String, args:Array<String>, ?options:ChildProcessSpawnOptions):ChildProcessObject {})
+	static function spawn(command:String, ?options:ChildProcessSpawnOptions):ChildProcessObject;
 
 	/**
 		Runs a command in a shell and buffers the output.
