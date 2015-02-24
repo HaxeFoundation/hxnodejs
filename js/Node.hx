@@ -19,7 +19,8 @@ extern class Node {
 	/**
 		The process object.
 	 */
-	static var process(default,null):Process; // TODO: avoid global.process lookup?
+	static var process(get,never):Process;
+	private static inline function get_process():Process return untyped __js__("process");
 
 	/**
 		Used to print to stdout and stderr.
