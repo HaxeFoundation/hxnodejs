@@ -229,20 +229,6 @@ extern class Process extends EventEmitter<Process> {
 	**/
 	function nextTick(callback:Void->Void):Void;
 
-
-	/**
-		Callbacks passed to `nextTick` will usually be called at the end of the current flow of execution,
-		and are thus approximately as fast as calling a function synchronously.
-
-		Left unchecked, this would starve the event loop, preventing any I/O from occurring.
-		In order to avoid the situation where Node is blocked by an infinite loop of recursive series
-		of nextTick calls, it defers to allow some I/O to be done every so often.
-
-		The `maxTickDepth` value (default is 1000) is the maximum depth of `nextTick`-calling `nextTick`-callbacks
-		that will be evaluated before allowing other forms of I/O to occur.
-	**/
-	var maxTickDepth:Int;
-
 	/**
 		Sets or reads the process's file mode creation mask.
 		Child processes inherit the mask from the parent process.

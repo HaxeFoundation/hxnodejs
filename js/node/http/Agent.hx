@@ -22,10 +22,10 @@ import js.node.net.Socket;
 @:jsRequire("http", "Agent")
 extern class Agent {
 	/**
-		By default set to 5.
 		Determines how many concurrent sockets the agent can have open per origin.
+		Default: Infinity
 	**/
-	var maxSockets:Int;
+	var maxSockets:Float;
 
 	/**
 		An object which contains arrays of sockets currently in use by the Agent.
