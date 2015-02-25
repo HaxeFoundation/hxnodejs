@@ -19,6 +19,16 @@ private typedef ChildProcessCommonOptions = {
 		Environment key-value pairs
 	**/
 	@:optional var env:DynamicAccess<String>;
+
+	/**
+		Sets the user identity of the process. See setuid(2).
+	**/
+	@:optional var uid:Int;
+
+	/**
+		Sets the group identity of the process. See setgid(2).
+	**/
+	@:optional var gid:Int;
 }
 
 /**
@@ -47,16 +57,6 @@ typedef ChildProcessSpawnOptions = {
 	**/
 	@:deprecated
 	@:optional var customFds:Array<Int>;
-
-	/**
-		Sets the user identity of the process. See setuid(2).
-	**/
-	@:optional var uid:Int;
-
-	/**
-		Sets the group identity of the process. See setgid(2).
-	**/
-	@:optional var gid:Int;
 }
 
 /**
@@ -146,14 +146,14 @@ typedef ChildProcessSpawnOptionsStdio = EitherType<ChildProcessSpawnOptionsStdio
 	var Ignore = "ignore";
 }
 
-// see https://github.com/HaxeFoundation/haxe/issues/3494
+// see https://github.com/HaxeFoundation/haxe/issues/3499
 // typedef ChildProcessSpawnOptionsStdioFull = Array<EitherType<ChildProcessSpawnOptionsStdioBehaviour,EitherType<IStream,Int>>>;
 typedef ChildProcessSpawnOptionsStdioFull = Array<Dynamic>;
 
 /**
-	Options for the `exec` method.
+	Common options for `exec` and `execFile` methods.
 **/
-typedef ChildProcessExecOptions = {
+private typedef ChildProcessExecOptionsBase = {
 	>ChildProcessCommonOptions,
 
 	/**
@@ -180,15 +180,33 @@ typedef ChildProcessExecOptions = {
 }
 
 /**
+	Options for the `exec` method.
+**/
+typedef ChildProcessExecOptions = {
+	>ChildProcessExecOptionsBase,
+
+	/**
+		Shell to execute the command with.
+		Default: '/bin/sh' on UNIX, 'cmd.exe' on Windows.
+
+		The shell should understand the -c switch on UNIX or /s /c on Windows.
+		On Windows, command line parsing should be compatible with cmd.exe.
+	**/
+	@:optional var shell:String;
+}
+
+/**
+	Options for the `execFile` method.
+**/
+typedef ChildProcessExecFileOptions = {
+	>ChildProcessExecOptionsBase,
+}
+
+/**
 	Options for the `fork` method.
 **/
 typedef ChildProcessForkOptions = {
 	>ChildProcessCommonOptions,
-
-	/**
-		Default: 'utf8'
-	**/
-	@:optional var encoding:String;
 
 	/**
 		Executable used to create the child process
@@ -271,8 +289,8 @@ extern class ChildProcess {
 		This is similar to `exec` except it does not execute a subshell but rather the specified file directly.
 		This makes it slightly leaner than `exec`
 	**/
-	@:overload(function(file:String, args:Array<String>, options:ChildProcessExecOptions, ?callback:ChildProcessExecCallback):ChildProcessObject {})
-	@:overload(function(file:String, options:ChildProcessExecOptions, ?callback:ChildProcessExecCallback):ChildProcessObject {})
+	@:overload(function(file:String, args:Array<String>, options:ChildProcessExecFileOptions, ?callback:ChildProcessExecCallback):ChildProcessObject {})
+	@:overload(function(file:String, options:ChildProcessExecFileOptions, ?callback:ChildProcessExecCallback):ChildProcessObject {})
 	@:overload(function(file:String, args:Array<String>, ?callback:ChildProcessExecCallback):ChildProcessObject {})
 	static function execFile(file:String, ?callback:ChildProcessExecCallback):ChildProcessObject;
 

@@ -1,7 +1,5 @@
 package js.node.child_process;
 
-import haxe.DynamicAccess;
-import haxe.EitherType;
 import js.node.events.EventEmitter;
 import js.node.Stream;
 import js.node.stream.Readable;
