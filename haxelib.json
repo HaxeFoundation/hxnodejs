@@ -1,0 +1,10 @@
+{
+    "name": "hxnodejs",
+    "url": "https://github.com/HaxeFoundation/hxnodejs",
+    "description": "Extern definitions for node.js",
+    "license": "MIT",
+    "version": "0.10.0",
+    "releasenote": "Initial release for node.js 0.10",
+    "contributors": ["nadako"],
+    "tags": ["js", "nodejs", "async", "net", "web"]
+}
