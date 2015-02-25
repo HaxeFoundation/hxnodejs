@@ -31,16 +31,25 @@ private typedef ChildProcessCommonOptions = {
 	@:optional var gid:Int;
 }
 
+
 /**
-	Options for the `spawn` method.
+	Common options for `spawn` and `spawnSync` methods.
 **/
-typedef ChildProcessSpawnOptions = {
+private typedef ChildProcessSpawnOptionsBase = {
 	>ChildProcessCommonOptions,
 
 	/**
 		Child's stdio configuration.
 	**/
 	@:optional var stdio:ChildProcessSpawnOptionsStdio;
+}
+
+
+/**
+	Options for the `spawn` method.
+**/
+typedef ChildProcessSpawnOptions = {
+	>ChildProcessSpawnOptionsBase,
 
 	/**
 		The child will be a process group leader.
@@ -58,6 +67,18 @@ typedef ChildProcessSpawnOptions = {
 	@:deprecated
 	@:optional var customFds:Array<Int>;
 }
+
+
+/**
+	Options for the `spawnSync` method.
+**/
+typedef ChildProcessSpawnSyncOptions = {
+	>ChildProcessSpawnOptionsBase,
+	>ChildProcessExecOptionsBase,
+
+	@:optional var input:EitherType<String,Buffer>;
+}
+
 
 /**
 	The `stdio` option is an array where each index corresponds to a fd in the child.
@@ -252,6 +273,48 @@ extern class ChildProcessExecError extends js.Error {
 **/
 typedef ChildProcessExecCallback = Null<ChildProcessExecError> -> Buffer -> Buffer -> Void;
 
+
+/**
+	Object returned from the `spawnSync` method.
+**/
+typedef ChildProcessSpawnSyncResult = {
+	/**
+		Pid of the child process
+	**/
+	var pid:Int;
+
+	/**
+		Array of results from stdio output
+	**/
+	var output:Array<EitherType<Buffer,String>>;
+
+	/**
+		The contents of output[1]
+	**/
+	var stdout:EitherType<Buffer,String>;
+
+	/**
+		The contents of output[2]
+	**/
+	var stderr:EitherType<Buffer,String>;
+
+	/**
+		The exit code of the child process
+	**/
+	var status:Int;
+
+	/**
+		The signal used to kill the child process
+	**/
+	var signal:String;
+
+	/**
+		The error object if the child process failed or timed out
+	**/
+	var error:js.Error;
+}
+
+
 @:jsRequire("child_process")
 extern class ChildProcess {
 	/**
@@ -266,8 +329,9 @@ extern class ChildProcess {
 		Note that if spawn receives an empty options object, it will result in spawning the process with an empty
 		environment rather than using `process.env`. This due to backwards compatibility issues with a deprecated API.
 	**/
+	@:overload(function(command:String, ?options:ChildProcessSpawnOptions):ChildProcessObject {})
 	@:overload(function(command:String, args:Array<String>, ?options:ChildProcessSpawnOptions):ChildProcessObject {})
-	static function spawn(command:String, ?options:ChildProcessSpawnOptions):ChildProcessObject;
+	static function spawn(command:String, ?args:Array<String>):ChildProcessObject;
 
 	/**
 		Runs a command in a shell and buffers the output.
@@ -303,4 +367,43 @@ extern class ChildProcess {
 	@:overload(function(modulePath:String, args:Array<String>, options:ChildProcessForkOptions):ChildProcessObject {})
 	@:overload(function(modulePath:String, options:ChildProcessForkOptions):ChildProcessObject {})
 	static function fork(modulePath:String, ?args:Array<String>):ChildProcessObject;
+
+	/**
+		Synchronous version of `spawn`.
+
+		`spawnSync` will not return until the child process has fully closed.
+		When a timeout has been encountered and `killSignal` is sent, the method won't return until the process
+		has completely exited. That is to say, if the process handles the SIGTERM signal and doesn't exit,
+		your process will wait until the child process has exited.
+	**/
+	@:overload(function(command:String, args:Array<String>, ?options:ChildProcessSpawnSyncOptions):ChildProcessSpawnSyncResult {})
+	static function spawnSync(command:String, ?options:ChildProcessSpawnSyncOptions):ChildProcessSpawnSyncResult;
+
+	/**
+		Synchronous version of `execFile`.
+
+		`execFileSync` will not return until the child process has fully closed.
+		When a timeout has been encountered and `killSignal` is sent, the method won't return until the process
+		has completely exited. That is to say, if the process handles the SIGTERM signal and doesn't exit,
+		your process will wait until the child process has exited.
+
+		If the process times out, or has a non-zero exit code, this method will throw.
+		The Error object will contain the entire result from `spawnSync`
+	**/
+	@:overload(function(command:String, ?options:ChildProcessSpawnSyncOptions):EitherType<String,Buffer> {})
+	@:overload(function(command:String, args:Array<String>, ?options:ChildProcessSpawnSyncOptions):EitherType<String,Buffer> {})
+	static function execFileSync(command:String, ?args:Array<String>):EitherType<String,Buffer>;
+
+	/**
+		Synchronous version of `exec`.
+
+		`execSync` will not return until the child process has fully closed.
+		When a timeout has been encountered and `killSignal` is sent, the method won't return until the process
+		has completely exited. That is to say, if the process handles the SIGTERM signal and doesn't exit,
+		your process will wait until the child process has exited.
+
+		If the process times out, or has a non-zero exit code, this method will throw.
+		The Error object will contain the entire result from `spawnSync`
+	**/
+	static function execSync(command:String, ?options:ChildProcessSpawnSyncOptions):EitherType<String,Buffer>;
 }
