@@ -7,6 +7,7 @@ import js.node.events.EventEmitter;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
 
+
 /**
 	Enumeration of events emitted by the Process class.
 **/
@@ -21,6 +22,20 @@ import js.node.stream.Writable;
 	**/
 	var Exit : ProcessEvent<Int->Void> = "exit";
 
+
+	/**
+		Emitted when node empties it's event loop and has nothing else to schedule.
+
+		Normally, node exits when there is no work scheduled, but a listener for `beforeExit`
+		can make asynchronous calls, and cause node to continue.
+
+		`beforeExit` is not emitted for conditions causing explicit termination, such as `process.exit()`
+		or uncaught exceptions, and should not be used as an alternative to the `exit` event
+		unless the intention is to schedule more work.
+	**/
+	var BeforeExit : ProcessEvent<Int->Void> = "beforeExit";
+
+
 	/**
 		Emitted when an exception bubbles all the way back to the event loop.
 		If a listener is added for this exception, the default action (which is to print a stack trace and exit)
@@ -28,6 +43,7 @@ import js.node.stream.Writable;
 	**/
 	var UncaughtException : ProcessEvent<js.Error->Void> = "uncaughtException";
 }
+
 
 extern class Process extends EventEmitter<Process> {
 
@@ -251,6 +267,15 @@ extern class Process extends EventEmitter<Process> {
 	**/
 	@:overload(function(prev:Array<Float>):Array<Float> {})
 	function hrtime():Array<Float>;
+
+	/**
+		Alternate way to retrieve require.main. The difference is that if the main module changes at runtime,
+		require.main might still refer to the original main module in modules that were required
+		before the change occurred. Generally it's safe to assume that the two refer to the same module.
+
+		As with require.main, it will be undefined if there was no entry script.
+	**/
+	var mainModule(default,null):Module;
 
 	/**
 		Send a message to the parent process.
