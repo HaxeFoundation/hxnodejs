@@ -55,9 +55,16 @@ extern class Buffer implements ArrayAccess<Int> {
 	static function concat(list:Array<Buffer>, ?totalLength:Int):Buffer;
 
 	/**
+		The same as `buf1.compare(buf2)`. Useful for sorting an Array of Buffers.
+	**/
+	@:native("compare")
+	static function compareBuffers(buf1:Buffer, buf2:Buffer):Int;
+
+	/**
 		Allocates a new buffer.
 	**/
 	@:overload(function(string:String, ?encoding:String):Void {})
+	@:overload(function(buffer:Buffer):Void {})
 	@:overload(function(array:Array<Int>):Void {})
 	function new(size:Int):Void;
 
@@ -68,13 +75,12 @@ extern class Buffer implements ArrayAccess<Int> {
 		`length` refers to the amount of memory allocated for the buffer object.
 		It does not change when the contents of the buffer are changed.
 	**/
-	var length:Int;
+	var length(default,null):Int;
 
 	/**
-		Returns a JSON-representation of the `Buffer` instance,
-		which is identical to the output for JSON Arrays.
+		Returns a JSON-representation of the `Buffer` instance.
 	**/
-	function toJSON():Array<Int>;
+	function toJSON():Dynamic;
 
 	/**
 		Writes `string` to the buffer at `offset` using the given `encoding`.
@@ -420,4 +426,14 @@ extern class Buffer implements ArrayAccess<Int> {
 	**/
 	@:overload(function(value:String, ?offset:Int, ?end:Int):Void {})
 	function fill(value:Int, ?offset:Int, ?end:Int):Void;
+
+	/**
+		Returns a boolean of whether `this` and `otherBuffer` have the same bytes.
+	**/
+	function equals(otherBuffer:Buffer):Bool;
+
+	/**
+		Returns a number indicating whether `this` comes before or after or is the same as the `otherBuffer` in sort order.
+	**/
+	function compare(otherBuffer:Buffer):Int;
 }
