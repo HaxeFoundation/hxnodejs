@@ -36,6 +36,7 @@ Requires latest GIT version of Haxe (builds available at http://builds.haxe.org/
 | querystring       | done   |                          |
 | readline          | done   |                          |
 | repl              | done   |                          |
+| smalloc           | done   |                          |
 | stream            | done   |                          |
 | string_decoder    | done   |                          |
 | tls               | wip    |                          |
