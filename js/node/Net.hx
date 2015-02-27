@@ -3,16 +3,35 @@ package js.node;
 import js.node.net.Socket;
 import js.node.net.Server;
 
-typedef SocketOptions = {
+private typedef CommonOptions = {
 	/**
-		if true, the socket won't automatically send a FIN packet when the other end of the socket sends a FIN packet.
-		Defaults to false. See 'end' event for more information.
+		If true, then the socket won't automatically send a FIN packet
+		when the other end of the socket sends a FIN packet.
+
+		The socket becomes non-readable, but still writable. You should call the `end` method explicitly.
+		See `end` event for more information.
+
+		Default: false
 	**/
 	@:optional var allowHalfOpen:Bool;
 }
 
+typedef SocketOptions = {
+	>CommonOptions,
+	/**
+		If true, then the socket associated with each incoming connection will be paused,
+		and no data will be read from its handle.
+
+		This allows connections to be passed between processes without any data being read by the original process.
+		To begin reading data from a paused socket, call `resume`.
+
+		Default: false
+	**/
+	@:optional var pauseOnConnect:Bool;
+}
+
 typedef TCPConnectOptions = {
-	>SocketOptions,
+	>CommonOptions,
 
 	/**
 		Port the client should connect to
@@ -29,10 +48,22 @@ typedef TCPConnectOptions = {
 		Local interface to bind to for network connections.
 	**/
 	@:optional var localAddress:String;
+
+	/**
+		Local port to bind to for network connections.
+	**/
+	@:optional var localPort:Int;
+
+	/**
+		Version of IP stack. Defaults to 4.
+
+		TODO: enum this?
+	**/
+	@:optional var family:Int;
 }
 
 typedef UnixConnectOptions = {
-	>SocketOptions,
+	>CommonOptions,
 
 	/**
 		Path the client should connect to

@@ -47,7 +47,7 @@ extern class Server extends EventEmitter<Server> {
 		This function is asynchronous. When the server has been bound, 'listening' event will be emitted.
 		The last parameter `callback` will be added as an listener for the 'listening' event.
 	**/
-	@:overload(function(path:String, ?callback:Void->Void):Void {}) // TOOD: document that
+	@:overload(function(path:String, ?callback:Void->Void):Void {})
 	@:overload(function(handle:haxe.EitherType<Dynamic,{fd:Int}>, ?callback:Void->Void):Void {}) // TODO: according to docs, Dynamic should be either a server or socket, but i'm not sure if it's EitherType<Socket,Server>. Also, document that
 	@:overload(function(port:Int, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, backlog:Int, ?callback:Void->Void):Void {})
@@ -91,13 +91,12 @@ extern class Server extends EventEmitter<Server> {
 	var maxConnections : Int;
 
 	/**
-		This function is deprecated; please use `getConnections` instead.
-
 		The number of concurrent connections on the server.
 
 		This becomes null when sending a socket to a child with child_process.fork().
 		To poll forks and get current number of active connections use asynchronous `getConnections` instead.
 	**/
+	@:deprecated("please use `getConnections` instead")
 	var connections(default,null):Null<Int>;
 
 	/**
