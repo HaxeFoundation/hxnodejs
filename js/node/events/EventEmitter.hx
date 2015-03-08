@@ -99,7 +99,7 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 		Execute each of the listeners in order with the supplied arguments.
 		Returns true if event had listeners, false otherwise.
 	**/
-	function emit<T:Function>(event:Event<T>, args:haxe.Rest<Dynamic>):Bool;
+	function emit<T:Function>(event:Event<T>, args:haxe.extern.Rest<Dynamic>):Bool;
 
 	/**
 		Return the number of listeners for a given event.
@@ -122,5 +122,5 @@ extern interface IEventEmitter {
     function removeAllListeners<T:Function>(?event:Event<T>):IEventEmitter;
     function setMaxListeners(n:Int):Void;
     function listeners<T:Function>(event:Event<T>):Array<T>;
-    function emit<T:Function>(event:Event<T>, args:haxe.Rest<Dynamic>):Bool;
+    function emit<T:Function>(event:Event<T>, args:haxe.extern.Rest<Dynamic>):Bool;
 }

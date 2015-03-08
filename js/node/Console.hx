@@ -15,26 +15,26 @@ extern class Console {
 		If formatting elements are not found in the first string then `Util.inspect` is used on each argument.
 		See `Util.format` for more information.
 	**/
-	@:overload(function(args:haxe.Rest<Dynamic>):Void {})
-	function log(data:String, args:haxe.Rest<Dynamic>):Void;
+	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
+	function log(data:String, args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
 		Same as `log`.
 	**/
-	@:overload(function(args:haxe.Rest<Dynamic>):Void {})
-	function info(data:String, args:haxe.Rest<Dynamic>):Void;
+	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
+	function info(data:String, args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
 		Same as `log` but prints to stderr.
 	**/
-	@:overload(function(args:haxe.Rest<Dynamic>):Void {})
-	function error(data:String, args:haxe.Rest<Dynamic>):Void;
+	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
+	function error(data:String, args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
 		Same as `error`.
 	**/
-	@:overload(function(args:haxe.Rest<Dynamic>):Void {})
-	function warn(data:String, args:haxe.Rest<Dynamic>):Void;
+	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
+	function warn(data:String, args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
 		Uses util.inspect on obj and prints resulting string to stdout.
@@ -55,13 +55,13 @@ extern class Console {
 	/**
 		Print to stderr 'Trace :', followed by the formatted message and stack trace to the current position.
 	**/
-	@:overload(function(args:haxe.Rest<Dynamic>):Void {})
-	function trace(message:String, args:haxe.Rest<Dynamic>):Void;
+	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
+	function trace(message:String, args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
 		Similar to `Assert.ok`, but the error message is formatted as `Util.format(message...)`.
 	**/
-	@:overload(function(value:Bool, args:haxe.Rest<Dynamic>):Void {})
-	@:overload(function(value:Bool, message:String, args:haxe.Rest<Dynamic>):Void {})
+	@:overload(function(value:Bool, args:haxe.extern.Rest<Dynamic>):Void {})
+	@:overload(function(value:Bool, message:String, args:haxe.extern.Rest<Dynamic>):Void {})
 	function assert(value:Bool):Void;
 }

@@ -24,8 +24,8 @@ extern class Util {
 		If the first argument is not a format string then `format` returns a string that is the concatenation of
 		all its arguments separated by spaces. Each argument is converted to a string with `inspect`.
 	**/
-	@:overload(function(args:haxe.Rest<Dynamic>):String {})
-	static function format(format:String, args:haxe.Rest<Dynamic>):String;
+	@:overload(function(args:haxe.extern.Rest<Dynamic>):String {})
+	static function format(format:String, args:haxe.extern.Rest<Dynamic>):String;
 
 	/**
 		A synchronous output function.
@@ -36,20 +36,20 @@ extern class Util {
 	/**
 		Same as `debug` except this will output all arguments immediately to stderr.
 	**/
-	static function error(args:haxe.Rest<Dynamic>):Void;
+	static function error(args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
 		A synchronous output function.
 		Will block the process and output all arguments to stdout with newlines after each argument.
 	**/
-	static function puts(args:haxe.Rest<Dynamic>):Void;
+	static function puts(args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
 		A synchronous output function.
 		Will block the process, cast each argument to a string then output to stdout.
 		Does not place newlines after each argument.
 	**/
-	static function print(args:haxe.Rest<Dynamic>):Void;
+	static function print(args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
 		Output with timestamp on stdout.

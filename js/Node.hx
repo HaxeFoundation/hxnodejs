@@ -105,7 +105,7 @@ extern class Node {
 		Returns a `TimeoutObject` for possible use with `clearTimeout`.
 		Optionally you can also pass arguments to the `callback`.
 	**/
-	static function setTimeout(callback:Function, delay:Int, args:haxe.Rest<Dynamic>):TimeoutObject;
+	static function setTimeout(callback:Function, delay:Int, args:haxe.extern.Rest<Dynamic>):TimeoutObject;
 
 	/**
 		Prevents a timeout from triggering.
@@ -117,7 +117,7 @@ extern class Node {
 		Returns a `IntervalObject` for possible use with `clearInterval`.
 		Optionally you can also pass arguments to the `callback`.
 	**/
-	static function setInterval(callback:Function, delay:Int, args:haxe.Rest<Dynamic>):IntervalObject;
+	static function setInterval(callback:Function, delay:Int, args:haxe.extern.Rest<Dynamic>):IntervalObject;
 
 	/**
 		Stops a interval from triggering.
@@ -134,7 +134,7 @@ extern class Node {
 		`setImmediate` will yield to the event loop after firing a queued callback to make sure I/O is not being starved.
 		While order is preserved for execution, other I/O events may fire between any two scheduled immediate callbacks.
 	**/
-	static function setImmediate(callback:Function, args:haxe.Rest<Dynamic>):ImmediateObject;
+	static function setImmediate(callback:Function, args:haxe.extern.Rest<Dynamic>):ImmediateObject;
 
 	/**
 		Stops an immediate from triggering.

@@ -1,6 +1,6 @@
 package js.node.stream;
 
-import haxe.EitherType;
+import haxe.extern.EitherType;
 
 /**
 	Transform streams are `Duplex` streams where the output is in some way computed from the input.

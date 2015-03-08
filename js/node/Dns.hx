@@ -58,7 +58,7 @@ package js.node;
 **/
 typedef DnsResolvedAddressMX = {priority:Int, exchange:String};
 typedef DnsResolvedAddressSRV = {priority:Int, weight:Int, port:Int, name:String};
-typedef DnsResolvedAddress = haxe.EitherType<String,haxe.EitherType<DnsResolvedAddressMX,DnsResolvedAddressSRV>>;
+typedef DnsResolvedAddress = haxe.extern.EitherType<String,haxe.extern.EitherType<DnsResolvedAddressMX,DnsResolvedAddressSRV>>;
 
 /**
 	Error objects returned by dns lookups are of this type

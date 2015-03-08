@@ -19,7 +19,7 @@ extern class Path {
 	/**
 		Join all arguments together and normalize the resulting path.
 	**/
-	static function join(paths:haxe.Rest<String>):String;
+	static function join(paths:haxe.extern.Rest<String>):String;
 
 
 	/**
@@ -31,7 +31,7 @@ extern class Path {
 		normalized, and trailing slashes are removed unless the path gets resolved to the
 		root directory.
 	**/
-	@:overload(function(args:haxe.Rest<String>):String {})
+	@:overload(function(args:haxe.extern.Rest<String>):String {})
 	@:overload(function(from:String, to:String):String {})
 	static function resolve(to:String):String;
 

@@ -117,7 +117,7 @@ typedef UrlData = {
 		where either one is expected, so if you know the actual type, just assign it
 		to properly typed variable (e.g. var s:String = url.query)
 	**/
-	@:optional var query:haxe.EitherType<String,DynamicAccess<String>>;
+	@:optional var query:haxe.extern.EitherType<String,DynamicAccess<String>>;
 
 	/**
 		The 'fragment' portion of the URL including the pound - sign.

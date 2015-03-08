@@ -1,6 +1,6 @@
 package js.node.readline;
 
-import haxe.EitherType;
+import haxe.extern.EitherType;
 import js.node.events.EventEmitter;
 
 /**

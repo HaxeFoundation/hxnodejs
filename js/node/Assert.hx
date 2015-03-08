@@ -1,6 +1,6 @@
 package js.node;
 
-import haxe.EitherType;
+import haxe.extern.EitherType;
 
 /**
 	This module is used for writing unit tests for your applications

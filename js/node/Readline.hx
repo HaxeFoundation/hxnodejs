@@ -1,6 +1,6 @@
 package js.node;
 
-import haxe.EitherType;
+import haxe.extern.EitherType;
 
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;

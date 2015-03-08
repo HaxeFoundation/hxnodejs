@@ -1,7 +1,7 @@
 package js.node;
 
 import haxe.DynamicAccess;
-import haxe.EitherType;
+import haxe.extern.EitherType;
 
 import js.node.events.EventEmitter;
 import js.node.stream.Readable;

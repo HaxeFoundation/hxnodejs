@@ -110,7 +110,7 @@ extern class Net {
 	@:overload(function(path:String, ?connectListener:Void->Void):Socket {})
 	@:overload(function(port:Int, ?connectListener :Void->Void):Socket {})
 	@:overload(function(port:Int, host:String, ?connectListener:Void->Void):Socket {})
-	static function connect(options:haxe.EitherType<TCPConnectOptions,UnixConnectOptions>, ?connectListener:Void->Void):Socket;
+	static function connect(options:haxe.extern.EitherType<TCPConnectOptions,UnixConnectOptions>, ?connectListener:Void->Void):Socket;
 
 	/**
 		Same as `connect`.
@@ -118,7 +118,7 @@ extern class Net {
 	@:overload(function(path:String, ?connectListener:Void->Void):Socket {})
 	@:overload(function(port:Int, ?connectListener:Void->Void):Socket {})
 	@:overload(function(port:Int, host:String, ?connectListener:Void->Void):Socket {})
-	static function createConnection(options:haxe.EitherType<TCPConnectOptions,UnixConnectOptions>, ?connectListener:Void->Void):Socket;
+	static function createConnection(options:haxe.extern.EitherType<TCPConnectOptions,UnixConnectOptions>, ?connectListener:Void->Void):Socket;
 
 	/**
 		Tests if input is an IP address.

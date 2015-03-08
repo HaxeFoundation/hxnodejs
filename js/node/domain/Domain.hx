@@ -54,7 +54,7 @@ extern class Domain extends EventEmitter<Domain> {
 	/**
 		An array of timers and event emitters that have been explicitly added to the domain.
 	**/
-	var members(default,null):Array<haxe.EitherType<IEventEmitter,TimerObject>>;
+	var members(default,null):Array<haxe.extern.EitherType<IEventEmitter,TimerObject>>;
 
 	/**
 		Explicitly adds an `emitter` to the domain.

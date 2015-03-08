@@ -1,6 +1,6 @@
 package js.node;
 
-import haxe.EitherType;
+import haxe.extern.EitherType;
 import js.Error;
 import js.node.Buffer;
 import js.node.crypto.*;

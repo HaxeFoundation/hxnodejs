@@ -1,6 +1,6 @@
 package js.node.stream;
 
-import haxe.EitherType;
+import haxe.extern.EitherType;
 import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
 import js.node.Stream;
@@ -26,7 +26,7 @@ import js.node.stream.Writable.IWritable;
 
 		If you just want to get all the data out of the stream as fast as possible, this is the best way to do so.
 	**/
-	var Data : ReadableEvent<haxe.EitherType<Buffer,String>->Void> = "data";
+	var Data : ReadableEvent<haxe.extern.EitherType<Buffer,String>->Void> = "data";
 
 	/**
 		This event fires when there will be no more data to read.

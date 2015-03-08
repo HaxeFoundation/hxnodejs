@@ -1,7 +1,7 @@
 package js.node;
 
 import haxe.DynamicAccess;
-import haxe.EitherType;
+import haxe.extern.EitherType;
 
 import js.node.Stream.IStream;
 import js.node.child_process.ChildProcess as ChildProcessObject;

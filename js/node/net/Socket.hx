@@ -25,7 +25,7 @@ import js.node.events.EventEmitter.Event;
 
 		Note that the data will be lost if there is no listener when a Socket emits a 'data' event.
 	**/
-	var Data : SocketEvent<haxe.EitherType<Buffer,String>->Void> = "data";
+	var Data : SocketEvent<haxe.extern.EitherType<Buffer,String>->Void> = "data";
 
 	/**
 		Emitted when the other end of the socket sends a FIN packet.

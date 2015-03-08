@@ -79,7 +79,7 @@ typedef HttpRequestOptions = {
 			`Agent` object: explicitly use the passed in `Agent`.
 			false: opts out of connection pooling with an `Agent`, defaults request to 'Connection: close'.
 	**/
-	@:optional var agent:haxe.EitherType<Agent,Bool>;
+	@:optional var agent:haxe.extern.EitherType<Agent,Bool>;
 }
 
 /**
