@@ -1,4 +1,4 @@
-![](http://i.imgur.com/J45iTOy.png)
+![](http://take.ms/dlXH9)
 # Haxe Node.JS
 
 ## Overview
