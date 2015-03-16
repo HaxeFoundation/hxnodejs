@@ -29,14 +29,15 @@ import haxe.extern.EitherType;
 @:jsRequire("assert")
 extern class Assert {
 	/**
-		Throws an exception that displays the values for actual and expected separated by the provided operator.
+		Throws an exception that displays the values for `actual` and `expected` separated by the provided `operator`.
 	**/
-	static function fail<T>(actual:T, expected:T, ?message:String, ?operator:String):Void;
+	static function fail<T>(actual:T, expected:T, message:String, operator:String):Void;
 
 	/**
 		Tests if value is truthy
 	**/
-	static inline function assert(value:Bool, ?message:String):Void untyped Assert(value, message);
+	@:selfCall
+	static function assert(value:Bool, ?message:String):Void;
 
 	/**
 		Tests if value is truthy
@@ -77,8 +78,8 @@ extern class Assert {
 		Expects block to throw an error.
 		`error` can be a class, javascript RegExp or a validation function.
 	**/
-	@:overload(function(block:Void->Void, error:ThrowsExpectedError, message:String):Void {})
-	static function throws(block:Void->Void, ?error:ThrowsExpectedError):Void;
+	@:overload(function(block:Void->Void, ?message:String):Void {})
+	static function throws(block:Void->Void, error:ThrowsExpectedError, ?message:String):Void;
 
 	/**
 		Expects block not to throw an error, see `throws` for details.
