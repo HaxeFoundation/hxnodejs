@@ -1,0 +1,9 @@
+--macro ImportAll.run("js")
+--no-output
+-D doc-gen
+-js all.js
+-xml bin/js.xml
+
+--next
+
+-cmd haxelib run dox -o bin/api -i bin -theme flambe -D source-path https://github.com/HaxeFoundation/hxnodejs/blob/master/
