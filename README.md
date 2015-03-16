@@ -5,13 +5,15 @@
 
 Extern classes for Node.JS version **0.12.0**
 
-Full documentation can be found in the **[Node.JS API Docs](http://nodejs.org/api/index.html)**.
+Haxe-generated API documentation is available at http://haxefoundation.github.io/hxnodejs/js/Node.html.
+
+Original node.js documentation can be found at http://nodejs.org/api/index.html.
 
 ## Status
 
 This library is currently at **beta** stage, testing and contributions are welcome. See [current issues](https://github.com/HaxeFoundation/hxnodejs/issues) and [extern guidelines](https://github.com/HaxeFoundation/hxnodejs/blob/master/HOWTO.md). After it's finished, it will either be included in Haxe standard library or released as a separate haxelib.
 
-Requires latest GIT version of Haxe (builds available at http://builds.haxe.org/)
+Requires Haxe 3.2RC1 or later (builds available at http://builds.haxe.org/)
 
 | module            | status | comment                  |
 |-------------------|--------|--------------------------|
