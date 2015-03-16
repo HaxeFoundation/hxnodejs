@@ -3,7 +3,7 @@
 
 ## Overview
 
-Extern classes for Node.JS version **0.12.0**
+Extern type definitions for Node.JS version **0.12.0**
 
 Haxe-generated API documentation is available at http://haxefoundation.github.io/hxnodejs/js/Node.html.
 
