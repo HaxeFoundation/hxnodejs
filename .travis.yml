@@ -1,0 +1,19 @@
+language: c
+
+env:
+  HAXE_VER:
+
+matrix:
+  fast_finish: true
+
+before_install:
+  - travis_retry git clone --depth=50 --branch=master git://github.com/waneck/travis-hx.git ~/travis-hx
+
+install:
+  - ~/travis-hx/setup.sh
+
+script:
+  - cd $TRAVIS_BUILD_DIR
+  - haxe build.hxml
+  - haxelib git dox https://github.com/dpeek/dox
+  - haxe doc.hxml

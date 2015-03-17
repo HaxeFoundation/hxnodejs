@@ -1,4 +1,7 @@
-![](http://take.ms/dlXH9)
+![hxnodejs](http://take.ms/dlXH9)
+
+[![Build Status](https://travis-ci.org/HaxeFoundation/hxnodejs.svg?branch=master)](https://travis-ci.org/HaxeFoundation/hxnodejs)
+
 # Haxe Node.JS
 
 ## Overview
