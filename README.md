@@ -6,11 +6,47 @@
 
 ## Overview
 
-Extern type definitions for Node.JS version **0.12.0**
+Extern type definitions for Node.JS version **0.12.0** and Haxe **3.2+**.
 
 Haxe-generated API documentation is available at http://haxefoundation.github.io/hxnodejs/js/Node.html.
 
 Original node.js documentation can be found at http://nodejs.org/api/index.html.
+
+## Features
+
+ - Full node.js API with documentation.
+ - Strict typing for everything, fully leveraging Haxe type system.
+ - Optionally typed event listeners.
+ - Automatic insert of "require" statements for used modules.
+ - Clean output.
+
+## Example
+```haxe
+class Main {
+    static function main() {
+        var server = js.node.Net.createServer(function(socket) {
+            socket.write("Echo server\n\n");
+            socket.pipe(socket);
+        });
+        server.listen(1337, "127.0.0.1");
+    }
+}
+```
+Generated JavaScript:
+```js
+(function () { "use strict";
+var Main = function() { };
+Main.main = function() {
+	var server = js_node_Net.createServer(function(socket) {
+		socket.write("Echo server\n\n");
+		socket.pipe(socket);
+	});
+	server.listen(1337,"127.0.0.1");
+};
+var js_node_Net = require("net");
+Main.main();
+})();
+```
 
 ## Status
 
