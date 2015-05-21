@@ -520,8 +520,8 @@ extern class Fs {
 	/**
 		Synchronous version of open().
 	**/
-	@:overload(function(path:String, flags:FsOpenFlag):Void {})
-	static function openSync(path:String, flags:FsOpenFlag, mode:FsMode):Void;
+	@:overload(function(path:String, flags:FsOpenFlag):Int {})
+	static function openSync(path:String, flags:FsOpenFlag, mode:FsMode):Int;
 
 	/**
 		Change file timestamps of the file referenced by the supplied path.
