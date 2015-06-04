@@ -688,7 +688,7 @@ extern class Fs {
 		is the name of the file which triggered the event.
 	**/
 	@:overload(function(filename:String):FSWatcher {})
-	@:overload(function(filename:String, options:{persistent:Bool}, listener:FSWatcherChangeType->String->Void):FSWatcher {})
+	@:overload(function(filename:String, options:{persistent:Bool,?recursive:Bool}, listener:FSWatcherChangeType->String->Void):FSWatcher {})
 	static function watch(filename:String, listener:FSWatcherChangeType->String->Void):FSWatcher;
 
 	/**
