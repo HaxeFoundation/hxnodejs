@@ -42,7 +42,6 @@ extern class Path {
 	**/
 	static function join(paths:haxe.extern.Rest<String>):String;
 
-
 	/**
 		Resolves to to an absolute path.
 
@@ -55,6 +54,13 @@ extern class Path {
 	@:overload(function(args:haxe.extern.Rest<String>):String {})
 	@:overload(function(from:String, to:String):String {})
 	static function resolve(to:String):String;
+
+	/**
+		Determines whether `path` is an absolute path.
+
+		An absolute path will always resolve to the same location, regardless of the working directory.
+	**/
+	static function isAbsolute(path:String):Bool;
 
 	/**
 		Solve the relative path from from to to.
@@ -87,4 +93,47 @@ extern class Path {
 		The platform-specific path delimiter, ; or ':'.
 	**/
 	static var delimiter(default,null):String;
+
+	/**
+		Returns an object from a path string.
+	**/
+	static function parse(pathString:String):PathObject;
+
+	/**
+		Returns a path string from an object, the opposite of `Path.parse` above.
+	**/
+	static function format(pathObject:PathObject):String;
+
+	// TODO: Path.posix, Path.win32 - same (static) methods. we probably need a macro here to copy method definitions
+}
+
+
+/**
+	Path object returned from `Path.parse` and taken by `Path.format`.
+**/
+typedef PathObject = {
+	/**
+		E.g. "C:\" for "C:\path\dir\index.html"
+	**/
+	var root:String;
+
+	/**
+		E.g. "C:\path\dir" for "C:\path\dir\index.html"
+	**/
+	var dir:String;
+
+	/**
+		E.g. "index.html" for "C:\path\dir\index.html"
+	**/
+	var base:String;
+
+	/**
+		E.g. ".html" for "C:\path\dir\index.html"
+	**/
+	var ext:String;
+
+	/**
+		E.g. "index" for "C:\path\dir\index.html"
+	**/
+	var name:String;
 }
