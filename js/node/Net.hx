@@ -77,10 +77,8 @@ typedef TCPConnectOptions = {
 
 	/**
 		Version of IP stack. Defaults to 4.
-
-		TODO: enum this?
 	**/
-	@:optional var family:Int;
+	@:optional var family:js.node.Dns.DnsAddressFamily;
 }
 
 typedef UnixConnectOptions = {
