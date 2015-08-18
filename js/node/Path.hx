@@ -21,6 +21,30 @@
  */
 package js.node;
 
+
+// IMPORTANT: this structure should contain a set of fields
+// matching statics of the `Path` class and is used as a type
+// for `posix` and `win32` fields of `Path` class.
+// We should probably generate this from a macro, but let's keep
+// things simple for now.
+private typedef PathModule = {
+	function normalize(p:String):String;
+	function join(paths:haxe.extern.Rest<String>):String;
+	@:overload(function(args:haxe.extern.Rest<String>):String {})
+	@:overload(function(from:String, to:String):String {})
+	function resolve(to:String):String;
+	function isAbsolute(path:String):Bool;
+	function relative(from:String, to:String):String;
+	function dirname(p:String):String;
+	function basename(p:String, ?ext:String):String;
+	function extname(p:String):String;
+	var sep(default,null):String;
+	var delimiter(default,null):String;
+	function parse(pathString:String):PathObject;
+	function format(pathObject:PathObject):String;
+}
+
+
 /**
 	This module contains utilities for handling and transforming file paths.
 	Almost all these methods perform only string transformations.
@@ -104,7 +128,15 @@ extern class Path {
 	**/
 	static function format(pathObject:PathObject):String;
 
-	// TODO: Path.posix, Path.win32 - same (static) methods. we probably need a macro here to copy method definitions
+	/**
+		Provide access to aforementioned path methods but always interact in a posix compatible way.
+	**/
+	static var posix:PathModule;
+
+	/**
+		Provide access to aforementioned path methods but always interact in a win32 compatible way.
+	**/
+	static var win32:PathModule;
 }
 
 
