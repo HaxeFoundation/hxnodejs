@@ -124,7 +124,7 @@ extern class Util {
 
 		As an additional convenience, superConstructor will be accessible through the constructor.`super_` property.
 	**/
-	static function inherits(constructor:Class<Dynamic>, superConstructor:Class<Dynamic>):Bool; // TODO: do we need this? isn't it basically the same haxe does for class inheritance?
+	static function inherits(constructor:Class<Dynamic>, superConstructor:Class<Dynamic>):Bool;
 }
 
 /**
