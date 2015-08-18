@@ -112,6 +112,15 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	function setMaxListeners(n:Int):Void;
 
 	/**
+		`setMaxListeners` sets the maximum on a per-instance basis.
+		This class property lets you set it for all EventEmitter instances,
+		current and future, effective immediately. Use with care.
+
+		Note that `setMaxListeners` still has precedence over `defaultMaxListeners`.
+	**/
+	static var defaultMaxListeners:Int;
+
+	/**
 		Returns an array of listeners for the specified event.
 	**/
 	function listeners<T:Function>(event:Event<T>):Array<T>;
