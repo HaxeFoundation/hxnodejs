@@ -88,8 +88,137 @@ extern class DnsError extends Error {
 	/**
 		Values for error codes are listed in `Dns` class.
 	**/
-	var code(default,null):String;
+	var code(default,null):DnsErrorCode;
 }
+
+
+/**
+	Each DNS query can return one of the following error codes
+**/
+@:fakeEnum(String)
+@:jsRequire("dns")
+extern enum DnsErrorCode {
+	/**
+		DNS server returned answer with no data.
+	**/
+	NODATA;
+
+	/**
+		DNS server claims query was misformatted.
+	**/
+	FORMERR;
+
+	/**
+		DNS server returned general failure.
+	**/
+	SERVFAIL;
+
+	/**
+		Domain name not found.
+	**/
+	NOTFOUND;
+
+	/**
+		DNS server does not implement requested operation.
+	**/
+	NOTIMP;
+
+	/**
+		DNS server refused query.
+	**/
+	REFUSED;
+
+	/**
+		Misformatted DNS query.
+	**/
+	BADQUERY;
+
+	/**
+		Misformatted domain name.
+	**/
+	BADNAME;
+
+	/**
+		Unsupported address family.
+	**/
+	BADFAMILY;
+
+	/**
+		Misformatted DNS reply.
+	**/
+	BADRESP;
+
+	/**
+		Could not contact DNS servers.
+	**/
+	CONNREFUSED;
+
+	/**
+		Timeout while contacting DNS servers.
+	**/
+	TIMEOUT;
+
+	/**
+		End of file.
+	**/
+	EOF;
+
+	/**
+		Error reading file.
+	**/
+	FILE;
+
+	/**
+		Out of memory.
+	**/
+	NOMEM;
+
+	/**
+		Channel is being destroyed.
+	**/
+	DESTRUCTION;
+
+	/**
+		Misformatted string.
+	**/
+	BADSTR;
+
+	/**
+		Illegal flags specified.
+	**/
+	BADFLAGS;
+
+	/**
+		Given hostname is not numeric.
+	**/
+	NONAME;
+
+	/**
+		Illegal hints flags specified.
+	**/
+	BADHINTS;
+
+	/**
+		c-ares library initialization not yet performed.
+	**/
+	NOTINITIALIZED;
+
+	/**
+		Error loading iphlpapi.dll.
+	**/
+	LOADIPHLPAPI;
+
+	/**
+		Could not find GetNetworkParams function.
+	**/
+	ADDRGETNETWORKPARAMS;
+
+	/**
+		DNS query cancelled.
+	**/
+	CANCELLED;
+}
+
 
 /**
 	All methods in the dns module use C-Ares except for `lookup` which uses getaddrinfo(3) in a thread pool.
@@ -174,128 +303,4 @@ extern class Dns {
 		The `callback` has arguments (err, domains).
 	**/
 	static function reverse(ip:String, callback:DnsError->Array<String>->Void):Void;
-
-
-	// Each DNS query can return one of the following error codes
-	// TODO: think of some kind of @:enum abstract pointing to these values so we can use that instead of strings
-
-	/**
-		DNS server returned answer with no data.
-	**/
-	static var NODATA(default,null):String;
-
-	/**
-		DNS server claims query was misformatted.
-	**/
-	static var FORMERR(default,null):String;
-
-	/**
-		DNS server returned general failure.
-	**/
-	static var SERVFAIL(default,null):String;
-
-	/**
-		Domain name not found.
-	**/
-	static var NOTFOUND(default,null):String;
-
-	/**
-		DNS server does not implement requested operation.
-	**/
-	static var NOTIMP(default,null):String;
-
-	/**
-		DNS server refused query.
-	**/
-	static var REFUSED(default,null):String;
-
-	/**
-		Misformatted DNS query.
-	**/
-	static var BADQUERY(default,null):String;
-
-	/**
-		Misformatted domain name.
-	**/
-	static var BADNAME(default,null):String;
-
-	/**
-		Unsupported address family.
-	**/
-	static var BADFAMILY(default,null):String;
-
-	/**
-		Misformatted DNS reply.
-	**/
-	static var BADRESP(default,null):String;
-
-	/**
-		Could not contact DNS servers.
-	**/
-	static var CONNREFUSED(default,null):String;
-
-	/**
-		Timeout while contacting DNS servers.
-	**/
-	static var TIMEOUT(default,null):String;
-
-	/**
-		End of file.
-	**/
-	static var EOF(default,null):String;
-
-	/**
-		Error reading file.
-	**/
-	static var FILE(default,null):String;
-
-	/**
-		Out of memory.
-	**/
-	static var NOMEM(default,null):String;
-
-	/**
-		Channel is being destroyed.
-	**/
-	static var DESTRUCTION(default,null):String;
-
-	/**
-		Misformatted string.
-	**/
-	static var BADSTR(default,null):String;
-
-	/**
-		Illegal flags specified.
-	**/
-	static var BADFLAGS(default,null):String;
-
-	/**
-		Given hostname is not numeric.
-	**/
-	static var NONAME(default,null):String;
-
-	/**
-		Illegal hints flags specified.
-	**/
-	static var BADHINTS(default,null):String;
-
-	/**
-		c-ares library initialization not yet performed.
-	**/
-	static var NOTINITIALIZED(default,null):String;
-
-	/**
-		Error loading iphlpapi.dll.
-	**/
-	static var LOADIPHLPAPI(default,null):String;
-
-	/**
-		Could not find GetNetworkParams function.
-	**/
-	static var ADDRGETNETWORKPARAMS(default,null):String;
-
-	/**
-		DNS query cancelled.
-	**/
-	static var CANCELLED(default,null):String;
 }
