@@ -57,8 +57,8 @@ extern class Require {
 	static var extensions(default,null):DynamicAccess<Dynamic>;
 
 	/**
-		When a file is run directly from Node, `require_main` is set to its module.
-		That means that you can determine whether a file has been run directly by testing `require_main == module`.
+		When a file is run directly from Node, `Require.main` is set to its module.
+		That means that you can determine whether a file has been run directly by testing `Require.main == module`.
 	**/
 	static var main(default,null):Module;
 }
