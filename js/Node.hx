@@ -49,45 +49,10 @@ extern class Node {
 	private static inline function get_console():Console return untyped __js__("console");
 
 
-	// TODO: handle this better way
 	/**
 		Fetches a library and returns the reference to it.
 	**/
-	static inline function require(module:String):Dynamic return js.Lib.require(module);
-
-	/**
-		Use the internal `require` machinery to look up the location of a module,
-		but rather than loading the module, just return the resolved filename.
-	**/
-	static inline function require_resolve(module:String):String return untyped __js__("require.resolve({0})", module);
-
-	/**
-		Modules are cached in this object when they are required.
-		By deleting a key value from this object, the next require will reload the module.
-	**/
-	static var require_cache(get,never):DynamicAccess<Module>;
-	private static inline function get_require_cache():DynamicAccess<Module> return untyped __js__("require.cache");
-
-	/**
-		Instruct require on how to handle certain file extensions.
-
-		Deprecated: In the past, this list has been used to load non-JavaScript modules into Node by compiling them on-demand.
-		However, in practice, there are much better ways to do this, such as loading modules via some other Node program,
-		or compiling them to JavaScript ahead of time.
-
-		Since the `Module` system is locked, this feature will probably never go away. However, it may have subtle bugs
-		and complexities that are best left untouched.
-	**/
-	static var require_extensions(get,never):DynamicAccess<Dynamic>;
-	private static inline function get_require_extensions():DynamicAccess<Dynamic> return untyped __js__("require.extensions");
-
-	/**
-		When a file is run directly from Node, `require_main` is set to its module.
-		That means that you can determine whether a file has been run directly by testing `require_main == module`.
-	**/
-	static var require_main(get,never):Module;
-	private static inline function get_require_main():Module return untyped __js__("require.main");
-
+	static inline function require(module:String):Dynamic return js.node.Require.require(module);
 
 	/**
 		The name of the directory that the currently executing script resides in.
