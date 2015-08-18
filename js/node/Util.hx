@@ -87,31 +87,6 @@ extern class Util {
 	static function inspect(object:Dynamic, ?options:InspectOptions):String;
 
 	/**
-		a map assigning each style a color from `inspect_colors`.
-		Highlighted styles and their default values are:
-			number (yellow)
-			boolean (yellow)
-			string (green)
-			date (magenta)
-			regexp (red)
-			null (bold)
-			undefined (grey)
-			special - only function at this time (cyan)
-			name (intentionally no styling)
-	**/
-	static var inspect_styles(get,set):DynamicAccess<String>;
-	private static inline function get_inspect_styles():DynamicAccess<String> return untyped inspect.styles;
-	private static inline function set_inspect_styles(value:DynamicAccess<String>):DynamicAccess<String> return untyped inspect.styles = value;
-
-	/**
-		Predefined color codes are: white, grey, black, blue, cyan, green, magenta, red and yellow.
-		There are also bold, italic, underline and inverse codes.
-	**/
-	static var inspect_colors(get,set):DynamicAccess<Array<Int>>; // TODO: these Arrays are supposed to have only 2 values, add Pair<Int> abstract?
-	private static inline function get_inspect_colors():DynamicAccess<Array<Int>> return untyped inspect.colors;
-	private static inline function set_inspect_colors(value:DynamicAccess<Array<Int>>):DynamicAccess<Array<Int>> return untyped inspect.colors = value;
-
-	/**
 		Returns true if the given "object" is an Array. false otherwise.
 	**/
 	static function isArray(object:Dynamic):Bool;
@@ -172,7 +147,7 @@ typedef InspectOptions = {
 	/**
 		if true, then the output will be styled with ANSI color codes.
 		Defaults to false.
-		Colors are customizable globally via `Util.inspect_styles` and `Util.inspect_colors` objects.
+		Colors are customizable globally via `js.node.util.Inspect.styles` and `js.node.util.Inspect.colors` objects.
 	**/
 	@:optional var colors:Bool;
 
