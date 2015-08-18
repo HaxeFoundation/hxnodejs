@@ -99,6 +99,16 @@ typedef CredentialOptions = {
 @:jsRequire("crypto")
 extern class Crypto {
 	/**
+		Load and set engine for some/all OpenSSL functions (selected by `flags`).
+
+		`engine` could be either an id or a path to the to the engine's shared library.
+
+		`flags` is optional and has `Constants.ENGINE_METHOD_ALL` value by default.
+		It could take one of or mix of flags prefixed with `ENGINE_METHOD_` defined in `Constants` module.
+	**/
+	static function setEngine(engine:String, ?flags:Int):Void;
+
+	/**
 		The default encoding to use for functions that can take either strings or buffers.
 		The default value is 'buffer', which makes it default to using `Buffer` objects.
 		This is here to make the crypto module more easily compatible with legacy programs
