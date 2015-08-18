@@ -56,5 +56,5 @@ extern class Inspect {
         Predefined color codes are: white, grey, black, blue, cyan, green, magenta, red and yellow.
         There are also bold, italic, underline and inverse codes.
     **/
-    static var colors:DynamicAccess<Array<Int>>; // TODO: these Arrays are supposed to have only 2 values, add Pair<Int> abstract?
+    static var colors:DynamicAccess<Array<Int>>;
 }
