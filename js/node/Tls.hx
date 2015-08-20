@@ -268,7 +268,7 @@ extern class Tls {
 
 		Don't change the defaults unless you know what you are doing.
 	**/
-	static var SLAB_BUFFER_SIZE :Int;
+	static var SLAB_BUFFER_SIZE:Int;
 
 	/**
 		Returns an array with the names of the supported SSL ciphers.
