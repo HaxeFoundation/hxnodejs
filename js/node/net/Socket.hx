@@ -266,4 +266,11 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 		The amount of bytes sent.
 	**/
 	var bytesWritten(default,null):Int;
+
+	/**
+		Always true for TLSSocket instances.
+
+		May be used to distinguish TLS sockets from regular ones.
+	**/
+	var encrypted(default,null):Bool;
 }
