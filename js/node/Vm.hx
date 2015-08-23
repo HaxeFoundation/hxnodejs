@@ -92,6 +92,15 @@ extern class Vm {
 	**/
 	static function isContext(sandbox:{}):Bool;
 
+	/**
+		Compiles and executes `code` inside the V8 debug context.
+		The primary use case is to get access to the V8 debug object:
+
+		Note that the debug context and object are intrinsically tied to V8's debugger implementation
+		and may change (or even get removed) without prior warning.
+	**/
+	static function runInDebugContext(code:String):Dynamic;
+
 	@:deprecated("use new js.node.vm.Script(...) instead")
 	static function createScript(code:String, ?options:ScriptOptions):Script;
 }
