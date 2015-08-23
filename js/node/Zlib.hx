@@ -163,11 +163,17 @@ extern class Zlib {
 	**/
 	static function createUnzip(?options:ZlibOptions):Unzip;
 
+
 	/**
 		Compress a string with `Deflate`.
 	**/
 	@:overload(function(buf:EitherType<String,Buffer>, options:ZlibOptions, callback:Error->Buffer->Void):Void {})
 	static function deflate(buf:EitherType<String,Buffer>, callback:Error->Buffer->Void):Void;
+
+	/**
+		Compress a string with `Deflate` (synchronous version).
+	**/
+	static function deflateSync(buf:EitherType<String,Buffer>, ?options:ZlibOptions):Buffer;
 
 	/**
 		Compress a string with `DeflateRaw`.
@@ -176,10 +182,20 @@ extern class Zlib {
 	static function deflateRaw(buf:EitherType<String,Buffer>, callback:Error->Buffer->Void):Void;
 
 	/**
+		Compress a string with `DeflateRaw` (synchronous version).
+	**/
+	static function deflateRawSync(buf:EitherType<String,Buffer>, ?options:ZlibOptions):Buffer;
+
+	/**
 		Compress a string with `Gzip`.
 	**/
 	@:overload(function(buf:EitherType<String,Buffer>, options:ZlibOptions, callback:Error->Buffer->Void):Void {})
 	static function gzip(buf:EitherType<String,Buffer>, callback:Error->Buffer->Void):Void;
+
+	/**
+		Compress a string with `Gzip` (synchronous version).
+	**/
+	static function gzipSync(buf:EitherType<String,Buffer>, ?options:ZlibOptions):Buffer;
 
 	/**
 		Decompress a raw Buffer with `Gunzip`.
@@ -188,10 +204,20 @@ extern class Zlib {
 	static function gunzip(buf:EitherType<String,Buffer>, callback:Error->Buffer->Void):Void;
 
 	/**
+		Decompress a raw Buffer with `Gunzip` (synchronous version).
+	**/
+	static function gunzipSync(buf:EitherType<String,Buffer>, ?options:ZlibOptions):Buffer;
+
+	/**
 		Decompress a raw Buffer with `Inflate`.
 	**/
 	@:overload(function(buf:EitherType<String,Buffer>, options:ZlibOptions, callback:Error->Buffer->Void):Void {})
 	static function inflate(buf:EitherType<String,Buffer>, callback:Error->Buffer->Void):Void;
+
+	/**
+		Decompress a raw Buffer with `Inflate` (synchronous version).
+	**/
+	static function inflateSync(buf:EitherType<String,Buffer>, ?options:ZlibOptions):Buffer;
 
 	/**
 		Decompress a raw Buffer with `InflateRaw`.
@@ -200,8 +226,18 @@ extern class Zlib {
 	static function inflateRaw(buf:EitherType<String,Buffer>, callback:Error->Buffer->Void):Void;
 
 	/**
+		Decompress a raw Buffer with `InflateRaw` (synchronous version).
+	**/
+	static function inflateRawSync(buf:EitherType<String,Buffer>, ?options:ZlibOptions):Buffer;
+
+	/**
 		Decompress a raw Buffer with `Unzip`.
 	**/
 	@:overload(function(buf:EitherType<String,Buffer>, options:ZlibOptions, callback:Error->Buffer->Void):Void {})
 	static function unzip(buf:EitherType<String,Buffer>, callback:Error->Buffer->Void):Void;
+
+	/**
+		Decompress a raw Buffer with `Unzip` (synchronous version).
+	**/
+	static function unzipSync(buf:EitherType<String,Buffer>, ?options:ZlibOptions):Buffer;
 }
