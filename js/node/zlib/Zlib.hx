@@ -28,9 +28,19 @@ package js.node.zlib;
 extern class Zlib extends js.node.stream.Transform<Zlib> {
 	/**
 		Flush pending data.
+
+		`kind` defaults to `Zlib.Z_FULL_FLUSH`.
+
 		Don't call this frivolously, premature flushes negatively impact the effectiveness of the compression algorithm.
 	**/
+	@:overload(function(kind:Int, callback:Void->Void):Void {})
 	function flush(callback:Void->Void):Void;
+
+	/**
+		Dynamically update the compression level and compression strategy.
+		Only applicable to deflate algorithm.
+	**/
+	function params(level:Int, strategy:Int, callback:Void->Void):Void;
 
 	/**
 		Reset the compressor/decompressor to factory defaults.
