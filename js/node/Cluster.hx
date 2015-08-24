@@ -111,6 +111,12 @@ typedef ListeningEventAddress = {
 	var UDPv6 = "udp6";
 }
 
+@:jsRequire("cluster")
+@:fakeEnum(Int)
+extern enum ClusterSchedulingPolicy {
+	SCHED_NONE;
+	SCHED_RR;
+}
 
 /**
 	A single instance of Node runs in a single thread.
@@ -122,14 +128,29 @@ typedef ListeningEventAddress = {
 	Also note that, on Windows, it is not yet possible to set up a named pipe server in a worker.
 **/
 @:jsRequire("cluster")
-extern class Cluster extends EventEmitter<Cluster>
-{
+extern class Cluster extends EventEmitter<Cluster> {
 	/**
 		A reference to the `Cluster` object returned by node.js module.
 
 		It can be imported into module namespace by using: "import js.node.Cluster.instance in cluster"
 	**/
 	public static inline var instance:Cluster = cast Cluster;
+
+	/**
+		The scheduling policy, either `SCHED_RR` for round-robin
+		or `SCHED_NONE` to leave it to the operating system.
+
+		This is a global setting and effectively frozen once you spawn the first worker
+		or call `setupMaster`, whatever comes first.
+
+		`SCHED_RR` is the default on all operating systems except Windows.
+		Windows will change to `SCHED_RR` once libuv is able to effectively distribute IOCP handles
+		without incurring a large performance hit.
+
+		`schedulingPolicy` can also be set through the NODE_CLUSTER_SCHED_POLICY environment variable.
+		Valid values are "rr" and "none".
+	**/
+	var schedulingPolicy:ClusterSchedulingPolicy;
 
 	/**
 		After calling `setupMaster` (or `fork`) this settings object will contain the settings, including the default values.
