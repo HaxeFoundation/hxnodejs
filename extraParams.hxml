@@ -1,1 +1,2 @@
 -D nodejs
+--macro allowPackage('sys')
