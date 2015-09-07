@@ -25,6 +25,7 @@ class File {
 	}
 
 	public static function saveContent( path : String, content : String ) {
+		Fs.writeFileSync(path, content);
 	}
 
 }
