@@ -168,9 +168,16 @@ extern class ChildProcess extends EventEmitter<ChildProcess> {
         The `sendHandle` option is for sending a TCP server or socket object to another process.
         The child will receive the object as its second argument to the message event.
 
+        The `callback` option is a function that is invoked after the message is sent but before the target may have received it.
+        It is called with a single argument: null on success, or an `Error` object on failure.
+
         Emits an 'error' event if the message cannot be sent, for example because the child process has already exited.
+
+        Returns true under normal circumstances or false when the backlog of unsent messages exceeds a threshold that
+        makes it unwise to send more. Use the callback mechanism to implement flow control.
     **/
-    function send(message:Dynamic, ?sendHandle:Dynamic):Void;
+    @:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:js.Error->Void):Bool {})
+    function send(message:Dynamic, ?callback:js.Error->Void):Bool;
 
     /**
         Close the IPC channel between parent and child, allowing the child to exit gracefully once there are no other
