@@ -457,4 +457,16 @@ extern class Buffer implements ArrayAccess<Int> {
 		Returns a number indicating whether `this` comes before or after or is the same as the `otherBuffer` in sort order.
 	**/
 	function compare(otherBuffer:Buffer):Int;
+
+	/**
+		Operates similar to `Array.indexOf`.
+		
+		Accepts a String, Buffer or Int.
+		Strings are interpreted as UTF8.
+		Buffers will use the entire buffer. So in order to compare a partial `Buffer` use `slice`.
+		Int can range from 0 to 255.
+	**/
+	@:overload(function(value:String, ?byteOffset:Int):Int {})
+	@:overload(function(value:Buffer, ?byteOffset:Int):Int {})
+	function indexOf(value:Int, ?byteOffset:Int):Int;
 }
