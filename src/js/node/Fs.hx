@@ -575,7 +575,7 @@ extern class Fs {
 	/**
 		Synchronous version of `write`. Returns the number of bytes written.
 	**/
-	static function writeSync(fd:Int, buffer:Buffer, offset:Int, length:Int, position:Null<Int>):Int;
+	static function writeSync(fd:Int, buffer:Buffer, offset:Int, length:Int, ?position:Int):Int;
 
 	/**
 		Read data from the file specified by `fd`.
