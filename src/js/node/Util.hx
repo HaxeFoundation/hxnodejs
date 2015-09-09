@@ -222,7 +222,7 @@ extern class Util {
 /**
 	Options object used by `Util.inspect`.
 **/
-typedef InspectOptions = {
+typedef InspectOptionsBase = {
 	/**
 		if true then the object's non-enumerable properties will be shown too.
 		Defaults to false.
@@ -242,6 +242,10 @@ typedef InspectOptions = {
 		Colors are customizable globally via `js.node.util.Inspect.styles` and `js.node.util.Inspect.colors` objects.
 	**/
 	@:optional var colors:Bool;
+}
+
+typedef InspectOptions = {
+	>InspectOptionsBase,
 
 	/**
 		if false, then custom `inspect` functions defined on the objects being inspected won't be called.

@@ -25,6 +25,7 @@ import haxe.Constraints.Function;
 import haxe.DynamicAccess;
 
 import js.node.*;
+import js.node.console.Console;
 
 /**
 	Node.js globals
@@ -43,7 +44,7 @@ extern class Node {
 	private static inline function get_process():Process return untyped __js__("process");
 
 	/**
-		Used to print to stdout and stderr.
+		The global console is a special `Console` whose output is sent to process.stdout and process.stderr.
 	**/
 	static var console(get,never):Console;
 	private static inline function get_console():Console return untyped __js__("console");

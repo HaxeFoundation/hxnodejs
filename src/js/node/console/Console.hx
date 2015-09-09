@@ -19,7 +19,9 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-package js.node;
+package js.node.console;
+
+import js.node.stream.Writable;
 
 /**
 	For printing to stdout and stderr.
@@ -29,7 +31,16 @@ package js.node;
 	The console functions are synchronous when the destination is a terminal or a file (to avoid lost messages in case of premature exit
 	and asynchronous  when it's a pipe (to avoid blocking for long periods of time).
 **/
+@:jsRequire("console", "Console")
 extern class Console {
+	/**
+		Create a new `Console` by passing one or two writable stream instances.
+		`stdout` is a writable stream to print log or info output.
+		`stderr` is used for warning or error output. If `stderr` isn't passed,
+		the warning and error output will be sent to the `stdout`.
+	**/
+	function new(stdout:IWritable, stderr:IWritable);
+
 	/**
 		Prints to stdout with newline. This function can take multiple arguments in a printf()-like way.
 		Example: console.log('count: %d', count);
@@ -59,8 +70,12 @@ extern class Console {
 
 	/**
 		Uses util.inspect on obj and prints resulting string to stdout.
+
+		This function bypasses any custom inspect() function on obj.
+		An optional options object may be passed that alters certain aspects
+		of the formatted string.
 	**/
-	function dir(obj:Dynamic):Void;
+	function dir(obj:Dynamic, ?options:Util.InspectOptionsBase):Void;
 
 	/**
 		Mark a time with `label`.
