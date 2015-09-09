@@ -277,7 +277,7 @@ extern class Process extends EventEmitter<Process> {
 	/**
 		Number of seconds Node has been running.
 	**/
-	function uptime():Int;
+	function uptime():Float;
 
 	/**
 		Returns the current high-resolution real time in a [seconds, nanoseconds] tuple Array.
