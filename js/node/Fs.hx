@@ -55,7 +55,7 @@ typedef FsMode = EitherType<Int,String>;
 /**
 	Possible options for `Fs.writeFile` and `Fs.appendFile`.
 **/
-typedef FsWriteFileOptions = {
+typedef FsWriteFileOptions = EitherType<String, {
 	/**
 		Encoding for writing strings.
 		Defaults to 'utf8'.
@@ -72,7 +72,7 @@ typedef FsWriteFileOptions = {
 		default: 'w' for `Fs.writeFile`, 'a' for `Fs.appendFile`
 	**/
 	@:optional var flag:FsOpenFlag;
-}
+}>;
 
 /**
 	Defaults:
@@ -86,7 +86,7 @@ typedef FsWriteFileOptions = {
 /**
 	Options for `Fs.createReadStream`.
 **/
-typedef FsCreateReadStreamOptions = {
+typedef FsCreateReadStreamOptions = EitherType<String, {
 	/**
 		default: 'r'
 	**/
@@ -126,7 +126,7 @@ typedef FsCreateReadStreamOptions = {
 		End of the range of bytes to read
 	**/
 	@:optional var end:Int;
-}
+}>;
 
 /**
 	Options for `Fs.createWriteStream`.
@@ -603,9 +603,12 @@ extern class Fs {
 
 		The `callback` is passed two arguments (err, data), where data is the contents of the file.
 		If no `encoding` is specified, then the raw buffer is returned.
+
+		If `options` is a string, then it specifies the encoding.
 	**/
 	@:overload(function(filename:String, callback:Error->Buffer->Void):Void {})
 	@:overload(function(filename:String, options:{flag:FsOpenFlag}, callback:Error->Buffer->Void):Void {})
+	@:overload(function(filename:String, options:String, callback:Error->String->Void):Void {})
 	static function readFile(filename:String, options:{encoding:String, ?flag:FsOpenFlag}, callback:Error->String->Void):Void;
 
 	/**
@@ -614,6 +617,7 @@ extern class Fs {
 	**/
 	@:overload(function(filename:String):Buffer {})
 	@:overload(function(filename:String, options:{flag:FsOpenFlag}):Buffer {})
+	@:overload(function(filename:String, options:String):String {})
 	static function readFileSync(filename:String, options:{encoding:String, ?flag:FsOpenFlag}):String;
 
 	/**
