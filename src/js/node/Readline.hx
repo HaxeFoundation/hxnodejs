@@ -36,7 +36,7 @@ typedef ReadlineOptions = {
 	/**
 		the writable stream to write readline data to
 	**/
-	var output:IWritable;
+	@:optional var output:IWritable;
 
 	/**
 		an optional function that is used for Tab autocompletion.
@@ -47,7 +47,7 @@ typedef ReadlineOptions = {
 			* The substring that was used for the matching.
 		Which ends up looking something like: [[substr1, substr2, ...], originalsubstring].
 	**/
-	@:optional var completer:String->Array<EitherType<Array<String>,String>>;
+	@:optional var completer:ReadlineCompleterCallback;
 
 	/**
 		pass true if the input and output streams should be treated like a TTY,
@@ -56,7 +56,15 @@ typedef ReadlineOptions = {
 		Defaults to checking isTTY on the output stream upon instantiation.
 	**/
 	@:optional var terminal:Bool;
+
+	/**
+		maximum number of history lines retained.
+		Defaults to 30.
+	**/
+	@:optional var historySize:Int;
 }
+
+typedef ReadlineCompleterCallback = String->Array<EitherType<Array<String>,String>>;
 
 /**
 	Enumeration of possible directions for `Readline.clearLine`
@@ -94,6 +102,7 @@ extern class Readline {
 		an `columns` property, and fires a "resize" event on the output if/when the columns ever change
 		(process.stdout does this automatically when it is a TTY).
 	**/
+	@:overload(function(input:IReadable, ?output:IWritable, ?completer:ReadlineCompleterCallback, ?terminal:Bool):Interface {})
 	static function createInterface(options:ReadlineOptions):Interface;
 
 	/**

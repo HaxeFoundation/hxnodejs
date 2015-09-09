@@ -27,23 +27,23 @@ import js.node.events.EventEmitter;
 /**
 	Enumeration of events emitted by the `Interface` objects.
 **/
-@:enum abstract InterfaceEvent(String) to String {
+@:enum abstract InterfaceEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted whenever the input stream receives a \n, usually received when the user hits enter, or return.
 		This is a good hook to listen for user input.
 	**/
-	var Line = "line";
+	var Line : InterfaceEvent<String->Void> = "line";
 
 	/**
 		Emitted whenever the input stream is paused.
 		Also emitted whenever the input stream is not paused and receives the SIGCONT event. (See events SIGTSTP and SIGCONT)
 	**/
-	var Pause = "pause";
+	var Pause : InterfaceEvent<Void->Void> = "pause";
 
 	/**
 		Emitted whenever the input stream is resumed.
 	**/
-	var Resume = "resume";
+	var Resume : InterfaceEvent<Void->Void> = "resume";
 
 	/**
 		Emitted when close() is called.
@@ -55,13 +55,13 @@ import js.node.events.EventEmitter;
 		This event is also called if there is no SIGINT event listener present when the input stream receives a ^C,
 		respectively known as SIGINT.
 	**/
-	var Close = "close";
+	var Close : InterfaceEvent<Void->Void> = "close";
 
 	/**
 		Emitted whenever the input stream receives a ^C, respectively known as SIGINT.
 		If there is no SIGINT event listener present when the input stream receives a SIGINT, pause will be triggered.
 	**/
-	var SIGINT = "SIGINT";
+	var SIGINT : InterfaceEvent<Void->Void> = "SIGINT";
 
 	/**
 		This does not work on Windows.
@@ -76,7 +76,7 @@ import js.node.events.EventEmitter;
 		The pause and SIGCONT events will not be triggered if the stream was paused
 		before the program was sent to the background.
 	**/
-	var SIGTSTP = "SIGTSTP";
+	var SIGTSTP : InterfaceEvent<Void->Void> = "SIGTSTP";
 
 	/**
 		This does not work on Windows.
@@ -85,7 +85,17 @@ import js.node.events.EventEmitter;
 		and then continued with fg(1). This event only emits if the stream was not paused before sending
 		the program to the background.
 	**/
-	var SIGCONT = "SIGCONT";
+	var SIGCONT : InterfaceEvent<Void->Void> = "SIGCONT";
+}
+
+/**
+	Key sequence passed as the `key` argument to `Interface.write`.
+**/
+typedef InterfaceWriteKey = {
+	var name:String;
+	@:optional var ctrl:Bool;
+	@:optional var shift:Bool;
+	@:optional var meta:Bool;
 }
 
 /**
@@ -95,7 +105,7 @@ extern class Interface extends EventEmitter<Interface> {
 	/**
 		Sets the prompt, for example when you run node on the command line, you see > , which is node's prompt.
 	**/
-	function setPrompt(prompt:String, length:Int):Void;
+	function setPrompt(prompt:String):Void;
 
 	/**
 		Readies readline for input from the user, putting the current `setPrompt` options on a new line,
@@ -104,6 +114,8 @@ extern class Interface extends EventEmitter<Interface> {
 		Set `preserveCursor` to true to prevent the cursor placement being reset to 0.
 
 		This will also resume the input stream used with `createInterface` if it has been paused.
+
+		If `output` is set to null when calling `Readline.createInterface`, the prompt is not written.
 	**/
 	function prompt(?preserveCursor:Bool):Void;
 
@@ -117,6 +129,9 @@ extern class Interface extends EventEmitter<Interface> {
 
 	/**
 		Pauses the readline input stream, allowing it to be resumed later if needed.
+
+		Note that this doesn't immediately pause the stream of events.
+		Several events may be emitted after calling `pause`, including `line`.
 	**/
 	function pause():Void;
 
@@ -127,7 +142,7 @@ extern class Interface extends EventEmitter<Interface> {
 
 	/**
 		Closes the `Interface` instance, relinquishing control on the input and output streams.
-		The "close" event will also be emitted.
+		The `close` event will also be emitted.
 	**/
 	function close():Void;
 
@@ -137,5 +152,5 @@ extern class Interface extends EventEmitter<Interface> {
 
 		This will also resume the input stream if it has been paused.
 	**/
-	function write(data:EitherType<Buffer,String>, ?key:{}):Void;
+	function write(data:EitherType<Buffer,String>, ?key:InterfaceWriteKey):Void;
 }
