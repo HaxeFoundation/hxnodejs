@@ -554,6 +554,8 @@ extern class Fs {
 	static function fsyncSync(fd:Int):Void;
 
 	/**
+		Documentation for the overloads with the `buffer` argument:
+
 		Write `buffer` to the file specified by `fd`.
 
 		`offset` and `length` determine the part of the `buffer` to be written.
@@ -564,17 +566,46 @@ extern class Fs {
 		The `callback` will be given three arguments (err, written, buffer)
 		where `written` specifies how many bytes were written from `buffer`.
 
+		---
+
+		Documentation for the overloads with the `data` argument:
+
+		Write `data` to the file specified by `fd`. If `data` is not a `Buffer` instance then
+		the value will be coerced to a string.
+
+		`position` refers to the offset from the beginning of the file where this data should be written.
+		If omitted, the data will be written at the current position. See pwrite(2).
+
+		`encoding` is the expected string encoding.
+
+		The `callback` will receive the arguments (err, written, string) where written specifies how many bytes
+		the passed string required to be written. Note that bytes written is not the same as string characters.
+		See `Buffer.byteLength`.
+
+		Unlike when writing `buffer`, the entire string must be written. No substring may be specified.
+		This is because the byte offset of the resulting data may not be the same as the string offset.
+
+		---
+
+		Common notes:
+
 		Note that it is unsafe to use `write` multiple times on the same file without waiting for the callback.
 		For this scenario, `createWriteStream` is strongly recommended.
 
 		On Linux, positional writes don't work when the file is opened in append mode. The kernel ignores the position
 		argument and always appends the data to the end of the file.
 	**/
-	static function write(fd:Int, buffer:Buffer, offset:Int, length:Int, position:Null<Int>, callback:Error->Int->Buffer->Void):Void;
+	@:overload(function(fd:Int, data:Dynamic, position:Int, encoding:String, callback:Error->Int->String->Void):Void {})
+	@:overload(function(fd:Int, data:Dynamic, position:Int, callback:Error->Int->String->Void):Void {})
+	@:overload(function(fd:Int, data:Dynamic, callback:Error->Int->String->Void):Void {})
+	@:overload(function(fd:Int, buffer:Buffer, offset:Int, length:Int, callback:Error->Int->Buffer->Void):Void {})
+	static function write(fd:Int, buffer:Buffer, offset:Int, length:Int, position:Int, callback:Error->Int->Buffer->Void):Void;
 
 	/**
 		Synchronous version of `write`. Returns the number of bytes written.
 	**/
+	@:overload(function(fd:Int, data:Dynamic, position:Int, encoding:String):Int {})
+	@:overload(function(fd:Int, data:Dynamic, ?position:Int):Int {})
 	static function writeSync(fd:Int, buffer:Buffer, offset:Int, length:Int, ?position:Int):Int;
 
 	/**
@@ -707,13 +738,64 @@ extern class Fs {
 
 		Just open the file and handle the error when it's not there.
 	**/
+	@:deprecated("Use Fs.stat or Fs.access instead")
 	static function exists(path:String, callback:Bool->Void):Void;
 
 	/**
 		Synchronous version of `exists`.
 	**/
+	@:deprecated("Use Fs.statSync or Fs.accessSync instead.")
 	static function existsSync(path:String):Bool;
 
+	/**
+		Tests a user's permissions for the file specified by path.
+
+		`mode` is an optional integer that specifies the accessibility checks to be performed.
+		The following constants define the possible values of mode: `F_OK`, `R_OK`, `W_OK`, `X_OK`.
+		It is possible to create a mask consisting of the bitwise OR of two or more values.
+		If no `mode` is specified, `F_OK` is used as a default.
+
+		The final argument, `callback`, is a callback function that is invoked with a possible error argument.
+		If any of the accessibility checks fail, the error argument will be populated.
+	**/
+	@:overload(function(path:String, callback:Error->Void):Void {})
+	static function access(path:String, mode:Int, callback:Error->Void):Void;
+
+	/**
+		A mode flag for `access` and `accessSync` methods:
+
+		File is visible to the calling process.
+		This is useful for determining if a file exists, but says nothing about rwx permissions.
+	**/
+	static var F_OK(default,null):Int;
+
+	/**
+		A mode flag for `access` and `accessSync` methods:
+
+		File can be read by the calling process.
+	**/
+	static var R_OK(default,null):Int;
+
+	/**
+		A mode flag for `access` and `accessSync` methods:
+
+		File can be written by the calling process.
+	**/
+	static var W_OK(default,null):Int;
+
+	/**
+		A mode flag for `access` and `accessSync` methods:
+
+		File can be executed by the calling process.
+		This has no effect on Windows.
+	**/
+	static var X_OK(default,null):Int;
+
+	/**
+		Synchronous version of `access`.
+		This throws if any accessibility checks fail, and does nothing otherwise.
+	**/
+	static function accessSync(path:String, ?mode:Int):Void;
 
 	/**
 		Returns a new ReadStream object (See Readable Stream).

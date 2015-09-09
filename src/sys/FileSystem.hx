@@ -6,8 +6,8 @@ import js.node.Fs;
 @:coreApi
 class FileSystem {
 
-	public static inline function exists( path : String ) : Bool {
-		return Fs.existsSync(path);
+	public static function exists( path : String ) : Bool {
+		return try { Fs.accessSync(path); true; } catch (_:Dynamic) false;
 	}
 
 	public static inline function rename( path : String, newPath : String ) : Void {
