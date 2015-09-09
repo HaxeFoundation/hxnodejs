@@ -15,7 +15,7 @@ class FileSystem {
 	}
 
 	public static inline function stat( path : String ) : sys.FileStat {
-		return Fs.statSync(path);
+		return cast Fs.statSync(path);
 	}
 
 	public static inline function fullPath( relPath : String ) : String {
