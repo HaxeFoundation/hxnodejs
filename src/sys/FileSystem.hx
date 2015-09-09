@@ -38,6 +38,10 @@ class FileSystem {
 		Fs.unlinkSync(path);
 	}
 
+	public static inline function deleteDirectory( path : String ) : Void {
+		Fs.rmdirSync(path);
+	}
+
 	public static inline function readDirectory( path : String ) : Array<String> {
 		return Fs.readdirSync(path);
 	}
