@@ -2,7 +2,7 @@ import js.node.ChildProcess;
 import js.Node.process;
 
 @:dce
-@:coreApi
+// @:coreApi
 class Sys {
     public static inline function print(v:Dynamic):Void {
         process.stdout.write(v);

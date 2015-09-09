@@ -3,7 +3,7 @@ package sys.io;
 import js.node.Fs;
 
 @:dce
-@:coreApi
+// @:coreApi
 class File {
 
 	public static inline function getContent( path : String ) : String {
