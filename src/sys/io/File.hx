@@ -1,10 +1,17 @@
 package sys.io;
+
 import js.node.Fs;
 
+@:dce
+@:coreApi
 class File {
 
-	public static function getContent( path : String ) : String {
-		return Fs.readFileSync(path, {encoding:"utf8"});
+	public static inline function getContent( path : String ) : String {
+		return Fs.readFileSync(path, {encoding: "utf8"});
+	}
+
+	public static inline function saveContent( path : String, content : String ) : Void {
+		Fs.writeFileSync(path, content);
 	}
 
 	public static function getBytes( path : String ) : haxe.io.Bytes {
@@ -23,9 +30,4 @@ class File {
 			bytes.set(i, tmpBuf[i]);
 		return bytes;
 	}
-
-	public static function saveContent( path : String, content : String ) {
-		Fs.writeFileSync(path, content);
-	}
-
 }
