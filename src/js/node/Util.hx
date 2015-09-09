@@ -22,11 +22,31 @@
 package js.node;
 
 import haxe.DynamicAccess;
+import haxe.extern.Rest;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
 
+/**
+	The util module is primarily designed to support the needs of node.js's internal APIs.
+	Many of these utilities are useful for your own programs. If you find that these functions
+	are lacking for your purposes, however, you are encouraged to write your own utilities.
+	We are not interested in any future additions to the util module that are unnecessary
+	for node.js's internal functionality.
+**/
 @:jsRequire("util")
 extern class Util {
+
+	/**
+		This is used to create a function which conditionally writes to stderr based on the existence of a NODE_DEBUG
+		environment variable.
+
+		If the `section` name appears in that environment variable, then the returned function will be similar
+		to `Console.error`. If not, then the returned function is a no-op.
+
+		You may separate multiple NODE_DEBUG environment variables with a comma. For example, NODE_DEBUG=fs,net,tls.
+	**/
+	static function debuglog(section:String):Rest<Dynamic>->Void;
+
 	/**
 		Returns a formatted string using the first argument as a printf-like format.
 
@@ -45,37 +65,13 @@ extern class Util {
 		If the first argument is not a format string then `format` returns a string that is the concatenation of
 		all its arguments separated by spaces. Each argument is converted to a string with `inspect`.
 	**/
-	@:overload(function(args:haxe.extern.Rest<Dynamic>):String {})
-	static function format(format:String, args:haxe.extern.Rest<Dynamic>):String;
-
-	/**
-		A synchronous output function.
-		Will block the process and output string immediately to stderr.
-	**/
-	static function debug(string:String):Void;
-
-	/**
-		Same as `debug` except this will output all arguments immediately to stderr.
-	**/
-	static function error(args:haxe.extern.Rest<Dynamic>):Void;
-
-	/**
-		A synchronous output function.
-		Will block the process and output all arguments to stdout with newlines after each argument.
-	**/
-	static function puts(args:haxe.extern.Rest<Dynamic>):Void;
-
-	/**
-		A synchronous output function.
-		Will block the process, cast each argument to a string then output to stdout.
-		Does not place newlines after each argument.
-	**/
-	static function print(args:haxe.extern.Rest<Dynamic>):Void;
+	@:overload(function(args:Rest<Dynamic>):String {})
+	static function format(format:String, args:Rest<Dynamic>):String;
 
 	/**
 		Output with timestamp on stdout.
 	**/
-	static function log(string:String):Void;
+	static function log(args:Rest<Dynamic>):Void;
 
 	/**
 		Return a string representation of `object`, which is useful for debugging.
@@ -89,34 +85,92 @@ extern class Util {
 	/**
 		Returns true if the given "object" is an Array. false otherwise.
 	**/
+	@:deprecated
 	static function isArray(object:Dynamic):Bool;
 
 	/**
 		Returns true if the given "object" is a RegExp. false otherwise.
 	**/
+	@:deprecated
 	static function isRegExp(object:Dynamic):Bool;
 
 	/**
 		Returns true if the given "object" is a Date. false otherwise.
 	**/
+	@:deprecated
 	static function isDate(object:Dynamic):Bool;
 
 	/**
 		Returns true if the given "object" is an Error. false otherwise.
 	**/
+	@:deprecated
 	static function isError(object:Dynamic):Bool;
 
 	/**
-		Deprecated: Use `readableStream.pipe(writableStream)`
-
-		Read the data from `readableStream` and send it to the `writableStream`.
-		When `writableStream.write(data)` returns false `readableStream` will be paused until
-		the drain event occurs on the `writableStream`.
-
-		`callback` is called when `writableStream` is closed or when an error occurs.
+		Returns true if the given "object" is a Bool. false otherwise.
 	**/
-	@:deprecated("Use `readableStream.pipe(writableStream)` instead")
-	static function pump(readableStream:IReadable, writableStream:IWritable, ?callback:js.Error->Void):Void;
+	@:deprecated
+	static function isBoolean(object:Dynamic):Bool;
+
+	/**
+		Returns true if the given "object" is strictly null. false otherwise.
+	**/
+	@:deprecated
+	static function isNull(object:Dynamic):Bool;
+
+	/**
+		Returns true if the given "object" is null or undefined. false otherwise.
+	**/
+	@:deprecated
+	static function isNullOrUndefined(object:Dynamic):Bool;
+
+	/**
+		Returns true if the given "object" is a Float. false otherwise.
+	**/
+	@:deprecated
+	static function isNumber(object:Dynamic):Bool;
+
+	/**
+		Returns true if the given "object" is a String. false otherwise.
+	**/
+	@:deprecated
+	static function isString(object:Dynamic):Bool;
+
+	/**
+		Returns true if the given "object" is a Symbol. false otherwise.
+	**/
+	@:deprecated
+	static function isSymbol(object:Dynamic):Bool;
+
+	/**
+		Returns true if the given "object" is undefined. false otherwise.
+	**/
+	@:deprecated
+	static function isUndefined(object:Dynamic):Bool;
+
+	/**
+		Returns true if the given "object" is strictly an Object and not a Function. false otherwise.
+	**/
+	@:deprecated
+	static function isObject(object:Dynamic):Bool;
+
+	/**
+		Returns true if the given "object" is a Function. false otherwise.
+	**/
+	@:deprecated
+	static function isFunction(object:Dynamic):Bool;
+
+	/**
+		Returns true if the given "object" is a primitive type. false otherwise.
+	**/
+	@:deprecated
+	static function isPrimitive(object:Dynamic):Bool;
+
+	/**
+		Returns true if the given "object" is a Buffer. false otherwise.
+	**/
+	@:deprecated
+	static function isBuffer(object:Dynamic):Bool;
 
 	/**
 		Inherit the prototype methods from one constructor into another.
@@ -125,6 +179,44 @@ extern class Util {
 		As an additional convenience, superConstructor will be accessible through the constructor.`super_` property.
 	**/
 	static function inherits(constructor:Class<Dynamic>, superConstructor:Class<Dynamic>):Bool;
+
+	/**
+		Marks that a method should not be used any more.
+		
+		It returns a modified function which warns once by default.
+	**/
+	static function deprecate<T:haxe.Constraints.Function>(fun:T, string:String):T;
+
+	/**
+		Deprecated predecessor of `Console.error`.
+	**/
+	@:deprecated("Use js.Node.console.error instead")
+	static function debug(string:String):Void;
+
+	/**
+		Deprecated predecessor of console.error.
+	**/
+	@:deprecated("Use js.Node.console.error instead")
+	static function error(args:Rest<Dynamic>):Void;
+
+	/**
+		Deprecated predecessor of console.log.
+	**/
+	@:deprecated("Use js.Node.console.log instead")
+	static function puts(args:Rest<Dynamic>):Void;
+
+	/**
+		Deprecated predecessor of console.log.
+	**/
+	@:deprecated("Use js.Node.console.log instead")
+	static function print(args:Rest<Dynamic>):Void;
+
+	/**
+		Deprecated predecessor of stream.pipe().
+	**/
+	@:deprecated("Use `readableStream.pipe(writableStream)` instead")
+	static function pump(readableStream:IReadable, writableStream:IWritable, ?callback:js.Error->Void):Void;
+
 }
 
 /**

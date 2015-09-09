@@ -312,6 +312,24 @@ extern class Process extends EventEmitter<Process> {
 		Only available for child processes. See `ChildProcess.disconnect`.
 	**/
 	function disconnect():Void;
+
+	/**
+		Disable run-time deprecation warnings.
+		See `Util.deprecate`.
+	**/
+	var noDeprecation:Bool;
+
+	/**
+		Enable logging of deprecation warnings.
+		See `Util.deprecate`.
+	**/
+	var traceDeprecation:Bool;
+
+	/**
+		Throw on deprecated API usage.
+		See `Util.deprecate`.
+	**/
+	var throwDeprecation:Bool;
 }
 
 typedef MemoryUsage = {
