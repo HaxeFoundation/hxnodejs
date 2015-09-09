@@ -23,6 +23,7 @@ package js.node;
 
 import haxe.DynamicAccess;
 import haxe.extern.EitherType;
+import haxe.extern.Rest;
 
 import js.node.events.EventEmitter;
 import js.node.stream.Readable;
@@ -264,7 +265,7 @@ extern class Process extends EventEmitter<Process> {
 		This is important in developing APIs where you want to give the user the chance to
 		assign event handlers after an object has been constructed, but before any I/O has occurred.
 	**/
-	function nextTick(callback:Void->Void):Void;
+	function nextTick(callback:Void->Void, args:Rest<Dynamic>):Void;
 
 	/**
 		Sets or reads the process's file mode creation mask.
