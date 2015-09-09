@@ -26,22 +26,26 @@ package js.node.fs;
 **/
 extern class Stats {
 	var dev:Int;
-	var ino:Int;
+	var ino:Float;
 	var mode:Int;
 	var nlink:Int;
 	var uid:Int;
 	var gid:Int;
 	var rdev:Int;
-	var size:Int;
-	var blksize:Int;
-	var blocks:Int;
+	var size:Float;
+	var blksize:Null<Int>;
+	var blocks:Null<Float>;
 	var atime:Date;
 	var mtime:Date;
 	var ctime:Date;
+	var birthtime:Date;
 	function isFile():Bool;
 	function isDirectory():Bool;
 	function isBlockDevice():Bool;
 	function isCharacterDevice():Bool;
+	/**
+		Only valid with `Fs.lstat`.
+	**/
 	function isSymbolicLink():Bool;
 	function isFIFO():Bool;
 	function isSocket():Bool;
