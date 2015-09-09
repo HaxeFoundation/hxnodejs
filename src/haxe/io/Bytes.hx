@@ -3,7 +3,7 @@ package haxe.io;
 // TODO: understand how to properly override std class but only for the target output, not for the macro
 #if !macro
 @:dce
-@:coreApi
+// @:coreApi // disabled due to `length` accessor
 class Bytes {
 
     public var length(get,never) : Int;

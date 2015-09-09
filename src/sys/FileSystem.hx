@@ -11,7 +11,7 @@ class FileSystem {
 	}
 
 	public static inline function rename( path : String, newPath : String ) : Void {
-		Fs.renameSync(path, newpath);
+		Fs.renameSync(path, newPath);
 	}
 
 	public static inline function stat( path : String ) : sys.FileStat {
