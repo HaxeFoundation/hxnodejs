@@ -10,7 +10,7 @@ class FileSystem {
 		return Fs.existsSync(path);
 	}
 
-	public static inline function rename( path : String, newpath : String ) : Void {
+	public static inline function rename( path : String, newPath : String ) : Void {
 		Fs.renameSync(path, newpath);
 	}
 
