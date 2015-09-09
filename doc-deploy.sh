@@ -8,6 +8,13 @@ mkdir bin;
 # run our compile script, discussed above
 haxe doc.hxml
 
+if ! [ "$TRAVIS_HAXE_VERSION" == "development" ]; then
+    echo "Skipping pushing documentation to GitHub - that is only done for Haxe development.";
+    exit 0;
+else
+    echo "Pushing documentation to GitHub"
+fi
+
 # go to the out directory and create a *new* Git repo
 cd bin/api
 git init
