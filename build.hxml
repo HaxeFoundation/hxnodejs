@@ -1,7 +1,6 @@
--js no-output
+-js dummy
+--macro ImportAll.run("src")
 --no-output
---each
+
 --next
---macro ImportAll.run("js")
---next
---macro BuildExamples.run()
+--run BuildExamples

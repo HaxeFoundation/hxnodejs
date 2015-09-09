@@ -1,7 +1,7 @@
---macro ImportAll.run("js")
---no-output
+-js dummy
 -D doc-gen
--js all.js
+--macro ImportAll.run("src")
+--no-output
 -xml bin/js.xml
 
 --next

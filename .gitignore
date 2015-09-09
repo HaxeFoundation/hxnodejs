@@ -1,4 +1,3 @@
-*.hxproj
-Main.hx
-bin/
+/*.hxproj
+/bin
 /examples/*.js
