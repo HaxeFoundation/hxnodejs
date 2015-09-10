@@ -6,7 +6,7 @@
 
 ## Overview
 
-Extern type definitions for Node.JS version **0.12.0** and Haxe **3.2+**.
+Extern type definitions for Node.JS version **4.0.0** and Haxe **3.2+**.
 
 Haxe-generated API documentation is available at http://haxefoundation.github.io/hxnodejs/js/Node.html.
 
@@ -52,7 +52,7 @@ Main.main();
 
 This library is currently at **beta** stage, testing and contributions are welcome. See [current issues](https://github.com/HaxeFoundation/hxnodejs/issues) and [extern guidelines](https://github.com/HaxeFoundation/hxnodejs/blob/master/HOWTO.md). After it's finished, it will either be included in Haxe standard library or released as a separate haxelib.
 
-Requires Haxe 3.2RC1 or later (builds available at http://builds.haxe.org/)
+Requires Haxe 3.2 or later
 
 | module            | status | comment                  |
 |-------------------|--------|--------------------------|
