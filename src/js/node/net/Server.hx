@@ -21,6 +21,8 @@
  */
 package js.node.net;
 
+import haxe.extern.EitherType;
+
 import js.Error;
 import js.node.events.EventEmitter;
 import js.node.net.Socket.SocketAdress;
@@ -52,28 +54,60 @@ import js.node.net.Socket.SocketAdress;
 	var Error : ServerEvent<Error->Void> = "error";
 }
 
+private typedef ServerListenOptionsBase = {
+	@:optional var exclusive:Bool;
+}
+
 /**
-	This class is used to create a TCP or UNIX server.
+	Options for the `Server.listen` method (TCP version).
+**/
+typedef ServerListenOptionsTcp = {
+	>ServerListenOptionsBase,
+	@:optional var port:Int;
+	@:optional var host:String;
+	@:optional var backlog:Int;
+}
+
+/**
+	Options for the `Server.listen` method (UNIX version).
+**/
+typedef ServerListenOptionsUnix = {
+	>ServerListenOptionsBase,
+	@:optional var path:String;
+}
+
+/**
+	This class is used to create a TCP or local server.
 **/
 extern class Server extends EventEmitter<Server> {
 	/**
-		Begin accepting connections on the specified `port` and `host`.
-		If the `host` is omitted, the server will accept connections directed to any IPv4 address (INADDR_ANY).
-		A `port` value of zero will assign a random port.
+		Begin accepting connections on the specified `port` and `hostname`.
 
+		If the `hostname` is omitted, the server will accept connections on any IPv6 address (::) when IPv6 is available,
+		or any IPv4 address (0.0.0.0) otherwise.
+		A `port` value of zero will assign a random port.
+		
 		`backlog` is the maximum length of the queue of pending connections. The actual length will be determined
 		by your OS through sysctl settings such as tcp_max_syn_backlog and somaxconn on linux.
 		The default value of this parameter is 511 (not 512).
+
+		When `path` is provided, start a local socket server listening for connections on the given path.
+
+		When `handle` is provided, it should be either a server or socket (anything with an underlying `_handle` member),
+		or a {fd: <n>} object. This will cause the server to accept connections on the specified handle,
+		but it is presumed that the file descriptor or handle has already been bound to a port or domain socket.
+		Listening on a file descriptor is not supported on Windows.
 
 		This function is asynchronous. When the server has been bound, 'listening' event will be emitted.
 		The last parameter `callback` will be added as an listener for the 'listening' event.
 	**/
 	@:overload(function(path:String, ?callback:Void->Void):Void {})
-	@:overload(function(handle:haxe.extern.EitherType<Dynamic,{fd:Int}>, ?callback:Void->Void):Void {}) // TODO: according to docs, Dynamic should be either a server or socket, but i'm not sure if it's EitherType<Socket,Server>. Also, document that
+	@:overload(function(handle:EitherType<Dynamic,{fd:Int}>, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, backlog:Int, ?callback:Void->Void):Void {})
-	@:overload(function(port:Int, host:String, ?callback:Void->Void):Void {})
-	function listen(port:Int, host:String, backlog:Int, ?callback:Void->Void):Void;
+	@:overload(function(port:Int, hostname:String, ?callback:Void->Void):Void {})
+	@:overload(function(port:Int, hostname:String, backlog:Int, ?callback:Void->Void):Void {})
+	function listen(options:EitherType<ServerListenOptionsTcp,ServerListenOptionsUnix>, ?callback:Void->Void):Void;
 
 
 	/**
@@ -109,7 +143,7 @@ extern class Server extends EventEmitter<Server> {
 		Set this property to reject connections when the server's connection count gets high.
 		It is not recommended to use this option once a socket has been sent to a child with child_process.fork().
 	**/
-	var maxConnections : Int;
+	var maxConnections:Int;
 
 	/**
 		The number of concurrent connections on the server.
