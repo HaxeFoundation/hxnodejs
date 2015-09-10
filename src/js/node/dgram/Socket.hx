@@ -22,6 +22,7 @@
 package js.node.dgram;
 
 import js.node.events.EventEmitter;
+import js.node.net.Socket.SocketAdress;
 
 /**
 	Enumeration of events for the `Socket` object.
@@ -53,24 +54,7 @@ import js.node.events.EventEmitter;
 	var Error : SocketEvent<js.Error->Void>= "error";
 }
 
-typedef MessageListener = Buffer->MessageInfo->Void;
-
-/**
-	Information about socket address.
-**/
-typedef AddressInfo = {
-    var address:String;
-    var family:String;
-    var port:Int;
-}
-
-/**
-    A structure passed to the callback of the 'message' event.
-**/
-typedef MessageInfo = {
-	>AddressInfo,
-    var size:Int;
-}
+typedef MessageListener = Buffer->SocketAdress->Void;
 
 /**
     Enumeration of possible datagram socket types
@@ -81,10 +65,45 @@ typedef MessageInfo = {
 }
 
 /**
-	Encapsulates the datagram functionality. It should be created via `Dgram.createSocket`.
+	Options passed to the Socket consturctor.
+**/
+typedef SocketOptions = {
+	/**
+		Type of the socket. Either udp4 or udp6.
+	**/
+	var type:SocketType;
+
+	/**
+		When true, `Socket.bind` will reuse the address, even if another process has already bound a socket on it.
+		Defaults to false.
+	**/
+	@:optional var reuseAddr:Bool;
+}
+
+/**
+	Options for `Socket.bind` method.
+**/
+typedef SocketBindOptions = {
+	var port:Int;
+	@:optional var address:String;
+
+	/**
+		If false (default), then cluster workers will use the same underlying handle, allowing connection handling
+		duties to be shared. When true, the handle is not shared, and attempted port sharing results in an error. 
+	**/
+	@:optional var exclusive:Bool;
+}
+
+/**
+	Encapsulates the datagram functionality.
+	It should be created via `Dgram.createSocket`.
 **/
 @:jsRequire("dgram", "Socket")
 extern class Socket extends EventEmitter<Socket> {
+
+    @:overload(function(type:SocketType, ?callback:MessageListener):Void {})
+    private function new(options:SocketOptions, ?callback:MessageListener);
+
 	/**
 		The destination `port` and `address` must be specified.
 		A string may be supplied for the `address` parameter, and it will be resolved with DNS.
@@ -104,6 +123,7 @@ extern class Socket extends EventEmitter<Socket> {
 
 	/**
 		Listen for datagrams on a named `port` and optional `address`.
+		If `port` is not specified, the OS will try to bind to a random port.
 		If `address` is not specified, the OS will try to listen on all addresses.
 		After binding is done, a "listening" event is emitted and the `callback` (if specified) is called.
 		Specifying both a "listening" event listener and `callback` is not harmful but not very useful.
@@ -113,18 +133,22 @@ extern class Socket extends EventEmitter<Socket> {
 		If binding fails, an "error" event is generated. In rare case (e.g. binding a closed socket),
 		an `Error` may be thrown by this method.
 	**/
+	@:overload(function(options:SocketBindOptions, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, address:String, ?callback:Void->Void):Void {})
-	function bind(port:Int, ?callback:Void->Void):Void;
+	@:overload(function(port:Int, ?callback:Void->Void):Void {})
+	function bind(?callback:Void->Void):Void;
 
 	/**
 		Close the underlying socket and stop listening for data on it.
+
+		If a `callback` is provided, it is added as a listener for the 'close' event.
 	**/
-	function close():Void;
+	function close(?callback:Void->Void):Void;
 
 	/**
 		Returns an object containing the address information for a socket.
 	**/
-	function address():AddressInfo;
+	function address():SocketAdress;
 
 	/**
 		Sets or clears the SO_BROADCAST socket option.

@@ -38,5 +38,6 @@ extern class Dgram {
         the "all interfaces" address on a random port (it does the right thing for both `udp4` and `udp6` sockets).
         You can then retrieve the address and port with `socket.address().address` and `socket.address().port`.
     **/
-    static function createSocket(type:SocketType, ?callback:MessageListener):Socket;
+    @:overload(function(type:SocketType, ?callback:MessageListener):Socket {})
+    static function createSocket(options:SocketOptions, ?callback:MessageListener):Socket;
 }
