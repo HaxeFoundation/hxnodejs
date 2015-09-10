@@ -1,11 +1,10 @@
 import js.node.Fs;
 import js.node.Tls;
-import js.Node.console;
 
 /**
 	example from the tls.createServer documentation
 **/
-class TlsServerExample {
+class TlsServerPemExample {
 	static function main() {
 		var options = {
 			key: Fs.readFileSync('server-key.pem'),
@@ -18,15 +17,12 @@ class TlsServerExample {
 			ca: [ Fs.readFileSync('client-cert.pem') ]
 		};
 
-		var server = Tls.createServer(options, function(cleartextStream) {
-			console.log('server connected',
-									cleartextStream.authorized ? 'authorized' : 'unauthorized');
-			cleartextStream.write("welcome!\n");
-			cleartextStream.setEncoding('utf8');
-			cleartextStream.pipe(cleartextStream);
+		var server = Tls.createServer(options, function(socket) {
+			trace('server connected', socket.authorized ? 'authorized' : 'unauthorized');
+			socket.write("welcome!\n");
+			socket.setEncoding('utf8');
+			socket.pipe(socket);
 		});
-		server.listen(8000, function() {
-			console.log('server bound');
-		});
+		server.listen(8000, function() trace('server bound'));
 	}
 }

@@ -31,12 +31,10 @@ import js.node.tls.CleartextStream;
 import js.node.tls.SecurePair;
 import js.node.tls.Server;
 
-// TODO: clean up these options structures keeping in mind that they are used by https as well
-
 /**
 	Base structure for options object used in tls methods.
 **/
-typedef TlsOptions = {
+typedef TlsCreateServerOptionsBase = {
 	/**
 		passphrase for the private key or pfx.
 	**/
@@ -61,20 +59,33 @@ typedef TlsOptions = {
 	@:optional var ciphers:String;
 
 	/**
+		named curve to use for ECDH key agreement or false to disable ECDH.
+
+		Defaults to prime256v1 (NIST P-256). Use `Crypto.getCurves` to obtain a list of available curve names.
+		On recent releases, openssl ecparam -list_curves will also display the name and description
+		of each available elliptic curve.
+	**/
+	@:optional var ecdhCurve:String;
+
+	/**
+		Diffie Hellman parameters, required for Perfect Forward Secrecy.
+
+		Use openssl dhparam to create it. Its key length should be greater than or equal to 1024 bits,
+		otherwise it throws an error. It is strongly recommended to use 2048 bits or more for stronger security.
+		If omitted or invalid, it is silently discarded and DHE ciphers won't be available.
+	**/
+	@:optional var dhparam:EitherType<String,Buffer>;
+
+	/**
 		Abort the connection if the SSL/TLS handshake does not finish in this many milliseconds.
 		The default is 120 seconds.
-		A 'clientError' is emitted on the tls.Server object whenever a handshake times out.
+		A 'clientError' is emitted on the `tls.Server` object whenever a handshake times out.
 	**/
 	@:optional var handshakeTimeout:Int;
 
 	/**
 		When choosing a cipher, use the server's preferences instead of the client preferences.
-
-		Note that if SSLv2 is used, the server will send its list of preferences to the client,
-		and the client chooses the cipher.
-
-		Although, this option is disabled by default, it is recommended that you use this option
-		in conjunction with the `ciphers` option to mitigate BEAST attacks.
+		Default: true.
 	**/
 	@:optional var honorCipherOrder:Bool;
 
@@ -95,16 +106,31 @@ typedef TlsOptions = {
 	/**
 		possible NPN protocols. (Protocols should be ordered by their priority).
 	**/
-	@:optional var NPNProtocols:Array<EitherType<String,Buffer>>;
+	@:optional var NPNProtocols:EitherType<Array<String>,Buffer>;
 
 	/**
 		A function that will be called if client supports SNI TLS extension.
-		Only one argument will be passed to it: `servername`.
-		And SNICallback should return SecureContext instance.
-		(You can use `Crypto.createCredentials(...).context` to get proper `SecureContext`).
-		If SNICallback wasn't provided - default callback with high-level API will be used.
+		Two argument will be passed to it: `servername`, and `cb`.
+		SNICallback should invoke `cb(null, ctx)`, where `ctx` is a SecureContext instance.
+		(You can use tls.createSecureContext(...) to get proper `SecureContext`).
+		If `SNICallback` wasn't provided - default callback with high-level API will be used.
 	**/
-	@:optional var SNICallback:String->SecureContext;
+	@:optional var SNICallback:String->(js.Error->SecureContext)->Void;
+
+	/**
+		An integer specifying the seconds after which TLS session identifiers
+		and TLS session tickets created by the server are timed out.
+		See SSL_CTX_set_timeout for more details.
+	**/
+	@:optional var sessionTimeout:Int;
+
+	/**
+		A 48-byte `Buffer` instance consisting of 16-byte prefix, 16-byte hmac key, 16-byte AES key.
+		You could use it to accept tls session tickets on multiple instances of tls server.
+
+		NOTE: Automatically shared between cluster module workers.
+	**/
+	@:optional var ticketKeys:Buffer;
 
 	/**
 		opaque identifier for session resumption.
@@ -116,7 +142,6 @@ typedef TlsOptions = {
 	/**
 		The SSL method to use, e.g. SSLv3_method to force SSL version 3.
 		The possible values depend on your installation of OpenSSL and are defined in the constant SSL_METHODS.
-		TODO: make an abstract enum for that
 	**/
 	@:optional var secureProtocol:String;
 }
@@ -124,8 +149,8 @@ typedef TlsOptions = {
 /**
 	Structure to use to configure pfx
 **/
-typedef TlsOptionsPfx = {
-	>TlsOptions,
+typedef TlsCreateServerOptionsPfx = {
+	>TlsCreateServerOptionsBase,
 
 	/**
 		private key, certificate and CA certs of the server in PFX or PKCS12 format.
@@ -136,8 +161,8 @@ typedef TlsOptionsPfx = {
 /**
 	Structure to use to configure PEM
 **/
-typedef TlsOptionsPem = {
-	>TlsOptions,
+typedef TlsCreateServerOptionsPem = {
+	>TlsCreateServerOptionsBase,
 
 	/**
 		private key of the server in PEM format.
@@ -157,7 +182,7 @@ typedef TlsOptionsPem = {
 	@:optional var ca:Array<EitherType<String,Buffer>>;
 }
 
-typedef TlsServerOptions = EitherType<TlsOptionsPem,TlsOptionsPfx>;
+typedef TlsCreateServerOptions = EitherType<TlsCreateServerOptionsPem,TlsCreateServerOptionsPfx>;
 
 
 typedef TlsConnectOptions = {
@@ -279,7 +304,7 @@ extern class Tls {
 		Creates a new `Server`.
 		The `connectionListener` argument is automatically set as a listener for the 'secureConnection' event.
 	**/
-	static function createServer(options:TlsServerOptions, ?secureConnectionListener:CleartextStream->Void):Server;
+	static function createServer(options:TlsCreateServerOptions, ?secureConnectionListener:CleartextStream->Void):Server;
 
 	/**
 		Creates a new client connection to the given `port` and `host` (old API) or `options.port` and `options.host`.

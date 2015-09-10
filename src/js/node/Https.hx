@@ -25,7 +25,7 @@ import js.node.http.IncomingMessage;
 import js.node.http.ClientRequest;
 import js.node.http.ServerResponse;
 import js.node.https.*;
-import js.node.Tls.TlsServerOptions;
+import js.node.Tls.TlsCreateServerOptions;
 import js.node.Tls.TlsConnectOptions;
 
 typedef HttpsRequestOptions = {
@@ -50,7 +50,7 @@ extern class Https {
 		The options is similar to `Tls.createServer`.
 		The `requestListener` is a function which is automatically added to the 'request' event.
 	**/
-	static function createServer(options:TlsServerOptions, ?listener:IncomingMessage->ServerResponse->Void):Server;
+	static function createServer(options:TlsCreateServerOptions, ?listener:IncomingMessage->ServerResponse->Void):Server;
 
 	/**
 		Makes a request to a secure web server.
