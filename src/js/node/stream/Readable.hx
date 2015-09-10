@@ -47,7 +47,7 @@ import js.node.stream.Writable.IWritable;
 
 		If you just want to get all the data out of the stream as fast as possible, this is the best way to do so.
 	**/
-	var Data : ReadableEvent<haxe.extern.EitherType<Buffer,String>->Void> = "data";
+	var Data : ReadableEvent<EitherType<Buffer,String>->Void> = "data";
 
 	/**
 		This event fires when there will be no more data to read.

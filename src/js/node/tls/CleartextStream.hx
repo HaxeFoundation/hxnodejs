@@ -22,7 +22,7 @@
 package js.node.tls;
 
 import js.node.events.EventEmitter.Event;
-import js.node.net.Socket.NetworkAdress;
+import js.node.net.Socket.SocketAdress;
 
 @:enum abstract CleartextStreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
@@ -97,5 +97,5 @@ extern class CleartextStream extends CryptoStream {
 		Returns the bound address, the address family name and port
 		of the underlying socket as reported by the operating system.
 	**/
-	function address():NetworkAdress;
+	function address():SocketAdress;
 }

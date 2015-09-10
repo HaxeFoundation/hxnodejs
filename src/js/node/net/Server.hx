@@ -23,7 +23,7 @@ package js.node.net;
 
 import js.Error;
 import js.node.events.EventEmitter;
-import js.node.net.Socket.NetworkAdress;
+import js.node.net.Socket.SocketAdress;
 
 /**
 	Enumeration of events emitted by the `Server` objects
@@ -89,7 +89,7 @@ extern class Server extends EventEmitter<Server> {
 		Returns the bound address, the address family name and port of the server as reported by the operating system.
 		Useful to find which port was assigned when giving getting an OS-assigned address.
 	**/
-	function address():NetworkAdress;
+	function address():SocketAdress;
 
 	/**
 		Calling `unref` on a server will allow the program to exit if this is the only active server in the event system.
