@@ -83,3 +83,6 @@ typedef DuplexNewOptions = {
 	>Writable.WritableNewOptions,
 	@:optional var allowHalfOpen:Bool;
 }
+
+@:remove
+extern interface IDuplex extends Readable.IReadable extends Writable.IWritable {}
