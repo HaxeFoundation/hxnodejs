@@ -29,8 +29,7 @@ import js.node.tls.SecurePair;
 import js.node.tls.SecureContext;
 import js.node.tls.Server;
 
-private typedef TlsOptionsBase = {
-	>SecureContextOptions,
+typedef TlsOptionsBase = {
 	/**
 		If true the server will reject any connection which is not authorized with the list of supplied CAs.
 		This option only has an effect if `requestCert` is true.
@@ -44,19 +43,8 @@ private typedef TlsOptionsBase = {
 	@:optional var NPNProtocols:EitherType<Array<String>,Buffer>;
 }
 
-/**
-	Base structure for options object used in tls methods.
-**/
-typedef TlsCreateServerOptions = {
+typedef TlsServerOptionsBase = {
 	>TlsOptionsBase,
-
-	/**
-		Abort the connection if the SSL/TLS handshake does not finish in this many milliseconds.
-		The default is 120 seconds.
-		A 'clientError' is emitted on the `tls.Server` object whenever a handshake times out.
-	**/
-	@:optional var handshakeTimeout:Int;
-
 
 	/**
 		If true the server will request a certificate from clients that connect
@@ -73,6 +61,37 @@ typedef TlsCreateServerOptions = {
 		If `SNICallback` wasn't provided - default callback with high-level API will be used.
 	**/
 	@:optional var SNICallback:String->(js.Error->SecureContext)->Void;
+}
+
+typedef TlsClientOptionsBase = {
+	>TlsOptionsBase,
+
+	/**
+		A Buffer instance, containing TLS session.
+	**/
+	@:optional var session:Buffer;
+
+	/**
+		If true - OCSP status request extension would be added to client hello,
+		and OCSPResponse event will be emitted on socket before establishing secure communication
+	**/
+	@:optional var requestOCSP:Bool;
+}
+
+
+/**
+	Base structure for options object used in tls methods.
+**/
+typedef TlsCreateServerOptions = {
+	>TlsServerOptionsBase,
+	>SecureContextOptions,
+
+	/**
+		Abort the connection if the SSL/TLS handshake does not finish in this many milliseconds.
+		The default is 120 seconds.
+		A 'clientError' is emitted on the `tls.Server` object whenever a handshake times out.
+	**/
+	@:optional var handshakeTimeout:Int;
 
 	/**
 		An integer specifying the seconds after which TLS session identifiers
@@ -92,7 +111,9 @@ typedef TlsCreateServerOptions = {
 }
 
 typedef TlsConnectOptions = {
-	>TlsOptionsBase,
+	>TlsClientOptionsBase,
+	>SecureContextOptions,
+
 	/**
 		Host the client should connect to.
 		Defaults to 'localhost'
@@ -126,11 +147,6 @@ typedef TlsConnectOptions = {
 		Should return an error if verification fails. Return `js.Lib.undefined` if passing.
 	**/
 	@:optional var checkServerIdentity:String->{}->Dynamic; // TODO: peer cerficicate structure
-
-	/**
-		A Buffer instance, containing TLS session.
-	**/
-	@:optional var session:Buffer;
 }
 
 

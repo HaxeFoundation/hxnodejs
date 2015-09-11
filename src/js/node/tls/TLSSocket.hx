@@ -24,6 +24,8 @@ package js.node.tls;
 import haxe.Constraints.Function;
 import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
+import js.node.Tls.TlsServerOptionsBase;
+import js.node.Tls.TlsClientOptionsBase;
 
 
 /**
@@ -54,6 +56,24 @@ import js.node.events.EventEmitter.Event;
 }
 
 
+typedef TLSSocketOptions = {
+	>TlsServerOptionsBase,
+	>TlsClientOptionsBase,
+
+	/**
+		An optional TLS context object from `Tls.createSecureContext`
+	**/
+	@:optional var secureContext:SecureContext;
+
+	/**
+		If true - TLS socket will be instantiated in server-mode
+	**/
+	@:optional var isServer:Bool;
+
+	@:optional var server:js.node.net.Server;
+}
+
+
 /**
 	This is a wrapped version of `net.Socket` that does transparent encryption
 	of written data and all required TLS negotiation.
@@ -63,14 +83,14 @@ import js.node.events.EventEmitter.Event;
 @:jsRequire("tls", "TLSSocket")
 extern class TLSSocket extends js.node.net.Socket {
 	/**
+		Construct a new TLSSocket object from existing TCP socket.
+	**/
+	function new(socket:js.node.net.Socket, options:TLSSocketOptions);
+
+	/**
 		true if the peer certificate was signed by one of the specified CAs, otherwise false
 	**/
 	var authorized(default,null):Bool;
-
-	/**
-		Negotiated protocol name.
-	**/
-	var npnProtocol(default,null):String;
 
 	/**
 		The reason why the peer's certificate has not been verified.
@@ -78,6 +98,11 @@ extern class TLSSocket extends js.node.net.Socket {
 		This property becomes available only when `authorized` is false.
 	**/
 	var authorizationError(default,null):Null<String>;
+
+	/**
+		Negotiated protocol name.
+	**/
+	var npnProtocol(default,null):String;
 
 	/**
 		Returns an object representing the peer's certificate.
@@ -100,7 +125,7 @@ extern class TLSSocket extends js.node.net.Socket {
 	/**
 		Initiate TLS renegotiation process.
 
-		The `options` may contain the following fields: rejectUnauthorized, requestCert (See tls.createServer for details).
+		The `options` may contain the following fields: rejectUnauthorized, requestCert (See `Tls.createServer` for details).
 
 		`callback(err)` will be executed with null as err, once the renegotiation is successfully completed.
 

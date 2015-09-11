@@ -68,7 +68,7 @@ Requires Haxe 3.2 or later
 | fs                | done   |                          |
 | Globals           | done   |                          |
 | http              | done   |                          |
-| https             | done   |                          |
+| https             | wip    |                          |
 | net               | done   |                          |
 | os                | done   |                          |
 | path              | done   |                          |
@@ -80,7 +80,7 @@ Requires Haxe 3.2 or later
 | smalloc           | done   |                          |
 | stream            | done   |                          |
 | string_decoder    | done   |                          |
-| tls               | wip    |                          |
+| tls               | done   |                          |
 | tty               | done   |                          |
 | dgram             | done   |                          |
 | url               | done   |                          |
