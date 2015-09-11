@@ -22,7 +22,7 @@
 package js.node.tls;
 
 import js.node.Buffer;
-import js.node.Crypto.CredentialOptions;
+import js.node.tls.SecureContext.SecureContextOptions;
 import js.node.events.EventEmitter.Event;
 
 /**
@@ -81,5 +81,5 @@ extern class Server extends js.node.net.Server {
 		Add secure context that will be used if client request's SNI hostname
 		is matching passed hostname (wildcards can be used).
 	**/
-	function addContext(hostname:String, credentials:CredentialOptions):Void;
+	function addContext(hostname:String, credentials:SecureContextOptions):Void;
 }

@@ -24,32 +24,14 @@ package js.node;
 import haxe.extern.EitherType;
 
 import js.node.Buffer;
-import js.node.crypto.Credentials;
-import js.node.crypto.SecureContext;
 import js.node.tls.TLSSocket;
 import js.node.tls.CleartextStream;
 import js.node.tls.SecurePair;
+import js.node.tls.SecureContext;
 import js.node.tls.Server;
 
 private typedef TlsOptionsBase = {
-	/**
-		passphrase for the private key or pfx.
-	**/
-	@:optional var passphrase:String;
-
-	/**
-		ciphers to use or exclude.
-
-		To mitigate BEAST attacks it is recommended that you use this option in conjunction with the `honorCipherOrder`
-		option described below to prioritize the non-CBC cipher.
-
-		Defaults to AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH.
-
-		Consult the OpenSSL cipher list format documentation for details on the format.
-		ECDH (Elliptic Curve Diffie-Hellman) ciphers are not yet supported.
-	**/
-	@:optional var ciphers:String;
-
+	>SecureContextOptions,
 	/**
 		If true the server will reject any connection which is not authorized with the list of supplied CAs.
 		This option only has an effect if `requestCert` is true.
@@ -63,60 +45,11 @@ private typedef TlsOptionsBase = {
 	@:optional var NPNProtocols:EitherType<Array<String>,Buffer>;
 }
 
-private typedef TlsOptionsPfx = {
-	/**
-		private key, certificate and CA certs of the server in PFX or PKCS12 format.
-	**/
-	var pfx:EitherType<String,Buffer>;
-}
-
-private typedef TlsOptionsPem = {
-	/**
-		private key of the server in PEM format.
-	**/
-	var key:EitherType<String,Buffer>;
-
-	/**
-		certificate key of the server in PEM format.
-	**/
-	var cert:EitherType<String,Buffer>;
-
-	/**
-		trusted certificates in PEM format.
-		If this is omitted several well known "root" CAs will be used, like VeriSign.
-		These are used to authorize connections.
-	**/
-	@:optional var ca:Array<EitherType<String,Buffer>>;
-}
-
 /**
 	Base structure for options object used in tls methods.
 **/
-typedef TlsCreateServerOptionsBase = {
+typedef TlsCreateServerOptions = {
 	>TlsOptionsBase,
-
-	/**
-		PEM encoded CRLs (Certificate Revocation List)
-	**/
-	@:optional var crl:EitherType<String,Array<String>>;
-
-	/**
-		named curve to use for ECDH key agreement or false to disable ECDH.
-
-		Defaults to prime256v1 (NIST P-256). Use `Crypto.getCurves` to obtain a list of available curve names.
-		On recent releases, openssl ecparam -list_curves will also display the name and description
-		of each available elliptic curve.
-	**/
-	@:optional var ecdhCurve:String;
-
-	/**
-		Diffie Hellman parameters, required for Perfect Forward Secrecy.
-
-		Use openssl dhparam to create it. Its key length should be greater than or equal to 1024 bits,
-		otherwise it throws an error. It is strongly recommended to use 2048 bits or more for stronger security.
-		If omitted or invalid, it is silently discarded and DHE ciphers won't be available.
-	**/
-	@:optional var dhparam:EitherType<String,Buffer>;
 
 	/**
 		Abort the connection if the SSL/TLS handshake does not finish in this many milliseconds.
@@ -125,11 +58,6 @@ typedef TlsCreateServerOptionsBase = {
 	**/
 	@:optional var handshakeTimeout:Int;
 
-	/**
-		When choosing a cipher, use the server's preferences instead of the client preferences.
-		Default: true.
-	**/
-	@:optional var honorCipherOrder:Bool;
 
 	/**
 		If true the server will request a certificate from clients that connect
@@ -162,40 +90,9 @@ typedef TlsCreateServerOptionsBase = {
 	**/
 	@:optional var ticketKeys:Buffer;
 
-	/**
-		opaque identifier for session resumption.
-		If `requestCert` is true, the default is MD5 hash value generated from command-line.
-		Otherwise, the default is not provided.
-	**/
-	@:optional var sessionIdContext:String;
-
-	/**
-		The SSL method to use, e.g. SSLv3_method to force SSL version 3.
-		The possible values depend on your installation of OpenSSL and are defined in the constant SSL_METHODS.
-	**/
-	@:optional var secureProtocol:String;
 }
 
-/**
-	Structure to use to configure pfx
-**/
-typedef TlsCreateServerOptionsPfx = {
-	>TlsCreateServerOptionsBase,
-	>TlsOptionsPfx,
-}
-
-/**
-	Structure to use to configure PEM
-**/
-typedef TlsCreateServerOptionsPem = {
-	>TlsCreateServerOptionsBase,
-	>TlsOptionsPem,
-}
-
-typedef TlsCreateServerOptions = EitherType<TlsCreateServerOptionsPem,TlsCreateServerOptionsPfx>;
-
-
-typedef TlsConnectOptionsBase = {
+typedef TlsConnectOptions = {
 	>TlsOptionsBase,
 	/**
 		Host the client should connect to.
@@ -232,35 +129,10 @@ typedef TlsConnectOptionsBase = {
 	@:optional var checkServerIdentity:String->{}->Dynamic; // TODO: peer cerficicate structure
 
 	/**
-		The SSL method to use, e.g. SSLv3_method to force SSL version 3.
-		The possible values depend on your installation of OpenSSL and are defined in the constant SSL_METHODS.
-		TODO: make an abstract enum for that
-	**/
-	@:optional var secureProtocol:String;
-
-	/**
 		A Buffer instance, containing TLS session.
 	**/
 	@:optional var session:Buffer;
 }
-
-/**
-	Structure to use to configure pfx
-**/
-typedef TlsConnectOptionsPfx = {
-	>TlsConnectOptionsBase,
-	>TlsOptionsPfx,
-}
-
-/**
-	Structure to use to configure PEM
-**/
-typedef TlsConnectOptionsPem = {
-	>TlsConnectOptionsBase,
-	>TlsOptionsPem,
-}
-
-typedef TlsConnectOptions = EitherType<TlsConnectOptionsPem,TlsConnectOptionsPfx>;
 
 
 /**
@@ -309,20 +181,15 @@ extern class Tls {
 	static function connect(options:TlsConnectOptions, ?callback:Void->Void):TLSSocket;
 
 	/**
-		Creates a new secure pair object with two streams, one of which reads/writes encrypted data,
-		and one reads/writes cleartext data. Generally the encrypted one is piped to/from an incoming
-		encrypted data stream, and the cleartext one is used as a replacement for the initial encrypted stream.
-
-		`credentials`: A credentials object from `Crypto.createCredentials()`
-
-		`isServer`: A boolean indicating whether this tls connection should be opened as a server or a client.
-
-		`requestCert`: A boolean indicating whether a server should request a certificate from a connecting client.
-		Only applies to server connections.
-
-		`rejectUnauthorized`: A boolean indicating whether a server should automatically reject clients with invalid certificates.
-		 Only applies to servers with `requestCert` enabled.
+		Creates a credentials object.
 	**/
-	@:overload(function(?credentials:Credentials, ?isServer:Bool, ?requestCert:Bool, ?rejectUnauthorized:Bool):SecurePair {})
-	static function createSecurePair(?credentials:Credentials, ?isServer:Bool):SecurePair;
+	static function createSecureContext(?details:SecureContextOptions):SecureContext;
+
+	/**
+		Creates a new secure pair object with two streams, one of which reads/writes encrypted data,
+		and one reads/writes cleartext data.
+		Generally the encrypted one is piped to/from an incoming encrypted data stream,
+		and the cleartext one is used as a replacement for the initial encrypted stream.
+	**/
+	static function createSecurePair(?context:SecureContext, ?isServer:Bool, ?requestCert:Bool, ?rejectUnauthorized:Bool):SecurePair;
 }

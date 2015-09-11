@@ -26,6 +26,7 @@ import js.Error;
 import js.node.Buffer;
 import js.node.crypto.*;
 import js.node.crypto.DiffieHellman.IDiffieHellman;
+import js.node.tls.SecureContext;
 
 /**
 	Enumerations of crypto algorighms to be used.
@@ -35,47 +36,6 @@ import js.node.crypto.DiffieHellman.IDiffieHellman;
 	var MD5 = "md5";
 	var SHA256 = "sha256";
 	var SHA512 = "sha512";
-}
-
-typedef CredentialOptions = {
-	/**
-		PFX or PKCS12 encoded private key, certificate and CA certificates
-	**/
-	pfx:EitherType<String,Buffer>,
-
-	/**
-		PEM encoded private key
-	**/
-	key:String,
-
-	/**
-		passphrase for the private key or pfx
-	**/
-	passphrase:String,
-
-	/**
-		PEM encoded certificate
-	**/
-	cert:String,
-
-	/**
-		PEM encoded CA certificates to trust.
-		If no `ca` details are given, then node.js will use the default publicly trusted list of CAs as given in
-		http://mxr.mozilla.org/mozilla/source/security/nss/lib/ckfw/builtins/certdata.txt.
-	**/
-	?ca:EitherType<String,Array<String>>,
-
-	/**
-		PEM encoded CRLs (Certificate Revocation List)
-	**/
-	crl:EitherType<String,Array<String>>,
-
-	/**
-		ciphers to use or exclude.
-		Consult http://www.openssl.org/docs/apps/ciphers.html#CIPHER_LIST_FORMAT for details on the format.
-	**/
-	ciphers:String,
-
 }
 
 /**
@@ -132,7 +92,8 @@ extern class Crypto {
 	/**
 		Creates a credentials object
 	**/
-	static function createCredentials(?details:CredentialOptions):Credentials;
+	@:deprecated("Use js.node.Tls.createSecureContext instead.")
+	static function createCredentials(?details:SecureContextOptions):SecureContext;
 
 	/**
 		Creates and returns a hash object, a cryptographic hash with the given algorithm which can be used to generate hash digests.
