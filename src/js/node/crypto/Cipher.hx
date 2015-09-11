@@ -68,4 +68,17 @@ extern class Cipher extends js.node.stream.Transform<Cipher> {
 	**/
 	@:overload(function():Void {})
 	function setAutoPadding(auto_padding:Bool):Void;
+
+	/**
+		For authenticated encryption modes (currently supported: GCM), this method returns a `Buffer`
+		that represents the authentication tag that has been computed from the given data.
+		Should be called after encryption has been completed using the `final` method!
+	**/
+	function getAuthTag():Buffer;
+
+	/**
+		For authenticated encryption modes (currently supported: GCM), this method sets the value
+		used for the additional authenticated data (AAD) input parameter.
+	**/
+	function setAAD(buffer:Buffer):Void;
 }

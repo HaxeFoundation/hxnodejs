@@ -22,6 +22,7 @@
 package js.node;
 
 import haxe.extern.EitherType;
+
 import js.Error;
 import js.node.Buffer;
 import js.node.crypto.*;
@@ -53,7 +54,9 @@ import js.node.tls.SecureContext;
 }
 
 /**
-	The crypto module offers a way of encapsulating secure credentials to be used as part of a secure HTTPS net or http connection.
+	The crypto module offers a way of encapsulating secure credentials
+	to be used as part of a secure HTTPS net or http connection.
+
 	It also offers a set of wrappers for OpenSSL's hash, hmac, cipher, decipher, sign and verify methods.
 **/
 @:jsRequire("crypto")
@@ -90,6 +93,11 @@ extern class Crypto {
 	static function getHashes():Array<String>;
 
 	/**
+		Returns an array with the names of the supported elliptic curves.
+	**/
+	static function getCurves():Array<String>;
+
+	/**
 		Creates a credentials object
 	**/
 	@:deprecated("Use js.node.Tls.createSecureContext instead.")
@@ -109,8 +117,7 @@ extern class Crypto {
 		`algorithm` is dependent on the available algorithms supported by OpenSSL - see `createHash` above.
 		`key` is the hmac key to be used.
 	**/
-	@:overload(function(algorithm:CryptoAlgorithm, key:String):Hmac {})
-	static function createHmac(algorithm:CryptoAlgorithm, key:Buffer):Hmac;
+	static function createHmac(algorithm:CryptoAlgorithm, key:EitherType<String,Buffer>):Hmac;
 
 	/**
 		Creates and returns a cipher object, with the given algorithm and password.
@@ -186,17 +193,25 @@ extern class Crypto {
 	**/
 	static function getDiffieHellman(group_name:DiffieHellmanGroupName):IDiffieHellman;
 
+	/**
+		Creates an Elliptic Curve (EC) Diffie-Hellman key exchange object using a predefined curve
+		specified by the `curve_name` string. Use `getCurves` to obtain a list of available curve names.
+		On recent releases, openssl ecparam -list_curves will also display the name
+		and description of each available elliptic curve.
+	**/
+	static function createECDH(curve_name:String):ECDH;
 
 	/**
 		Asynchronous PBKDF2 applies pseudorandom function HMAC-SHA1 to derive a key of given length
 		from the given password, salt and iterations.
 	**/
+	@:overload(function(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, digest:String, callback:Error->String->Void):Void {})
 	static function pbkdf2(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, callback:Error->String->Void):Void;
 
 	/**
 		Synchronous PBKDF2 function. Returns derivedKey or throws error.
 	**/
-	static function pbkdf2Sync(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int):String;
+	static function pbkdf2Sync(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, ?digest:String):String;
 
 	/**
 		Generates cryptographically strong pseudo-random data.

@@ -66,4 +66,18 @@ extern class Decipher extends js.node.stream.Transform<Decipher> {
 	**/
 	@:overload(function():Void {})
 	function setAutoPadding(auto_padding:Bool):Void;
+
+	/**
+		For authenticated encryption modes (currently supported: GCM), this method must be used
+		to pass in the received authentication tag. If no tag is provided or if the ciphertext
+		has been tampered with, `final` will throw, thus indicating that the ciphertext should be
+		discarded due to failed authentication.
+	**/
+	function setAuthTag(buffer:Buffer):Void;
+
+	/**
+		For authenticated encryption modes (currently supported: GCM), this method sets the value
+		used for the additional authenticated data (AAD) input parameter.
+	**/
+	function setAAD(buffer:Buffer):Void;
 }
