@@ -26,24 +26,16 @@ import haxe.extern.EitherType;
 import js.node.Buffer;
 import js.node.crypto.Credentials;
 import js.node.crypto.SecureContext;
-import js.node.net.Socket;
+import js.node.tls.TLSSocket;
 import js.node.tls.CleartextStream;
 import js.node.tls.SecurePair;
 import js.node.tls.Server;
 
-/**
-	Base structure for options object used in tls methods.
-**/
-typedef TlsCreateServerOptionsBase = {
+private typedef TlsOptionsBase = {
 	/**
 		passphrase for the private key or pfx.
 	**/
 	@:optional var passphrase:String;
-
-	/**
-		PEM encoded CRLs (Certificate Revocation List)
-	**/
-	@:optional var crl:EitherType<String,Array<String>>;
 
 	/**
 		ciphers to use or exclude.
@@ -57,6 +49,56 @@ typedef TlsCreateServerOptionsBase = {
 		ECDH (Elliptic Curve Diffie-Hellman) ciphers are not yet supported.
 	**/
 	@:optional var ciphers:String;
+
+	/**
+		If true the server will reject any connection which is not authorized with the list of supplied CAs.
+		This option only has an effect if `requestCert` is true.
+		Default: false.
+	**/
+	@:optional var rejectUnauthorized:Bool;
+
+	/**
+		possible NPN protocols. (Protocols should be ordered by their priority).
+	**/
+	@:optional var NPNProtocols:EitherType<Array<String>,Buffer>;
+}
+
+private typedef TlsOptionsPfx = {
+	/**
+		private key, certificate and CA certs of the server in PFX or PKCS12 format.
+	**/
+	var pfx:EitherType<String,Buffer>;
+}
+
+private typedef TlsOptionsPem = {
+	/**
+		private key of the server in PEM format.
+	**/
+	var key:EitherType<String,Buffer>;
+
+	/**
+		certificate key of the server in PEM format.
+	**/
+	var cert:EitherType<String,Buffer>;
+
+	/**
+		trusted certificates in PEM format.
+		If this is omitted several well known "root" CAs will be used, like VeriSign.
+		These are used to authorize connections.
+	**/
+	@:optional var ca:Array<EitherType<String,Buffer>>;
+}
+
+/**
+	Base structure for options object used in tls methods.
+**/
+typedef TlsCreateServerOptionsBase = {
+	>TlsOptionsBase,
+
+	/**
+		PEM encoded CRLs (Certificate Revocation List)
+	**/
+	@:optional var crl:EitherType<String,Array<String>>;
 
 	/**
 		named curve to use for ECDH key agreement or false to disable ECDH.
@@ -95,18 +137,6 @@ typedef TlsCreateServerOptionsBase = {
 		Default: false.
 	**/
 	@:optional var requestCert:Bool;
-
-	/**
-		If true the server will reject any connection which is not authorized with the list of supplied CAs.
-		This option only has an effect if `requestCert` is true.
-		Default: false.
-	**/
-	@:optional var rejectUnauthorized:Bool;
-
-	/**
-		possible NPN protocols. (Protocols should be ordered by their priority).
-	**/
-	@:optional var NPNProtocols:EitherType<Array<String>,Buffer>;
 
 	/**
 		A function that will be called if client supports SNI TLS extension.
@@ -151,11 +181,7 @@ typedef TlsCreateServerOptionsBase = {
 **/
 typedef TlsCreateServerOptionsPfx = {
 	>TlsCreateServerOptionsBase,
-
-	/**
-		private key, certificate and CA certs of the server in PFX or PKCS12 format.
-	**/
-	var pfx:EitherType<String,Buffer>;
+	>TlsOptionsPfx,
 }
 
 /**
@@ -163,29 +189,14 @@ typedef TlsCreateServerOptionsPfx = {
 **/
 typedef TlsCreateServerOptionsPem = {
 	>TlsCreateServerOptionsBase,
-
-	/**
-		private key of the server in PEM format.
-	**/
-	var key:EitherType<String,Buffer>;
-
-	/**
-		certificate key of the server in PEM format.
-	**/
-	var cert:EitherType<String,Buffer>;
-
-	/**
-		trusted certificates in PEM format.
-		If this is omitted several well known "root" CAs will be used, like VeriSign.
-		These are used to authorize connections.
-	**/
-	@:optional var ca:Array<EitherType<String,Buffer>>;
+	>TlsOptionsPem,
 }
 
 typedef TlsCreateServerOptions = EitherType<TlsCreateServerOptionsPem,TlsCreateServerOptionsPfx>;
 
 
-typedef TlsConnectOptions = {
+typedef TlsConnectOptionsBase = {
+	>TlsOptionsBase,
 	/**
 		Host the client should connect to.
 		Defaults to 'localhost'
@@ -201,25 +212,13 @@ typedef TlsConnectOptions = {
 		Establish secure connection on a given socket rather than creating a new socket.
 		If this option is specified, `host` and `port` are ignored.
 	**/
-	@:optional var socket:Socket;
+	@:optional var socket:js.node.net.Socket;
 
 	/**
-		passphrase for the private key or pfx.
+		Creates unix socket connection to path.
+		If this option is specified, host and port are ignored.
 	**/
-	@:optional var passphrase:String;
-
-	/**
-		If true, the server certificate is verified against the list of supplied CAs.
-		An 'error' event is emitted if verification fails. Default: true.
-	**/
-	@:optional var rejectUnauthorized:Bool;
-
-	/**
-		supported NPN protocols.
-		Buffers should have following format: 0x05hello0x05world, where first byte is next protocol name's length.
-		Passing array of strings should usually be much simpler: ['hello', 'world'].
-	**/
-	@:optional var NPNProtocols:Array<EitherType<String,Buffer>>;
+	@:optional var path:String;
 
 	/**
 		Servername for SNI (Server Name Indication) TLS extension.
@@ -227,48 +226,41 @@ typedef TlsConnectOptions = {
 	@:optional var servername:String;
 
 	/**
+		An override for checking server's hostname against the certificate.
+		Should return an error if verification fails. Return `js.Lib.undefined` if passing.
+	**/
+	@:optional var checkServerIdentity:String->{}->Dynamic; // TODO: peer cerficicate structure
+
+	/**
 		The SSL method to use, e.g. SSLv3_method to force SSL version 3.
 		The possible values depend on your installation of OpenSSL and are defined in the constant SSL_METHODS.
 		TODO: make an abstract enum for that
 	**/
 	@:optional var secureProtocol:String;
+
+	/**
+		A Buffer instance, containing TLS session.
+	**/
+	@:optional var session:Buffer;
 }
 
 /**
 	Structure to use to configure pfx
 **/
 typedef TlsConnectOptionsPfx = {
-	>TlsConnectOptions,
-
-	/**
-		private key, certificate and CA certs of the client in PFX or PKCS12 format.
-	**/
-	var pfx:EitherType<String,Buffer>;
+	>TlsConnectOptionsBase,
+	>TlsOptionsPfx,
 }
 
 /**
 	Structure to use to configure PEM
 **/
 typedef TlsConnectOptionsPem = {
-	>TlsConnectOptions,
-
-	/**
-		private key of the client in PEM format.
-	**/
-	var key:EitherType<String,Buffer>;
-
-	/**
-		certificate key of the client in PEM format.
-	**/
-	var cert:EitherType<String,Buffer>;
-
-	/**
-		trusted certificates in PEM format.
-		If this is omitted several well known "root" CAs will be used, like VeriSign.
-		These are used to authorize connections.
-	**/
-	@:optional var ca:Array<EitherType<String,Buffer>>;
+	>TlsConnectOptionsBase,
+	>TlsOptionsPem,
 }
+
+typedef TlsConnectOptions = EitherType<TlsConnectOptionsPem,TlsConnectOptionsPfx>;
 
 
 /**
@@ -304,17 +296,17 @@ extern class Tls {
 		Creates a new `Server`.
 		The `connectionListener` argument is automatically set as a listener for the 'secureConnection' event.
 	**/
-	static function createServer(options:TlsCreateServerOptions, ?secureConnectionListener:CleartextStream->Void):Server;
+	static function createServer(options:TlsCreateServerOptions, ?secureConnectionListener:TLSSocket->Void):Server;
 
 	/**
 		Creates a new client connection to the given `port` and `host` (old API) or `options.port` and `options.host`.
 		If `host` is omitted, it defaults to 'localhost'.
 	**/
-	@:overload(function(port:Int, ?callback:Void->Void):CleartextStream {})
-	@:overload(function(port:Int, options:TlsConnectOptions, ?callback:Void->Void):CleartextStream {})
-	@:overload(function(port:Int, host:String, ?callback:Void->Void):CleartextStream {})
-	@:overload(function(port:Int, host:String, options:TlsConnectOptions, ?callback:Void->Void):CleartextStream {})
-	static function connect(options:TlsConnectOptions, ?callback:Void->Void):CleartextStream;
+	@:overload(function(port:Int, ?callback:Void->Void):TLSSocket {})
+	@:overload(function(port:Int, options:TlsConnectOptions, ?callback:Void->Void):TLSSocket {})
+	@:overload(function(port:Int, host:String, ?callback:Void->Void):TLSSocket {})
+	@:overload(function(port:Int, host:String, options:TlsConnectOptions, ?callback:Void->Void):TLSSocket {})
+	static function connect(options:TlsConnectOptions, ?callback:Void->Void):TLSSocket;
 
 	/**
 		Creates a new secure pair object with two streams, one of which reads/writes encrypted data,

@@ -26,11 +26,11 @@ import js.node.http.ClientRequest;
 import js.node.http.ServerResponse;
 import js.node.https.*;
 import js.node.Tls.TlsCreateServerOptions;
-import js.node.Tls.TlsConnectOptions;
+import js.node.Tls.TlsConnectOptionsBase;
 
 typedef HttpsRequestOptions = {
 	>js.node.Http.HttpRequestOptions,
-	>TlsConnectOptions, // TODO: clean those options up
+	>TlsConnectOptionsBase, // TODO: clean those options up
 }
 
 /**
