@@ -41,6 +41,6 @@ import js.node.events.EventEmitter;
 	Returned by `Tls.createSecurePair`.
 **/
 extern class SecurePair extends EventEmitter<SecurePair> {
-	var cleartext(default,null):CleartextStream;
-	var encrypted(default,null):EncryptedStream;
+	var cleartext(default,null):TLSSocket;
+	var encrypted(default,null):js.node.stream.Duplex.IDuplex;
 }

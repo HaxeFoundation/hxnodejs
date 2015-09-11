@@ -25,7 +25,6 @@ import haxe.extern.EitherType;
 
 import js.node.Buffer;
 import js.node.tls.TLSSocket;
-import js.node.tls.CleartextStream;
 import js.node.tls.SecurePair;
 import js.node.tls.SecureContext;
 import js.node.tls.Server;
