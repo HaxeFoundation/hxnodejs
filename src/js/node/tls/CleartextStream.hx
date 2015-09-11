@@ -72,11 +72,6 @@ extern class CleartextStream extends CryptoStream {
 	var remotePort(default,null):Int;
 
 	/**
-		Negotiated protocol name.
-	**/
-	var npnProtocol(default,null):String;
-
-	/**
 		Returns an object representing the peer's certificate.
 		The returned object has some properties corresponding to the field of the certificate.
 

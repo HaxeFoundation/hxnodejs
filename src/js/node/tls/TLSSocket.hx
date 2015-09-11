@@ -68,6 +68,11 @@ extern class TLSSocket extends js.node.net.Socket {
 	var authorized(default,null):Bool;
 
 	/**
+		Negotiated protocol name.
+	**/
+	var npnProtocol(default,null):String;
+
+	/**
 		The reason why the peer's certificate has not been verified.
 
 		This property becomes available only when `authorized` is false.

@@ -24,6 +24,7 @@ package js.node.tls;
 /**
 	This is an encrypted stream. Base class for `CleartextStream` and `EncryptedStream`.
 **/
+@:deprecated("Use js.node.tls.TLSSocket instead.")
 extern class CryptoStream extends js.node.stream.Duplex<CryptoStream> {
 	/**
 		A proxy to the underlying socket's bytesWritten accessor,

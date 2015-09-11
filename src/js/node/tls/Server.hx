@@ -22,6 +22,7 @@
 package js.node.tls;
 
 import js.node.Buffer;
+import js.node.tls.TLSSocket;
 import js.node.tls.SecureContext.SecureContextOptions;
 import js.node.events.EventEmitter.Event;
 
@@ -32,7 +33,7 @@ import js.node.events.EventEmitter.Event;
 	/**
 		This event is emitted after a new connection has been successfully handshaked.
 	**/
-	var SecureConnection : ServerEvent<CleartextStream->Void> = "secureConnection";
+	var SecureConnection : ServerEvent<TLSSocket->Void> = "secureConnection";
 
 	/**
 		When a client connection emits an 'error' event before secure connection is established -
@@ -40,19 +41,22 @@ import js.node.events.EventEmitter.Event;
 
 		Listener arguments:
 			exception - error object
-			securePair - a secure pair that the error originated from
+			securePair - the `TLSSocket` that the error originated from
 	**/
-	var ClientError : ServerEvent<js.Error->SecurePair->Void> = "clientError";
+	var ClientError : ServerEvent<js.Error->TLSSocket->Void> = "clientError";
 
 	/**
 		Emitted on creation of TLS session.
 		May be used to store sessions in external storage.
 
+		`callback` must be invoked eventually, otherwise no data will be sent or received from secure connection.
+
 		Listener arguments:
 			sessionId
 			sessionData
+			callback
 	**/
-	var NewSession : ServerEvent<Buffer->Buffer->Void> = "newSession";
+	var NewSession : ServerEvent<Buffer->Buffer->(Void->Void)->Void> = "newSession";
 
 	/**
 		Emitted when client wants to resume previous TLS session.
@@ -69,6 +73,19 @@ import js.node.events.EventEmitter.Event;
 			callback
 	**/
 	var ResumeSession : ServerEvent<Buffer->(js.Error->?Buffer->Void)->Void>= "resumeSession";
+
+	/**
+		Emitted when the client sends a certificate status request.
+		You could parse server's current certificate to obtain OCSP url and certificate id,
+		and after obtaining OCSP response invoke `callback(null, resp)`, where `resp` is a `Buffer` instance.
+		Both certificate and issuer are a Buffer DER-representations of the primary and issuer's certificates.
+		They could be used to obtain OCSP certificate id and OCSP endpoint url.
+
+		Alternatively, `callback(null, null)` could be called, meaning that there is no OCSP response.
+
+		Calling `callback(err)` will result in a `socket.destroy(err)` call.
+	**/
+	var OCSPRequest : ServerEvent<Buffer->Buffer->(js.Error->?Buffer->Void)->Void> = "OCSPRequest";
 }
 
 /**
@@ -77,6 +94,22 @@ import js.node.events.EventEmitter.Event;
 **/
 @:jsRequire("tls", "Server")
 extern class Server extends js.node.net.Server {
+	/**
+		Returns `Buffer` instance holding the keys currently used for encryption/decryption of the TLS Session Tickets.
+	**/
+	function getTicketKeys():Buffer;
+
+	/**
+		Updates the keys for encryption/decryption of the TLS Session Tickets.
+
+		NOTE: the buffer should be 48 bytes long. See server `ticketKeys` option for
+		more information on how it is going to be used.
+
+		NOTE: the change is effective only for the future server connections. Existing or currently pending
+		server connections will use previous keys.
+	**/
+	function setTicketKeys(keys:Buffer):Void;
+
 	/**
 		Add secure context that will be used if client request's SNI hostname
 		is matching passed hostname (wildcards can be used).
