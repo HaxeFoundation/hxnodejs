@@ -77,7 +77,7 @@ extern class TLSSocket extends js.node.net.Socket {
 
 		This property becomes available only when `authorized` is false.
 	**/
-	var authorizationError:Null<String>;
+	var authorizationError(default,null):Null<String>;
 
 	/**
 		Returns an object representing the peer's certificate.
