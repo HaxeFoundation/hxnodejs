@@ -55,7 +55,7 @@ typedef FsMode = EitherType<Int,String>;
 /**
 	Possible options for `Fs.writeFile` and `Fs.appendFile`.
 **/
-typedef FsWriteFileOptions = EitherType<String, {
+typedef FsWriteFileOptions = {
 	/**
 		Encoding for writing strings.
 		Defaults to 'utf8'.
@@ -72,7 +72,7 @@ typedef FsWriteFileOptions = EitherType<String, {
 		default: 'w' for `Fs.writeFile`, 'a' for `Fs.appendFile`
 	**/
 	@:optional var flag:FsOpenFlag;
-}>;
+}
 
 /**
 	Defaults:
@@ -86,7 +86,7 @@ typedef FsWriteFileOptions = EitherType<String, {
 /**
 	Options for `Fs.createReadStream`.
 **/
-typedef FsCreateReadStreamOptions = EitherType<String, {
+typedef FsCreateReadStreamOptions = {
 	/**
 		default: 'r'
 	**/
@@ -126,7 +126,7 @@ typedef FsCreateReadStreamOptions = EitherType<String, {
 		End of the range of bytes to read
 	**/
 	@:optional var end:Int;
-}>;
+};
 
 /**
 	Options for `Fs.createWriteStream`.
@@ -660,16 +660,16 @@ extern class Fs {
 	**/
 	@:overload(function(filename:String, data:Buffer, callback:Error->Void):Void {})
 	@:overload(function(filename:String, data:String, callback:Error->Void):Void {})
-	@:overload(function(filename:String, data:Buffer, options:FsWriteFileOptions, callback:Error->Void):Void {})
-	static function writeFile(filename:String, data:String, options:FsWriteFileOptions, callback:Error->Void):Void;
+	@:overload(function(filename:String, data:Buffer, options:EitherType<String,FsWriteFileOptions>, callback:Error->Void):Void {})
+	static function writeFile(filename:String, data:String, options:EitherType<String,FsWriteFileOptions>, callback:Error->Void):Void;
 
 	/**
 		The synchronous version of `writeFile`.
 	**/
 	@:overload(function(filename:String, data:Buffer):Void {})
 	@:overload(function(filename:String, data:String):Void {})
-	@:overload(function(filename:String, data:Buffer, options:FsWriteFileOptions):Void {})
-	static function writeFileSync(filename:String, data:String, options:FsWriteFileOptions):Void;
+	@:overload(function(filename:String, data:Buffer, options:EitherType<String,FsWriteFileOptions>):Void {})
+	static function writeFileSync(filename:String, data:String, options:EitherType<String,FsWriteFileOptions>):Void;
 
 	/**
 		Asynchronously append data to a file, creating the file if it not yet exists.
@@ -677,16 +677,16 @@ extern class Fs {
 	**/
 	@:overload(function(filename:String, data:Buffer, callback:Error->Void):Void {})
 	@:overload(function(filename:String, data:String, callback:Error->Void):Void {})
-	@:overload(function(filename:String, data:Buffer, options:FsWriteFileOptions, callback:Error->Void):Void {})
-	static function appendFile(filename:String, data:String, options:FsWriteFileOptions, callback:Error->Void):Void;
+	@:overload(function(filename:String, data:Buffer, options:EitherType<String,FsWriteFileOptions>, callback:Error->Void):Void {})
+	static function appendFile(filename:String, data:String, options:EitherType<String,FsWriteFileOptions>, callback:Error->Void):Void;
 
 	/**
 		The synchronous version of `appendFile`.
 	**/
 	@:overload(function(filename:String, data:Buffer):Void {})
 	@:overload(function(filename:String, data:String):Void {})
-	@:overload(function(filename:String, data:Buffer, options:FsWriteFileOptions):Void {})
-	static function appendFileSync(filename:String, data:String, options:FsWriteFileOptions):Void;
+	@:overload(function(filename:String, data:Buffer, options:EitherType<String,FsWriteFileOptions>):Void {})
+	static function appendFileSync(filename:String, data:String, options:EitherType<String,FsWriteFileOptions>):Void;
 
 	/**
 		Unstable. Use `watch` instead, if possible.
@@ -809,7 +809,7 @@ extern class Fs {
 		It is your responsiblity to close it and make sure there's no file descriptor leak.
 		If `autoClose` is set to true (default behavior), on error or end the file descriptor will be closed automatically.
 	**/
-	static function createReadStream(path:String, ?options:FsCreateReadStreamOptions):ReadStream;
+	static function createReadStream(path:String, ?options:EitherType<String,FsCreateReadStreamOptions>):ReadStream;
 
 	/**
 		Returns a new WriteStream object (See Writable Stream).
