@@ -29,6 +29,10 @@ import js.node.http.*;
 **/
 typedef HttpRequestOptions = {
 	/**
+		Protocol to use. Defaults to 'http'.
+	**/
+	@:optional var protocol:String;
+	/**
 		A domain name or IP address of the server to issue the request to.
 		Defaults to 'localhost'.
 	**/
@@ -38,6 +42,13 @@ typedef HttpRequestOptions = {
 		To support `Url.parse` `hostname` is preferred over `host`
 	**/
 	@:optional var hostname:String;
+
+	/**
+		IP address family to use when resolving host and hostname.
+		Valid values are 4 or 6.
+		When unspecified, both IP v4 and v6 will be used.
+	**/
+	@:optional var family:js.node.Dns.DnsAddressFamily;
 
 	/**
 		Port of remote server.
@@ -112,7 +123,7 @@ typedef HttpRequestOptions = {
 		{ 'content-length': '123',
 		  'content-type': 'text/plain',
 		  'connection': 'keep-alive' }
-		Keys are lowercased. Values are not modified.
+	Keys are lowercased. Values are not modified.
 
 	In order to support the full spectrum of possible HTTP applications, Node's HTTP API is very low-level.
 	It deals with stream handling and message parsing only. It parses a message into headers and body but
@@ -120,6 +131,10 @@ typedef HttpRequestOptions = {
 **/
 @:jsRequire("http")
 extern class Http {
+	/**
+		A list of the HTTP methods that are supported by the parser.
+	**/
+	static var METHODS:Array<String>;
 
 	/**
 		A collection of all the standard HTTP response status codes, and the short description of each.
