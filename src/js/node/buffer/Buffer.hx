@@ -460,4 +460,21 @@ extern class Buffer extends js.html.Uint8Array {
 	@:overload(function(value:String, ?byteOffset:Int):Int {})
 	@:overload(function(value:Buffer, ?byteOffset:Int):Int {})
 	function indexOf(value:Int, ?byteOffset:Int):Int;
+
+
+	/**
+		Create `haxe.io.Bytes` object that uses the same underlying data storage as `this` buffer.
+		Any modifications done using the returned object will be reflected in the `this` buffer.
+	**/
+	inline function hxToBytes():haxe.io.Bytes {
+		return haxe.io.Bytes.ofData(buffer);
+	}
+
+	/**
+		Create `Buffer` object from `haxe.io.Bytes` using the same underlying data storage.
+		Any modifications done using the returned object will be reflected in given `haxe.io.Bytes` object.
+	**/
+	static inline function hxFromBytes(b:haxe.io.Bytes):Buffer {
+		return new Buffer(cast b.getData());
+	}
 }

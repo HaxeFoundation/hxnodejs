@@ -15,11 +15,11 @@ class File {
 	}
 
 	public static inline function getBytes( path : String ) : haxe.io.Bytes {
-		return haxe.io.Bytes.ofData(Fs.readFileSync(path));
+		return Fs.readFileSync(path).hxToBytes();
 	}
 
 	public static inline function saveBytes( path : String, bytes : haxe.io.Bytes ) : Void {
-		Fs.writeFileSync(path, bytes.getData());
+		Fs.writeFileSync(path, js.node.Buffer.hxFromBytes(bytes));
 	}
 
 	static inline var copyBufLen = 64 * 1024;
