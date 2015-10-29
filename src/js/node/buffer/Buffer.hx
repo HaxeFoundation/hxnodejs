@@ -28,7 +28,7 @@ package js.node.buffer;
 	so the legal range is between 0x00 and 0xFF hex or 0 and 255.
 **/
 @:jsRequire("buffer", "Buffer")
-extern class Buffer implements ArrayAccess<Int> {
+extern class Buffer extends js.html.Uint8Array {
 
 	/**
 		How many bytes will be returned when `buffer.inspect()` is called.
@@ -88,15 +88,6 @@ extern class Buffer implements ArrayAccess<Int> {
 	@:overload(function(buffer:Buffer):Void {})
 	@:overload(function(array:Array<Int>):Void {})
 	function new(size:Int):Void;
-
-	/**
-		The size of the buffer in bytes.
-
-		Note that this is not necessarily the size of the contents.
-		`length` refers to the amount of memory allocated for the buffer object.
-		It does not change when the contents of the buffer are changed.
-	**/
-	var length(default,null):Int;
 
 	/**
 		Returns a JSON-representation of the `Buffer` instance.
@@ -460,7 +451,7 @@ extern class Buffer implements ArrayAccess<Int> {
 
 	/**
 		Operates similar to `Array.indexOf`.
-		
+
 		Accepts a String, Buffer or Int.
 		Strings are interpreted as UTF8.
 		Buffers will use the entire buffer. So in order to compare a partial `Buffer` use `slice`.
