@@ -35,7 +35,7 @@ import haxe.extern.EitherType;
 @:jsRequire("stream", "Transform")
 extern class Transform<TSelf:Transform<TSelf>> extends Duplex<TSelf> {
     // --------- API for stream implementors - see node.js API documentation ---------
-    private function new(?options:Duplex.DuplexNewOptions);
+    public function new(?options:Duplex.DuplexNewOptions);
     @:overload(function(chunk:String, encoding:String, callback:js.Error->EitherType<String,Buffer>->Void):Void {})
     private function _transform(chunk:Buffer, encoding:String, callback:js.Error->EitherType<String,Buffer>->Void):Void;
     private function _flush(callback:js.Error->Void):Void;
