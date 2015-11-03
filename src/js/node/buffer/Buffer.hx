@@ -61,7 +61,20 @@ extern class Buffer extends js.html.Uint8Array {
 		This is not the same as `String.length` since that
 		returns the number of characters in a string.
 	**/
+	#if (haxe_ver >= 3.3)
 	static function byteLength(string:String, ?encoding:String):Int;
+	#end
+
+	/**
+		Gives the actual byte length of a string.
+
+		`encoding` defaults to 'utf8'.
+
+		This is not the same as `String.length` since that
+		returns the number of characters in a string.
+	**/
+	#if (haxe_ver >= 3.3) @:deprecated("In haxe 3.3+, use Buffer.byteLength instead!") #end
+	inline static function _byteLength(string:String, ?encoding:String):Int return untyped Buffer['byteLength'](string, encoding);
 
 	/**
 		Returns a buffer which is the result of concatenating all the buffers in the `list` together.
