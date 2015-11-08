@@ -23,6 +23,7 @@ package js.node.http;
 
 import haxe.DynamicAccess;
 
+@:jsRequire("http", "Client")
 @:deprecated("http.Client will be removed soon. Do not use it.")
 extern class Client extends js.node.events.EventEmitter<Client> {
     @:overload(function(path:String, ?headers:DynamicAccess<String>):ClientRequest {})
