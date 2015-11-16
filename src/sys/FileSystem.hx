@@ -1,6 +1,7 @@
 package sys;
 
 import js.node.Fs;
+import js.node.Path;
 
 @:dce
 @:coreApi
@@ -30,8 +31,21 @@ class FileSystem {
 		return Fs.statSync(path).isDirectory();
 	}
 
-	public static inline function createDirectory( path : String ) : Void {
-		Fs.mkdirSync(path);
+	public static function createDirectory( path : String ) : Void {
+		try {
+			Fs.mkdirSync(path);
+		} catch (e:Dynamic) {
+			if (e.code == "ENOENT") {
+				// parent doesn't exist - create parent and then this dir
+				createDirectory(Path.dirname(path));
+				Fs.mkdirSync(path);
+			} else {
+				// some other error - check if path is a dir, rethrow the error if not
+				// (the `(e : js.Error)` cast is here to avoid HaxeError wrapping, though we need to investigate this in Haxe itself)
+				var stat = try Fs.statSync(path) catch (_:Dynamic) throw (e : js.Error);
+				if (!stat.isDirectory()) throw (e : js.Error);
+			}
+		}
 	}
 
 	public static inline function deleteFile( path : String ) : Void {
