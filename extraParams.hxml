@@ -1,2 +1,3 @@
 -D nodejs
 --macro allowPackage('sys')
+--macro includeFile("hxnodejs-version-warning.js")
