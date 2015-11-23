@@ -12,6 +12,8 @@ class ImportAll {
         function loop(acc:Array<String>):Void {
             var path = Path.join([cp].concat(acc));
             if (FileSystem.isDirectory(path)) {
+                if (acc.length > 0 && acc[acc.length - 1].charCodeAt(0) == "_".code) // skip hidden packages
+                    return;
                 for (file in FileSystem.readDirectory(path))
                     loop(acc.concat([file]));
             } else if (Path.extension(path) == "hx") {
