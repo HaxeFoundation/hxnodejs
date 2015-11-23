@@ -20,7 +20,11 @@ Original node.js documentation can be found at http://nodejs.org/api/index.html.
  - Automatic insert of "require" statements for used modules.
  - Clean output.
 
-## Example
+## Quick example
+
+1) Install hxnodejs with `haxelib install hxnodejs` (released version) or `haxelib git hxnodejs https://github.com/HaxeFoundation/hxnodejs` (latest from github).
+
+2) Write some code and save to `Main.hx`:
 ```haxe
 class Main {
     static function main() {
@@ -32,7 +36,10 @@ class Main {
     }
 }
 ```
-Generated JavaScript:
+
+3) Compile it with with `haxe -lib hxnodejs -main Main -js main.js` (optionally add `-D js-es5` for cleaner JavaScript output, since node.js is ES5-compilant)
+
+4) Look at generated `main.js`:
 ```js
 (function () { "use strict";
 var Main = function() { };
@@ -48,42 +55,8 @@ Main.main();
 })();
 ```
 
+5) You're awesome!
+
 ## Status
 
-This library is currently at **beta** stage, testing and contributions are welcome. See [current issues](https://github.com/HaxeFoundation/hxnodejs/issues) and [extern guidelines](https://github.com/HaxeFoundation/hxnodejs/blob/master/HOWTO.md). After it's finished, it will either be included in Haxe standard library or released as a separate haxelib.
-
-Requires Haxe 3.2 or later
-
-| module            | status | comment                  |
-|-------------------|--------|--------------------------|
-| assert            | done   |                          |
-| Buffer            | done   |                          |
-| child_processes   | done   |                          |
-| cluster           | done   |                          |
-| console           | done   |                          |
-| crypto            | done   |                          |
-| dns               | done   |                          |
-| domain            | done   |                          |
-| events            | done   |                          |
-| fs                | done   |                          |
-| Globals           | done   |                          |
-| http              | done   |                          |
-| https             | wip    |                          |
-| net               | done   |                          |
-| os                | done   |                          |
-| path              | done   |                          |
-| process           | done   |                          |
-| punycode          | done   |                          |
-| querystring       | done   |                          |
-| readline          | done   |                          |
-| repl              | done   |                          |
-| smalloc           | done   |                          |
-| stream            | done   |                          |
-| string_decoder    | done   |                          |
-| tls               | done   |                          |
-| tty               | done   |                          |
-| dgram             | done   |                          |
-| url               | done   |                          |
-| util              | done   |                          |
-| vm                | done   |                          |
-| zlib              | done   |                          |
+This library is currently at **beta** stage, testing and contributions are welcome. See [current issues](https://github.com/HaxeFoundation/hxnodejs/issues) and [extern guidelines](https://github.com/HaxeFoundation/hxnodejs/blob/master/HOWTO.md).
