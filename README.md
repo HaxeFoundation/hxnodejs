@@ -55,7 +55,7 @@ Original node.js documentation can be found at http://nodejs.org/api/index.html.
     })();
     ```
 
-5. You're awesome!
+5. You're awesome! (See more [examples](examples))
 
 ## Status
 
