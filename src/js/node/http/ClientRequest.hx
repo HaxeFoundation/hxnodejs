@@ -90,13 +90,14 @@ extern class ClientRequest extends Writable<ClientRequest> {
 	/**
 		Get header value
 	**/
-	function getHeader(name:String):String;
+	function getHeader(name:String):haxe.extern.EitherType<String,Array<String>>;
 
 	/**
 		Set header value.
 
 		Headers can only be modified before the request is sent.
 	**/
+	@:overload(function(name:String, value:Array<String>):Void {})
 	function setHeader(name:String, value:String):Void;
 
 	/**

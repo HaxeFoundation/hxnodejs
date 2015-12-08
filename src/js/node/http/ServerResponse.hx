@@ -109,7 +109,7 @@ extern class ServerResponse extends Writable<ServerResponse> {
 		Note that the name is case insensitive.
 		This can only be called before headers get implicitly flushed.
 	**/
-	function getHeader(name:String):String;
+	function getHeader(name:String):haxe.extern.EitherType<String,Array<String>>;
 
 	/**
 		Sets a single header value for implicit headers.
