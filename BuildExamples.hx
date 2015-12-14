@@ -7,7 +7,7 @@ class BuildExamples {
         for (file in FileSystem.readDirectory(".")) {
             if (Path.extension(file) == "hx") {
                 var main = Path.withoutExtension(file);
-                Sys.command("haxe", [
+                var code = Sys.command("haxe", [
                     "-main", main,
                     "-js", '$main.js',
                     "-lib", "hxnodejs",
@@ -15,6 +15,8 @@ class BuildExamples {
                     "-D", "analyzer",
                     "-dce", "full",
                 ]);
+                if (code != 0)
+                    Sys.exit(code);
             }
         }
     }
