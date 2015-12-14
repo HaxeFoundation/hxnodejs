@@ -9,8 +9,8 @@ class BuildExamples {
                 var main = Path.withoutExtension(file);
                 Sys.command("haxe", [
                     "-main", main,
-                    "-cp", "../src",
                     "-js", '$main.js',
+                    "-lib", "hxnodejs",
                     "-D", "js-es5",
                     "-D", "analyzer",
                     "-dce", "full",
