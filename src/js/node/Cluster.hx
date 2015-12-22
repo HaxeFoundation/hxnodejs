@@ -23,9 +23,10 @@ package js.node;
 
 import haxe.DynamicAccess;
 import js.node.events.EventEmitter;
+import js.node.events.EventEmitter.Event;
 import js.node.cluster.Worker;
 
-@:enum abstract ClusterEvent(String) to String {
+@:enum abstract ClusterEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		When a new worker is forked the cluster module will emit a 'fork' event.
 		This can be used to log worker activity, and create your own timeout.
@@ -33,7 +34,7 @@ import js.node.cluster.Worker;
 		Listener arguments:
 			* worker:Worker
 	**/
-	var Fork = "fork";
+	var Fork : ClusterEvent<Worker->Void> = "fork";
 
 	/**
 		After forking a new worker, the worker should respond with an online message.
@@ -45,7 +46,7 @@ import js.node.cluster.Worker;
 		Listener arguments:
 			* worker:Worker
 	**/
-	var Online = "online";
+	var Online : ClusterEvent<Worker->Void> = "online";
 
 	/**
 		After calling `listen` from a worker, when the 'listening' event is emitted on the server,
@@ -59,7 +60,7 @@ import js.node.cluster.Worker;
 			* worker:Worker
 			* address:ListeningEventAddress
 	**/
-	var Listening = "listening";
+	var Listening : ClusterEvent<Worker->ListeningEventAddress->Void> = "listening";
 
 	/**
 		Emitted after the worker IPC channel has disconnected.
@@ -75,7 +76,7 @@ import js.node.cluster.Worker;
 		Listener arguments:
 			* worker:Worker
 	**/
-	var Disconnect = "disconnect";
+	var Disconnect : ClusterEvent<Worker->Void> = "disconnect";
 
 	/**
 		When any of the workers die the cluster module will emit the 'exit' event.
@@ -86,12 +87,12 @@ import js.node.cluster.Worker;
 			* code:Int - the exit code, if it exited normally.
 			* signal:String - the name of the signal (eg. 'SIGHUP') that caused the process to be killed.
 	**/
-	var Exit = "exit";
+	var Exit : ClusterEvent<Worker->Int->String->Void> = "exit";
 
 	/**
 		Emitted the first time that `Cluster.setupMaster` is called.
 	**/
-	var Setup = "setup";
+	var Setup : ClusterEvent<ClusterSettings->Void> = "setup";
 }
 
 /**
