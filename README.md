@@ -59,4 +59,4 @@ Original node.js documentation can be found at http://nodejs.org/api/index.html.
 
 ## Status
 
-This library is currently at **beta** stage, testing and contributions are welcome. See [current issues](https://github.com/HaxeFoundation/hxnodejs/issues) and [extern guidelines](https://github.com/HaxeFoundation/hxnodejs/blob/master/HOWTO.md).
+This library is considered complete, but it's fairly new, so testing and contributions are welcome. See [current issues](https://github.com/HaxeFoundation/hxnodejs/issues) and [extern guidelines](https://github.com/HaxeFoundation/hxnodejs/blob/master/HOWTO.md).
