@@ -14,7 +14,7 @@ class Sys {
     }
 
     public static inline function args():Array<String> {
-        return process.argv;
+        return process.argv.slice(2);
     }
 
     public static inline function getEnv(s:String):String {
@@ -79,7 +79,7 @@ class Sys {
 
     /**
         The following are not (yet) implemented.
-        
+
         static function sleep(seconds:Float):Void;
         static function getChar(echo:Bool):Int;
         static function stdin():haxe.io.Input;
