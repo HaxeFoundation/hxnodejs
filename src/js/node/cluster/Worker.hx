@@ -27,16 +27,16 @@ import js.node.events.EventEmitter;
 import js.node.events.EventEmitter.Event;
 
 @:enum abstract WorkerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
-	var Message : WorkerEvent<{}->Void> = "message";
-	
+	var Message : WorkerEvent<Dynamic->Dynamic->Void> = "message";
+
 	var Online : WorkerEvent<Void->Void> = "online";
-	
+
 	var Listening : WorkerEvent<ListeningEventAddress->Void> = "listening";
-	
+
 	var Disconnect : WorkerEvent<Void->Void> = "disconnect";
-	
+
 	var Exit : WorkerEvent<Int->String->Void> = "exit";
-	
+
 	var Error : WorkerEvent<js.Error->Void> = "error";
 }
 
