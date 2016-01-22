@@ -44,8 +44,8 @@ extern class Hash extends js.node.stream.Transform<Hash> {
 
 		This can be called many times with new data as it is streamed.
 	**/
-	@:overload(function(data:Buffer):Void {})
-	function update(data:String, ?input_encoding:String):Void;
+	@:overload(function(data:Buffer):Hash {})
+	function update(data:String, ?input_encoding:String):Hash;
 
 	/**
 		Calculates the digest of all of the passed data to be hashed.
