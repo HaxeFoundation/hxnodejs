@@ -53,7 +53,7 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 		The request/response headers object.
 		Read only map of header names and values. Header names are lower-cased
 	**/
-	var headers(default,null):DynamicAccess<String>;
+	var headers(default,null):DynamicAccess<haxe.extern.EitherType<String, Array<String>>>;
 
 	/**
 		The request/response trailers object.
