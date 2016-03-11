@@ -3,8 +3,8 @@
     "url": "https://github.com/HaxeFoundation/hxnodejs",
     "description": "Extern definitions for node.js",
     "license": "MIT",
-    "version": "4.0.3",
-    "releasenote": "Hash.update now returns this Hash; Add typing for ClusterEvent and WorkerEvent listeners; Do not drop view bounds in Buffer.hxToBytes (thanks back2dos);",
+    "version": "4.0.4",
+    "releasenote": "IncomingMessage.headers is now DynamicAccess<EitherType<String, Array<String>>>",
     "classPath": "src",
     "contributors": ["nadako"],
     "tags": ["js", "nodejs", "async", "net", "web"]
