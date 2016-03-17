@@ -73,8 +73,12 @@ class Sys {
         return process.uptime();
     }
 
-    public static inline function executablePath():String {
+    @:deprecated("Use programPath instead") public static inline function executablePath():String {
         return process.argv[0];
+    }
+    
+    public static inline function programPath():String {
+        return js.Node.__filename;
     }
 
     /**
