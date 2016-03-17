@@ -73,13 +73,16 @@ class Sys {
         return process.uptime();
     }
 
-    @:deprecated("Use programPath instead") public static inline function executablePath():String {
+    #if (haxe_ver >= 3.3) @:deprecated("Use programPath instead") #end
+    public static inline function executablePath():String {
         return process.argv[0];
     }
     
+    #if (haxe_ver >= 3.3)
     public static inline function programPath():String {
         return js.Node.__filename;
     }
+    #end
 
     /**
         The following are not (yet) implemented.
