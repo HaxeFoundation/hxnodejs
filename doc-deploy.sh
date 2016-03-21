@@ -11,6 +11,9 @@ haxe doc.hxml
 if ! [ "$TRAVIS_HAXE_VERSION" == "development" ]; then
     echo "Skipping pushing documentation to GitHub - that is only done for Haxe development.";
     exit 0;
+elif [ -z "$GH_TOKEN" ]; then
+	echo "Skipping pushing documentation to GitHub - missing $GH_TOKEN (probably in a PR build).";
+    exit 0;
 else
     echo "Pushing documentation to GitHub"
 fi
