@@ -3,8 +3,8 @@
     "url": "https://github.com/HaxeFoundation/hxnodejs",
     "description": "Extern definitions for node.js",
     "license": "MIT",
-    "version": "4.0.4",
-    "releasenote": "IncomingMessage.headers is now DynamicAccess<EitherType<String, Array<String>>>",
+    "version": "4.0.5",
+    "releasenote": "Added Sys.programPath() for Haxe 3.3 (thanks kevinresol)",
     "classPath": "src",
     "contributors": ["nadako"],
     "tags": ["js", "nodejs", "async", "net", "web"]
