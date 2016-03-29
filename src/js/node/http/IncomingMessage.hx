@@ -56,6 +56,14 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 	var headers(default,null):DynamicAccess<haxe.extern.EitherType<String, Array<String>>>;
 
 	/**
+		The raw request/response headers list exactly as they were received.
+		Note that the keys and values are in the same list. It is not a list of tuples. So, the even-numbered 
+		offsets are key values, and the odd-numbered offsets are the associated values.
+		Header names are not lowercased, and duplicates are not merged.
+	**/
+	var rawHeaders(default,null):Array<String>;
+
+	/**
 		The request/response trailers object.
 		Only populated after the 'end' event.
 	**/
@@ -86,6 +94,12 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 		The 3-digit HTTP response status code. E.G. 404.
 	**/
 	var statusCode(default,null):Int;
+
+	/**
+		Only valid for response obtained from 'ClientRequest'.
+		The HTTP response status message (reason phrase). E.G. OK or Internal Server Error.
+	**/
+	var statusMessage(default,null):String;
 
 	/**
 		The `Socket` object associated with the connection.
