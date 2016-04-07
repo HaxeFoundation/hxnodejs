@@ -95,7 +95,7 @@ typedef HttpRequestOptions = {
 
 			Sending an Authorization header will override using the auth option to compute basic authentication.
 	**/
-	@:optional var headers:Dynamic<haxe.extern.EitherType<String,Array<String>>>;
+	@:optional var headers:DynamicAccess<haxe.extern.EitherType<String,Array<String>>>;
 
 	/**
 		Basic authentication i.e. 'user:password' to compute an Authorization header.
