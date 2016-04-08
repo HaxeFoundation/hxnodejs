@@ -3,8 +3,8 @@
     "url": "https://github.com/HaxeFoundation/hxnodejs",
     "description": "Extern definitions for node.js",
     "license": "MIT",
-    "version": "4.0.6",
-    "releasenote": "Added 'rawHeaders' and 'statusMessage' to IncomingMessage (thanks clue4gd)",
+    "version": "4.0.7",
+    "releasenote": "Change HttpRequestOptions.headers to DynamicAccess",
     "classPath": "src",
     "contributors": ["nadako"],
     "tags": ["js", "nodejs", "async", "net", "web"]
