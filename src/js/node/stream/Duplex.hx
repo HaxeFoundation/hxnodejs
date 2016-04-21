@@ -34,7 +34,7 @@ import js.node.Buffer;
 		- crypto streams
 **/
 @:jsRequire("stream", "Duplex")
-extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements Writable.IWritable {
+extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDuplex {
 	// --------- Writable interface implementation ---------
 
 	/**
