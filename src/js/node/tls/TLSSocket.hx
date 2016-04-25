@@ -147,6 +147,14 @@ extern class TLSSocket extends js.node.net.Socket {
 	function setMaxSendFragment(size:Int):Bool;
 
 	/**
+		Returns a string containing the negotiated SSL/TLS protocol version of the current connection.
+
+		'unknown' will be returned for connected sockets that have not completed the handshaking process.
+		`null` will be returned for server sockets or disconnected client sockets.
+	**/
+	function getProtocol():String;
+
+	/**
 		Return ASN.1 encoded TLS session or null if none was negotiated.
 		Could be used to speed up handshake establishment when reconnecting to the server.
 	**/
