@@ -480,6 +480,23 @@ extern class Fs {
 	static function mkdirSync(path:String, ?mode:FsMode):Void;
 
 	/**
+		Creates a unique temporary directory.
+
+		Generates six random characters to be appended behind a required `prefix` to create a unique temporary directory.
+
+		The created folder path is passed as a string to the `callback`'s second parameter.
+	**/
+	static function mkdtemp(prefix:String, callback:Error->String->Void):Void;
+
+
+	/**
+		The synchronous version of `mkdtemp`.
+
+		Returns the created folder path.
+	**/
+	static function mkdtempSync(template:String):String;
+
+	/**
 		Asynchronous readdir(3).
 		Reads the contents of a directory.
 
