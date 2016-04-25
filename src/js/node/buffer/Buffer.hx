@@ -459,8 +459,11 @@ extern class Buffer extends js.html.Uint8Array {
 
 	/**
 		Returns a number indicating whether `this` comes before or after or is the same as the `otherBuffer` in sort order.
+
+		The optional `targetStart`, `targetEnd`, `sourceStart`, and `sourceEnd` arguments can be used
+		to limit the comparison to specific ranges within the two `Buffer` objects.
 	**/
-	function compare(otherBuffer:Buffer):Int;
+	function compare(otherBuffer:Buffer, ?targetStart:Int, ?targetEnd:Int, ?sourceStart:Int, ?sourceEnd:Int):Int;
 
 	/**
 		Operates similar to `Array.indexOf`.
