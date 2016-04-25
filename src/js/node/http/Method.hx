@@ -26,12 +26,37 @@ package js.node.http;
     http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
 **/
 @:enum abstract Method(String) from String to String {
-    var Get = "GET";
-    var Post = "POST";
-    var Head = "HEAD";
-    var Options = "OPTIONS";
-    var Put = "PUT";
-    var Delete = "DELETE";
-    var Trace = "TRACE";
+    var Acl = "ACL";
+    var Bind = "BIND";
+    var Checkout = "CHECKOUT";
     var Connect = "CONNECT";
+    var Copy = "COPY";
+    var Delete = "DELETE";
+    var Get = "GET";
+    var Head = "HEAD";
+    var Link = "LINK'";
+    var Lock = "LOCK'";
+    var MSearch = "M-SEARCH'";
+    var Merge = "MERGE'";
+    var Mkactivity = "MKACTIVITY'";
+    var Mkcalendar = "MKCALENDAR'";
+    var Mkcol = "MKCOL'";
+    var Move = "MOVE'";
+    var Notify = "NOTIFY'";
+    var Options = "OPTIONS";
+    var Patch = "PATCH";
+    var Post = "POST";
+    var Propfind = "PROPFIND";
+    var Proppatch = "PROPPATCH";
+    var Purge = "PURGE";
+    var Put = "PUT";
+    var Rebind = "REBIND";
+    var Report = "REPORT";
+    var Search = "SEARCH";
+    var Subscribe = "SUBSCRIBE";
+    var Trace = "TRACE";
+    var Unbind = "UNBIND";
+    var Unlink = "UNLINK";
+    var Unlock = "UNLOCK";
+    var Unsubscribe = "UNSUBSCRIBE";
 }
