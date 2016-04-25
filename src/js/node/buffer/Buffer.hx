@@ -145,6 +145,22 @@ extern class Buffer extends js.html.Uint8Array {
 	function slice(?start:Int, ?end:Int):Buffer;
 
 	/**
+		Interprets the `Buffer` as an array of unsigned 16-bit integers and swaps the byte-order in-place.
+
+		Throws a `RangeError` if the `Buffer` length is not a multiple of 16 bits.
+		The method returns a reference to the `Buffer`, so calls can be chained.
+	**/
+	function swap16():Buffer;
+
+	/**
+		Interprets the `Buffer` as an array of unsigned 32-bit integers and swaps the byte-order in-place.
+
+		Throws a `RangeError` if the `Buffer` length is not a multiple of 32 bits.
+		The method returns a reference to the `Buffer`, so calls can be chained.
+	**/
+	function swap32():Buffer;
+
+	/**
 		Reads an unsigned 8 bit integer from the buffer at the specified offset.
 
 		Set `noAssert` to `true` to skip validation of `offset`.
