@@ -464,9 +464,14 @@ extern class Buffer extends js.html.Uint8Array {
 		Fills the buffer with the specified `value`.
 		If the `offset` (defaults to 0) and `end` (defaults to `buffer.length`)
 		are not given it will fill the entire buffer.
+
+		The method returns a reference to the `Buffer`, so calls can be chained.
 	**/
-	@:overload(function(value:String, ?offset:Int, ?end:Int):Void {})
-	function fill(value:Int, ?offset:Int, ?end:Int):Void;
+	@:overload(function(value:String, encoding:String):Buffer {})
+	@:overload(function(value:String, offset:Int, encoding:String):Buffer {})
+	@:overload(function(value:String, offset:Int, end:Int, encoding:String):Buffer {})
+	@:overload(function(value:String, ?offset:Int, ?end:Int):Buffer {})
+	function fill(value:Int, ?offset:Int, ?end:Int):Buffer;
 
 	/**
 		Returns a boolean of whether `this` and `otherBuffer` have the same bytes.
