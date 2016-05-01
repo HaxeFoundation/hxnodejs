@@ -68,8 +68,18 @@ extern class Worker extends EventEmitter<Worker> {
 
 		Lets you distinguish between voluntary and accidental exit, the master may choose
 		not to respawn a worker based on this value.
+
+		(an alias to `exitedAfterDisconnect` in newer node.js versions)
 	**/
 	var suicide:Null<Bool>;
+
+	/**
+		Set by calling `kill` or `disconnect`. Until then, it is undefined.
+
+		Lets you distinguish between voluntary and accidental exit, the master may choose
+		not to respawn a worker based on this value.
+	**/
+	var exitedAfterDisconnect:Null<Bool>;
 
 	/**
 		This function is equal to the `send` methods provided by `ChildProcess.fork`.
@@ -77,7 +87,8 @@ extern class Worker extends EventEmitter<Worker> {
 
 		In a worker you can also use `process.send`, it is the same function.
 	**/
-	function send(message:Dynamic, sendHandle:Dynamic):Void;
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:js.Error->Void):Bool {})
+	function send(message:Dynamic, ?callback:js.Error->Void):Bool;
 
 	/**
 		This function will kill the worker. In the master, it does this by disconnecting the `worker.process`,
@@ -97,4 +108,18 @@ extern class Worker extends EventEmitter<Worker> {
 		Causes `suicide` to be set.
 	**/
 	function disconnect():Void;
+
+	/**
+		This function returns true if the worker is connected to its master via its IPC channel, false otherwise
+
+		A worker is connected to its master after it's been created.
+		It is disconnected after the 'disconnect' event is emitted.
+	**/
+	function isConnected():Bool;
+
+	/**
+		This function returns true if the worker's process has terminated (either because of exiting or being signaled).
+		Otherwise, it returns false.
+	**/
+	function isDead():Bool;
 }

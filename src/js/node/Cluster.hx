@@ -254,4 +254,14 @@ typedef ClusterSettings = {
 		Default: false
 	**/
 	@:optional var silent(default,null):Bool;
+
+	/**
+		Sets the user identity of the process.
+	**/
+	@:optional var uid(default,null):Int;
+
+	/**
+		Sets the group identity of the process.
+	**/
+	@:optional var gid(default,null):Int;
 }
