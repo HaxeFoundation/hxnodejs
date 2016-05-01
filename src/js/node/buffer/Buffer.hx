@@ -35,13 +35,21 @@ extern class Buffer extends js.html.Uint8Array {
 		This can be overridden by user modules.
 		Default: 50
 	**/
-    public static var INSPECT_MAX_BYTES(get,set):Int;
-    private inline static function get_INSPECT_MAX_BYTES():Int {
-        return js.Lib.require("buffer").INSPECT_MAX_BYTES;
-    }
-    private inline static function set_INSPECT_MAX_BYTES(value:Int):Int {
-        return js.Lib.require("buffer").INSPECT_MAX_BYTES = value;
-    }
+	public static var INSPECT_MAX_BYTES(get,set):Int;
+	private inline static function get_INSPECT_MAX_BYTES():Int {
+		return js.Lib.require("buffer").INSPECT_MAX_BYTES;
+	}
+	private inline static function set_INSPECT_MAX_BYTES(value:Int):Int {
+		return js.Lib.require("buffer").INSPECT_MAX_BYTES = value;
+	}
+
+	/**
+		Maximum length of a `Buffer`.
+	**/
+	public static var kMaxLength(get,never):Int;
+	private inline static function get_kMaxLength():Int {
+		return js.Lib.require("buffer").kMaxLength;
+	}
 
 	/**
 		Returns `true` if the encoding is a valid encoding argument, or `false` otherwise.
@@ -99,8 +107,42 @@ extern class Buffer extends js.html.Uint8Array {
 	**/
 	@:overload(function(string:String, ?encoding:String):Void {})
 	@:overload(function(buffer:Buffer):Void {})
+	@:overload(function(arrayBuffer:js.html.ArrayBuffer, ?byteOffset:Int, ?length:Int):Void {})
 	@:overload(function(array:Array<Int>):Void {})
 	function new(size:Int):Void;
+
+	/**
+		Allocates a new `Buffer` of `size` bytes.
+
+		If `fill` is undefined, the `Buffer` will be zero-filled.
+
+		Calling `Buffer.alloc(size)` can be significantly slower than the alternative `Buffer.allocUnsafe(size)`
+		but ensures that the newly created `Buffer` instance contents will never contain sensitive data.
+	**/
+	@:overload(function(size:Int, fill:String, ?encoding:String):Buffer {})
+	static function alloc(size:Int, ?fill:Int):Buffer;
+
+	/**
+		Allocates a new non-zero-filled `Buffer` of `size` bytes.
+
+		The underlying memory for `Buffer` instances created in this way is not initialized.
+		The contents of the newly created `Buffer` are unknown and may contain sensitive data.
+		Use `buf.fill(0)` to initialize such `Buffer` instances to zeroes.
+	**/
+	static function allocUnsafe(size:Int):Buffer;
+
+	/**
+		Allocates a new non-zero-filled and non-pooled `Buffer` of `size` bytes.
+
+		The underlying memory for `Buffer` instances created in this way is not initialized.
+		The contents of the newly created `Buffer` are unknown and may contain sensitive data.
+		Use `buf.fill(0)` to initialize such `Buffer` instances to zeroes.
+	**/
+	static function allocUnsafeSlow(size:Int):Buffer;
+
+	@:overload(function(buffer:Buffer):Buffer {})
+	@:overload(function(str:String, ?encoding:String):Buffer {})
+	static function from(arrayBuffer:js.html.ArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer;
 
 	/**
 		Returns a JSON-representation of the `Buffer` instance.
@@ -487,17 +529,35 @@ extern class Buffer extends js.html.Uint8Array {
 	function compare(otherBuffer:Buffer, ?targetStart:Int, ?targetEnd:Int, ?sourceStart:Int, ?sourceEnd:Int):Int;
 
 	/**
-		Operates similar to `Array.indexOf`.
+		Operates similar to `Array.indexOf` in that it returns either
 
-		Accepts a String, Buffer or Int.
-		Strings are interpreted as UTF8.
-		Buffers will use the entire buffer. So in order to compare a partial `Buffer` use `slice`.
-		Int can range from 0 to 255.
+		the starting index position of value in `Buffer` or -1 if the `Buffer` does not contain value.
+		The value can be a String, Buffer or Number. Strings are by default interpreted as UTF8.
+		Buffers will use the entire `Buffer` (to compare a partial `Buffer` use buf.slice()).
+		Numbers can range from 0 to 255.
 	**/
-	@:overload(function(value:String, ?byteOffset:Int):Int {})
+	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Int {})
+	@:overload(function(value:String, ?encoding:String):Int {})
 	@:overload(function(value:Buffer, ?byteOffset:Int):Int {})
 	function indexOf(value:Int, ?byteOffset:Int):Int;
 
+	/**
+		Identical to `indexOf`, but searches the `Buffer` from back to front instead of front to back.
+
+		Returns the starting index position of value in `Buffer` or -1 if the `Buffer` does not contain value.
+		The value can be a String, Buffer or Number. Strings are by default interpreted as UTF8.
+		If `byteOffset` is provided, will return the last match that begins at or before `byteOffset`.
+	**/
+	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Int {})
+	@:overload(function(value:String, ?encoding:String):Int {})
+	@:overload(function(value:Buffer, ?byteOffset:Int):Int {})
+	function lastIndexOf(value:Int, ?byteOffset:Int):Int;
+
+	// TODO: we don't have Array.includes in Haxe yet, so the doc would be lying
+	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Bool {})
+	@:overload(function(value:String, ?encoding:String):Bool {})
+	@:overload(function(value:Buffer, ?byteOffset:Int):Bool {})
+	function includes(value:Int, ?byteOffset:Int):Bool;
 
 	/**
 		Create `haxe.io.Bytes` object that uses the same underlying data storage as `this` buffer.
