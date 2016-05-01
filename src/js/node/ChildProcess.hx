@@ -24,7 +24,6 @@ package js.node;
 import haxe.DynamicAccess;
 import haxe.extern.EitherType;
 
-import js.node.Stream.IStream;
 import js.node.child_process.ChildProcess as ChildProcessObject;
 
 /**
@@ -76,17 +75,6 @@ typedef ChildProcessSpawnOptions = {
 		The child will be a process group leader.
 	**/
 	@:optional var detached:Bool;
-
-	/**
-		Specifies specific file descriptors for the stdio of the child process.
-		This API was not portable to all platforms and therefore removed.
-		With `customFds` it was possible to hook up the new process' [stdin, stdout, stderr] to existing streams;
-		-1 meant that a new stream should be created.
-
-		Use at your own risk.
-	**/
-	@:deprecated
-	@:optional var customFds:Array<Int>;
 }
 
 
@@ -292,7 +280,7 @@ extern class ChildProcessExecError extends js.Error {
 	and `error.code` will be the exit code of the child process, and `error.signal` will be set
 	to the signal that terminated the process (see `ChildProcessExecError`).
 **/
-typedef ChildProcessExecCallback = Null<ChildProcessExecError> -> Buffer -> Buffer -> Void;
+typedef ChildProcessExecCallback = Null<ChildProcessExecError> -> EitherType<Buffer,String> -> EitherType<Buffer,String> -> Void;
 
 
 /**
