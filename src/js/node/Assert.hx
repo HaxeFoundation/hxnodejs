@@ -60,9 +60,22 @@ extern class Assert {
 	static function deepEqual<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
+		Generally identical to `deepEqual` with two exceptions.
+		First, primitive values are compared using the strict equality operator ( === ).
+		Second, object comparisons include a strict equality check of their prototypes.
+	**/
+	static function deepStrictEqual<T>(actual:T, expected:T, ?message:String):Void;
+
+	/**
 		Tests for any deep inequality.
 	**/
 	static function notDeepEqual<T>(actual:T, expected:T, ?message:String):Void;
+
+	/**
+		Tests for deep strict inequality.
+		Opposite of `deepStrictEqual`.
+	**/
+	static function notDeepStrictEqual<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
 		Tests strict equality, as determined by the JavaScript strict equality operator (===)
@@ -84,12 +97,13 @@ extern class Assert {
 	/**
 		Expects block not to throw an error, see `throws` for details.
 	**/
-	static function doesNotThrow(block:Void->Void, ?message:String):Void;
+	@:overload(function(block:Void->Void, ?message:String):Void {})
+	static function doesNotThrow(block:Void->Void, error:ThrowsExpectedError, ?message:String):Void;
 
 	/**
-		Tests if `value` is not a false value, throws that value if it is a true value.
+		Throws `value` if `value` is truthy.
 
-		A 'false' value in JavaScript is false, null, undefined and 0.
+		A falsy value in JavaScript is false, null, undefined and 0.
 
 		Useful when testing the first argument, error in callbacks.
 	**/
