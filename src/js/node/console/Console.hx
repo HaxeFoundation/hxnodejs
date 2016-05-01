@@ -39,7 +39,7 @@ extern class Console {
 		`stderr` is used for warning or error output. If `stderr` isn't passed,
 		the warning and error output will be sent to the `stdout`.
 	**/
-	function new(stdout:IWritable, stderr:IWritable);
+	function new(stdout:IWritable, ?stderr:IWritable);
 
 	/**
 		Prints to stdout with newline. This function can take multiple arguments in a printf()-like way.
