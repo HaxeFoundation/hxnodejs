@@ -81,7 +81,23 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 		Adds a `listener` to the end of the listeners array for the specified `event`.
 	**/
 	function addListener<T:Function>(event:Event<T>, listener:T):TSelf;
+
+	/**
+		Adds a `listener` to the end of the listeners array for the specified `event`.
+	**/
 	function on<T:Function>(event:Event<T>, listener:T):TSelf;
+
+	/**
+		Adds the `listener` function to the beginning of the listeners array for the `event`.
+	**/
+	function prependListener<T:Function>(event:Event<T>, listener:T):TSelf;
+
+	/**
+		Adds a one time `listener` function for the `event` to the beginning of the listeners array.
+
+		This listener is invoked only the next time event is triggered, after which it is removed.
+	**/
+	function prependOnceListener<T:Function>(event:Event<T>, listener:T):TSelf;
 
 	/**
 		Adds a one time `listener` for the `event`.
@@ -112,6 +128,12 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	function setMaxListeners(n:Int):Void;
 
 	/**
+		Returns the current max listener value for the `EventEmitter` which is either set by `setMaxListeners`
+		or defaults to `defaultMaxListeners`.
+	**/
+	function getMaxListeners():Int;
+
+	/**
 		`setMaxListeners` sets the maximum on a per-instance basis.
 		This class property lets you set it for all EventEmitter instances,
 		current and future, effective immediately. Use with care.
@@ -132,6 +154,11 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	function emit<T:Function>(event:Event<T>, args:haxe.extern.Rest<Dynamic>):Bool;
 
 	/**
+		Returns an array listing the events for which the emitter has registered listeners.
+	**/
+	function eventNames():Array<String>;
+
+	/**
 		Return the number of listeners for a given event.
 	**/
 	static function listenerCount<T:Function>(emitter:IEventEmitter, event:Event<T>):Int;
@@ -139,18 +166,22 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 
 
 /**
-    `IEventEmitter` interface is used as "any EventEmitter".
+	`IEventEmitter` interface is used as "any EventEmitter".
 
-    See `EventEmitter` for actual class documentation.
+	See `EventEmitter` for actual class documentation.
 **/
 @:remove
 extern interface IEventEmitter {
-    function addListener<T:Function>(event:Event<T>, listener:T):IEventEmitter;
-    function on<T:Function>(event:Event<T>, listener:T):IEventEmitter;
-    function once<T:Function>(event:Event<T>, listener:T):IEventEmitter;
-    function removeListener<T:Function>(event:Event<T>, listener:T):IEventEmitter;
-    function removeAllListeners<T:Function>(?event:Event<T>):IEventEmitter;
-    function setMaxListeners(n:Int):Void;
-    function listeners<T:Function>(event:Event<T>):Array<T>;
-    function emit<T:Function>(event:Event<T>, args:haxe.extern.Rest<Dynamic>):Bool;
+	function addListener<T:Function>(event:Event<T>, listener:T):IEventEmitter;
+	function on<T:Function>(event:Event<T>, listener:T):IEventEmitter;
+	function once<T:Function>(event:Event<T>, listener:T):IEventEmitter;
+	function prependListener<T:Function>(event:Event<T>, listener:T):IEventEmitter;
+	function prependOnceListener<T:Function>(event:Event<T>, listener:T):IEventEmitter;
+	function removeListener<T:Function>(event:Event<T>, listener:T):IEventEmitter;
+	function removeAllListeners<T:Function>(?event:Event<T>):IEventEmitter;
+	function setMaxListeners(n:Int):Void;
+	function getMaxListeners():Int;
+	function listeners<T:Function>(event:Event<T>):Array<T>;
+	function emit<T:Function>(event:Event<T>, args:haxe.extern.Rest<Dynamic>):Bool;
+	function eventNames():Array<String>;
 }
