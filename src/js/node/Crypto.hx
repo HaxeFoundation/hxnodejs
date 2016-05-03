@@ -239,7 +239,7 @@ extern class Crypto {
 		If `private_key` is a string, it is treated as the key with no passphrase
 		and will use `RSA_PKCS1_OAEP_PADDING`.
 	**/
-	@:overload(function(private_key:PrivateKeyOptions, buffer:Buffer):Buffer {})
+	@:overload(function(private_key:CryptoKeyOptions, buffer:Buffer):Buffer {})
 	static function privateDecrypt(private_key:String, buffer:Buffer):Buffer;
 
 	/**
@@ -249,7 +249,7 @@ extern class Crypto {
 		If `private_key` is a string, it is treated as the key with no passphrase
 		and will use `RSA_PKCS1_PADDING`.
 	**/
-	@:overload(function(private_key:PrivateKeyOptions, buffer:Buffer):Buffer {})
+	@:overload(function(private_key:CryptoKeyOptions, buffer:Buffer):Buffer {})
 	static function privateEncrypt(private_key:String, buffer:Buffer):Buffer;
 
 	/**
@@ -262,7 +262,7 @@ extern class Crypto {
 		Because RSA public keys can be derived from private keys,
 		a private key may be passed instead of a public key.
 	**/
-	@:overload(function(public_key:PrivateKeyOptions, buffer:Buffer):Buffer {})
+	@:overload(function(public_key:CryptoKeyOptions, buffer:Buffer):Buffer {})
 	static function publicDecrypt(public_key:String, buffer:Buffer):Buffer;
 
 	/**
@@ -275,14 +275,14 @@ extern class Crypto {
 		Because RSA public keys can be derived from private keys,
 		a private key may be passed instead of a public key.
 	**/
-	@:overload(function(public_key:PrivateKeyOptions, buffer:Buffer):Buffer {})
+	@:overload(function(public_key:CryptoKeyOptions, buffer:Buffer):Buffer {})
 	static function publicEncrypt(public_key:String, buffer:Buffer):Buffer;
 }
 
 /**
 	An options type for `privateEncrypt`, `privateDecrypt`, `publicEncrypt`, `publicDecrypt` methods of `Crypto`.
 **/
-typedef PrivateKeyOptions = {
+typedef CryptoKeyOptions = {
 	/**
 		PEM encoded public key
 	**/
