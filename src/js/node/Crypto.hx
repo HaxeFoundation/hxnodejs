@@ -83,6 +83,12 @@ extern class Crypto {
 	static var DEFAULT_ENCODING:String;
 
 	/**
+		Property for checking and controlling whether a FIPS compliant crypto provider is currently in use.
+		Setting to true requires a FIPS build of Node.js.
+	**/
+	static var fips:Bool;
+
+	/**
 		Returns an array with the names of the supported ciphers.
 	**/
 	static function getCiphers():Array<String>;
@@ -227,14 +233,71 @@ extern class Crypto {
 	static function randomBytes(size:Int):Buffer;
 
 	/**
-		Generates non-cryptographically strong pseudo-random data.
+		Decrypts `buffer` with `private_key`.
 
-		The data returned will be unique if it is sufficiently long, but is not necessarily unpredictable.
-		For this reason, the output of this function should never be used where unpredictability is important,
-		such as in the generation of encryption keys.
-
-		Usage is otherwise identical to `randomBytes`.
+		`private_key` can be an object or a string.
+		If `private_key` is a string, it is treated as the key with no passphrase
+		and will use `RSA_PKCS1_OAEP_PADDING`.
 	**/
-	@:overload(function(size:Int, callback:Error->Buffer->Void):Void {})
-	static function pseudoRandomBytes(size:Int):Buffer;
+	@:overload(function(private_key:PrivateKeyOptions, buffer:Buffer):Buffer {})
+	static function privateDecrypt(private_key:String, buffer:Buffer):Buffer;
+
+	/**
+		Encrypts `buffer` with `private_key`.
+
+		`private_key` can be an object or a string.
+		If `private_key` is a string, it is treated as the key with no passphrase
+		and will use `RSA_PKCS1_PADDING`.
+	**/
+	@:overload(function(private_key:PrivateKeyOptions, buffer:Buffer):Buffer {})
+	static function privateEncrypt(private_key:String, buffer:Buffer):Buffer;
+
+	/**
+		Decrypts `buffer` with `public_key`.
+
+		`public_key` can be an object or a string.
+		If `public_key` is a string, it is treated as the key with no passphrase
+		and will use `RSA_PKCS1_PADDING`.
+
+		Because RSA public keys can be derived from private keys,
+		a private key may be passed instead of a public key.
+	**/
+	@:overload(function(public_key:PrivateKeyOptions, buffer:Buffer):Buffer {})
+	static function publicDecrypt(public_key:String, buffer:Buffer):Buffer;
+
+	/**
+		Encrypts `buffer` with `public_key`.
+
+		`public_key` can be an object or a string.
+		If `public_key` is a string, it is treated as the key with no passphrase
+		and will use `RSA_PKCS1_OAEP_PADDING`.
+
+		Because RSA public keys can be derived from private keys,
+		a private key may be passed instead of a public key.
+	**/
+	@:overload(function(public_key:PrivateKeyOptions, buffer:Buffer):Buffer {})
+	static function publicEncrypt(public_key:String, buffer:Buffer):Buffer;
+}
+
+/**
+	An options type for `privateEncrypt`, `privateDecrypt`, `publicEncrypt`, `publicDecrypt` methods of `Crypto`.
+**/
+typedef PrivateKeyOptions = {
+	/**
+		PEM encoded public key
+	**/
+	var key:String;
+
+	/**
+		Passphrase for the private key
+	**/
+	@:optional var passphrase:String;
+
+	/**
+		Padding value, one of the following:
+		 * `Constants.RSA_NO_PADDING`
+		 * `Constants.RSA_PKCS1_PADDING`
+		 * `Constants.RSA_PKCS1_OAEP_PADDING`
+	**/
+	@:optional var padding:Int;
 }

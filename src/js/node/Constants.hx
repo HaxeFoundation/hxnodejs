@@ -36,4 +36,8 @@ extern class Constants {
 	static var ENGINE_METHOD_PKEY_ASN1_METH(default,null):Int;
 	static var ENGINE_METHOD_ALL(default,null):Int;
 	static var ENGINE_METHOD_NONE(default,null):Int;
+
+	static var RSA_NO_PADDING(default,null):Int;
+	static var RSA_PKCS1_PADDING(default,null):Int;
+	static var RSA_PKCS1_OAEP_PADDING(default,null):Int;
 }
