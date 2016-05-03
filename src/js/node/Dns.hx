@@ -369,6 +369,12 @@ extern class Dns {
 	static function resolveSrv(hostname:String, callback:DnsError->Array<DnsResolvedAddressSRV>->Void):Void;
 
 	/**
+		Uses the DNS protocol to resolve pointer records (PTR records) for the `hostname`.
+		The addresses argument passed to the callback function will be an array of strings containing the reply records.
+	**/
+	static function resolvePtr(hostname:String, callback:DnsError->Array<String>->Void):Void;
+
+	/**
 		The same as `resolve`, but only for start of authority record queries (SOA record).
 
 		`addresses` is an object with the following structure:
