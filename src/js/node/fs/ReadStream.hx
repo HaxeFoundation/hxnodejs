@@ -22,6 +22,7 @@
 package js.node.fs;
 
 import js.node.events.EventEmitter.Event;
+import js.node.Fs.FsPath;
 
 @:enum abstract ReadStreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
@@ -37,4 +38,11 @@ import js.node.events.EventEmitter.Event;
 	Readable file stream.
 **/
 extern class ReadStream extends js.node.stream.Readable<ReadStream> {
+	/**
+		The path to the file the stream is reading from as specified in the first argument to `Fs.createReadStream`.
+
+		If path is passed as a string, then readStream.path will be a string.
+		If path is passed as a Buffer, then readStream.path will be a Buffer.
+	**/
+	var path:FsPath;
 }

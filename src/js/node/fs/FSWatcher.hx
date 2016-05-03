@@ -22,11 +22,12 @@
 package js.node.fs;
 
 import js.node.events.EventEmitter;
+import js.node.Fs.FsPath;
 
 /**
 	Enumeration of possible types of changes for 'change' event.
 **/
-@:enum abstract FSWatcherChangeType(String) to String {
+@:enum abstract FSWatcherChangeType(String) from String to String {
 	var Change = "change";
 	var Rename = "rename";
 }
@@ -42,7 +43,7 @@ import js.node.events.EventEmitter;
 			event - The type of fs change
 			filename - The filename that changed (if relevant/available)
 	**/
-	var Change : FSWatcherEvent<FSWatcherChangeType->String->Void> = "change";
+	var Change : FSWatcherEvent<FSWatcherChangeType->FsPath->Void> = "change";
 
 	/**
 		Emitted when an error occurs.
