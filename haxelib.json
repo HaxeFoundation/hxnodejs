@@ -3,8 +3,8 @@
     "url": "https://github.com/HaxeFoundation/hxnodejs",
     "description": "Extern definitions for node.js",
     "license": "MIT",
-    "version": "4.0.8",
-    "releasenote": "Make stream.Duplex implement IDuplex (thanks JbIPS)",
+    "version": "4.0.9",
+    "releasenote": "Fix cluster.Worker.process type, add some of the new definitions from node 6.0",
     "classPath": "src",
     "contributors": ["nadako"],
     "tags": ["js", "nodejs", "async", "net", "web"]
