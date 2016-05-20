@@ -1,4 +1,5 @@
 import js.node.Cluster.instance as cluster;
+import js.node.cluster.Worker;
 import js.node.Http;
 import js.node.Os;
 import js.Node.console;
@@ -15,7 +16,7 @@ class ClusterExample {
 				cluster.fork();
 			}
 
-			cluster.on('exit', function(worker, code, signal) {
+			cluster.on('exit', function(worker:Worker, code:Int, signal:String) {
 				console.log('worker ' + worker.process.pid + ' died');
 			});
 		} else {

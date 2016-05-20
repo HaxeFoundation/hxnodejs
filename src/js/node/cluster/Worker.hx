@@ -21,7 +21,7 @@
  */
 package js.node.cluster;
 
-import js.node.ChildProcess;
+import js.node.child_process.ChildProcess;
 import js.node.Cluster.ListeningEventAddress;
 import js.node.events.EventEmitter;
 import js.node.events.EventEmitter.Event;
