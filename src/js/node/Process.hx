@@ -138,9 +138,18 @@ extern class Process extends EventEmitter<Process> {
 	var env:DynamicAccess<String>;
 
 	/**
-		Ends the process with the specified `code`. If omitted, exit uses the 'success' code 0.
+		Ends the process with the specified `code`. If the `code` is omitted, exit uses either the 
+		'success' code `0` or the value of `process.exitCode` if specified.
 	**/
 	function exit(?code:Int):Void;
+
+	/**
+		A number which will be the process exit code, when the process either exits gracefully,
+		or is exited via `process.exit()` without specifying a code.
+
+		Specifying a code to `process.exit(code)` will override any previous setting of `process.exitCode`.
+	**/
+	var exitCode:Null<Int>;
 
 	/**
 		Gets the group identity of the process. See getgid(2).
