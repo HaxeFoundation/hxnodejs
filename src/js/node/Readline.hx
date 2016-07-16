@@ -62,6 +62,12 @@ typedef ReadlineOptions = {
 		Defaults to 30.
 	**/
 	@:optional var historySize:Int;
+
+	/**
+		the prompt string to use.
+		Default: '> '
+	**/
+	@:optional var prompt:String;
 }
 
 typedef ReadlineCompleterCallback = String->Array<EitherType<Array<String>,String>>;

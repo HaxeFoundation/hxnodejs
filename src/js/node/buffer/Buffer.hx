@@ -203,6 +203,14 @@ extern class Buffer extends js.html.Uint8Array {
 	function swap32():Buffer;
 
 	/**
+		Interprets the `Buffer` as an array of 64-bit numbers and swaps the byte-order in-place.
+
+		Throws a `RangeError` if the `Buffer` length is not a multiple of 64 bits.
+		The method returns a reference to the `Buffer`, so calls can be chained.
+	**/
+	function swap64():Buffer;
+
+	/**
 		Reads an unsigned 8 bit integer from the buffer at the specified offset.
 
 		Set `noAssert` to `true` to skip validation of `offset`.

@@ -21,7 +21,6 @@
  */
 package js.node;
 
-import haxe.DynamicAccess;
 import haxe.extern.Rest;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
@@ -182,7 +181,7 @@ extern class Util {
 
 	/**
 		Marks that a method should not be used any more.
-		
+
 		It returns a modified function which warns once by default.
 	**/
 	static function deprecate<T:haxe.Constraints.Function>(fun:T, string:String):T;
@@ -242,6 +241,14 @@ typedef InspectOptionsBase = {
 		Colors are customizable globally via `js.node.util.Inspect.styles` and `js.node.util.Inspect.colors` objects.
 	**/
 	@:optional var colors:Bool;
+
+	/**
+		The length at which an object's keys are split across multiple lines.
+
+		Set to `Math.POSITIVE_INFINITY` to format an object as a single line.
+		Defaults to 60 for legacy compatibility.
+	**/
+	@:optional var breakLength:Float;
 }
 
 typedef InspectOptions = {
