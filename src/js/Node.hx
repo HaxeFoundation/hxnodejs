@@ -22,7 +22,6 @@
 package js;
 
 import haxe.Constraints.Function;
-import haxe.DynamicAccess;
 
 import js.node.*;
 import js.node.console.Console;
