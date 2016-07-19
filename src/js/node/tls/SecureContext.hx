@@ -107,7 +107,7 @@ typedef SecureContextOptions = {
     @:optional var honorCipherOrder:Bool;
 }
 
-class SecureContext {
+extern class SecureContext {
 
 }
 
