@@ -6,4 +6,4 @@
 
 --next
 
--cmd haxelib run dox -o bin/api -i bin -D source-path https://github.com/HaxeFoundation/hxnodejs/blob/master/src/
+-cmd haxelib run dox -o bin/api -i bin --title "HXNODEJS - API documentation" -D themeColor 0xEEEEEE -D textColor 0x555555 -D logo http://take.ms/dlXH9 -D source-path https://github.com/HaxeFoundation/hxnodejs/blob/master/src/
