@@ -17,5 +17,5 @@ install:
 
 script:
   - haxe build.hxml
-  - haxelib git dox https://github.com/dpeek/dox
+  - haxelib git dox https://github.com/HaxeFoundation/dox
   - bash doc-deploy.sh
