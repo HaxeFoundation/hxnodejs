@@ -1,4 +1,4 @@
-![hxnodejs](http://take.ms/dlXH9)
+![hxnodejs](hxnodejs.png)
 
 [![Build Status](https://travis-ci.org/HaxeFoundation/hxnodejs.svg?branch=master)](https://travis-ci.org/HaxeFoundation/hxnodejs)
 
