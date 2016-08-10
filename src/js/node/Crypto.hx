@@ -211,13 +211,13 @@ extern class Crypto {
 		Asynchronous PBKDF2 applies pseudorandom function HMAC-SHA1 to derive a key of given length
 		from the given password, salt and iterations.
 	**/
-	@:overload(function(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, digest:String, callback:Error->String->Void):Void {})
-	static function pbkdf2(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, callback:Error->String->Void):Void;
+	@:overload(function(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, digest:String, callback:Error->Buffer->Void):Void {})
+	static function pbkdf2(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, callback:Error->Buffer->Void):Void;
 
 	/**
 		Synchronous PBKDF2 function. Returns derivedKey or throws error.
 	**/
-	static function pbkdf2Sync(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, ?digest:String):String;
+	static function pbkdf2Sync(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, ?digest:String):Buffer;
 
 	/**
 		Generates cryptographically strong pseudo-random data.
