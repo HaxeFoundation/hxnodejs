@@ -1,4 +1,10 @@
+import haxe.io.Bytes;
+import haxe.io.Output;
+import haxe.io.Error;
+import haxe.io.Eof;
+import js.node.Buffer;
 import js.node.ChildProcess;
+import js.node.Fs;
 import js.Node.process;
 
 @:dce
@@ -77,7 +83,7 @@ class Sys {
     public static inline function executablePath():String {
         return process.argv[0];
     }
-    
+
     #if (haxe_ver >= 3.3)
     public static inline function programPath():String {
         return js.Node.__filename;
@@ -89,8 +95,88 @@ class Sys {
 
         static function sleep(seconds:Float):Void;
         static function getChar(echo:Bool):Int;
-        static function stdin():haxe.io.Input;
-        static function stdout():haxe.io.Output;
-        static function stderr():haxe.io.Output;
     */
+
+    public static function sleep(seconds:Float):Void {
+        var end = (cast Date).now() + seconds * 1000;
+        while ((cast Date).now() <= end) {}
+    }
+
+    public static inline function stdin():haxe.io.Input {
+        return new FileInput(0);
+    }
+
+    public static inline function stdout():haxe.io.Output {
+        return new FileOutput(1);
+    }
+
+    public static inline function stderr():haxe.io.Output {
+        return new FileOutput(2);
+    }
+
+}
+
+private class FileOutput extends haxe.io.Output {
+    var fd:Int;
+
+    public function new(fd:Int) {
+        this.fd = fd;
+    }
+
+    override public function writeByte(c:Int) {
+        Fs.writeSync(fd, String.fromCharCode(c));
+    }
+
+    override public function writeBytes(s:Bytes, pos:Int, len:Int):Int {
+        return Fs.writeSync(fd, Buffer.hxFromBytes(s), pos, len);
+    }
+
+    override public function writeString(s:String) {
+        Fs.writeSync(fd, s);
+    }
+
+    override public function flush() {
+        Fs.fsyncSync(fd);
+    }
+
+    override public function close() {
+        Fs.closeSync(fd);
+    }
+}
+
+private class FileInput extends haxe.io.Input {
+    var fd:Int;
+
+    public function new(fd:Int) {
+        this.fd = fd;
+    }
+
+    override public function readByte() : Int {
+        var buf = new Buffer(1);
+        try {
+            Fs.readSync(fd, buf, 0, 1, null);
+        } catch (e:Dynamic) {
+            if (e.code == "EOF")
+                throw new Eof();
+            else
+                throw Error.Custom(e);
+        }
+        return buf[0];
+    }
+
+    override public function readBytes( s : Bytes, pos : Int, len : Int ) : Int {
+        var buf = Buffer.hxFromBytes(s);
+        try {
+            return Fs.readSync(fd, buf, pos, len, null);
+        } catch (e:Dynamic) {
+            if (e.code == "EOF")
+                throw new Eof();
+            else
+                throw Error.Custom(e);
+        }
+    }
+
+    override public function close() : Void {
+        Fs.closeSync(fd);
+    }
 }
