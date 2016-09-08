@@ -68,6 +68,22 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 	**/
 	var isTTY(default,null):Bool;
 
+	/**
+		The writable.cork() method forces all written data to be buffered in memory.
+		The buffered data will be flushed when either the stream.uncork() or stream.end() methods are called.
+	**/
+	function cork():Void;
+
+	/**
+		The writable.uncork() method flushes all data buffered since stream.cork() was called.
+	**/
+	function uncork():Void;
+
+	/**
+		The writable.setDefaultEncoding() method sets the default encoding for a Writable stream.
+	**/
+	function setDefaultEncoding(encoding:String):TSelf;
+
 	// --------- API for stream implementors - see node.js API documentation ---------
 	private function new(?options:DuplexNewOptions);
 	@:overload(function(chunk:String, encoding:String, callback:js.Error->Void):Void {})
