@@ -113,21 +113,6 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 	**/
 	var isTTY(default,null):Bool;
 
-	/**
-		The writable.cork() method forces all written data to be buffered in memory. 
-		The buffered data will be flushed when either the stream.uncork() or stream.end() methods are called.
-	**/
-	function cork():Void;
-
-	/**
-		The writable.uncork() method flushes all data buffered since stream.cork() was called.
-	**/
-	function uncork():Void;
-
-	/**
-		The writable.setDefaultEncoding() method sets the default encoding for a Writable stream.
-	**/
-	function setDefaultEncoding(encoding:String):TSelf;
 
 	// --------- API for stream implementors - see node.js API documentation ---------
 	private function new(?options:WritableNewOptions);
@@ -160,10 +145,6 @@ extern interface IWritable extends IStream {
 	@:overload(function(chunk:Buffer, ?callback:Void->Void):Void {})
 	@:overload(function(chunk:String, ?callback:Void->Void):Void {})
 	function end(chunk:String, encoding:String, ?callback:Void->Void):Void;
-
-	function cork():Void;
-	function uncork():Void;
-	function setDefaultEncoding(encoding:String):IWritable;
 
 	var isTTY(default,null):Bool;
 }
