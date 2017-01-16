@@ -28,6 +28,7 @@ import haxe.extern.Rest;
 import js.node.events.EventEmitter;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
+import js.node.child_process.ChildProcess.ChildProcessSendOptions;
 
 
 /**
@@ -138,7 +139,7 @@ extern class Process extends EventEmitter<Process> {
 	var env:DynamicAccess<String>;
 
 	/**
-		Ends the process with the specified `code`. If the `code` is omitted, exit uses either the 
+		Ends the process with the specified `code`. If the `code` is omitted, exit uses either the
 		'success' code `0` or the value of `process.exitCode` if specified.
 	**/
 	function exit(?code:Int):Void;
@@ -313,7 +314,9 @@ extern class Process extends EventEmitter<Process> {
 
 		Only available for child processes. See `ChildProcess.send`.
 	**/
-	function send(message:Dynamic):Void;
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, options:ChildProcessSendOptions, ?callback:js.Error->Void):Bool {})
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:js.Error->Void):Bool {})
+	function send(message:Dynamic, ?callback:js.Error->Void):Bool;
 
 	/**
 		Close the IPC channel to parent process.
