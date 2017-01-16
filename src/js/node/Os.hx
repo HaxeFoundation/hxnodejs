@@ -100,6 +100,11 @@ extern class Os {
 	static function endianness():Endianness;
 
 	/**
+		Returns the home directory of the current user as a string.
+	**/
+	static function homedir():String;
+
+	/**
 		Returns the hostname of the operating system.
 	**/
 	static function hostname():String;
