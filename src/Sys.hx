@@ -11,11 +11,11 @@ import js.Node.process;
 // @:coreApi
 class Sys {
     public static inline function print(v:Dynamic):Void {
-        process.stdout.write(v);
+        process.stdout.write(Std.string(v));
     }
 
     public static inline function println(v:Dynamic):Void {
-        process.stdout.write(v);
+        process.stdout.write(Std.string(v));
         process.stdout.write("\n");
     }
 
