@@ -57,7 +57,7 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 
 	/**
 		The raw request/response headers list exactly as they were received.
-		Note that the keys and values are in the same list. It is not a list of tuples. So, the even-numbered 
+		Note that the keys and values are in the same list. It is not a list of tuples. So, the even-numbered
 		offsets are key values, and the odd-numbered offsets are the associated values.
 		Header names are not lowercased, and duplicates are not merged.
 	**/
@@ -68,6 +68,14 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 		Only populated after the 'end' event.
 	**/
 	var trailers(default,null):DynamicAccess<String>;
+
+	/**
+		Calls `destroy` on the socket that received the `IncomingMessage`.
+
+		If `error` is provided, an 'error' event is emitted and
+		`error` is passed as an argument to any listeners on the event.
+	**/
+	function destroy(?error:js.Error):Void;
 
 	/**
 		Calls `setTimeout` on the `socket` object.
