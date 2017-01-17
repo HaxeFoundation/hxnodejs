@@ -260,7 +260,7 @@ extern class Process extends EventEmitter<Process> {
 	/**
 		What platform you're running on: 'darwin', 'freebsd', 'linux', 'sunos' or 'win32'
 	**/
-	var platform : String;
+	var platform:String;
 
 	/**
 		Returns an object describing the memory usage of the Node process measured in bytes.
