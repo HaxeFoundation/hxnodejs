@@ -28,16 +28,14 @@ package js.node;
 // We should probably generate this from a macro, but let's keep
 // things simple for now.
 private typedef PathModule = {
-	function normalize(p:String):String;
+	function normalize(path:String):String;
 	function join(paths:haxe.extern.Rest<String>):String;
-	@:overload(function(args:haxe.extern.Rest<String>):String {})
-	@:overload(function(from:String, to:String):String {})
-	function resolve(to:String):String;
+	function resolve(paths:haxe.extern.Rest<String>):String;
 	function isAbsolute(path:String):Bool;
 	function relative(from:String, to:String):String;
-	function dirname(p:String):String;
-	function basename(p:String, ?ext:String):String;
-	function extname(p:String):String;
+	function dirname(path:String):String;
+	function basename(path:String, ?ext:String):String;
+	function extname(path:String):String;
 	var sep(default,null):String;
 	var delimiter(default,null):String;
 	function parse(pathString:String):PathObject;
@@ -46,82 +44,102 @@ private typedef PathModule = {
 
 
 /**
-	This module contains utilities for handling and transforming file paths.
-	Almost all these methods perform only string transformations.
-	The file system is not consulted to check whether paths are valid.
+	This module provides utilities for working with file and directory paths.
 **/
 @:jsRequire("path")
 extern class Path {
 	/**
-		Normalize a string path, taking care of '..' and '.' parts.
+		Normalizes the given `path`, resolving '..' and '.' segments.
 
-		When multiple slashes are found, they're replaced by a single one;
-		when the path contains a trailing slash, it is preserved.
-		On Windows backslashes are used.
+		When multiple, sequential path segment separation characters are found (e.g. `/` on POSIX and `\` on Windows),
+		they are replaced by a single instance of the platform specific path segment separator.
+		Trailing separators are preserved.
+
+		If the `path` is a zero-length string, '.' is returned, representing the current working directory.
 	**/
-	static function normalize(p:String):String;
+	static function normalize(path:String):String;
 
 	/**
-		Join all arguments together and normalize the resulting path.
+		Joins all given `path` segments together using the platform specific separator as a delimiter,
+		then normalizes the resulting path.
+
+		Zero-length `path` segments are ignored. If the joined path string is a zero-length string
+		then '.' will be returned, representing the current working directory.
 	**/
 	static function join(paths:haxe.extern.Rest<String>):String;
 
 	/**
-		Resolves to to an absolute path.
+		Resolves a sequence of paths or path segments into an absolute path.
 
-		If `to` isn't already absolute `from` arguments are prepended in right to left order,
-		until an absolute path is found. If after using all from paths still no absolute
-		path is found, the current working directory is used as well. The resulting path is
-		normalized, and trailing slashes are removed unless the path gets resolved to the
-		root directory.
+		The given sequence of paths is processed from right to left, with each subsequent path prepended
+		until an absolute path is constructed. For instance, given the sequence of path segments: `/foo`, `/bar`, `baz`,
+		calling `resolve('/foo', '/bar', 'baz')` would return `/bar/baz`.
+
+		If after processing all given path segments an absolute path has not yet been generated,
+		the current working directory is used.
+
+		The resulting path is normalized and trailing slashes are removed unless the path is resolved to the root directory.
+
+		Zero-length path segments are ignored.
+
+		If no path segments are passed, `resolve` will return the absolute path of the current working directory.
 	**/
-	@:overload(function(args:haxe.extern.Rest<String>):String {})
-	@:overload(function(from:String, to:String):String {})
-	static function resolve(to:String):String;
+	static function resolve(paths:haxe.extern.Rest<String>):String;
 
 	/**
-		Determines whether `path` is an absolute path.
+		Determines if path is an absolute path.
 
-		An absolute path will always resolve to the same location, regardless of the working directory.
+		If the given `path` is a zero-length string, false will be returned.
 	**/
 	static function isAbsolute(path:String):Bool;
 
 	/**
-		Solve the relative path from from to to.
+		Returns the relative path from `from` to `to`.
+
+		If `from` and `to` each resolve to the same path (after calling `resolve` on each), a zero-length string is returned.
+
+		If a zero-length string is passed as `from` or `to`, the current working directory will be used
+		instead of the zero-length strings.
 	**/
 	static function relative(from:String, to:String):String;
 
 	/**
-		Return the directory name of a path. Similar to the Unix dirname command.
+		Return the directory name of a `path`. Similar to the Unix `dirname` command.
 	**/
-	static function dirname(p:String):String;
+	static function dirname(path:String):String;
 
 	/**
-		Return the last portion of a path. Similar to the Unix basename command.
+		Return the last portion of a `path`. Similar to the Unix `basename` command.
 	**/
-	static function basename(p:String, ?ext:String):String;
+	static function basename(path:String, ?ext:String):String;
 
 	/**
-		Return the extension of the path, from the last '.' to end of string in the last portion of the path.
-		If there is no '.' in the last portion of the path or the first character of it is '.',
+		Return the extension of the `path`, from the last '.' (period) to end of string in the last portion of the `path`.
+		If there is no '.' in the last portion of the `path` or the first character of it is '.',
 		then it returns an empty string.
 	**/
-	static function extname(p:String):String;
+	static function extname(path:String):String;
 
 	/**
-		The platform-specific file separator. '\\' or '/'.
+		Platform-specific path segment separator:
+
+		`\` on Windows
+		`/` on POSIX
 	**/
 	static var sep(default,null):String;
 
 	/**
-		The platform-specific path delimiter, ; or ':'.
+		Platform-specific path delimiter:
+
+		`;` for Windows
+		`:` for POSIX
 	**/
 	static var delimiter(default,null):String;
 
 	/**
-		Returns an object from a path string.
+		Returns an object whose properties represent significant elements of the `path`.
 	**/
-	static function parse(pathString:String):PathObject;
+	static function parse(path:String):PathObject;
 
 	/**
 		Returns a path string from an object, the opposite of `Path.parse` above.
@@ -129,14 +147,17 @@ extern class Path {
 	static function format(pathObject:PathObject):String;
 
 	/**
-		Provide access to aforementioned path methods but always interact in a posix compatible way.
+		Provides access to POSIX specific implementations of the path methods.
 	**/
-	static var posix:PathModule;
+	static var posix(default,null):PathModule;
 
 	/**
-		Provide access to aforementioned path methods but always interact in a win32 compatible way.
+		Provides access to Windows-specific implementations of the path methods.
+
+		Note: On Windows, both the forward slash (/) and backward slash (\) characters are accepted as path delimiters;
+		however, only the backward slash (\) will be used in return values.
 	**/
-	static var win32:PathModule;
+	static var win32(default,null):PathModule;
 }
 
 
