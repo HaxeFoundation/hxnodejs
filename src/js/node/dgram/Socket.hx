@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2015 Haxe Foundation
+ * Copyright (C)2014-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -89,7 +89,7 @@ typedef SocketBindOptions = {
 
 	/**
 		If false (default), then cluster workers will use the same underlying handle, allowing connection handling
-		duties to be shared. When true, the handle is not shared, and attempted port sharing results in an error. 
+		duties to be shared. When true, the handle is not shared, and attempted port sharing results in an error.
 	**/
 	@:optional var exclusive:Bool;
 }

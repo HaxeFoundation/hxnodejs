@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2015 Haxe Foundation
+ * Copyright (C)2014-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -86,7 +86,7 @@ extern class Server extends EventEmitter<Server> {
 		If the `hostname` is omitted, the server will accept connections on any IPv6 address (::) when IPv6 is available,
 		or any IPv4 address (0.0.0.0) otherwise.
 		A `port` value of zero will assign a random port.
-		
+
 		`backlog` is the maximum length of the queue of pending connections. The actual length will be determined
 		by your OS through sysctl settings such as tcp_max_syn_backlog and somaxconn on linux.
 		The default value of this parameter is 511 (not 512).

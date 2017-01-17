@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2015 Haxe Foundation
+ * Copyright (C)2014-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -114,7 +114,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 	var isTTY(default,null):Bool;
 
 	/**
-		The writable.cork() method forces all written data to be buffered in memory. 
+		The writable.cork() method forces all written data to be buffered in memory.
 		The buffered data will be flushed when either the stream.uncork() or stream.end() methods are called.
 	**/
 	function cork():Void;

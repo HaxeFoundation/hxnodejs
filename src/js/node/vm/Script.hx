@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2015 Haxe Foundation
+ * Copyright (C)2014-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -38,7 +38,7 @@ typedef ScriptOptions = {
 
 		Defaults to true.
 	**/
-	@:optional var displayErrors:Bool;    
+	@:optional var displayErrors:Bool;
 }
 
 typedef ScriptRunOptions = {
@@ -50,7 +50,7 @@ typedef ScriptRunOptions = {
 
 		Defaults to true.
 	**/
-	@:optional var displayErrors:Bool;    
+	@:optional var displayErrors:Bool;
 
 	/**
 		Number of milliseconds to execute code before terminating execution.
@@ -68,7 +68,7 @@ extern class Script {
 	/**
 		Creating a new `Script` compiles `code` but does not run it. Instead, the created `Script` object
 		represents this compiled code.
-		
+
 		This script can be run later many times using methods below.
 
 		The returned script is not bound to any global object. It is bound before each run, just for that run.

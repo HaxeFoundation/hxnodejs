@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2015 Haxe Foundation
+ * Copyright (C)2014-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -84,13 +84,13 @@ extern class ECDH {
 
 		Key encoding can be 'binary', 'hex' or 'base64'.
 		If no encoding is provided, then a buffer is expected.
-	**/	
+	**/
 	@:overload(function(public_key:Buffer):Void {})
 	function setPublicKey(public_key:String, encoding:String):Void;
 
 	/**
 		Sets the EC Diffie-Hellman private key.
-		
+
 		Key encoding can be 'binary', 'hex' or 'base64'.
 		If no encoding is provided, then a buffer is expected.
 	**/
