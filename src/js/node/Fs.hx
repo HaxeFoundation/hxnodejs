@@ -254,6 +254,214 @@ typedef FsCreateWriteStreamOptions = {
 }
 
 /**
+	Constants for use in `Fs` module.
+
+	Note: Not every constant will be available on every operating system.
+**/
+typedef FsConstants = {
+	/**
+		Flag indicating that the file is visible to the calling process.
+		Meant for use with `Fs.access`.
+	**/
+	var F_OK:Int;
+
+	/**
+		Flag indicating that the file can be read by the calling process.
+		Meant for use with `Fs.access`.
+	**/
+	var R_OK:Int;
+
+	/**
+		Flag indicating that the file can be written by the calling process.
+		Meant for use with `Fs.access`.
+	**/
+	var W_OK:Int;
+
+	/**
+		Flag indicating that the file can be executed by the calling process.
+		Meant for use with `Fs.access`.
+	**/
+	var X_OK:Int;
+
+
+	/**
+		Flag indicating to open a file for read-only access.
+	**/
+	var O_RDONLY:Int;
+
+	/**
+		Flag indicating to open a file for write-only access.
+	**/
+	var O_WRONLY:Int;
+
+	/**
+		Flag indicating to open a file for read-write access.
+	**/
+	var O_RDWR:Int;
+
+	/**
+		Flag indicating to create the file if it does not already exist.
+	**/
+	var O_CREAT:Int;
+
+	/**
+		Flag indicating that opening a file should fail if the O_CREAT flag is set and the file already exists.
+	**/
+	var O_EXCL:Int;
+
+	/**
+		Flag indicating that if path identifies a terminal device, opening the path shall not cause that terminal to become the controlling terminal for the process (if the process does not already have one).
+	**/
+	var O_NOCTTY:Int;
+
+	/**
+		Flag indicating that if the file exists and is a regular file, and the file is opened successfully for write access, its length shall be truncated to zero.
+	**/
+	var O_TRUNC:Int;
+
+	/**
+		Flag indicating that data will be appended to the end of the file.
+	**/
+	var O_APPEND:Int;
+
+	/**
+		Flag indicating that the open should fail if the path is not a directory.
+	**/
+	var O_DIRECTORY:Int;
+
+	/**
+		Flag indicating reading accesses to the file system will no longer result in an update to the atime information associated with the file. This flag is available on Linux operating systems only.
+	**/
+	var O_NOATIME:Int;
+
+	/**
+		Flag indicating that the open should fail if the path is a symbolic link.
+	**/
+	var O_NOFOLLOW:Int;
+
+	/**
+		Flag indicating that the file is opened for synchronous I/O.
+	**/
+	var O_SYNC:Int;
+
+	/**
+		Flag indicating to open the symbolic link itself rather than the resource it is pointing to.
+	**/
+	var O_SYMLINK:Int;
+
+	/**
+		When set, an attempt will be made to minimize caching effects of file I/O.
+	**/
+	var O_DIRECT:Int;
+
+	/**
+		Flag indicating to open the file in nonblocking mode when possible.
+	**/
+	var O_NONBLOCK:Int;
+
+
+	/**
+		Bit mask used to extract the file type code.
+	**/
+	var S_IFMT:Int;
+
+	/**
+		File type constant for a regular file.
+	**/
+	var S_IFREG:Int;
+
+	/**
+		File type constant for a directory.
+	**/
+	var S_IFDIR:Int;
+
+	/**
+		File type constant for a character-oriented device file.
+	**/
+	var S_IFCHR:Int;
+
+	/**
+		File type constant for a block-oriented device file.
+	**/
+	var S_IFBLK:Int;
+
+	/**
+		File type constant for a FIFO/pipe.
+	**/
+	var S_IFIFO:Int;
+
+	/**
+		File type constant for a symbolic link.
+	**/
+	var S_IFLNK:Int;
+
+	/**
+		File type constant for a socket.
+	**/
+	var S_IFSOCK:Int;
+
+	/**
+		File mode indicating readable, writable and executable by owner.
+	**/
+	var S_IRWXU:Int;
+
+	/**
+		File mode indicating readable by owner.
+	**/
+	var S_IRUSR:Int;
+
+	/**
+		File mode indicating writable by owner.
+	**/
+	var S_IWUSR:Int;
+
+	/**
+		File mode indicating executable by owner.
+	**/
+	var S_IXUSR:Int;
+
+	/**
+		File mode indicating readable, writable and executable by group.
+	**/
+	var S_IRWXG:Int;
+
+	/**
+		File mode indicating readable by group.
+	**/
+	var S_IRGRP:Int;
+
+	/**
+		File mode indicating writable by group.
+	**/
+	var S_IWGRP:Int;
+
+	/**
+		File mode indicating executable by group.
+	**/
+	var S_IXGRP:Int;
+
+	/**
+		File mode indicating readable, writable and executable by others.
+	**/
+	var S_IRWXO:Int;
+
+	/**
+		File mode indicating readable by others.
+	**/
+	var S_IROTH:Int;
+
+	/**
+		File mode indicating writable by others.
+	**/
+	var S_IWOTH:Int;
+
+	/**
+		File mode indicating executable by others.
+	**/
+	var S_IXOTH:Int;
+}
+
+/**
 	File I/O is provided by simple wrappers around standard POSIX functions.
 	All the methods have asynchronous and synchronous forms.
 
@@ -268,6 +476,11 @@ typedef FsCreateWriteStreamOptions = {
 **/
 @:jsRequire("fs")
 extern class Fs {
+	/**
+		An object containing commonly used constants for file system operations.
+	**/
+	static var constants(default,null):FsConstants;
+
 	/**
 		Asynchronous rename(2).
 	**/
@@ -771,12 +984,18 @@ extern class Fs {
 	static function existsSync(path:FsPath):Bool;
 
 	/**
-		Tests a user's permissions for the file specified by path.
+		Tests a user's permissions for the file or directory specified by `path`.
 
-		`mode` is an optional integer that specifies the accessibility checks to be performed.
-		The following constants define the possible values of mode: `F_OK`, `R_OK`, `W_OK`, `X_OK`.
-		It is possible to create a mask consisting of the bitwise OR of two or more values.
-		If no `mode` is specified, `F_OK` is used as a default.
+		The `mode` argument is an optional integer that specifies the accessibility checks to be performed.
+		The following constants define the possible values of `mode`. It is possible to create a mask consisting
+		of the bitwise OR of two or more values.
+
+		* `Fs.constants.F_OK` - path is visible to the calling process. This is useful for determining if a file exists,
+		  but says nothing about `rwx` permissions. Default if no `mode` is specified.
+		* `Fs.constants.R_OK` - path can be read by the calling process.
+		* `Fs.constants.W_OK` - path can be written by the calling process.
+		* `Fs.constants.X_OK` - path can be executed by the calling process.
+		  This has no effect on Windows (will behave like `Fs.constants.F_OK`).
 
 		The final argument, `callback`, is a callback function that is invoked with a possible error argument.
 		If any of the accessibility checks fail, the error argument will be populated.
