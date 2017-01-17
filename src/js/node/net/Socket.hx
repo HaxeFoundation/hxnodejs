@@ -243,9 +243,19 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 	var bufferSize:Int;
 
 	/**
-		Ensures that no more I/O activity happens on this socket. Only necessary in case of errors (parse error or so).
+		A boolean value that indicates if the connection is destroyed or not.
+		Once a connection is destroyed no further data can be transferred using it.
 	**/
-	function destroy():Void;
+	var destroyed(default,null):Bool;
+
+	/**
+		Ensures that no more I/O activity happens on this socket.
+		Only necessary in case of errors (parse error or so).
+
+		If `exception` is specified, an 'error' event will be emitted and
+		any listeners for that event will receive exception as an argument.
+	**/
+	function destroy(?exception:js.Error):Void;
 
 	/**
 		Sets the socket to timeout after `timeout` milliseconds of inactivity on the socket.
