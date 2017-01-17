@@ -21,6 +21,7 @@
  */
 package js.node;
 
+@:deprecated("In a future major version of Node.js punycode module will be removed")
 @:jsRequire("punycode")
 extern class Punycode {
     /**
