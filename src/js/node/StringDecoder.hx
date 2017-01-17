@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2015 Haxe Foundation
+ * Copyright (C)2014-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,8 +22,7 @@
 package js.node;
 
 /**
-	StringDecoder decodes a buffer to a string.
-	It is a simple interface to buffer.toString() but provides additional support for utf8.
+	API for decoding `Buffer` objects into strings in a manner that preserves encoded multi-byte UTF-8 and UTF-16 characters.
 **/
 @:jsRequire("string_decoder", "StringDecoder")
 extern class StringDecoder {
@@ -33,12 +32,17 @@ extern class StringDecoder {
 	function new(?encoding:String);
 
 	/**
-		Returns a decoded string.
+		Returns a decoded string, ensuring that any incomplete multibyte characters at the end of the `Buffer` are
+		omitted from the returned string and stored in an internal buffer for the next call to `write` or `end`.
 	**/
 	function write(buffer:Buffer):String;
 
 	/**
-		Returns any trailing bytes that were left in the buffer.
+		Returns any remaining input stored in the internal buffer as a string.
+		Bytes representing incomplete UTF-8 and UTF-16 characters will be replaced with
+		substitution characters appropriate for the character encoding.
+
+		If the `buffer` argument is provided, one final call to `write` is performed before returning the remaining input.
 	**/
-	function end():String;
+	function end(?buffer:Buffer):String;
 }
