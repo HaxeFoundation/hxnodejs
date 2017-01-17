@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2015 Haxe Foundation
+ * Copyright (C)2014-2017 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,7 +21,42 @@
  */
 package js.node;
 
+import haxe.extern.EitherType;
 import haxe.DynamicAccess;
+
+/**
+	Options used for `Querystring.parse` method.
+**/
+typedef QuerystringParseOptions = {
+	/**
+		Specifies the maximum number of keys to parse.
+		Defaults to 1000.
+		Specify 0 to remove key counting limitations.
+	**/
+	@:optional var maxKeys:Int;
+
+	/**
+		The function to use when decoding percent-encoded characters in the query string.
+		Defaults to `Querystring.unescape`.
+	**/
+	@:optional var decodeURIComponent:String->String;
+}
+
+/**
+	Options for `Querystring.stringify` method.
+**/
+typedef QuerystringStringifyOptions = {
+	/**
+		The function to use when converting URL-unsafe characters to percent-encoding in the query string.
+		Defaults to `Querystring.escape`.
+	**/
+	@:optional var encodeURIComponent:String->String;
+}
+
+/**
+	The result type of `Querystring.parse`. Is a collection of either strings or array of strings.
+**/
+typedef QuerystringParseResult = DynamicAccess<EitherType<String,Array<String>>>;
 
 /**
 	This module provides utilities for dealing with query strings.
@@ -29,29 +64,48 @@ import haxe.DynamicAccess;
 @:jsRequire("querystring")
 extern class Querystring {
 	/**
-		Serialize an object to a query string.
-		Optionally override the default separator ('&') and assignment ('=') characters.
+		Produces a URL query string from a given `obj` by iterating through the object's "own properties".
+
+		If `sep` is provided, it is used to delimit key and value pairs in the query string. Defaults to '&'.
+		If `eq` is provided, it is used to delimit keys and values in the query string. Defaults to '='.
+
+		By default, characters requiring percent-encoding within the query string will be encoded as UTF-8.
+		If an alternative encoding is required, then an alternative `encodeURIComponent` option will need to be specified.
 	**/
-	static function stringify(obj:{}, ?sep:String, ?eq:String):String;
+	@:overload(function(obj:{}, ?sep:String):String {})
+	static function stringify(obj:{}, sep:String, eq:String, ?options:QuerystringStringifyOptions):String;
 
 	/**
-		Deserialize a query string to an object.
-		Optionally override the default separator ('&') and assignment ('=') characters.
+		Parses a URL query string (`str`) into a collection of key and value pairs.
 
-		Options object may contain `maxKeys` property (equal to 1000 by default), it'll be used to limit processed keys.
-		Set it to 0 to remove key count limitation.
+		If `sep` is provided, it is used to delimit key and value pairs in the query string. Defaults to '&'.
+		If `eq` is provided, it is used to delimit keys and values in the query string. Defaults to '='.
+
+		By default, percent-encoded characters within the query string will be assumed to use UTF-8 encoding.
+		If an alternative character encoding is used, then an alternative `decodeURIComponent` option will need to be specified.
 	**/
-	@:overload(function(str:String, ?options:{maxKeys:Int}):DynamicAccess<String> {})
-	@:overload(function(str:String, sep:String, ?options:{maxKeys:Int}):DynamicAccess<String> {})
-	static function parse(str:String, ?sep:String, ?eq:String):DynamicAccess<String>;
+	@:overload(function(str:String, ?sep:String):QuerystringParseResult {})
+	static function parse(str:String, sep:String, eq:String, ?options:QuerystringParseOptions):QuerystringParseResult;
 
 	/**
-		The escape function used by `Querystring.stringify`, provided so that it could be overridden if necessary.
+		Performs URL percent-encoding on the given `str` in a manner that is optimized for
+		the specific requirements of URL query strings.
+
+		This method is used by `stringify` and is generally not expected to be used directly.
+		It is exported primarily to allow application code to provide a replacement percent-encoding implementation
+		if necessary by assigning `Querystring.escape` to an alternative function.
 	**/
-	static dynamic function escape(obj:Dynamic):String;
+	static dynamic function escape(str:String):String;
 
 	/**
-		The unescape function used by `Querystring.parse`, provided so that it could be overridden if necessary.
+		Performs decoding of URL percent-encoded characters on the given `str`.
+
+		This method is used by `Querystring.parse` and is generally not expected to be used directly.
+		It is exported primarily to allow application code to provide a replacement decoding implementation
+		if necessary by assigning `Querystring.unescape` to an alternative function.
+
+		By default, this method will attempt to use the JavaScript built-in `decodeURIComponent` method to decode.
+		If that fails, a safer equivalent that does not throw on malformed URLs will be used.
 	**/
 	static dynamic function unescape(str:String):Dynamic;
 }
