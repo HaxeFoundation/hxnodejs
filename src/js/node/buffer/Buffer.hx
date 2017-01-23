@@ -580,7 +580,8 @@ extern class Buffer extends js.html.Uint8Array {
 		Any modifications done using the returned object will be reflected in given `haxe.io.Bytes` object.
 	**/
 	static inline function hxFromBytes(b:haxe.io.Bytes):Buffer {
-		return cast b.getData();
+		var data = @:privateAccess b.b;
+		return new Buffer(data.buffer, data.byteOffset, data.byteLength);
 	}
 }
 
