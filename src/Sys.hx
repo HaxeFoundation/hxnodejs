@@ -8,7 +8,7 @@ import js.node.Fs;
 import js.Node.process;
 
 @:dce
-// @:coreApi
+@:coreApi
 class Sys {
     public static inline function print(v:Dynamic):Void {
         process.stdout.write(Std.string(v));
@@ -90,12 +90,9 @@ class Sys {
     }
     #end
 
-    /**
-        The following are not (yet) implemented.
-
-        static function sleep(seconds:Float):Void;
-        static function getChar(echo:Bool):Int;
-    */
+    public static function getChar(echo:Bool):Int {
+        throw "Sys.getChar is currently not implemented on node.js";
+    }
 
     public static function sleep(seconds:Float):Void {
         var end = (cast Date).now() + seconds * 1000;
@@ -113,7 +110,6 @@ class Sys {
     public static inline function stderr():haxe.io.Output {
         return new FileOutput(2);
     }
-
 }
 
 private class FileOutput extends haxe.io.Output {
