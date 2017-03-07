@@ -6,6 +6,10 @@ import js.node.Fs;
 // @:coreApi
 class File {
 
+	public static inline function read( path : String, binary : Bool = true ) : FileInput {
+		return new FileInput(Fs.openSync(path, Read));
+	}
+
 	public static inline function getContent( path : String ) : String {
 		return Fs.readFileSync(path, {encoding: "utf8"});
 	}
