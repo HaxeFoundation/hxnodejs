@@ -64,7 +64,7 @@ class Sys {
         if (args == null)
             return ChildProcess.spawnSync(cmd, {shell: true, stdio: "inherit"}).status;
         else
-            return ChildProcess.spawnSync(cmd, args, {shell: true, stdio: "inherit"}).status;
+            return ChildProcess.spawnSync(cmd, args, {stdio: "inherit"}).status;
     }
 
     public static inline function exit(code:Int):Void {
