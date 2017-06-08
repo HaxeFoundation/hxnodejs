@@ -62,9 +62,9 @@ class Sys {
 
     public static inline function command(cmd:String, ?args:Array<String>):Int {
         if (args == null)
-            return ChildProcess.spawnSync(cmd, {stdio: "inherit"}).status;
+            return ChildProcess.spawnSync(cmd, {shell: true, stdio: "inherit"}).status;
         else
-            return ChildProcess.spawnSync(cmd, args, {stdio: "inherit"}).status;
+            return ChildProcess.spawnSync(cmd, args, {shell: true, stdio: "inherit"}).status;
     }
 
     public static inline function exit(code:Int):Void {
