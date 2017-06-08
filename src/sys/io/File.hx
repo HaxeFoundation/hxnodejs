@@ -1,7 +1,5 @@
 package sys.io;
 
-import js.node.Fs;
-
 @:dce
 // @:coreApi
 class File {
@@ -11,34 +9,34 @@ class File {
 	}
 
 	public static inline function getContent( path : String ) : String {
-		return Fs.readFileSync(path, {encoding: "utf8"});
+		return js.node.Fs.readFileSync(path, {encoding: "utf8"});
 	}
 
 	public static inline function saveContent( path : String, content : String ) : Void {
-		Fs.writeFileSync(path, content);
+		js.node.Fs.writeFileSync(path, content);
 	}
 
 	public static inline function getBytes( path : String ) : haxe.io.Bytes {
-		return Fs.readFileSync(path).hxToBytes();
+		return js.node.Fs.readFileSync(path).hxToBytes();
 	}
 
 	public static inline function saveBytes( path : String, bytes : haxe.io.Bytes ) : Void {
-		Fs.writeFileSync(path, js.node.Buffer.hxFromBytes(bytes));
+		js.node.Fs.writeFileSync(path, js.node.Buffer.hxFromBytes(bytes));
 	}
 
 	static inline var copyBufLen = 64 * 1024;
 	static var copyBuf = new js.node.Buffer(copyBufLen);
 
 	public static function copy( srcPath : String, dstPath : String ) : Void {
-		var src = Fs.openSync(srcPath, Read);
-		var stat = Fs.fstatSync(src);
-		var dst = Fs.openSync(dstPath, WriteCreate, stat.mode);
+		var src = js.node.Fs.openSync(srcPath, Read);
+		var stat = js.node.Fs.fstatSync(src);
+		var dst = js.node.Fs.openSync(dstPath, WriteCreate, stat.mode);
 		var bytesRead, pos = 0;
-		while ((bytesRead = Fs.readSync(src, copyBuf, 0, copyBufLen, pos)) > 0) {
-			Fs.writeSync(dst, copyBuf, 0, bytesRead);
+		while ((bytesRead = js.node.Fs.readSync(src, copyBuf, 0, copyBufLen, pos)) > 0) {
+			js.node.Fs.writeSync(dst, copyBuf, 0, bytesRead);
 			pos += bytesRead;
 		}
-		Fs.closeSync(src);
-		Fs.closeSync(dst);
+		js.node.Fs.closeSync(src);
+		js.node.Fs.closeSync(dst);
 	}
 }
