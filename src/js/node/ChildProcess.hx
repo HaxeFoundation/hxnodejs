@@ -49,6 +49,15 @@ private typedef ChildProcessCommonOptions = {
 		Sets the group identity of the process. See setgid(2).
 	**/
 	@:optional var gid:Int;
+
+	/**
+		Shell to execute the command with.
+		Default: '/bin/sh' on UNIX, 'cmd.exe' on Windows.
+
+		The shell should understand the -c switch on UNIX or /s /c on Windows.
+		On Windows, command line parsing should be compatible with cmd.exe.
+	**/
+	@:optional var shell:EitherType<Bool, String>;
 }
 
 
@@ -214,15 +223,6 @@ private typedef ChildProcessExecOptionsBase = {
 **/
 typedef ChildProcessExecOptions = {
 	>ChildProcessExecOptionsBase,
-
-	/**
-		Shell to execute the command with.
-		Default: '/bin/sh' on UNIX, 'cmd.exe' on Windows.
-
-		The shell should understand the -c switch on UNIX or /s /c on Windows.
-		On Windows, command line parsing should be compatible with cmd.exe.
-	**/
-	@:optional var shell:String;
 }
 
 /**
