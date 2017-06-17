@@ -1,3 +1,2 @@
--D nodejs
 --macro allowPackage('sys')
---macro _hxnodejs.VersionWarning.include()
+--macro _hxnodejs.InitMacro.include()
