@@ -20,7 +20,7 @@ class FileSystem {
 	}
 
 	public static inline function fullPath( relPath : String ) : String {
-		return Fs.realpathSync(relPath);
+		return try Fs.realpathSync(relPath) catch( e : Dynamic ) null;
 	}
 
 	public static inline function absolutePath( relPath : String ) : String {
@@ -28,7 +28,7 @@ class FileSystem {
 	}
 
 	public static inline function isDirectory( path : String ) : Bool {
-		return Fs.statSync(path).isDirectory();
+		return try Fs.statSync(path).isDirectory() catch( e : Dynamic ) false;
 	}
 
 	public static function createDirectory( path : String ) : Void {
