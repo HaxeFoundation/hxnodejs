@@ -1,6 +1,7 @@
 language: haxe
 
 sudo: false
+dist: trusty
 
 env:
   global:
