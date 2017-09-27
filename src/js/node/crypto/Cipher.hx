@@ -55,8 +55,8 @@ extern class Cipher extends js.node.stream.Transform<Cipher> {
 
 		Note: cipher object can not be used after `final` method has been called.
 	**/
-	@:overload(function():Buffer {})
-	function final(output_encoding:String):String;
+	@:native("final") @:overload(function():Buffer {})
+	function finalContents(output_encoding:String):String;
 
 	/**
 		You can disable automatic padding of the input data to block size.
