@@ -53,8 +53,8 @@ extern class Decipher extends js.node.stream.Transform<Decipher> {
 
 		Note: decipher object can not be used after `final` method has been called.
 	**/
-	@:overload(function():Buffer {})
-	function final(output_encoding:String):String;
+	@:native("final") @:overload(function():Buffer {})
+	function finalContents(output_encoding:String):String;
 
 	/**
 		You can disable auto padding if the data has been encrypted without standard block padding
