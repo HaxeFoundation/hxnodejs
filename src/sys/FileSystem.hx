@@ -27,7 +27,7 @@ class FileSystem {
 		return js.node.Path.resolve(relPath);
 	}
 
-	public static inline function isDirectory( path : String ) : Bool {
+	public static function isDirectory( path : String ) : Bool {
 		return try Fs.statSync(path).isDirectory() catch( e : Dynamic ) false;
 	}
 
