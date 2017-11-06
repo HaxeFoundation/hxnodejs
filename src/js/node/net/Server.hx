@@ -79,6 +79,7 @@ typedef ServerListenOptionsUnix = {
 /**
 	This class is used to create a TCP or local server.
 **/
+@:jsRequire("net", "Server")
 extern class Server extends EventEmitter<Server> {
 	/**
 		Begin accepting connections on the specified `port` and `hostname`.
