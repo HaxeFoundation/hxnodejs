@@ -1,9 +1,10 @@
 package sys.net;
 
 @:coreApi
+@:allow(sys.net.Socket)
 class Host {
-
-	public var host(default,null) : String;
+	#if (haxe_ver >= 4) public #end var host(default,null) : String;
+	
 	public var ip(default, null) : Int;
 	var ipStr : String;
 
