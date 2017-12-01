@@ -3,11 +3,6 @@ language: haxe
 sudo: false
 dist: trusty
 
-env:
-  global:
-    - GH_REF: github.com/HaxeFoundation/hxnodejs.git
-    - secure: Y/G07GhNVPykjFvobBRJnHSCIskWNW2D9GDjZAp5SSr7/6m9ZgwUZeFDa8dsK1GztSGanPJOnrbXIbsItt5do0bVUqp08m79rqUtpjneUJbQmRdzjanGKQT3oiIjdmJ/mVcj1FuwDN9uCq6aHlfOxKP/NTpJ8TlBP3orNs4U6d0=
-
 haxe:
   - "3.2.1"
   - "3.4.4"
