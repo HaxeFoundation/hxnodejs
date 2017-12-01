@@ -19,4 +19,12 @@ install:
 script:
   - haxe build.hxml
   - haxelib git dox https://github.com/HaxeFoundation/dox
-  - bash doc-deploy.sh
+  - haxe doc.hxml
+
+deploy:
+  provider: script
+  script: haxe deploy.hxml
+  on:
+    branch: master
+    haxe: development
+  skip_cleanup: true
