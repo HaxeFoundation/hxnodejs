@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"><!-- use theme color or fallback -->
+<!--use textcolor from settings, otherwise create a contrasting color to theme color-->
+<head><meta charset="utf-8"/><link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/><link href="../../bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"/><link href="../../bootstrap/css/bootstrap-select.min.css" rel="stylesheet"/><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,700italic,400italic" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600,600italic,400" rel="stylesheet" type="text/css"/><link href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet" type="text/css"/><script src="../../jquery-1.9.1.min.js"></script><script src="../../bootstrap/js/bootstrap.min.js"></script><script src="../../bootstrap/js/bootstrap-select.min.js"></script><link href="../../styles.css" rel="stylesheet"/><link href="../../extra-styles.css" rel="stylesheet"/><link href="../../haxe-nav.css" rel="stylesheet"/><script type="text/javascript">var dox = {rootPath: "../../",platforms: ["js"]};</script><script type="text/javascript" src="../../nav.js"></script><script type="text/javascript" src="../../index.js"></script><link rel="icon" href="../../favicon.ico" type="image/x-icon"></link><title>js.node.ChildProcessSpawnOptionsStdio - HXNODEJS - API documentation</title><meta name="description" content="The &lt;code&gt;stdio&lt;/code&gt; option is an array where each index corresponds to a fd in the child.
+The value is one of the following:"/></head><body><style>
+.navbar .brand {
+	display: inline-block;
+	float: none;
+	text-shadow: 0 0 0 transparent;
+</style><nav class="nav"><div class="navbar"><div class="navbar-inner" style="background:#EEEEEE; border-bottom:1px solid rgba(0,0,0,.09)"><div class="container"><a class="brand" href="../../"><img alt="" src="http://take.ms/dlXH9"/></a><a class="brand" style="color:#555555" href="../../">HXNODEJS - API documentation</a></div></div></div></nav><div class="container main-content"><div class="row-fluid"><div class="span3"><div class="well sidebar-nav"><form class="form-search" id="searchForm"><div class="input-prepend input-block-level"><span class="add-on"><i class="icon-search"></i></span><input id="search" type="text" placeholder="Filter" autocomplete="off"/></div></form></div><div class="well sidebar-nav"><div id="nav"></div></div></div><div class="span9"><div class="page-header"><span class="viewsource"><a href="https://github.com/HaxeFoundation/hxnodejs/blob/master/src/js/node/ChildProcess.hx" class="btn btn-medium"><i class="fa fa-eye"></i> View source</a></span><h1><small>typedef</small> ChildProcessSpawnOptionsStdio</h1><h4><small>package <a href="../../js/node/index.html">js.node</a></small></h4><h4><small>alias for <a class="type" title="An abstract type allowing values to be either of T1 or T2 type." href="../../haxe/extern/EitherType.html">EitherType</a>&lt;<a class="type" title="" href="../../js/node/ChildProcessSpawnOptionsStdioSimple.html">ChildProcessSpawnOptionsStdioSimple</a>, <a class="type" title="" href="../../js/node/ChildProcessSpawnOptionsStdioFull.html">ChildProcessSpawnOptionsStdioFull</a>&gt;</small></h4><p><h4><small>import <a href="../../js/node/ChildProcess.html">js.node.ChildProcess</a></small></h4></p></div><div class="body"><div class="doc doc-main"><div class="indent"><p>The <code>stdio</code> option is an array where each index corresponds to a fd in the child.
+The value is one of the following:</p>
+<pre><code>* 'pipe' - Create a pipe between the child process and the parent process.
+	       The parent end of the pipe is exposed to the parent as a property on the child_process object as ChildProcess.stdio[fd].
+	       Pipes created for fds 0 - 2 are also available as ChildProcess.stdin, ChildProcess.stdout and ChildProcess.stderr, respectively.
+
+* 'ipc' - Create an IPC channel for passing messages/file descriptors between parent and child.
+	      A ChildProcess may have at most one IPC stdio file descriptor. Setting this option enables the ChildProcess.send() method.
+	      If the child writes JSON messages to this file descriptor, then this will trigger ChildProcess.on('message').
+	      If the child is a Node.js program, then the presence of an IPC channel will enable process.send() and process.on('message').
+
+* 'ignore' - Do not set this file descriptor in the child. Note that Node will always open fd 0 - 2 for the processes it spawns.
+             When any of these is ignored node will open /dev/null and attach it to the child's fd.
+
+* Stream object - Share a readable or writable stream that refers to a tty, file, socket, or a pipe with the child process.
+                  The stream's underlying file descriptor is duplicated in the child process to the fd that corresponds to the index
+                  in the stdio array. Note that the stream must have an underlying descriptor (file streams do not until the 'open'
+                  event has occurred).
+
+* Positive integer - The integer value is interpreted as a file descriptor that is is currently open in the parent process.
+                     It is shared with the child process, similar to how Stream objects can be shared.
+
+* null - Use default value. For stdio fds 0, 1 and 2 (in other words, stdin, stdout, and stderr) a pipe is created.
+         For fd 3 and up, the default is 'ignore'.
+
+ As a shorthand, the stdio argument may also be one of the following strings, rather than an array:
+ignore - ['ignore', 'ignore', 'ignore']
+pipe - ['pipe', 'pipe', 'pipe']
+inherit - [process.stdin, process.stdout, process.stderr] or [0,1,2]
+</code></pre></div></div></div></div></div></div><footer class="section site-footer" style="background:#EEEEEE"><div class="container"><div class="copyright"><p style="color:#555555">&copy; 2017 &nbsp;</p></div></div></footer><script src="../..//highlighter.js"></script><link href="../../highlighter.css" rel="stylesheet"/></body></html>
