@@ -29,12 +29,12 @@ class SocketInput extends haxe.io.Input {
 			if( buf == null ) break;
 			var avail = buf.length - s.inputPos;
 			if( avail > len ) {
-				buf.copy(nbuf, pos, s.inputPos, len);
+				buf.copy(nbuf, pos, s.inputPos, s.inputPos + len);
 				pos += len;
 				s.inputPos += len;
 				break;
 			}
-			buf.copy(nbuf, pos, s.inputPos, avail);
+			buf.copy(nbuf, pos, s.inputPos, s.inputPos + avail);
 			pos += avail;
 			len -= avail;
 			s.inputData.shift();
