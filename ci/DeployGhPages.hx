@@ -6,6 +6,16 @@ using StringTools;
 class DeployGhPages {
     static function main():Void {
         var root = getCwd();
+
+        if (remote == null) {
+            println('GHP_REMOTE is not set, skip deploy.');
+            return;
+        }
+
+        // TravisCI by default clones repositories to a depth of 50 commits.
+        // We need a full clone inorder to do git operations.
+        runCommand("git", ["fetch", "--unshallow"]);
+
         var sha = commandOutput("git", ["rev-parse", "HEAD"]).trim();
 
         setCwd(htmlDir);
@@ -28,10 +38,6 @@ class DeployGhPages {
         runCommand("git", ["commit", "--allow-empty", "--quiet", "-m", 'deploy for ${sha}']);
         runCommand("git", ["push", "local", branch]);
 
-        if (remote == null) {
-            println('GHP_REMOTE is not set, skip deploy.');
-            return;
-        }
         setCwd(root);
         runCommand("git", ["push", remote, branch]);
     }
