@@ -1,2 +1,3 @@
 --macro allowPackage('sys')
---macro _hxnodejs.InitMacro.include()
+# should behave like other target defines and not be defined in macro context
+--macro define('nodejs')
