@@ -980,7 +980,6 @@ extern class Fs {
 	/**
 		Synchronous version of `exists`.
 	**/
-	@:deprecated("Use Fs.statSync or Fs.accessSync instead.")
 	static function existsSync(path:FsPath):Bool;
 
 	/**
