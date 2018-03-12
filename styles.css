@@ -101,7 +101,7 @@ footer{
 }
 
 .availability {
-	color: #AB611A;
+	color: #e48931;
 	font-size: 90%;
 }
 
@@ -115,8 +115,27 @@ h3 code {
 	margin-left: -10px;
 }
 
-h3 span.label {	
+h3 span.label, .label-meta {
 	margin-right: 5px; 
+}
+
+.label.label-meta {
+	background:#5959AC;
+}
+
+/* hide useless meta */
+.label-meta-impl, .label-meta-value, .label-meta-has_untyped, .label-meta-hlNative, .label-meta-access, .label-meta-allow, .label-meta-keep, .label-meta-dox, .label-meta-noCompletion {
+	display:none;
+}
+
+.label-meta.label-meta-from, .label-meta.label-meta-to {
+	background:#a93685;
+}
+
+.alert.alert-deprecated {
+	font-size: 90%;
+	margin-bottom: 10px;
+	padding: 4px 35px 4px 14px;
 }
 
 code {
