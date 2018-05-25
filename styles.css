@@ -123,8 +123,8 @@ h3 span.label, .label-meta {
 	background:#5959AC;
 }
 
-/* hide useless meta */
-.label-meta-impl, .label-meta-value, .label-meta-has_untyped, .label-meta-hlNative, .label-meta-access, .label-meta-allow, .label-meta-keep, .label-meta-dox, .label-meta-noCompletion {
+/* hide meta that has doesn't belong in the API (implementation details) */
+.label-meta-impl, .label-meta-value, .label-meta-has_untyped, .label-meta-hlNative, .label-meta-access, .label-meta-allow, .label-meta-keep, .label-meta-keepInit, .label-meta-keepSub, .label-meta-dox, .label-meta-noCompletion, .label-meta-directlyUsed, .label-meta-build, .label-meta-autoBuild, .label-meta-genericBuild, .label-meta-analyzer, .label-meta-enum, .label-meta-extern {
 	display:none;
 }
 

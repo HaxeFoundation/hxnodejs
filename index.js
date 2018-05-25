@@ -231,3 +231,21 @@ function searchMatch(text, queryParts) {
 	}
 	return scoreSum;
 }
+
+function errorSearch() {
+	var errorURL = "";
+	if(!!window.location.pathname) {
+		errorURL = window.location.pathname;
+	}else if(!!window.location.href) {
+		errorURL = window.location.href;
+	}
+	if(!!errorURL) {
+		var searchTerm = errorURL.split("/").pop();
+		if(searchTerm.indexOf(".html") > -1) { searchTerm = searchTerm.split(".html").join(""); }
+		if(!!searchTerm) {
+			// update filter with search term
+			$("#search").val(searchTerm);
+			searchQuery(searchTerm);
+		}
+	}
+}
