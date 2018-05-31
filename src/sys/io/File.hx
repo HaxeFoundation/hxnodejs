@@ -6,6 +6,10 @@ import js.node.Fs;
 // @:coreApi
 class File {
 
+	public static inline function write( path : String, binary : Bool = true ) : FileOutput {
+		return new FileOutput(Fs.openSync(path, WriteCreate));
+	}
+
 	public static inline function read( path : String, binary : Bool = true ) : FileInput {
 		return new FileInput(Fs.openSync(path, Read));
 	}
