@@ -53,7 +53,17 @@ class FileSystem {
 	}
 
 	public static inline function deleteDirectory( path : String ) : Void {
-		Fs.rmdirSync(path);
+		if (exists(path)) {
+			for (file in readDirectory(path)) {
+				var curPath = path + "/" + file;
+				if (isDirectory(curPath)) { 
+					deleteDirectory(curPath);
+				} else { 
+					deleteFile(curPath);
+				}
+			}
+			js.node.Fs.rmdirSync(path);
+		}
 	}
 
 	public static inline function readDirectory( path : String ) : Array<String> {
