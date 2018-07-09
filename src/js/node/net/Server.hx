@@ -141,6 +141,11 @@ extern class Server extends EventEmitter<Server> {
 	function ref():Void;
 
 	/**
+		A boolean indicating whether or not the server is listening for connections.
+	**/
+	var listening(default,null):Bool;
+
+	/**
 		Set this property to reject connections when the server's connection count gets high.
 		It is not recommended to use this option once a socket has been sent to a child with child_process.fork().
 	**/
