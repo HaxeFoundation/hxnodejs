@@ -127,7 +127,7 @@ private class FileOutput extends haxe.io.Output {
         return Fs.writeSync(fd, Buffer.hxFromBytes(s), pos, len);
     }
 
-    override public function writeString(s:String) {
+    override public function writeString(s:String #if (haxe_ver >= 4), ?encoding:haxe.io.Encoding #end) {
         Fs.writeSync(fd, s);
     }
 
