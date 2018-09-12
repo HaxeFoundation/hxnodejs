@@ -39,8 +39,8 @@ extern class Hmac extends js.node.stream.Transform<Hmac> {
 
 		This can be called many times with new data as it is streamed.
 	**/
-	@:overload(function(data:Buffer):Void {})
-	function update(data:String, ?input_encoding:String):Void;
+	@:overload(function(data:Buffer):Hmac {})
+	function update(data:String, ?input_encoding:String):Hmac;
 
 	/**
 		Calculates the digest of all of the passed data to the hmac.
