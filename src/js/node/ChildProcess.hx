@@ -273,14 +273,19 @@ extern class ChildProcessExecError extends js.Error {
 }
 
 /**
-	A callback type for the `ChildProcess.exec`.
-	It received three arguments: error, stdout, stderr.
+	A callback type for `ChildProcess.exec`.
+	It receives three arguments: `error`, `stdout`, `stderr`.
 
-	On success, error will be null. On error, error will be an instance of `Error`
+	On success, error will be `null`. On error, `error` will be an instance of `Error`
 	and `error.code` will be the exit code of the child process, and `error.signal` will be set
 	to the signal that terminated the process (see `ChildProcessExecError`).
 **/
-typedef ChildProcessExecCallback = Null<ChildProcessExecError> -> EitherType<Buffer,String> -> EitherType<Buffer,String> -> Void;
+typedef ChildProcessExecCallback =
+	#if (haxe_ver >= 4)
+	(error:Null<ChildProcessExecError>, stdout:EitherType<Buffer,String>, stderr:EitherType<Buffer,String>) -> Void;
+	#else
+	Null<ChildProcessExecError> -> EitherType<Buffer,String> -> EitherType<Buffer,String> -> Void;
+	#end
 
 
 /**

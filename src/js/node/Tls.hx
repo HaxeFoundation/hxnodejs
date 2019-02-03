@@ -60,7 +60,7 @@ typedef TlsServerOptionsBase = {
 		(You can use tls.createSecureContext(...) to get proper `SecureContext`).
 		If `SNICallback` wasn't provided - default callback with high-level API will be used.
 	**/
-	@:optional var SNICallback:String->(js.Error->SecureContext)->Void;
+	@:optional var SNICallback:#if (haxe_ver >= 4) (servername:String, cb:(js.Error->SecureContext))->Void #else String->(js.Error->SecureContext)->Void #end;
 }
 
 typedef TlsClientOptionsBase = {
