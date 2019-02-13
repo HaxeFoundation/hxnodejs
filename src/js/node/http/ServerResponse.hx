@@ -25,6 +25,7 @@ import haxe.DynamicAccess;
 
 import js.node.events.EventEmitter.Event;
 import js.node.stream.Writable;
+import js.node.net.Socket;
 
 /**
 	Enumeration of events emitted by the `ServerResponse` objects in addition to its parent class events.
@@ -85,6 +86,25 @@ extern class ServerResponse extends Writable<ServerResponse> {
 	function setTimeout(msecs:Int, ?callback:Void->Void):Void;
 
 	/**
+		Reference to the underlying socket.
+		Usually users will not want to access this property. In particular, the socket will not emit 'readable' events
+		because of how the protocol parser attaches to the socket. After `response.end()`, the property is nulled.
+		The socket may also be accessed via `response.connection`.
+	**/
+	var socket:Socket;
+
+	/**
+		See `socket`.
+	**/
+	var connection:Socket;
+
+	/**
+		Boolean value that indicates whether the response has completed.
+		Starts as `false`. After `response.end()` executes, the value will be `true`.
+	**/
+	var finished:Bool;
+
+	/**
 		When using implicit headers (not calling `writeHead` explicitly), this property controls the status code
 		that will be sent to the client when the headers get flushed.
 	**/
@@ -133,6 +153,6 @@ extern class ServerResponse extends Writable<ServerResponse> {
 		Note that HTTP requires the 'Trailer' header to be sent if you intend to emit trailers,
 		with a list of the header fields in its value.
 	**/
-    @:overload(function(headers:Array<Array<String>>):Void {})
-    function addTrailers(headers:DynamicAccess<String>):Void;
+	@:overload(function(headers:Array<Array<String>>):Void {})
+	function addTrailers(headers:DynamicAccess<String>):Void;
 }
