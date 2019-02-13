@@ -250,8 +250,20 @@ extern enum DnsErrorCode {
 	CANCELLED;
 }
 
-typedef DnsLookupCallbackSingle = DnsError->String->DnsAddressFamily->Void;
-typedef DnsLookupCallbackAll = DnsError->Array<DnsLookupCallbackAllEntry>->Void;
+typedef DnsLookupCallbackSingle =
+	#if (haxe_ver >= 4)
+	(err:DnsError, address:String, family:DnsAddressFamily) -> Void;
+	#else
+	DnsError->String->DnsAddressFamily->Void
+	#end
+
+typedef DnsLookupCallbackAll =
+	#if (haxe_ver >= 4)
+	(err:DnsError, addresses:Array<DnsLookupCallbackAllEntry>) -> Void;
+	#else
+	DnsError->Array<DnsLookupCallbackAllEntry>->Void;
+	#end
+
 typedef DnsLookupCallbackAllEntry = {address:String, family:DnsAddressFamily};
 
 /**

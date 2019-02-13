@@ -70,7 +70,12 @@ typedef ReadlineOptions = {
 	@:optional var prompt:String;
 }
 
-typedef ReadlineCompleterCallback = String->Array<EitherType<Array<String>,String>>;
+typedef ReadlineCompleterCallback =
+	#if (haxe_ver >= 4)
+	(line:String) -> Array<EitherType<Array<String>,String>>;
+	#else
+	String->Array<EitherType<Array<String>,String>>;
+	#end
 
 /**
 	Enumeration of possible directions for `Readline.clearLine`
