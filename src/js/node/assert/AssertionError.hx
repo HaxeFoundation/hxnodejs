@@ -24,7 +24,9 @@ package js.node.assert;
 typedef AssertionErrorOptions = {
 	@:optional var actual:Dynamic;
 	@:optional var expected:Dynamic;
+	#if (haxe_ver < 4)
 	@:optional var operator:String;
+	#end
 	@:optional var message:String;
 	@:optional var stackStartFunction:Dynamic;
 }
@@ -33,7 +35,7 @@ typedef AssertionErrorOptions = {
 extern class AssertionError extends js.Error {
 	var actual:Dynamic;
 	var expected:Dynamic;
-	var operator:String;
+	@:native("operator") var operator_:String;
 	var generatedMessage:Bool;
 	function new(options:AssertionErrorOptions);
 }
