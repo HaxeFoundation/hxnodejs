@@ -21,6 +21,14 @@
  */
 package js.node.buffer;
 
+#if haxe4
+import js.lib.ArrayBuffer;
+import js.lib.Uint8Array;
+#else
+import js.html.ArrayBuffer;
+import js.html.Uint8Array;
+#end
+
 /**
 	The Buffer class is a global type for dealing with binary data directly. It can be constructed in a variety of ways.
 
@@ -28,7 +36,7 @@ package js.node.buffer;
 	so the legal range is between 0x00 and 0xFF hex or 0 and 255.
 **/
 @:jsRequire("buffer", "Buffer")
-extern class Buffer extends js.html.Uint8Array {
+extern class Buffer extends Uint8Array {
 
 	/**
 		How many bytes will be returned when `buffer.inspect()` is called.
@@ -107,7 +115,7 @@ extern class Buffer extends js.html.Uint8Array {
 	**/
 	@:overload(function(string:String, ?encoding:String):Void {})
 	@:overload(function(buffer:Buffer):Void {})
-	@:overload(function(arrayBuffer:js.html.ArrayBuffer, ?byteOffset:Int, ?length:Int):Void {})
+	@:overload(function(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Void {})
 	@:overload(function(array:Array<Int>):Void {})
 	function new(size:Int):Void;
 
@@ -142,7 +150,7 @@ extern class Buffer extends js.html.Uint8Array {
 
 	@:overload(function(buffer:Buffer):Buffer {})
 	@:overload(function(str:String, ?encoding:String):Buffer {})
-	static function from(arrayBuffer:js.html.ArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer;
+	static function from(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer;
 
 	/**
 		Returns a JSON-representation of the `Buffer` instance.
