@@ -6,6 +6,6 @@
     "version": "6.9.0",
     "releasenote": "Update externs to node.js 6.9 LTS",
     "classPath": "src",
-    "contributors": ["nadako"],
+    "contributors": ["nadako", "Simn", "Gama11"],
     "tags": ["js", "nodejs", "async", "net", "web", "extern"]
 }
