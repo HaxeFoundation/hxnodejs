@@ -3,8 +3,8 @@
     "url": "https://github.com/HaxeFoundation/hxnodejs",
     "description": "Extern definitions for node.js",
     "license": "MIT",
-    "version": "6.9.0",
-    "releasenote": "Update externs to node.js 6.9 LTS",
+    "version": "6.9.1",
+    "releasenote": "Fixed deprecation warnings with Haxe 4.0.0-rc.2",
     "classPath": "src",
     "contributors": ["nadako", "Simn", "Gama11"],
     "tags": ["js", "nodejs", "async", "net", "web", "extern"]
