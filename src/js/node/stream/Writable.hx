@@ -25,6 +25,11 @@ import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
 import js.node.Stream;
 import js.node.stream.Readable.IReadable;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	Enumeration for `Writable` class events.
@@ -63,7 +68,7 @@ import js.node.stream.Readable.IReadable;
 	/**
 		Emitted if there was an error when writing or piping data.
 	**/
-	var Error : WritableEvent<js.Error->Void> = "error";
+	var Error : WritableEvent<Error->Void> = "error";
 }
 
 /**
@@ -131,8 +136,8 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 	// --------- API for stream implementors - see node.js API documentation ---------
 	private function new(?options:WritableNewOptions);
-	@:overload(function(chunk:String, encoding:String, callback:js.Error->Void):Void {})
-	private function _write(chunk:Buffer, encoding:String, callback:js.Error->Void):Void;
+	@:overload(function(chunk:String, encoding:String, callback:Error->Void):Void {})
+	private function _write(chunk:Buffer, encoding:String, callback:Error->Void):Void;
 }
 
 /**

@@ -22,6 +22,11 @@
 package js.node;
 
 import haxe.extern.EitherType;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	Enumeration of possible Int `options` values for `Dns.lookup`.

@@ -24,6 +24,11 @@ package js.node.http;
 import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
 import js.node.net.Socket;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	Enumeration of events emitted by `http.Server` class in addition to
@@ -96,7 +101,7 @@ import js.node.net.Socket;
 	/**
 		If a client connection emits an 'error' event - it will forwarded here.
 	**/
-	var ClientError : ServerEvent<js.Error->Socket->Void> = "clientError";
+	var ClientError : ServerEvent<Error->Socket->Void> = "clientError";
 }
 
 /**

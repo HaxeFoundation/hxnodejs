@@ -1,5 +1,10 @@
 import js.node.Buffer;
 import js.node.stream.Transform;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 @:keep
 class SimpleProtocol extends Transform<SimpleProtocol> {
@@ -37,7 +42,7 @@ class SimpleProtocol extends Transform<SimpleProtocol> {
 				try {
 					this.header = haxe.Json.parse(header);
 				} catch (_:Dynamic) {
-					this.emit('error', new js.Error('invalid simple protocol data'));
+					this.emit('error', new Error('invalid simple protocol data'));
 					return;
 				}
 				// and let them know that we are done parsing the header.

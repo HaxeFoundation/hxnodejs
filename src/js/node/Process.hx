@@ -29,6 +29,11 @@ import js.node.events.EventEmitter;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
 import js.node.child_process.ChildProcess.ChildProcessSendOptions;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 
 /**
@@ -64,7 +69,7 @@ import js.node.child_process.ChildProcess.ChildProcessSendOptions;
 		If a listener is added for this exception, the default action (which is to print a stack trace and exit)
 		will not occur.
 	**/
-	var UncaughtException : ProcessEvent<js.Error->Void> = "uncaughtException";
+	var UncaughtException : ProcessEvent<Error->Void> = "uncaughtException";
 }
 
 
@@ -314,9 +319,9 @@ extern class Process extends EventEmitter<Process> {
 
 		Only available for child processes. See `ChildProcess.send`.
 	**/
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, options:ChildProcessSendOptions, ?callback:js.Error->Void):Bool {})
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:js.Error->Void):Bool {})
-	function send(message:Dynamic, ?callback:js.Error->Void):Bool;
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, options:ChildProcessSendOptions, ?callback:Error->Void):Bool {})
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:Error->Void):Bool {})
+	function send(message:Dynamic, ?callback:Error->Void):Bool;
 
 	/**
 		Close the IPC channel to parent process.

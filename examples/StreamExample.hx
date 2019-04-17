@@ -1,5 +1,11 @@
 import js.node.Http;
 
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
+
 /**
     An example from the stream page
 **/
@@ -23,7 +29,7 @@ class StreamExample {
             req.on('end', function () {
                 var data = try {
                     haxe.Json.parse(body);
-                } catch (er:js.Error) {
+                } catch (er:Error) {
                     // uh oh!  bad json!
                     res.statusCode = 400;
                     return res.end('error: ' + er.message);

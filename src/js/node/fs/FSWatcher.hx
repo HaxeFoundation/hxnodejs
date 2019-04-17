@@ -23,6 +23,11 @@ package js.node.fs;
 
 import js.node.events.EventEmitter;
 import js.node.Fs.FsPath;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	Enumeration of possible types of changes for 'change' event.
@@ -48,7 +53,7 @@ import js.node.Fs.FsPath;
 	/**
 		Emitted when an error occurs.
 	**/
-	var Error : FSWatcherEvent<js.Error->Void> = "error";
+	var Error : FSWatcherEvent<Error->Void> = "error";
 }
 
 /**

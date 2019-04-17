@@ -22,6 +22,11 @@
 package js.node;
 
 import haxe.extern.EitherType;
+#if haxe4
+import js.lib.RegExp;
+#else
+import js.RegExp;
+#end
 
 /**
 	This module is used for writing unit tests for your applications
@@ -157,4 +162,4 @@ extern class Assert {
 /**
 	a class, RegExp or function.
 **/
-private typedef ThrowsExpectedError = EitherType<Class<Dynamic>, EitherType<js.RegExp, Dynamic->Bool>>;
+private typedef ThrowsExpectedError = EitherType<Class<Dynamic>, EitherType<RegExp, Dynamic->Bool>>;

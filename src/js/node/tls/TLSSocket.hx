@@ -26,7 +26,11 @@ import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
 import js.node.Tls.TlsServerOptionsBase;
 import js.node.Tls.TlsClientOptionsBase;
-
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	Enumeration of events emitted by `TLSSocket` objects in addition to its parent class events.
@@ -132,7 +136,7 @@ extern class TLSSocket extends js.node.net.Socket {
 		NOTE: Can be used to request peer's certificate after the secure connection has been established.
 		ANOTHER NOTE: When running as the server, socket will be destroyed with an error after handshakeTimeout timeout.
 	**/
-	function renegotiate(options:{?rejectUnauthorized:Bool, ?requestCert:Bool}, ?callback:js.Error->Void):Bool;
+	function renegotiate(options:{?rejectUnauthorized:Bool, ?requestCert:Bool}, ?callback:Error->Void):Bool;
 
 	/**
 		Set maximum TLS fragment size (default and maximum value is: 16384, minimum is: 512).

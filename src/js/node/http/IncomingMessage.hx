@@ -24,6 +24,11 @@ package js.node.http;
 import haxe.DynamicAccess;
 import js.node.stream.Readable;
 import js.node.net.Socket;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	An `IncomingMessage` object is created by `Server` or `ClientRequest`
@@ -75,7 +80,7 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 		If `error` is provided, an 'error' event is emitted and
 		`error` is passed as an argument to any listeners on the event.
 	**/
-	function destroy(?error:js.Error):Void;
+	function destroy(?error:Error):Void;
 
 	/**
 		Calls `setTimeout` on the `socket` object.

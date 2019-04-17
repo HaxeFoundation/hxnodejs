@@ -1,5 +1,10 @@
 import js.node.Buffer;
 import js.node.stream.Readable;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 // A parser for a simple data protocol.
 // The "header" is a JSON object, followed by 2 \n characters, and
@@ -65,7 +70,7 @@ class SimpleProtocol extends Readable<SimpleProtocol> {
 				var header = try {
 						haxe.Json.parse(Buffer.concat(_rawHeader).toString());
 					} catch (_:Dynamic) {
-						emit('error', new js.Error('invalid simple protocol data'));
+						emit('error', new Error('invalid simple protocol data'));
 						return;
 					}
 				// now, because we got some extra data, unshift the rest

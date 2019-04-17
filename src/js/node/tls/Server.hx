@@ -25,6 +25,11 @@ import js.node.Buffer;
 import js.node.tls.TLSSocket;
 import js.node.tls.SecureContext.SecureContextOptions;
 import js.node.events.EventEmitter.Event;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	Enumeration of events emitted by `Server` in addition to its parent classes.
@@ -43,7 +48,7 @@ import js.node.events.EventEmitter.Event;
 			exception - error object
 			securePair - the `TLSSocket` that the error originated from
 	**/
-	var ClientError : ServerEvent<js.Error->TLSSocket->Void> = "clientError";
+	var ClientError : ServerEvent<Error->TLSSocket->Void> = "clientError";
 
 	/**
 		Emitted on creation of TLS session.
@@ -72,7 +77,7 @@ import js.node.events.EventEmitter.Event;
 			sessionId
 			callback
 	**/
-	var ResumeSession : ServerEvent<Buffer->(js.Error->?Buffer->Void)->Void>= "resumeSession";
+	var ResumeSession : ServerEvent<Buffer->(Error->?Buffer->Void)->Void>= "resumeSession";
 
 	/**
 		Emitted when the client sends a certificate status request.
@@ -85,7 +90,7 @@ import js.node.events.EventEmitter.Event;
 
 		Calling `callback(err)` will result in a `socket.destroy(err)` call.
 	**/
-	var OCSPRequest : ServerEvent<Buffer->Buffer->(js.Error->?Buffer->Void)->Void> = "OCSPRequest";
+	var OCSPRequest : ServerEvent<Buffer->Buffer->(Error->?Buffer->Void)->Void> = "OCSPRequest";
 }
 
 /**

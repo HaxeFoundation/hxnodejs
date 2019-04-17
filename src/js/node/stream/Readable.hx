@@ -26,6 +26,11 @@ import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
 import js.node.Stream;
 import js.node.stream.Writable.IWritable;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	Enumeration of events emitted by the `Readable` class.
@@ -67,7 +72,7 @@ import js.node.stream.Writable.IWritable;
 	/**
 		Emitted if there was an error receiving data.
 	**/
-	var Error : ReadableEvent<js.Error->Void> = "error";
+	var Error : ReadableEvent<Error->Void> = "error";
 }
 
 /**
