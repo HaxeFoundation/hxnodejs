@@ -25,6 +25,11 @@ import js.node.child_process.ChildProcess;
 import js.node.Cluster.ListeningEventAddress;
 import js.node.events.EventEmitter;
 import js.node.events.EventEmitter.Event;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 @:enum abstract WorkerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	var Message : WorkerEvent<Dynamic->Dynamic->Void> = "message";
@@ -37,7 +42,7 @@ import js.node.events.EventEmitter.Event;
 
 	var Exit : WorkerEvent<Int->String->Void> = "exit";
 
-	var Error : WorkerEvent<js.Error->Void> = "error";
+	var Error : WorkerEvent<Error->Void> = "error";
 }
 
 
@@ -87,8 +92,8 @@ extern class Worker extends EventEmitter<Worker> {
 
 		In a worker you can also use `process.send`, it is the same function.
 	**/
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:js.Error->Void):Bool {})
-	function send(message:Dynamic, ?callback:js.Error->Void):Bool;
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:Error->Void):Bool {})
+	function send(message:Dynamic, ?callback:Error->Void):Bool;
 
 	/**
 		This function will kill the worker. In the master, it does this by disconnecting the `worker.process`,

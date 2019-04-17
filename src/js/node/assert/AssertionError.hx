@@ -21,6 +21,12 @@
  */
 package js.node.assert;
 
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
+
 typedef AssertionErrorOptions = {
 	@:optional var actual:Dynamic;
 	@:optional var expected:Dynamic;
@@ -32,7 +38,7 @@ typedef AssertionErrorOptions = {
 }
 
 @:jsRequire("assert", "AssertionError")
-extern class AssertionError extends js.Error {
+extern class AssertionError extends Error {
 	var actual:Dynamic;
 	var expected:Dynamic;
 	@:native("operator") var operator_:String;

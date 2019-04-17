@@ -2,6 +2,11 @@ package sys;
 
 import js.node.Fs;
 import js.node.Path;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 @:dce
 @:coreApi
@@ -41,9 +46,9 @@ class FileSystem {
 				Fs.mkdirSync(path);
 			} else {
 				// some other error - check if path is a dir, rethrow the error if not
-				// (the `(e : js.Error)` cast is here to avoid HaxeError wrapping, though we need to investigate this in Haxe itself)
-				var stat = try Fs.statSync(path) catch (_:Dynamic) throw (e : js.Error);
-				if (!stat.isDirectory()) throw (e : js.Error);
+				// (the `(e : Error)` cast is here to avoid HaxeError wrapping, though we need to investigate this in Haxe itself)
+				var stat = try Fs.statSync(path) catch (_:Dynamic) throw (e : Error);
+				if (!stat.isDirectory()) throw (e : Error);
 			}
 		}
 	}
@@ -56,9 +61,9 @@ class FileSystem {
 		if (exists(path)) {
 			for (file in readDirectory(path)) {
 				var curPath = path + "/" + file;
-				if (isDirectory(curPath)) { 
+				if (isDirectory(curPath)) {
 					deleteDirectory(curPath);
-				} else { 
+				} else {
 					deleteFile(curPath);
 				}
 			}

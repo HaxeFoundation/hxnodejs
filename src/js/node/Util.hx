@@ -24,6 +24,11 @@ package js.node;
 import haxe.extern.Rest;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	The util module is primarily designed to support the needs of node.js's internal APIs.
@@ -214,7 +219,7 @@ extern class Util {
 		Deprecated predecessor of stream.pipe().
 	**/
 	@:deprecated("Use `readableStream.pipe(writableStream)` instead")
-	static function pump(readableStream:IReadable, writableStream:IWritable, ?callback:js.Error->Void):Void;
+	static function pump(readableStream:IReadable, writableStream:IWritable, ?callback:Error->Void):Void;
 
 }
 

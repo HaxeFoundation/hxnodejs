@@ -28,6 +28,11 @@ import js.node.tls.TLSSocket;
 import js.node.tls.SecurePair;
 import js.node.tls.SecureContext;
 import js.node.tls.Server;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 typedef TlsOptionsBase = {
 	/**
@@ -60,7 +65,7 @@ typedef TlsServerOptionsBase = {
 		(You can use tls.createSecureContext(...) to get proper `SecureContext`).
 		If `SNICallback` wasn't provided - default callback with high-level API will be used.
 	**/
-	@:optional var SNICallback:#if (haxe_ver >= 4) (servername:String, cb:(js.Error->SecureContext))->Void #else String->(js.Error->SecureContext)->Void #end;
+	@:optional var SNICallback:#if (haxe_ver >= 4) (servername:String, cb:(Error->SecureContext))->Void #else String->(Error->SecureContext)->Void #end;
 }
 
 typedef TlsClientOptionsBase = {

@@ -22,7 +22,11 @@
 package js.node;
 
 import haxe.extern.EitherType;
+#if haxe4
+import js.lib.Error;
+#else
 import js.Error;
+#end
 import js.node.Buffer;
 import js.node.zlib.*;
 

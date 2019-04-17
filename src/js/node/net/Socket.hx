@@ -23,7 +23,11 @@ package js.node.net;
 
 import haxe.extern.EitherType;
 
+#if haxe4
+import js.lib.Error;
+#else
 import js.Error;
+#end
 import js.node.Dns;
 import js.node.events.EventEmitter.Event;
 
@@ -78,7 +82,7 @@ import js.node.events.EventEmitter.Event;
 	/**
 		Emitted when an error occurs. The 'close' event will be called directly following this event.
 	**/
-	var Error : SocketEvent<js.Error->Void> = "error";
+	var Error : SocketEvent<Error->Void> = "error";
 
 	/**
 		Emitted once the socket is fully closed.
@@ -255,7 +259,7 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 		If `exception` is specified, an 'error' event will be emitted and
 		any listeners for that event will receive exception as an argument.
 	**/
-	function destroy(?exception:js.Error):Void;
+	function destroy(?exception:Error):Void;
 
 	/**
 		Sets the socket to timeout after `timeout` milliseconds of inactivity on the socket.

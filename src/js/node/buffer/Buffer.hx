@@ -24,6 +24,7 @@ package js.node.buffer;
 #if haxe4
 import js.lib.ArrayBuffer;
 import js.lib.Uint8Array;
+import js.lib.Object;
 #else
 import js.html.ArrayBuffer;
 import js.html.Uint8Array;

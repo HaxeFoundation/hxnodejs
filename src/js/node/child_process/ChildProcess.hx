@@ -25,6 +25,11 @@ import js.node.events.EventEmitter;
 import js.node.Stream;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	Enumeration of events emitted by `ChildProcess` objects.
@@ -41,7 +46,7 @@ import js.node.stream.Writable;
 
 		See also `ChildProcess.kill` and `ChildProcess.send`.
 	**/
-	var Error : ChildProcessEvent<js.Error->Void> = "error";
+	var Error : ChildProcessEvent<Error->Void> = "error";
 
 	/**
 		This event is emitted after the child process ends.
@@ -187,9 +192,9 @@ extern class ChildProcess extends EventEmitter<ChildProcess> {
 		Returns true under normal circumstances or false when the backlog of unsent messages exceeds a threshold that
 		makes it unwise to send more. Use the callback mechanism to implement flow control.
 	**/
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, options:ChildProcessSendOptions, ?callback:js.Error->Void):Bool {})
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:js.Error->Void):Bool {})
-	function send(message:Dynamic, ?callback:js.Error->Void):Bool;
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, options:ChildProcessSendOptions, ?callback:Error->Void):Bool {})
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:Error->Void):Bool {})
+	function send(message:Dynamic, ?callback:Error->Void):Bool;
 
 	/**
 		Close the IPC channel between parent and child, allowing the child to exit gracefully once there are no other

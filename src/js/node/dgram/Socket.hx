@@ -23,6 +23,11 @@ package js.node.dgram;
 
 import js.node.events.EventEmitter;
 import js.node.net.Socket.SocketAdress;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	Enumeration of events for the `Socket` object.
@@ -51,7 +56,7 @@ import js.node.net.Socket.SocketAdress;
 	/**
 		Emitted when an error occurs.
 	**/
-	var Error : SocketEvent<js.Error->Void>= "error";
+	var Error : SocketEvent<Error->Void>= "error";
 }
 
 typedef MessageListener = Buffer->SocketAdress->Void;
