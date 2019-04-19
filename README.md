@@ -37,7 +37,7 @@ Original node.js documentation can be found at http://nodejs.org/api/index.html.
     }
     ```
 
-3. Compile it with with `haxe -lib hxnodejs -main Main -js main.js` (optionally add `-D js-es=6` for cleaner JavaScript output, since node.js is ES6-compilant)
+3. Compile it with with `haxe -lib hxnodejs -main Main -js main.js` (optionally add `-D js-es=6` for cleaner JavaScript output, since node.js is ES6-compliant)
 4. Look at generated `main.js`:
 
     ```js

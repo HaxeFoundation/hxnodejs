@@ -1,7 +1,5 @@
 language: haxe
-
-sudo: false
-dist: trusty
+dist: xenial
 
 haxe:
   - 3.4.7
