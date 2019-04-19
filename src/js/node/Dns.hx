@@ -131,128 +131,127 @@ extern class DnsError extends Error {
 /**
 	Each DNS query can return one of the following error codes
 **/
-@:fakeEnum(String)
 @:jsRequire("dns")
-extern enum DnsErrorCode {
+@:enum extern abstract DnsErrorCode(String) {
 	/**
 		DNS server returned answer with no data.
 	**/
-	NODATA;
+	var NODATA;
 
 	/**
 		DNS server claims query was misformatted.
 	**/
-	FORMERR;
+	var FORMERR;
 
 	/**
 		DNS server returned general failure.
 	**/
-	SERVFAIL;
+	var SERVFAIL;
 
 	/**
 		Domain name not found.
 	**/
-	NOTFOUND;
+	var NOTFOUND;
 
 	/**
 		DNS server does not implement requested operation.
 	**/
-	NOTIMP;
+	var NOTIMP;
 
 	/**
 		DNS server refused query.
 	**/
-	REFUSED;
+	var REFUSED;
 
 	/**
 		Misformatted DNS query.
 	**/
-	BADQUERY;
+	var BADQUERY;
 
 	/**
 		Misformatted domain name.
 	**/
-	BADNAME;
+	var BADNAME;
 
 	/**
 		Unsupported address family.
 	**/
-	BADFAMILY;
+	var BADFAMILY;
 
 	/**
 		Misformatted DNS reply.
 	**/
-	BADRESP;
+	var BADRESP;
 
 	/**
 		Could not contact DNS servers.
 	**/
-	CONNREFUSED;
+	var CONNREFUSED;
 
 	/**
 		Timeout while contacting DNS servers.
 	**/
-	TIMEOUT;
+	var TIMEOUT;
 
 	/**
 		End of file.
 	**/
-	EOF;
+	var EOF;
 
 	/**
 		Error reading file.
 	**/
-	FILE;
+	var FILE;
 
 	/**
 		Out of memory.
 	**/
-	NOMEM;
+	var NOMEM;
 
 	/**
 		Channel is being destroyed.
 	**/
-	DESTRUCTION;
+	var DESTRUCTION;
 
 	/**
 		Misformatted string.
 	**/
-	BADSTR;
+	var BADSTR;
 
 	/**
 		Illegal flags specified.
 	**/
-	BADFLAGS;
+	var BADFLAGS;
 
 	/**
 		Given hostname is not numeric.
 	**/
-	NONAME;
+	var NONAME;
 
 	/**
 		Illegal hints flags specified.
 	**/
-	BADHINTS;
+	var BADHINTS;
 
 	/**
 		c-ares library initialization not yet performed.
 	**/
-	NOTINITIALIZED;
+	var NOTINITIALIZED;
 
 	/**
 		Error loading iphlpapi.dll.
 	**/
-	LOADIPHLPAPI;
+	var LOADIPHLPAPI;
 
 	/**
 		Could not find GetNetworkParams function.
 	**/
-	ADDRGETNETWORKPARAMS;
+	var ADDRGETNETWORKPARAMS;
 
 	/**
 		DNS query cancelled.
 	**/
-	CANCELLED;
+	var CANCELLED;
 }
 
 typedef DnsLookupCallbackSingle =

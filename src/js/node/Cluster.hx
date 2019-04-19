@@ -113,10 +113,9 @@ typedef ListeningEventAddress = {
 }
 
 @:jsRequire("cluster")
-@:fakeEnum(Int)
-extern enum ClusterSchedulingPolicy {
-	SCHED_NONE;
-	SCHED_RR;
+@:enum extern abstract ClusterSchedulingPolicy(Int) {
+	var SCHED_NONE;
+	var SCHED_RR;
 }
 
 /**
