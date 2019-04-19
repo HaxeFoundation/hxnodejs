@@ -6,7 +6,7 @@
 
 ## Overview
 
-Extern type definitions for Node.JS version **4.0.0** and Haxe **3.2+**.
+Extern type definitions for Node.JS version **4.0.0** and Haxe **3.4+**.
 
 Haxe-generated API documentation is available at http://haxefoundation.github.io/hxnodejs/js/Node.html.
 
@@ -59,5 +59,5 @@ Original node.js documentation can be found at http://nodejs.org/api/index.html.
 
 ## Status
 
-This library is considered complete, but it's fairly new, so testing and contributions are welcome. See [current issues](https://github.com/HaxeFoundation/hxnodejs/issues) and [extern guidelines](https://github.com/HaxeFoundation/hxnodejs/blob/master/HOWTO.md).
+This library is considered complete, but testing and contributions are welcome. See [current issues](https://github.com/HaxeFoundation/hxnodejs/issues) and [extern guidelines](https://github.com/HaxeFoundation/hxnodejs/blob/master/HOWTO.md).
 
