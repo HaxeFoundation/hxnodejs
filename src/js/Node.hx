@@ -25,6 +25,27 @@ import haxe.Constraints.Function;
 
 import js.node.*;
 import js.node.console.Console;
+#if haxe4
+import js.lib.Int8Array;
+import js.lib.Int16Array;
+import js.lib.Int32Array;
+import js.lib.Uint8Array;
+import js.lib.Uint8ClampedArray;
+import js.lib.Uint16Array;
+import js.lib.Uint32Array;
+import js.lib.Float32Array;
+import js.lib.Float64Array;
+#else
+import js.html.Int8Array;
+import js.html.Int16Array;
+import js.html.Int32Array;
+import js.html.Uint8Array;
+import js.html.Uint8ClampedArray;
+import js.html.Uint16Array;
+import js.html.Uint32Array;
+import js.html.Float32Array;
+import js.html.Float64Array;
+#end
 
 /**
 	Node.js globals
@@ -162,3 +183,15 @@ extern class IntervalObject extends TimerObject {}
 	Object returned by `setImmediate`.
 **/
 extern class ImmediateObject {}
+
+abstract TypedArray(Dynamic) 
+	from Uint8Array to Uint8Array
+	from Uint8ClampedArray to Uint8ClampedArray
+	from Uint16Array to Uint16Array
+	from Uint32Array to Uint32Array
+	from Int8Array to Int8Array
+	from Int16Array to Int16Array
+	from Int32Array to Int32Array
+	from Float32Array to Float32Array
+	from Float64Array to Float64Array
+{ }
