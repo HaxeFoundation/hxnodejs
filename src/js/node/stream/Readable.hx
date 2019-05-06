@@ -205,6 +205,8 @@ typedef ReadableNewOptions = {
 	@:optional var highWaterMark:Int;
 	@:optional var encoding:String;
 	@:optional var objectMode:Bool;
+	@:optional var read:Int->Void;
+	@:optional var destroy:Null<Error>->(Null<Error>->Void)->Void;
 }
 
 /**

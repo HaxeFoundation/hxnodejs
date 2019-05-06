@@ -147,7 +147,12 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 typedef WritableNewOptions = {
 	@:optional var highWaterMark:Int;
 	@:optional var decodeStrings:Bool;
+	@:optional var defaultEncoding:String;
 	@:optional var objectMode:Bool;
+	@:optional var emitClose:Bool;
+	@:optional var write:Dynamic->String->(Null<Error>->Void)->Void;
+	@:optional var writev:Array<{chunk:Dynamic,encoding:String}>->(Null<Error>->Void)->Void;
+	@:optional var destroy:Null<Error>->(Null<Error>->Void)->Void;
 }
 
 
