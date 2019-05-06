@@ -24,13 +24,14 @@ package js.node;
 import haxe.Constraints.Function;
 import haxe.extern.Rest;
 import haxe.extern.EitherType;
-import js.Promise;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
 #if haxe4
 import js.lib.Error;
+import js.lib.Promise;
 #else
 import js.Error;
+import js.Promise;
 #end
 
 /**
@@ -170,7 +171,7 @@ extern class Util {
 		If `original` is not a function, `promisify()` will throw an error. If original is a function but its last
 		argument is not an error-first callback, it will still be passed an error-first callback as its last argument.
 	**/
-	static function promisify(original:Function):Rest<Dynamic>->js.Promise<Dynamic>;
+	static function promisify(original:Function):Rest<Dynamic>->Promise<Dynamic>;
 
 	/**
 		Deprecated predecessor of `Console.error`.

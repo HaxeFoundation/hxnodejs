@@ -23,6 +23,11 @@ package js.node.util;
 
 import haxe.extern.Rest;
 import haxe.Constraints.Function;
+#if haxe4
+import js.lib.Promise;
+#else
+import js.Promise;
+#end
 
 @:jsRequire("util", "promisify")
 extern class Promisify {
@@ -37,7 +42,7 @@ extern class Promisify {
 		argument is not an error-first callback, it will still be passed an error-first callback as its last argument.
 	**/
 	@:selfCall
-	static function promisify(original:Function):Rest<Dynamic>->js.Promise<Dynamic>;
+	static function promisify(original:Function):Rest<Dynamic>->Promise<Dynamic>;
 
 	/**
 		A `<symbol>` that can be used to declare custom promisified variants of functions.
