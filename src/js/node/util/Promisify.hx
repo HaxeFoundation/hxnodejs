@@ -48,8 +48,8 @@ extern class Promisify {
 		A `<symbol>` that can be used to declare custom promisified variants of functions.
 	**/
 	#if haxe4
-	static final custom: js.lib.Symbol;
+	static final custom:js.lib.Symbol;
 	#else
-	static var custom(default, never): Dynamic;
+	static var custom(default,never):Dynamic;
 	#end
 }

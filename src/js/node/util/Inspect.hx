@@ -27,34 +27,34 @@ import js.node.Util.InspectOptions;
 
 @:jsRequire("util", "inspect")
 extern class Inspect {
-    /**
-        Return a string representation of `object`, which is useful for debugging.
-        An optional `options` object may be passed that alters certain aspects of the formatted string.
+	/**
+		Return a string representation of `object`, which is useful for debugging.
+		An optional `options` object may be passed that alters certain aspects of the formatted string.
 
-        Objects also may define their own `inspect(depth:Int)` function which `inspect` will invoke and
-        use the result of when inspecting the object.
-    **/
-    @:selfCall
-    static function inspect(object:Dynamic, ?options:InspectOptions):String;
+		Objects also may define their own `inspect(depth:Int)` function which `inspect` will invoke and
+		use the result of when inspecting the object.
+	**/
+	@:selfCall
+	static function inspect(object:Dynamic, ?options:InspectOptions):String;
 
-    /**
-        a map assigning each style a color from `inspect_colors`.
-        Highlighted styles and their default values are:
-            number (yellow)
-            boolean (yellow)
-            string (green)
-            date (magenta)
-            regexp (red)
-            null (bold)
-            undefined (grey)
-            special - only function at this time (cyan)
-            name (intentionally no styling)
-    **/
-    static var styles:DynamicAccess<String>;
+	/**
+		a map assigning each style a color from `inspect_colors`.
+		Highlighted styles and their default values are:
+			number (yellow)
+			boolean (yellow)
+			string (green)
+			date (magenta)
+			regexp (red)
+			null (bold)
+			undefined (grey)
+			special - only function at this time (cyan)
+			name (intentionally no styling)
+	**/
+	static var styles:DynamicAccess<String>;
 
-    /**
-        Predefined color codes are: white, grey, black, blue, cyan, green, magenta, red and yellow.
-        There are also bold, italic, underline and inverse codes.
-    **/
-    static var colors:DynamicAccess<Array<Int>>;
+	/**
+		Predefined color codes are: white, grey, black, blue, cyan, green, magenta, red and yellow.
+		There are also bold, italic, underline and inverse codes.
+	**/
+	static var colors:DynamicAccess<Array<Int>>;
 }
