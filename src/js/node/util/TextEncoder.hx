@@ -21,35 +21,27 @@
  */
 package js.node.util;
 
-import haxe.extern.Rest;
-import haxe.Constraints.Function;
 #if haxe4
-import js.lib.Promise;
+import js.lib.Uint8Array;
 #else
-import js.Promise;
+import js.html.Uint8Array;
 #end
 
-@:jsRequire("util", "promisify")
-extern class Promisify {
-	/**
-		Takes a function following the common error-first callback style, i.e. taking an `(err, value) => ...`
-		callback as the last argument, and returns a version that returns promises.
-
-		If there is an `original[util.promisify.custom]` property present, promisify will return its value.
-
-		`promisify()` assumes that `original` is a function taking a callback as its final argument in all cases.
-		If `original` is not a function, `promisify()` will throw an error. If original is a function but its last
-		argument is not an error-first callback, it will still be passed an error-first callback as its last argument.
-	**/
-	@:selfCall
-	static function promisify(original:Function):Rest<Dynamic>->Promise<Dynamic>;
+/**
+	An implementation of the WHATWG Encoding Standard `TextEncoder` API.
+	All instances of `TextEncoder` only support UTF-8 encoding.
+**/
+@:jsRequire("util", "TextEncoder")
+extern class TextEncoder {
+	function new();
 
 	/**
-		A `<symbol>` that can be used to declare custom promisified variants of functions.
+		UTF-8 encodes the `input` string and returns a `Uint8Array` containing the encoded bytes.
 	**/
-	#if haxe4
-	static final custom:js.lib.Symbol;
-	#else
-	static var custom(default,never):Dynamic;
-	#end
+	function encode(?input:String):Uint8Array;
+
+	/**
+		The encoding supported by the `TextEncoder` instance. Always set to 'utf-8'.
+	**/
+	var encoding(default,null):String;
 }
