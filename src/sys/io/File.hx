@@ -31,7 +31,7 @@ class File {
 	}
 
 	static inline var copyBufLen = 64 * 1024;
-	static var copyBuf = new js.node.Buffer(copyBufLen);
+	static var copyBuf = js.node.Buffer.alloc(copyBufLen);
 
 	public static function copy( srcPath : String, dstPath : String ) : Void {
 		var src = Fs.openSync(srcPath, Read);
