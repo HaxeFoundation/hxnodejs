@@ -1,10 +1,8 @@
 ![hxnodejs](hxnodejs.png)
 
-[![Build Status](https://travis-ci.org/HaxeFoundation/hxnodejs.svg?branch=master)](https://travis-ci.org/HaxeFoundation/hxnodejs)
-
 # Haxe Node.JS
 
-## Overview
+[![Build Status](https://travis-ci.org/HaxeFoundation/hxnodejs.svg?branch=master)](https://travis-ci.org/HaxeFoundation/hxnodejs)
 
 Extern type definitions for Node.JS version **4.0.0** and Haxe **3.4+**.
 
