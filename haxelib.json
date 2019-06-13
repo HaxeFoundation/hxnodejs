@@ -6,6 +6,6 @@
     "version": "6.9.1",
     "releasenote": "Fixed deprecation warnings with Haxe 4.0.0-rc.2",
     "classPath": "src",
-    "contributors": ["nadako", "Simn", "Gama11"],
+    "contributors": ["HaxeFoundation", "nadako", "Simn", "Gama11"],
     "tags": ["js", "nodejs", "async", "net", "web", "extern"]
 }
