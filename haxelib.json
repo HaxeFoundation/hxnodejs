@@ -3,9 +3,9 @@
     "url": "https://github.com/HaxeFoundation/hxnodejs",
     "description": "Extern definitions for node.js",
     "license": "MIT",
-    "version": "6.9.1",
-    "releasenote": "Fixed deprecation warnings with Haxe 4.0.0-rc.2",
+    "version": "10.0.0",
+    "releasenote": "Compatibility with Haxe 4.0.0-rc.3, updated stream and util to Node.js 10 ",
     "classPath": "src",
-    "contributors": ["HaxeFoundation", "nadako", "Simn", "Gama11"],
+    "contributors": ["nadako", "Simn", "Gama11", "HaxeFoundation"],
     "tags": ["js", "nodejs", "async", "net", "web", "extern"]
 }
