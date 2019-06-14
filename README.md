@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/HaxeFoundation/hxnodejs.svg?branch=master)](https://travis-ci.org/HaxeFoundation/hxnodejs)
 
-Extern type definitions for Node.JS version **4.0.0** and Haxe **3.4+**.
+Extern type definitions for Node.JS. Haxe **3.4** or newer is required.
 
 Haxe-generated API documentation is available at http://haxefoundation.github.io/hxnodejs/js/Node.html.
 
