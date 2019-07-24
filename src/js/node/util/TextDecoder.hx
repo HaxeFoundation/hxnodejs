@@ -23,10 +23,10 @@ package js.node.util;
 
 #if haxe4
 import js.lib.ArrayBuffer;
-import js.lib.DataView;
+import js.lib.ArrayBufferView;
 #else
 import js.html.ArrayBuffer;
-import js.html.DataView;
+import js.html.ArrayBufferView;
 #end
 
 /**
@@ -48,8 +48,7 @@ extern class TextDecoder {
 
 		If `fatal` is `true`, decoding errors that occur will result in a `TypeError` being thrown.
 	**/
-	@:overload(function(?input:DataView, ?options:TextDecodeOptions):String {})
-	@:overload(function(?input:js.Node.TypedArray, ?options:TextDecodeOptions):String {})
+	@:overload(function(?input:ArrayBufferView, ?options:TextDecodeOptions):String {})
 	function decode(?input:ArrayBuffer, ?options:TextDecodeOptions):String;
 
 	/**
