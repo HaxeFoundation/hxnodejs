@@ -36,7 +36,7 @@ import js.node.Timers.Timeout;
 @:native("global")
 extern class Node {
 	/**
-		The directory name of the current module. This is the same as the `Path.dirname()` of the `__filename`.
+		This variable may appear to be global but is not. See [__dirname](https://nodejs.org/api/modules.html#modules_dirname).
 	**/
 	static var __dirname(get, never):String;
 
@@ -44,11 +44,7 @@ extern class Node {
 		return untyped __js__("__dirname");
 
 	/**
-		The file name of the current module. This is the current module file's absolute path with symlinks resolved.
-
-		For a main program this is not necessarily the same as the file name used in the command line.
-
-		See `__dirname` for the directory name of the current module
+		This variable may appear to be global but is not. See [__filename](https://nodejs.org/api/modules.html#modules_filename).
 	**/
 	static var __filename(get, never):String;
 
@@ -56,22 +52,22 @@ extern class Node {
 		return untyped __js__("__filename");
 
 	/**
-		`clearImmediate` is described in the `Timers` section.
-	 */
+		`clearImmediate` is described in the [timers](https://nodejs.org/api/timers.html) section.
+	**/
 	static function clearImmediate(immediate:Immediate):Void;
 
 	/**
-		`clearInterval` is described in the `Timers` section.
-	 */
+		`clearInterval` is described in the [timers](https://nodejs.org/api/timers.html) section.
+	**/
 	static function clearInterval(timeout:Timeout):Void;
 
 	/**
-		`clearTimeout` is described in the `Timers` section.
-	 */
+		`clearTimeout` is described in the [timers](https://nodejs.org/api/timers.html) section.
+	**/
 	static function clearTimeout(timeout:Timeout):Void;
 
 	/**
-		Used to print to stdout and stderr. See the `Console` section.
+		Used to print to stdout and stderr. See the [console](https://nodejs.org/api/console.html) section.
 	**/
 	static var console(get, never):Console;
 
@@ -106,7 +102,7 @@ extern class Node {
 
 	/**
 		The process object. See the [process object](https://nodejs.org/api/process.html#process_process) section.
-	 */
+	**/
 	static var process(get, never):Process;
 
 	private static inline function get_process():Process {
@@ -115,7 +111,7 @@ extern class Node {
 
 	/**
 		The `queueMicrotask()` method queues a microtask to invoke `callback`.
-		If `callback` throws an exception, the process object 'uncaughtException' event will be emitted.
+		If `callback` throws an exception, the [process object](https://nodejs.org/api/process.html#process_process) 'uncaughtException' event will be emitted.
 
 		The microtask queue is managed by V8 and may be used in a similar manner to the `Process.nextTick()` queue,
 		which is managed by Node.js.
@@ -124,24 +120,24 @@ extern class Node {
 	static function queueMicrotask(callback:Void->Void):Void;
 
 	/**
-		This variable may appear to be global but is not. See `require()`.
+		This variable may appear to be global but is not. See [require()](https://nodejs.org/api/modules.html#modules_require_id).
 	**/
 	static inline function require(module:String):Dynamic {
 		return untyped __js__("require({0})", module);
 	}
 
 	/**
-		`setImmediate` is described in the `Timers` section.
-	 */
+		`setImmediate` is described in the [timers](https://nodejs.org/api/timers.html) section.
+	**/
 	static function setImmediate(callback:Function, args:Rest<Dynamic>):Immediate;
 
 	/**
-		`setInterval` is described in the `Timers` section.
-	 */
+		`setInterval` is described in the [timers](https://nodejs.org/api/timers.html) section.
+	**/
 	static function setInterval(callback:Function, delay:Int, args:Rest<Dynamic>):Timeout;
 
 	/**
-		`setTimeout` is described in the `Timers` section.
-	 */
+		`setTimeout` is described in the [timers](https://nodejs.org/api/timers.html) section.
+	**/
 	static function setTimeout(callback:Function, delay:Int, args:Rest<Dynamic>):Timeout;
 }
