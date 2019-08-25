@@ -19,15 +19,55 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
-import haxe.DynamicAccess;
+import js.node.url.URL;
 
 /**
-	This module has utilities for URL resolution and parsing.
+	The `url` module provides utilities for URL resolution and parsing.
 **/
 @:jsRequire("url")
 extern class Url {
+	/**
+		Returns the Punycode ASCII serialization of the `domain`. If `domain` is an invalid domain, the empty string is returned.
+
+		It performs the inverse operation to `url.domainToUnicode()`.
+	**/
+	static function domainToASCII(domain:String):String;
+
+	/**
+		Returns the Unicode serialization of the `domain`. If `domain` is an invalid domain, the empty string is returned.
+
+		It performs the inverse operation to `url.dmainToASCII()`.
+	**/
+	static function domainToUnicode(domain:String):String;
+
+	/**
+		This function ensures the correct decodings of percent-encoded characters as well as ensuring a cross-platform valid absolute path string.
+	 */
+	@:overload(function(url:String):String {})
+	static function fileURLToPath(url:URL):String;
+
+	/**
+		Returns a customizable serialization of a URL `String` representation of a [WHATWG URL](https://nodejs.org/api/url.html#url_the_whatwg_url_api) object.
+
+		The URL object has both a `toString()` method and href property that return string serializations of the URL.
+		These are not, however, customizable in any way.
+		The `url.format(URL[, options])` method allows for basic customization of the output.
+
+		`format(urlObject:UrlObject)` and `format(urlObject:String)` are deprecated.
+	**/
+	@:overload(function(urlObject:UrlObject):String {})
+	@:overload(function(urlObject:String):String {})
+	static function format(url:URL, ?options:UrlFormatOptions):String;
+
+	/**
+		This function ensures that `path` is resolved absolutely,
+		and that the URL control characters are correctly encoded when converting into a File URL.
+	 */
+	static function pathToFileURL(path:String):URL;
+
 	/**
 		Takes a URL string, parses it, and returns a URL object.
 
@@ -39,15 +79,8 @@ extern class Url {
 		For instance, given `//foo/bar`, the result would be `{host: 'foo', pathname: '/bar'}` rather than `{pathname: '//foo/bar'}`.
 		Defaults to false.
 	**/
+	@:deprecated
 	static function parse(urlString:String, ?parseQueryString:Bool, ?slashesDenoteHost:Bool):UrlObject;
-
-	/**
-		Returns a formatted URL string derived from `urlObject`.
-
-		If `urlObject` is a string, it is converted to an object by passing it to `Url.parse`.
-	**/
-	@:overload(function(urlObject:String):String {})
-	static function format(urlObject:UrlObject):String;
 
 	/**
 		Resolves a target URL relative to a base URL in a manner similar to that of a Web browser resolving an anchor tag HREF.
@@ -57,13 +90,45 @@ extern class Url {
 			resolve('http://example.com/', '/one')    // 'http://example.com/one'
 			resolve('http://example.com/one', '/two') // 'http://example.com/two'
 	**/
+	@:deprecated
 	static function resolve(from:String, to:String):String;
+}
+
+typedef UrlFormatOptions = {
+	/**
+			`true` if the serialized URL string should include the username and password, `false` otherwise.
+
+			Default: `true`.
+	**/
+	@:optional var auth:Bool;
+
+	/**
+		`true` if the serialized URL string should include the fragment, `false` otherwise.
+
+		Default: `true`.
+	**/
+	@:optional var fragment:Bool;
+
+	/**
+		`true` if the serialized URL string should include the search query, `false` otherwise.
+
+		Default: `true`.
+	**/
+	@:optional var search:Bool;
+
+	/**
+		`true` if Unicode characters appearing in the host component of the URL string should be encoded directly as opposed to being Punycode encoded.
+
+		Default: `false`.
+	**/
+	@:optional var unicode:Bool;
 }
 
 /**
 	Parsed URL objects have some or all of the following fields, depending on whether or not they exist in the URL string.
 	Any parts that are not in the URL string will not be in the parsed object.
 **/
+@:deprecated
 typedef UrlObject = {
 	/**
 		The full URL string that was parsed with both the `protocol` and `host` components converted to lower-case.
@@ -160,7 +225,7 @@ typedef UrlObject = {
 		where either one is expected, so if you know the actual type, just assign it
 		to properly typed variable (e.g. var s:String = url.query)
 	**/
-	@:optional var query:haxe.extern.EitherType<String,DynamicAccess<String>>;
+	@:optional var query:haxe.extern.EitherType<String, haxe.DynamicAccess<String>>;
 
 	/**
 		The "fragment" portion of the URL including the leading ASCII hash (`#`) character.
@@ -169,5 +234,3 @@ typedef UrlObject = {
 	**/
 	@:optional var hash:String;
 }
-
-@:dox(hide) @:deprecated("Use UrlObject instead") typedef UrlData = UrlObject;
