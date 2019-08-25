@@ -157,15 +157,6 @@ extern class Http {
 	static function createServer(?requestListener:IncomingMessage->ServerResponse->Void):Server;
 
 	/**
-		This function is deprecated; please use `request` instead.
-
-		Constructs a new HTTP client.
-		`port` and `host` refer to the server to be connected to.
-	**/
-	@:deprecated("This function is deprecated; please use `request` instead.")
-	static function createClient(?port:Int, ?host:String):Client;
-
-	/**
 		Node maintains several connections per server to make HTTP requests.
 		This function allows one to transparently issue requests.
 
