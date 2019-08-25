@@ -22,6 +22,8 @@
 
 package js.node.url;
 
+import js.node.Iterator;
+
 /**
 	The `URLSearchParams` API provides read and write access to the query of a `URL`.
 	The `URLSearchParams` class can also be used standalone with one of the four following constructors.
@@ -35,7 +37,7 @@ extern class URLSearchParams {
 	@:overload(function(init:String):Void {})
 	@:overload(function(obj:Dynamic<String>):Void {})
 	@:overload(function(array:Array<URLSearchParamsEntry>):Void {})
-	@:overload(function(iter:js.lib.Iterator<URLSearchParamsEntry>):Void {})
+	@:overload(function(iter:Iterator<URLSearchParamsEntry>):Void {})
 	function new():Void;
 
 	/**
@@ -53,7 +55,7 @@ extern class URLSearchParams {
 		Each item of the iterator is a JavaScript `Array`.
 		The first item of the `Array` is the `name`, the second item of the `Array` is the `value`.
 	**/
-	function entries():js.lib.Iterator<URLSearchParamsEntry>;
+	function entries():Iterator<URLSearchParamsEntry>;
 
 	/**
 		Iterates over each name-value pair in the query and invokes the given function.
@@ -63,9 +65,9 @@ extern class URLSearchParams {
 	@:overload(function(fn:(value:String, name:String) -> Void, ?thisArg:Dynamic):Void {})
 	function forEach(fn:(value:String, name:String, searchParams:URLSearchParams) -> Void, ?thisArg:Dynamic):Void;
 	#else
-	@:overload(function(fn:String -> Void, ?thisArg:Dynamic):Void {})
-	@:overload(function(fn:String -> String -> Void, ?thisArg:Dynamic):Void {})
-	function forEach(fn:String -> String -> URLSearchParams -> Void, ?thisArg:Dynamic):Void;
+	@:overload(function(fn:String->Void, ?thisArg:Dynamic):Void {})
+	@:overload(function(fn:String->String->Void, ?thisArg:Dynamic):Void {})
+	function forEach(fn:String->String->URLSearchParams->Void, ?thisArg:Dynamic):Void;
 	#end
 
 	/**
@@ -88,7 +90,7 @@ extern class URLSearchParams {
 	/**
 		Returns an ES6 `Iterator` over the names of each name-value pair.
 	**/
-	function keys():js.lib.Iterator<String>;
+	function keys():Iterator<String>;
 
 	/**
 		Sets the value in the `URLSearchParams` object associated with `name` to `value`.
@@ -113,7 +115,7 @@ extern class URLSearchParams {
 	/**
 		Returns an ES6 `Iterator` over the values of each name-value pair.
 	**/
-	function values():js.lib.Iterator<String>;
+	function values():Iterator<String>;
 }
 
 /**
@@ -122,7 +124,7 @@ extern class URLSearchParams {
 abstract URLSearchParamsEntry(Array<String>) {
 	public var name(get, never):String;
 	public var value(get, never):String;
-	
+
 	public function new(name:String, value:String) {
 		this = [name, value];
 	}
