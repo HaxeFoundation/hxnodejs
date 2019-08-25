@@ -29,6 +29,7 @@ import js.Node.TimerObject;
 /**
 	Enumeration of events emitted by `Domain` objects.
 **/
+@:deprecated
 @:enum abstract DomainEvent<T:Function>(Event<T>) to Event<T> {
 	var Error : DomainEvent<DomainError->Void> = "error";
 	var Dispose : DomainEvent<Void->Void> = "dispose";
@@ -37,6 +38,7 @@ import js.Node.TimerObject;
 /**
 	Any time an Error object is routed through a domain, a few extra fields are added to it.
 **/
+@:deprecated
 typedef DomainError = {
 	/**
 		The domain that first handled the error.
@@ -63,6 +65,7 @@ typedef DomainError = {
 	The Domain class encapsulates the functionality of routing errors
 	and uncaught exceptions to the active Domain object.
 **/
+@:deprecated
 extern class Domain extends EventEmitter<Domain> {
 	/**
 		Run the supplied function in the context of the domain, implicitly binding all event emitters, timers,
