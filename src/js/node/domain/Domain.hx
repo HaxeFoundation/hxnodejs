@@ -24,7 +24,7 @@ package js.node.domain;
 import haxe.Constraints.Function;
 
 import js.node.events.EventEmitter;
-import js.Node.TimerObject;
+import js.node.Timers.Timeout;
 
 /**
 	Enumeration of events emitted by `Domain` objects.
@@ -78,7 +78,7 @@ extern class Domain extends EventEmitter<Domain> {
 	/**
 		An array of timers and event emitters that have been explicitly added to the domain.
 	**/
-	var members(default,null):Array<haxe.extern.EitherType<IEventEmitter,TimerObject>>;
+	var members(default,null):Array<haxe.extern.EitherType<IEventEmitter,Timeout>>;
 
 	/**
 		Explicitly adds an `emitter` to the domain.
@@ -92,13 +92,13 @@ extern class Domain extends EventEmitter<Domain> {
 		If the Timer or EventEmitter was already bound to a domain, it is removed from that one,
 		and bound to this one instead.
 	**/
-	@:overload(function(emitter:TimerObject):Void {})
+	@:overload(function(emitter:Timeout):Void {})
 	function add(emitter:IEventEmitter):Void;
 
 	/**
 		The opposite of `add`. Removes domain handling from the specified emitter.
 	**/
-	@:overload(function(emitter:TimerObject):Void {})
+	@:overload(function(emitter:Timeout):Void {})
 	function remove(emitter:IEventEmitter):Void;
 
 	/**

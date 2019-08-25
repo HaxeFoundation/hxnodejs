@@ -19,12 +19,16 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js;
 
 import haxe.Constraints.Function;
-
-import js.node.*;
+import haxe.extern.Rest;
 import js.node.console.Console;
+import js.node.Module;
+import js.node.Process;
+import js.node.Timers.Immediate;
+import js.node.Timers.Timeout;
 
 /**
 	Node.js globals
@@ -32,133 +36,112 @@ import js.node.console.Console;
 @:native("global")
 extern class Node {
 	/**
-		The global namespace object.
+		This variable may appear to be global but is not. See [__dirname](https://nodejs.org/api/modules.html#modules_dirname).
+	**/
+	static var __dirname(get, never):String;
+
+	private static inline function get___dirname():String
+		return untyped __js__("__dirname");
+
+	/**
+		This variable may appear to be global but is not. See [__filename](https://nodejs.org/api/modules.html#modules_filename).
+	**/
+	static var __filename(get, never):String;
+
+	private static inline function get___filename():String
+		return untyped __js__("__filename");
+
+	/**
+		`clearImmediate` is described in the [timers](https://nodejs.org/api/timers.html) section.
+	**/
+	static function clearImmediate(immediate:Immediate):Void;
+
+	/**
+		`clearInterval` is described in the [timers](https://nodejs.org/api/timers.html) section.
+	**/
+	static function clearInterval(timeout:Timeout):Void;
+
+	/**
+		`clearTimeout` is described in the [timers](https://nodejs.org/api/timers.html) section.
+	**/
+	static function clearTimeout(timeout:Timeout):Void;
+
+	/**
+		Used to print to stdout and stderr. See the [console](https://nodejs.org/api/console.html) section.
+	**/
+	static var console(get, never):Console;
+
+	private static inline function get_console():Console
+		return untyped __js__("console");
+
+	/**
+		This variable may appear to be global but is not. See [exports](https://nodejs.org/api/modules.html#modules_exports).
+	**/
+	static var exports(get, never):Dynamic<Dynamic>;
+
+	private static inline function get_exports():Dynamic<Dynamic> {
+		return untyped __js__("exports");
+	}
+
+	/**
+		In browsers, the top-level scope is the global scope.
+		This means that within the browser `var something` will define a new global variable.
+		In Node.js this is different. The top-level scope is not the global scope; `var something` inside a Node.js module
+		will be local to that module.
 	**/
 	static inline var global:Dynamic<Dynamic> = cast Node;
 
 	/**
-		The process object.
+		This variable may appear to be global but is not. See [module](https://nodejs.org/api/modules.html#modules_module).
+	**/
+	static var module(get, never):Module;
+
+	private static inline function get_module():Module {
+		return untyped __js__("module");
+	}
+
+	/**
+		The process object. See the [process object](https://nodejs.org/api/process.html#process_process) section.
+	**/
+	static var process(get, never):Process;
+
+	private static inline function get_process():Process {
+		return untyped __js__("process");
+	}
+
+	/**
+		The `queueMicrotask()` method queues a microtask to invoke `callback`.
+		If `callback` throws an exception, the [process object](https://nodejs.org/api/process.html#process_process) 'uncaughtException' event will be emitted.
+
+		The microtask queue is managed by V8 and may be used in a similar manner to the `Process.nextTick()` queue,
+		which is managed by Node.js.
+		The `Process.nextTick()` queue is always processed before the microtask queue within each turn of the Node.js event loop.
 	 */
-	static var process(get,never):Process;
-	private static inline function get_process():Process return untyped __js__("process");
+	static function queueMicrotask(callback:Void->Void):Void;
 
 	/**
-		The global console is a special `Console` whose output is sent to process.stdout and process.stderr.
+		This variable may appear to be global but is not. See [require()](https://nodejs.org/api/modules.html#modules_require_id).
 	**/
-	static var console(get,never):Console;
-	private static inline function get_console():Console return untyped __js__("console");
-
+	static inline function require(module:String):Dynamic {
+		return untyped __js__("require({0})", module);
+	}
 
 	/**
-		Fetches a library and returns the reference to it.
+		`setImmediate` is described in the [timers](https://nodejs.org/api/timers.html) section.
 	**/
-	static inline function require(module:String):Dynamic return js.node.Require.require(module);
+	static function setImmediate(callback:Function, args:Rest<Dynamic>):Immediate;
 
 	/**
-		The name of the directory that the currently executing script resides in.
+		`setInterval` is described in the [timers](https://nodejs.org/api/timers.html) section.
 	**/
-	static var __dirname(get,never):String;
-	private static inline function get___dirname():String return untyped __js__("__dirname");
+	static function setInterval(callback:Function, delay:Int, args:Rest<Dynamic>):Timeout;
 
 	/**
-		The filename of the code being executed. This is the resolved absolute path of this code file.
-		For a main program this is not necessarily the same filename used in the command line.
-		The value inside a module is the path to that module file.
+		`setTimeout` is described in the [timers](https://nodejs.org/api/timers.html) section.
 	**/
-	static var __filename(get,never):String;
-	private static inline function get___filename():String return untyped __js__("__filename");
-
-	/**
-		A reference to the current module.
-		In particular `module.exports` is used for defining what a module exports and makes available through `require`.
-		`module` isn't actually a global but rather local to each module.
-	**/
-	static var module(get,never):Module;
-	private static inline function get_module():Module return untyped __js__("module");
-
-	/**
-		A reference to the module.exports that is shorter to type.
-		See module system documentation for details on when to use exports and when to use `module.exports`.
-		`exports` isn't actually a global but rather local to each module.
-	**/
-	static var exports(get,never):Dynamic<Dynamic>;
-	private static inline function get_exports():Dynamic<Dynamic> return module.exports;
-
-
-	/**
-		To schedule execution of a one-time `callback` after `delay` milliseconds.
-		Returns a `TimeoutObject` for possible use with `clearTimeout`.
-		Optionally you can also pass arguments to the `callback`.
-	**/
-	static function setTimeout(callback:Function, delay:Int, args:haxe.extern.Rest<Dynamic>):TimeoutObject;
-
-	/**
-		Prevents a timeout from triggering.
-	**/
-	static function clearTimeout(timeoutObject:TimeoutObject):Void;
-
-	/**
-		To schedule the repeated execution of `callback` every `delay` milliseconds.
-		Returns a `IntervalObject` for possible use with `clearInterval`.
-		Optionally you can also pass arguments to the `callback`.
-	**/
-	static function setInterval(callback:Function, delay:Int, args:haxe.extern.Rest<Dynamic>):IntervalObject;
-
-	/**
-		Stops a interval from triggering.
-	**/
-	static function clearInterval(intervalObject:IntervalObject):Void;
-
-	/**
-		To schedule the "immediate" execution of `callback` after I/O events callbacks and before `setTimeout` and `setInterval`.
-		Returns an `ImmediateObject` for possible use with `clearImmediate`.
-		Optionally you can also pass arguments to the `callback`.
-
-		Immediates are queued in the order created, and are popped off the queue once per loop iteration.
-		This is different from `Process.nextTick` which will execute `Process.maxTickDepth` queued callbacks per iteration.
-		`setImmediate` will yield to the event loop after firing a queued callback to make sure I/O is not being starved.
-		While order is preserved for execution, other I/O events may fire between any two scheduled immediate callbacks.
-	**/
-	static function setImmediate(callback:Function, args:haxe.extern.Rest<Dynamic>):ImmediateObject;
-
-	/**
-		Stops an immediate from triggering.
-	**/
-	static function clearImmediate(immediateObject:ImmediateObject):Void;
+	static function setTimeout(callback:Function, delay:Int, args:Rest<Dynamic>):Timeout;
 }
 
-/**
-	Base class for the opaque value returned by `setTimeout` and `setInterval`.
-	See `TimeoutObject` and `IntervalObject` concrete classes.
-**/
-extern class TimerObject {
-	/**
-		Makes the event loop won't keep the program running if a timer is active but is the only item left in the loop.
-		If the timer is already `unref`d calling `unref` again will have no effect.
-
-		In the case of `setTimeout` when you `unref` you create a separate timer that will wakeup the event loop,
-		creating too many of these may adversely effect event loop performance -- use wisely.
-	**/
-	function unref():Void;
-
-	/**
-		If you had previously `unref`d a timer you can call `ref` to explicitly request the timer hold the program open.
-		If the timer is already `ref`d calling `ref` again will have no effect.
-	**/
-	function ref():Void;
-}
-
-/**
-	Object returned by `setTimeout`.
-**/
-extern class TimeoutObject extends TimerObject {}
-
-/**
-	Object returned by `setInterval`.
-**/
-extern class IntervalObject extends TimerObject {}
-
-/**
-	Object returned by `setImmediate`.
-**/
-extern class ImmediateObject {}
+@:deprecated typedef TimeoutObject = js.node.Timers.Timeout;
+@:deprecated typedef IntervalObject = js.node.Timers.Timeout;
+@:deprecated typedef ImmediateObject = js.node.Timers.Immediate;
