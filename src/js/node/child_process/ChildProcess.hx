@@ -207,7 +207,7 @@ extern class ChildProcess extends EventEmitter<ChildProcess> {
 		most likely immediately.
 
 		Note that you can also call `process.disconnect` in the child process.
-	 */
+	**/
 	function disconnect():Void;
 
 	/**

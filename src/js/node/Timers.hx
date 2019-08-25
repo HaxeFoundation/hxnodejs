@@ -9,7 +9,7 @@ import haxe.extern.Rest;
 
 	The timer functions within Node.js implement a similar API as the timers API provided by Web Browsers
 	but use a different internal implementation that is built around the Node.js Event Loop.
- */
+**/
 @:jsRequire("timers")
 extern class Timers {
 	/**
@@ -23,7 +23,7 @@ extern class Timers {
 		If `callback` is not a function, a `TypeError` will be thrown.
 
 		This method has a custom variant for promises that is available using `util.promisify()`.
-	 */
+	**/
 	static function setImmediate(callback:Function, args:Rest<Dynamic>):Immediate;
 
 	/**
@@ -35,7 +35,7 @@ extern class Timers {
 		If `callback` is not a function, a `TypeError` will be thrown.
 
 		This method has a custom variant for promises that is available using `util.promisify()`.
-	 */
+	**/
 	static function setInterval(callback:Function, delay:Int, args:Rest<Dynamic>):Timeout;
 
 	/**
@@ -51,33 +51,33 @@ extern class Timers {
 		If `callback` is not a function, a `TypeError` will be thrown.
 
 		This method has a custom variant for promises that is available using `util.promisify()`.
-	 */
+	**/
 	static function setTimeout(callback:Function, delay:Int, args:Rest<Dynamic>):Timeout;
 
 	/**
 		Cancels an Immediate object created by `setImmediate()`.
-	 */
+	**/
 	static function clearImmediate(immediate:Immediate):Void;
 
 	/**
 		Cancels a Timeout object created by `setInterval()`.
-	 */
+	**/
 	static function clearInterval(timeout:Timeout):Void;
 
 	/**
 		Cancels a Timeout object created by `setTimeout()`.
-	 */
+	**/
 	static function clearTimeout(timeout:Timeout):Void;
 }
 
 /**
 	This object is created internally and is returned from `setImmediate()`.
 	It can be passed to `clearImmediate()` in order to cancel the scheduled actions.
- */
+**/
 extern class Immediate {
 	/**
 		If true, the `Immediate` object will keep the Node.js event loop active.
-	 */
+	**/
 	function hasRef():Bool;
 
 	/**
@@ -86,25 +86,25 @@ extern class Immediate {
 
 		By default, all `Immediate` objects are "ref'ed", making it normally unnecessary to call `immediate.ref()`
 		unless `immediate.unref()` had been called previously.
-	 */
+	**/
 	function ref():Immediate;
 
 	/**
 		When called, the active `Immediate` object will not require the Node.js event loop to remain active.
 		If there is no other activity keeping the event loop running, the process may exit before the `Immediate` object's
 		callback is invoked. Calling immediate.unref() multiple times will have no effect.
-	 */
+	**/
 	function unref():Immediate;
 }
 
 /**
 	This object is created internally and is returned from `setTimeout()` and `setInterval()`.
 	It can be passed to either `clearTimeout()` or `clearInterval()` in order to cancel the scheduled actions.
- */
+**/
 extern class Timeout {
 	/**
 		If true, the `Timeout` object will keep the Node.js event loop active.
-	 */
+	**/
 	function hasRef():Bool;
 
 	/**
@@ -114,7 +114,7 @@ extern class Timeout {
 
 		Calling `timeout.unref()` creates an internal timer that will wake the Node.js event loop.
 		Creating too many of these can adversely impact performance of the Node.js application.
-	 */
+	**/
 	function ref():Timeout;
 
 	/**
@@ -123,7 +123,7 @@ extern class Timeout {
 		a new JavaScript object.
 
 		Using this on a timer that has already called its callback will reactivate the timer.
-	 */
+	**/
 	function refresh():Timeout;
 
 	/**
@@ -133,6 +133,6 @@ extern class Timeout {
 
 		Calling `timeout.unref()` creates an internal timer that will wake the Node.js event loop.
 		Creating too many of these can adversely impact performance of the Node.js application.
-	 */
+	**/
 	function unref():Timeout;
 }

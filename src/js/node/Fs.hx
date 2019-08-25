@@ -203,7 +203,7 @@ typedef FsCreateWriteStreamOptions = {
 
 		Note that this doesn't turn `Fs.open` into a synchronous blocking call.
 		If that's what you want then you should be using `Fs.openSync`
-	 */
+	**/
 	var ReadSync = "rs";
 
 	/**
@@ -578,7 +578,7 @@ extern class Fs {
 
 	/**
 		Asynchronous stat(2).
-	 */
+	**/
 	static function stat(path:FsPath, callback:Error->Stats->Void):Void;
 
 	/**

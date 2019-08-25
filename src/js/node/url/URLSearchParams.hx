@@ -59,7 +59,7 @@ extern class URLSearchParams {
 
 	/**
 		Iterates over each name-value pair in the query and invokes the given function.
-	 */
+	**/
 	#if haxe4
 	@:overload(function(fn:(value:String) -> Void, ?thisArg:Dynamic):Void {})
 	@:overload(function(fn:(value:String, name:String) -> Void, ?thisArg:Dynamic):Void {})

@@ -45,7 +45,7 @@ extern class Url {
 
 	/**
 		This function ensures the correct decodings of percent-encoded characters as well as ensuring a cross-platform valid absolute path string.
-	 */
+	**/
 	@:overload(function(url:String):String {})
 	static function fileURLToPath(url:URL):String;
 
@@ -65,7 +65,7 @@ extern class Url {
 	/**
 		This function ensures that `path` is resolved absolutely,
 		and that the URL control characters are correctly encoded when converting into a File URL.
-	 */
+	**/
 	static function pathToFileURL(path:String):URL;
 
 	/**
@@ -86,9 +86,12 @@ extern class Url {
 		Resolves a target URL relative to a base URL in a manner similar to that of a Web browser resolving an anchor tag HREF.
 
 		Examples:
-			resolve('/one/two/three', 'four')         // '/one/two/four'
-			resolve('http://example.com/', '/one')    // 'http://example.com/one'
-			resolve('http://example.com/one', '/two') // 'http://example.com/two'
+		
+		```haxe
+		resolve('/one/two/three', 'four')         // '/one/two/four'
+		resolve('http://example.com/', '/one')    // 'http://example.com/one'
+		resolve('http://example.com/one', '/two') // 'http://example.com/two'
+		```
 	**/
 	@:deprecated
 	static function resolve(from:String, to:String):String;

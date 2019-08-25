@@ -116,7 +116,7 @@ extern class Node {
 		The microtask queue is managed by V8 and may be used in a similar manner to the `Process.nextTick()` queue,
 		which is managed by Node.js.
 		The `Process.nextTick()` queue is always processed before the microtask queue within each turn of the Node.js event loop.
-	 */
+	**/
 	static function queueMicrotask(callback:Void->Void):Void;
 
 	/**
