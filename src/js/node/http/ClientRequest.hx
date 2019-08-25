@@ -22,6 +22,7 @@
 
 package js.node.http;
 
+import haxe.DynamicAccess;
 import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
 import js.node.net.Socket;
@@ -31,6 +32,36 @@ import js.node.stream.Writable;
 	Enumeration of events emitted by `ClientRequest`
 **/
 @:enum abstract ClientRequestEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
+	/**
+		Emitted when the request has been aborted by the client.
+		This event is only emitted on the first call to `abort()`.
+	**/
+	var Abort:ClientRequestEvent<Void->Void> = "abort";
+	
+	/**
+		Emitted each time a server responds to a request with a `CONNECT` method.
+		If this event is not being listened for, clients receiving a `CONNECT` method will have their connections closed.
+	**/
+	#if haxe4
+	var Connect:ClientRequestEvent<(response:IncomingMessage, socket:Socket, head:Buffer) -> Void> = "connect";
+	#else
+	var Connect:ClientRequestEvent<IncomingMessage->Socket->Buffer->Void> = "connect";
+	#end
+	
+	/**
+		Emitted when the server sends a '100 Continue' HTTP response,
+		usually because the request contained 'Expect: 100-continue'.
+		This is an instruction that the client should send the request body.
+	**/
+	var Continue:ClientRequestEvent<Void->Void> = "continue";
+
+	/**
+		Emitted when the server sends a 1xx intermediate response (excluding 101 Upgrade).
+		The listeners of this event will receive an object containing the HTTP version, status code, status message,
+		key-value headers object, and array with the raw header names followed by their respective values.
+	**/
+	var Information:ClientRequestEvent<InformationEventData->Void> = "information";
+	
 	/**
 		Emitted when a response is received to this request. This event is emitted only once.
 	**/
@@ -42,70 +73,69 @@ import js.node.stream.Writable;
 	var Socket:ClientRequestEvent<Socket->Void> = "socket";
 
 	/**
-		Emitted each time a server responds to a request with a CONNECT method.
-		If this event isn't being listened for, clients receiving a CONNECT method
-		will have their connections closed.
+		Emitted when the underlying socket times out from inactivity.
+		This only notifies that the socket has been idle. The request must be aborted manually.
+
+		See also: [request.setTimeout()](https://nodejs.org/api/http.html#http_request_settimeout_timeout_callback).
 	**/
-	var Connect:ClientRequestEvent<IncomingMessage->Socket->Buffer->Void> = "connect";
+	var Timeout:ClientRequestEvent<Socket->Void> = "timeout";
 
 	/**
 		Emitted each time a server responds to a request with an upgrade.
-		If this event isn't being listened for, clients receiving an upgrade header
-		will have their connections closed.
+		If this event is not being listened for and the response status code is 101 Switching Protocols,
+		clients receiving an upgrade header will have their connections closed.
 	**/
+	#if haxe4
+	var Upgrade:ClientRequestEvent<(response:IncomingMessage, socket:Socket, head:Buffer) -> Void> = "upgrade";
+	#else
 	var Upgrade:ClientRequestEvent<IncomingMessage->Socket->Buffer->Void> = "upgrade";
-
-	/**
-		Emitted when the server sends a '100 Continue' HTTP response,
-		usually because the request contained 'Expect: 100-continue'.
-		This is an instruction that the client should send the request body.
-	**/
-	var Continue:ClientRequestEvent<Void->Void> = "continue";
+	#end
 }
 
 /**
-	This object is created internally and returned from `Http.request`.
-
+	This object is created internally and returned from http.request().
 	It represents an in-progress request whose header has already been queued.
-	The header is still mutable using the `setHeader`, `getHeader` and `removeHeader`.
-	The actual header will be sent along with the first data chunk or when closing the connection.
+	The header is still mutable using the `setHeader(name, value)`, `getHeader(name)`, `removeHeader(name)` API.
+	The actual header will be sent along with the first data chunk or when calling `request.end()`.
 
-	To get the response, add a listener for 'response' to the request object.
-	'response' will be emitted from the request object when the response headers have been received.
-	The 'response' event is executed with one argument which is an instance of `IncomingMessage`.
+	To get the response, add a listener for `'response'` to the request object.
+	`'response'` will be emitted from the request object when the response headers have been received.
+	The `'response'` event is executed with one argument which is an instance of `http.IncomingMessage`.
 
-	During the 'response' event, one can add listeners to the response object;
-	particularly to listen for the 'data' event.
+	During the `'response'` event, one can add listeners to the response object; particularly to listen for the `'data'` event.
 
-	If no 'response' handler is added, then the response will be entirely discarded.
-	However, if you add a 'response' event handler, then you must consume the data from the response object,
-	either by calling `read` whenever there is a 'readable' event, or by adding a 'data' handler, or by calling
-	the `resume` method. Until the data is consumed, the 'end' event will not fire. Also, until the data is read
-	it will consume memory that can eventually lead to a 'process out of memory' error.
+	If no `'response'` handler is added, then the response will be entirely discarded. However,
+	if a `'response'` event handler is added, then the data from the response object *must* be consumed,
+	either by calling `response.read()` whenever there is a `'readable'` event, or by adding a `'data'` handler,
+	or by calling the `.resume()` method. Until the data is consumed, the `'end'` event will not fire.
+	Also, until the data is read it will consume memory that can eventually lead to a 'process out of memory' error.
 
-	Note: Node does not check whether 'Content-Length' and the length of the body which has been transmitted are equal or not.
+	Unlike the `request` object, if the response closes prematurely, the response object does not emit an `'error'` event
+	but instead emits the `'aborted'` event.
+
+	Node.js does not check whether Content-Length and the length of the body which has been transmitted are equal or not.
 **/
 @:jsRequire("http", "ClientRequest")
 extern class ClientRequest extends Writable<ClientRequest> {
 	/**
-		Get header value
+		Marks the request as aborting. Calling this will cause remaining data in the response to be dropped and the socket to be destroyed.
 	**/
-	function getHeader(name:String):haxe.extern.EitherType<String, Array<String>>;
+	function abort():Void;
 
 	/**
-		Set header value.
-
-		Headers can only be modified before the request is sent.
+		The request.aborted property will be true if the request has been aborted.
 	**/
-	@:overload(function(name:String, value:Array<String>):Void {})
-	function setHeader(name:String, value:String):Void;
+	var aborted(default, null):Bool;
 
 	/**
-		Remove header
-
-		Headers can only be modified before the request is sent.
+		See `request.socket`.
 	**/
-	function removeHeader(name:String):String;
+	var connection(default, null):Socket;
+
+	/**
+		The `response.finished` property will be true if `response.end()` has been called.
+	**/
+	var finished(default, null):Bool;
 
 	/**
 		Flush the request headers.
@@ -120,15 +150,37 @@ extern class ClientRequest extends Writable<ClientRequest> {
 	function flushHeaders():Void;
 
 	/**
-		Aborts a request.
+		Reads out a header on the request. The name is case-insensitive.
+		The type of the return value depends on the arguments provided to `request.setHeader()`.
 	**/
-	function abort():Void;
+	function getHeader(name:String):haxe.extern.EitherType<String, Array<String>>;
 
 	/**
-		Once a socket is assigned to this request and is connected
-		`socket.setTimeout` will be called.
+		Limits maximum response headers count. If set to 0, no limit will be applied.
+
+		Default: `2000`
 	**/
-	function setTimeout(timeout:Int, ?callback:Void->Void):Void;
+	var maxHeadersCount:Null<Int>;
+
+	/**
+		The request path.
+	**/
+	var path(default, null):String;
+
+	/**
+		Removes a header that's already defined into headers object.
+	**/
+	function removeHeader(name:String):Void;
+
+	/**
+		Sets a single header value for headers object.
+		If this header already exists in the to-be-sent headers, its value will be replaced.
+		Use an array of strings here to send multiple headers with the same name.
+		Non-string values will be stored without modification. Therefore, `request.getHeader()` may return non-string values.
+		However, the non-string values will be converted to strings for network transmission.
+	**/
+	@:overload(function(name:String, value:Array<String>):Void {})
+	function setHeader(name:String, value:String):Void;
 
 	/**
 		Once a socket is assigned to this request and is connected
@@ -142,4 +194,37 @@ extern class ClientRequest extends Writable<ClientRequest> {
 	**/
 	@:overload(function(?initialDelay:Int):Void {})
 	function setSocketKeepAlive(enable:Bool, ?initialDelay:Int):Void;
+
+	/**
+		Once a socket is assigned to this request and is connected `socket.setTimeout()` will be called.
+	**/
+	function setTimeout(timeout:Int, ?callback:Socket->Void):ClientRequest;
+
+	/**
+		Reference to the underlying socket. Usually users will not want to access this property.
+		In particular, the socket will not emit `'readable'` events because of how the protocol parser attaches to the socket.
+		The `socket` may also be accessed via `request.connection`.
+	 */
+	var socket(default, null):Socket;
+
+	/**
+		Is `true` after `request.end()` has been called.
+		This property does not indicate whether the data has been flushed, for this use `request.writableFinished` instead.
+	**/
+	var writableEnded(default, null):Bool;
+
+	/**
+		Is `true` if all data has been flushed to the underlying system, immediately before the `'finish'` event is emitted.
+	**/
+	var writableFinished(default, null):Bool;
+}
+
+typedef InformationEventData = {
+	var httpVersion:String;
+	var httpVersionMajor:Int;
+	var httpVersionMinor:Int;
+	var statusCode:Int;
+	var statusMessage:String;
+	var headers:DynamicAccess<String>;
+	var rawHeaders:Array<String>;
 }
