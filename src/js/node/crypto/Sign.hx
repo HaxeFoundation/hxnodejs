@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.crypto;
 
 import haxe.extern.EitherType;
@@ -36,7 +37,6 @@ import js.node.stream.Writable;
 	The legacy `update` method is also supported.
 **/
 extern class Sign extends Writable<Sign> {
-
 	/**
 		Updates the sign object with data.
 		This can be called many times with new data as it is streamed.

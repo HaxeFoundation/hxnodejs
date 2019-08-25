@@ -15,9 +15,9 @@ class TlsServerPfxExample {
 
 		var server = Tls.createServer(options, function(socket) {
 			trace('server connected', socket.authorized ? 'authorized' : 'unauthorized');
-	  		socket.write("welcome!\n");
-	  		socket.setEncoding('utf8');
-	  		socket.pipe(socket);
+			socket.write("welcome!\n");
+			socket.setEncoding('utf8');
+			socket.pipe(socket);
 		});
 		server.listen(8000, function() trace('server bound'));
 	}

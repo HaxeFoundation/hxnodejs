@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.http;
 
 import haxe.DynamicAccess;
@@ -42,23 +43,23 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 		In the case of client response, the HTTP version of the connected-to server.
 		Probably either '1.1' or '1.0'.
 	**/
-	var httpVersion(default,null):String;
+	var httpVersion(default, null):String;
 
 	/**
 		HTTP Version first integer
 	**/
-	var httpVersionMajor(default,null):Int;
+	var httpVersionMajor(default, null):Int;
 
 	/**
 		HTTP Version second integer
 	**/
-	var httpVersionMinor(default,null):Int;
+	var httpVersionMinor(default, null):Int;
 
 	/**
 		The request/response headers object.
 		Read only map of header names and values. Header names are lower-cased
 	**/
-	var headers(default,null):DynamicAccess<haxe.extern.EitherType<String, Array<String>>>;
+	var headers(default, null):DynamicAccess<haxe.extern.EitherType<String, Array<String>>>;
 
 	/**
 		The raw request/response headers list exactly as they were received.
@@ -66,13 +67,13 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 		offsets are key values, and the odd-numbered offsets are the associated values.
 		Header names are not lowercased, and duplicates are not merged.
 	**/
-	var rawHeaders(default,null):Array<String>;
+	var rawHeaders(default, null):Array<String>;
 
 	/**
 		The request/response trailers object.
 		Only populated after the 'end' event.
 	**/
-	var trailers(default,null):DynamicAccess<String>;
+	var trailers(default, null):DynamicAccess<String>;
 
 	/**
 		Calls `destroy` on the socket that received the `IncomingMessage`.
@@ -93,34 +94,34 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 		The request method as a string.
 		Read only. Example: 'GET', 'DELETE'.
 	**/
-	var method(default,null):Method;
+	var method(default, null):Method;
 
 	/**
 		Only valid for request obtained from `Server`.
 
 		Request URL string. This contains only the URL that is present in the actual HTTP request.
 	**/
-	var url(default,null):String;
+	var url(default, null):String;
 
 	/**
 		Only valid for response obtained from `ClientRequest`.
 		The 3-digit HTTP response status code. E.G. 404.
 	**/
-	var statusCode(default,null):Int;
+	var statusCode(default, null):Int;
 
 	/**
 		Only valid for response obtained from 'ClientRequest'.
 		The HTTP response status message (reason phrase). E.G. OK or Internal Server Error.
 	**/
-	var statusMessage(default,null):String;
+	var statusMessage(default, null):String;
 
 	/**
 		The `Socket` object associated with the connection.
 	**/
-	var socket(default,null):Socket;
+	var socket(default, null):Socket;
 
 	/**
 		Alias for `socket`.
 	**/
-	var connection(default,null):Socket;
+	var connection(default, null):Socket;
 }

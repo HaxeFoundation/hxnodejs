@@ -19,10 +19,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.crypto;
 
 import haxe.extern.EitherType;
-
 import js.node.Buffer;
 
 @:enum abstract ECDHFormat(String) from String to String {
@@ -46,7 +46,7 @@ extern class ECDH {
 
 		Encoding can be 'binary', 'hex', or 'base64'. If no encoding is provided, then a buffer is returned.
 	**/
-	function generateKeys(?encoding:String, ?format:ECDHFormat):EitherType<String,Buffer>;
+	function generateKeys(?encoding:String, ?format:ECDHFormat):EitherType<String, Buffer>;
 
 	/**
 		Computes the shared secret using `other_public_key` as the other party's public key
@@ -70,7 +70,7 @@ extern class ECDH {
 
 		Encoding can be 'binary', 'hex', or 'base64'. If no encoding is provided, then a buffer is returned.
 	**/
-	function getPublicKey(?encoding:String, ?format:ECDHFormat):EitherType<String,Buffer>;
+	function getPublicKey(?encoding:String, ?format:ECDHFormat):EitherType<String, Buffer>;
 
 	/**
 		Returns the EC Diffie-Hellman private key in the specified encoding, which can be 'binary', 'hex', or 'base64'.

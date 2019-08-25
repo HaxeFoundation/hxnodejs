@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.http;
 
 import haxe.DynamicAccess;
@@ -26,7 +27,7 @@ import haxe.DynamicAccess;
 @:jsRequire("http", "Client")
 @:deprecated("http.Client will be removed soon. Do not use it.")
 extern class Client extends js.node.events.EventEmitter<Client> {
-    @:overload(function(path:String, ?headers:DynamicAccess<String>):ClientRequest {})
-    @:overload(function(method:Method, ?headers:DynamicAccess<String>):ClientRequest {})
-    function request(method:Method, path:String, ?headers:DynamicAccess<String>):ClientRequest;
+	@:overload(function(path:String, ?headers:DynamicAccess<String>):ClientRequest {})
+	@:overload(function(method:Method, ?headers:DynamicAccess<String>):ClientRequest {})
+	function request(method:Method, path:String, ?headers:DynamicAccess<String>):ClientRequest;
 }

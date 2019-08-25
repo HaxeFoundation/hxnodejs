@@ -19,12 +19,12 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import haxe.DynamicAccess;
 import haxe.extern.EitherType;
 import haxe.extern.Rest;
-
 import js.node.events.EventEmitter;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
@@ -34,7 +34,6 @@ import js.lib.Error;
 #else
 import js.Error;
 #end
-
 
 /**
 	Enumeration of events emitted by the Process class.
@@ -48,8 +47,7 @@ import js.Error;
 		This is a good hook to perform checks on the module's state (like for unit tests).
 		The callback takes one argument, the code the process is exiting with.
 	**/
-	var Exit : ProcessEvent<Int->Void> = "exit";
-
+	var Exit:ProcessEvent<Int->Void> = "exit";
 
 	/**
 		Emitted when node empties it's event loop and has nothing else to schedule.
@@ -61,20 +59,17 @@ import js.Error;
 		or uncaught exceptions, and should not be used as an alternative to the `exit` event
 		unless the intention is to schedule more work.
 	**/
-	var BeforeExit : ProcessEvent<Int->Void> = "beforeExit";
-
+	var BeforeExit:ProcessEvent<Int->Void> = "beforeExit";
 
 	/**
 		Emitted when an exception bubbles all the way back to the event loop.
 		If a listener is added for this exception, the default action (which is to print a stack trace and exit)
 		will not occur.
 	**/
-	var UncaughtException : ProcessEvent<Error->Void> = "uncaughtException";
+	var UncaughtException:ProcessEvent<Error->Void> = "uncaughtException";
 }
 
-
 extern class Process extends EventEmitter<Process> {
-
 	/**
 		A Writable Stream to stdout.
 
@@ -203,7 +198,7 @@ extern class Process extends EventEmitter<Process> {
 		Note: this function is only available on POSIX platforms (i.e. not Windows)
 		The list can contain group IDs, group names or both.
 	**/
-	function setgroups(groups:Array<EitherType<String,Int>>):Void;
+	function setgroups(groups:Array<EitherType<String, Int>>):Void;
 
 	/**
 		Reads /etc/group and initializes the group access list, using all groups of which the user is a member.
@@ -211,12 +206,12 @@ extern class Process extends EventEmitter<Process> {
 
 		Note: this function is only available on POSIX platforms (i.e. not Windows)
 	**/
-	function initgroups(user:EitherType<String,Int>, extra_group:EitherType<String,Int>):Void;
+	function initgroups(user:EitherType<String, Int>, extra_group:EitherType<String, Int>):Void;
 
 	/**
 		A compiled-in property that exposes NODE_VERSION.
 	**/
-	var version(default,null):String;
+	var version(default, null):String;
 
 	/**
 		A property exposing version strings of node and its dependencies.
@@ -246,7 +241,7 @@ extern class Process extends EventEmitter<Process> {
 	/**
 		The PID of the process.
 	**/
-	var pid(default,null):Int;
+	var pid(default, null):Int;
 
 	/**
 		Getter/setter to set what is displayed in 'ps'.
@@ -312,7 +307,7 @@ extern class Process extends EventEmitter<Process> {
 
 		As with require.main, it will be undefined if there was no entry script.
 	**/
-	var mainModule(default,null):Module;
+	var mainModule(default, null):Module;
 
 	/**
 		Send a message to the parent process.

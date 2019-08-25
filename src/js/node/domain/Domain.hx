@@ -19,10 +19,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.domain;
 
 import haxe.Constraints.Function;
-
 import js.node.events.EventEmitter;
 import js.node.Timers.Timeout;
 
@@ -31,8 +31,8 @@ import js.node.Timers.Timeout;
 **/
 @:deprecated
 @:enum abstract DomainEvent<T:Function>(Event<T>) to Event<T> {
-	var Error : DomainEvent<DomainError->Void> = "error";
-	var Dispose : DomainEvent<Void->Void> = "dispose";
+	var Error:DomainEvent<DomainError->Void> = "error";
+	var Dispose:DomainEvent<Void->Void> = "dispose";
 }
 
 /**
@@ -78,7 +78,7 @@ extern class Domain extends EventEmitter<Domain> {
 	/**
 		An array of timers and event emitters that have been explicitly added to the domain.
 	**/
-	var members(default,null):Array<haxe.extern.EitherType<IEventEmitter,Timeout>>;
+	var members(default, null):Array<haxe.extern.EitherType<IEventEmitter, Timeout>>;
 
 	/**
 		Explicitly adds an `emitter` to the domain.

@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.util;
 
 #if haxe4
@@ -43,5 +44,5 @@ extern class TextEncoder {
 	/**
 		The encoding supported by the `TextEncoder` instance. Always set to 'utf-8'.
 	**/
-	var encoding(default,null):String;
+	var encoding(default, null):String;
 }

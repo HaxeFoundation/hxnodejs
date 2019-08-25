@@ -19,10 +19,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.net;
 
 import haxe.extern.EitherType;
-
 #if haxe4
 import js.lib.Error;
 #else
@@ -38,24 +38,24 @@ import js.node.net.Socket.SocketAdress;
 	/**
 		Emitted when the server has been bound after calling `Server.listen`.
 	**/
-	var Listening : ServerEvent<Void->Void> = "listening";
+	var Listening:ServerEvent<Void->Void> = "listening";
 
 	/**
 		Emitted when a new connection is made.
 	**/
-	var Connection : ServerEvent<Socket->Void> = "connection";
+	var Connection:ServerEvent<Socket->Void> = "connection";
 
 	/**
 		Emitted when the server closes.
 		Note that if connections exist, this event is not emitted until all connections are ended.
 	**/
-	var Close : ServerEvent<Void->Void> = "close";
+	var Close:ServerEvent<Void->Void> = "close";
 
 	/**
 		Emitted when an error occurs.
 		The 'close' event will be called directly following this event. See example in discussion of server.listen.
 	**/
-	var Error : ServerEvent<Error->Void> = "error";
+	var Error:ServerEvent<Error->Void> = "error";
 }
 
 private typedef ServerListenOptionsBase = {
@@ -66,7 +66,7 @@ private typedef ServerListenOptionsBase = {
 	Options for the `Server.listen` method (TCP version).
 **/
 typedef ServerListenOptionsTcp = {
-	>ServerListenOptionsBase,
+	> ServerListenOptionsBase,
 	@:optional var port:Int;
 	@:optional var host:String;
 	@:optional var backlog:Int;
@@ -76,7 +76,7 @@ typedef ServerListenOptionsTcp = {
 	Options for the `Server.listen` method (UNIX version).
 **/
 typedef ServerListenOptionsUnix = {
-	>ServerListenOptionsBase,
+	> ServerListenOptionsBase,
 	@:optional var path:String;
 }
 
@@ -107,13 +107,12 @@ extern class Server extends EventEmitter<Server> {
 		The last parameter `callback` will be added as an listener for the 'listening' event.
 	**/
 	@:overload(function(path:String, ?callback:Void->Void):Void {})
-	@:overload(function(handle:EitherType<Dynamic,{fd:Int}>, ?callback:Void->Void):Void {})
+	@:overload(function(handle:EitherType<Dynamic, {fd:Int}>, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, backlog:Int, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, hostname:String, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, hostname:String, backlog:Int, ?callback:Void->Void):Void {})
-	function listen(options:EitherType<ServerListenOptionsTcp,ServerListenOptionsUnix>, ?callback:Void->Void):Void;
-
+	function listen(options:EitherType<ServerListenOptionsTcp, ServerListenOptionsUnix>, ?callback:Void->Void):Void;
 
 	/**
 		Stops the server from accepting new connections and keeps existing connections.
@@ -147,7 +146,7 @@ extern class Server extends EventEmitter<Server> {
 	/**
 		A boolean indicating whether or not the server is listening for connections.
 	**/
-	var listening(default,null):Bool;
+	var listening(default, null):Bool;
 
 	/**
 		Set this property to reject connections when the server's connection count gets high.
@@ -162,7 +161,7 @@ extern class Server extends EventEmitter<Server> {
 		To poll forks and get current number of active connections use asynchronous `getConnections` instead.
 	**/
 	@:deprecated("please use `getConnections` instead")
-	var connections(default,null):Null<Int>;
+	var connections(default, null):Null<Int>;
 
 	/**
 		Asynchronously get the number of concurrent connections on the server.

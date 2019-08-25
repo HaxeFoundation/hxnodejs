@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.repl;
 
 import js.node.events.EventEmitter;
@@ -32,7 +33,7 @@ import js.node.events.EventEmitter;
 		Namely, typing .exit at the repl, pressing Ctrl+C twice to signal SIGINT,
 		or pressing Ctrl+D to signal "end" on the input stream.
 	**/
-	var Exit : REPLServerEvent<Void->Void> = "exit";
+	var Exit:REPLServerEvent<Void->Void> = "exit";
 }
 
 /**
@@ -44,5 +45,5 @@ extern class REPLServer extends EventEmitter<REPLServer> {
 		You can expose a variable to the REPL explicitly by assigning it
 		to the `context` object associated with each REPLServer.
 	**/
-	var context(default,null):Dynamic<Dynamic>;
+	var context(default, null):Dynamic<Dynamic>;
 }

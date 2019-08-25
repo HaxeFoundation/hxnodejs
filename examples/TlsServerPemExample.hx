@@ -14,7 +14,7 @@ class TlsServerPemExample {
 			requestCert: true,
 
 			// This is necessary only if the client uses the self-signed certificate.
-			ca: [ Fs.readFileSync('client-cert.pem') ]
+			ca: [Fs.readFileSync('client-cert.pem')]
 		};
 
 		var server = Tls.createServer(options, function(socket) {

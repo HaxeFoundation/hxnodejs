@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.stream;
 
 import haxe.extern.EitherType;
@@ -44,7 +45,7 @@ import js.Error;
 
 		Once the internal buffer is drained, a 'readable' event will fire again when more data is available.
 	**/
-	var Readable : ReadableEvent<Void->Void> = "readable";
+	var Readable:ReadableEvent<Void->Void> = "readable";
 
 	/**
 		If you attach a 'data' event listener, then it will switch the stream into flowing mode,
@@ -52,7 +53,7 @@ import js.Error;
 
 		If you just want to get all the data out of the stream as fast as possible, this is the best way to do so.
 	**/
-	var Data : ReadableEvent<EitherType<Buffer,String>->Void> = "data";
+	var Data:ReadableEvent<EitherType<Buffer, String>->Void> = "data";
 
 	/**
 		This event fires when there will be no more data to read.
@@ -60,19 +61,19 @@ import js.Error;
 		Note that the 'end' event will not fire unless the data is completely consumed.
 		This can be done by switching into flowing mode, or by calling 'read' repeatedly until you get to the end.
 	**/
-	var End : ReadableEvent<Void->Void> = "end";
+	var End:ReadableEvent<Void->Void> = "end";
 
 	/**
 		Emitted when the underlying resource (for example, the backing file descriptor) has been closed.
 
 		Not all streams will emit this.
 	**/
-	var Close : ReadableEvent<Void->Void> = "close";
+	var Close:ReadableEvent<Void->Void> = "close";
 
 	/**
 		Emitted if there was an error receiving data.
 	**/
-	var Error : ReadableEvent<Error->Void> = "error";
+	var Error:ReadableEvent<Error->Void> = "error";
 }
 
 /**
@@ -109,7 +110,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 		This method should only be called in non-flowing mode.
 		In flowing-mode, this method is called automatically until the internal buffer is drained.
 	**/
-	function read(?size:Int):Null<EitherType<String,Buffer>>;
+	function read(?size:Int):Null<EitherType<String, Buffer>>;
 
 	/**
 		Call this function to cause the stream to return strings of the specified encoding instead of `Buffer` objects.
@@ -188,7 +189,6 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	**/
 	function wrap(stream:Dynamic):IReadable;
 
-
 	// --------- API for stream implementors - see node.js API documentation ---------
 	// TODO: add state objects here and in other streams
 	private function new(?options:ReadableNewOptions);
@@ -210,26 +210,26 @@ typedef ReadableNewOptions = {
 }
 
 /**
-    `IReadable` interface is used as "any Readable".
+	`IReadable` interface is used as "any Readable".
 
-    See `Readable` for actual class documentation.
+	See `Readable` for actual class documentation.
 **/
 @:remove
 extern interface IReadable extends IStream {
-    function read(?size:Int):Null<EitherType<String,Buffer>>;
+	function read(?size:Int):Null<EitherType<String, Buffer>>;
 
-    function setEncoding(encoding:String):Void;
+	function setEncoding(encoding:String):Void;
 
-    function resume():Void;
-    function pause():Void;
+	function resume():Void;
+	function pause():Void;
 
-    function pipe<T:IWritable>(destination:T, ?options:{?end:Bool}):T;
+	function pipe<T:IWritable>(destination:T, ?options:{?end:Bool}):T;
 
-    @:overload(function():Void {})
-    function unpipe(destination:IWritable):Void;
+	@:overload(function():Void {})
+	function unpipe(destination:IWritable):Void;
 
-    @:overload(function(chunk:Buffer):Void {})
-    function unshift(chunk:String):Void;
+	@:overload(function(chunk:Buffer):Void {})
+	function unshift(chunk:String):Void;
 
-    function wrap(stream:Dynamic):IReadable;
+	function wrap(stream:Dynamic):IReadable;
 }

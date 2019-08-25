@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.http;
 
 import js.node.Buffer;
@@ -33,33 +34,33 @@ import js.node.stream.Writable;
 	/**
 		Emitted when a response is received to this request. This event is emitted only once.
 	**/
-	var Response : ClientRequestEvent<IncomingMessage->Void> = "response";
+	var Response:ClientRequestEvent<IncomingMessage->Void> = "response";
 
 	/**
 		Emitted after a socket is assigned to this request.
 	**/
-	var Socket : ClientRequestEvent<Socket->Void> = "socket";
+	var Socket:ClientRequestEvent<Socket->Void> = "socket";
 
 	/**
 		Emitted each time a server responds to a request with a CONNECT method.
 		If this event isn't being listened for, clients receiving a CONNECT method
 		will have their connections closed.
 	**/
-	var Connect : ClientRequestEvent<IncomingMessage->Socket->Buffer->Void> = "connect";
+	var Connect:ClientRequestEvent<IncomingMessage->Socket->Buffer->Void> = "connect";
 
 	/**
 		Emitted each time a server responds to a request with an upgrade.
 		If this event isn't being listened for, clients receiving an upgrade header
 		will have their connections closed.
 	**/
-	var Upgrade : ClientRequestEvent<IncomingMessage->Socket->Buffer->Void> = "upgrade";
+	var Upgrade:ClientRequestEvent<IncomingMessage->Socket->Buffer->Void> = "upgrade";
 
 	/**
 		Emitted when the server sends a '100 Continue' HTTP response,
 		usually because the request contained 'Expect: 100-continue'.
 		This is an instruction that the client should send the request body.
 	**/
-	var Continue : ClientRequestEvent<Void->Void> = "continue";
+	var Continue:ClientRequestEvent<Void->Void> = "continue";
 }
 
 /**
@@ -86,11 +87,10 @@ import js.node.stream.Writable;
 **/
 @:jsRequire("http", "ClientRequest")
 extern class ClientRequest extends Writable<ClientRequest> {
-
 	/**
 		Get header value
 	**/
-	function getHeader(name:String):haxe.extern.EitherType<String,Array<String>>;
+	function getHeader(name:String):haxe.extern.EitherType<String, Array<String>>;
 
 	/**
 		Set header value.
@@ -140,6 +140,6 @@ extern class ClientRequest extends Writable<ClientRequest> {
 		Once a socket is assigned to this request and is connected
 		`socket.setKeepAlive`() will be called.
 	**/
-    @:overload(function(?initialDelay:Int):Void {})
-    function setSocketKeepAlive(enable:Bool, ?initialDelay:Int):Void;
+	@:overload(function(?initialDelay:Int):Void {})
+	function setSocketKeepAlive(enable:Bool, ?initialDelay:Int):Void;
 }

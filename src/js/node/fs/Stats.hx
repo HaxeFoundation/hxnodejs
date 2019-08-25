@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.fs;
 
 /**
@@ -70,10 +71,12 @@ extern class Stats {
 	function isDirectory():Bool;
 	function isBlockDevice():Bool;
 	function isCharacterDevice():Bool;
+
 	/**
 		Only valid with `Fs.lstat`.
 	**/
 	function isSymbolicLink():Bool;
+
 	function isFIFO():Bool;
 	function isSocket():Bool;
 }

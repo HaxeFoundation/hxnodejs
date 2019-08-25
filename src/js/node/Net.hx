@@ -19,15 +19,16 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import haxe.extern.EitherType;
-
 import js.node.net.Socket;
 import js.node.net.Server;
 
 typedef NetCreateServerOptions = {
-	>SocketOptionsBase,
+	> SocketOptionsBase,
+
 	/**
 		If true, then the socket associated with each incoming connection will be paused,
 		and no data will be read from its handle.
@@ -44,16 +45,16 @@ typedef NetCreateServerOptions = {
 	Options for the `Net.connect` method (TCP version).
 **/
 typedef NetConnectOptionsTcp = {
-	>SocketOptions,
-	>SocketConnectOptionsTcp,
+	> SocketOptions,
+	> SocketConnectOptionsTcp,
 }
 
 /**
 	Options for the `Net.connect` method (Local domain socket version).
 **/
 typedef NetConnectOptionsUnix = {
-	>SocketOptions,
-	>SocketConnectOptionsUnix,
+	> SocketOptions,
+	> SocketConnectOptionsUnix,
 }
 
 /**
@@ -94,9 +95,9 @@ extern class Net {
 		Otherwise `options` argument should be provided.
 	**/
 	@:overload(function(path:String, ?connectListener:Void->Void):Socket {})
-	@:overload(function(port:Int, ?connectListener :Void->Void):Socket {})
+	@:overload(function(port:Int, ?connectListener:Void->Void):Socket {})
 	@:overload(function(port:Int, host:String, ?connectListener:Void->Void):Socket {})
-	static function connect(options:EitherType<NetConnectOptionsTcp,NetConnectOptionsUnix>, ?connectListener:Void->Void):Socket;
+	static function connect(options:EitherType<NetConnectOptionsTcp, NetConnectOptionsUnix>, ?connectListener:Void->Void):Socket;
 
 	/**
 		Same as `connect`.
@@ -104,7 +105,7 @@ extern class Net {
 	@:overload(function(path:String, ?connectListener:Void->Void):Socket {})
 	@:overload(function(port:Int, ?connectListener:Void->Void):Socket {})
 	@:overload(function(port:Int, host:String, ?connectListener:Void->Void):Socket {})
-	static function createConnection(options:EitherType<NetConnectOptionsTcp,NetConnectOptionsUnix>, ?connectListener:Void->Void):Socket;
+	static function createConnection(options:EitherType<NetConnectOptionsTcp, NetConnectOptionsUnix>, ?connectListener:Void->Void):Socket;
 
 	/**
 		Tests if input is an IP address.

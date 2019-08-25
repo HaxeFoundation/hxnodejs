@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.crypto;
 
 import js.node.Buffer;
@@ -34,7 +35,6 @@ import js.node.Buffer;
 	The legacy `update` and `final` methods are also supported.
 **/
 extern class Cipher extends js.node.stream.Transform<Cipher> {
-
 	/**
 		Updates the cipher with `data`, the encoding of which is given in `input_encoding`
 		and can be 'utf8', 'ascii' or 'binary'. If no encoding is provided, then a buffer is expected.

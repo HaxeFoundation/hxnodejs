@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import js.node.http.IncomingMessage;
@@ -29,8 +30,9 @@ import js.node.Tls.TlsCreateServerOptions;
 import js.node.Tls.TlsConnectOptions;
 
 typedef HttpsRequestOptions = {
-	>js.node.Http.HttpRequestOptions,
-	>TlsConnectOptions, // TODO: clean those options up
+	> js.node.Http.HttpRequestOptions,
+	> TlsConnectOptions,
+	// TODO: clean those options up
 }
 
 /**
@@ -39,7 +41,6 @@ typedef HttpsRequestOptions = {
 **/
 @:jsRequire("https")
 extern class Https {
-
 	/**
 		Global instance of `Agent` for all HTTPS client requests.
 	**/

@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.util;
 
 #if haxe4
@@ -36,7 +37,7 @@ import js.html.ArrayBufferView;
 extern class TextDecoder {
 	/**
 		Creates an new `TextDecoder` instance.
-		
+
 		The `encoding` may specify one of the supported encodings or an alias.
 	**/
 	function new(?encoding:String, ?options:TextDecoderOptions);
@@ -54,34 +55,34 @@ extern class TextDecoder {
 	/**
 		The encoding supported by the `TextDecoder` instance.
 	**/
-	var encoding(default,null):String;
+	var encoding(default, null):String;
 
 	/**
 		The value will be `true` if decoding errors result in a `TypeError` being thrown.
 	**/
-	var fatal(default,null):Bool;
+	var fatal(default, null):Bool;
 
 	/**
 		The value will be `true` if the decoding result will include the byte order mark.
 	**/
-	var ignoreBOM(default,null):Bool;
+	var ignoreBOM(default, null):Bool;
 }
 
 typedef TextDecoderOptions = {
 	/**
 		`true` if decoding failures are fatal. This option is only supported when ICU is enabled (see Internationalization).
-		
+
 		Default: `false`.
 	**/
 	@:optional var fatal:Bool;
 
 	/**
 		When `true`, the TextDecoder will include the byte order mark in the decoded result.
-		
+
 		When `false`, the byte order mark will be removed from the output.
-		
+
 		This option is only used when encoding is 'utf-8', 'utf-16be' or 'utf-16le'.
-		
+
 		Default: `false`.
 	**/
 	@:optional var ignoreBOM:Bool;
@@ -90,7 +91,7 @@ typedef TextDecoderOptions = {
 typedef TextDecodeOptions = {
 	/**
 		true if additional chunks of data are expected.
-		
+
 		Default: false.
 	**/
 	@:optional var stream:Bool;

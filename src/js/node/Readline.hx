@@ -19,10 +19,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import haxe.extern.EitherType;
-
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
 import js.node.readline.*;
@@ -70,12 +70,8 @@ typedef ReadlineOptions = {
 	@:optional var prompt:String;
 }
 
-typedef ReadlineCompleterCallback =
-	#if (haxe_ver >= 4)
-	(line:String) -> Array<EitherType<Array<String>,String>>;
-	#else
-	String->Array<EitherType<Array<String>,String>>;
-	#end
+typedef ReadlineCompleterCallback = #if (haxe_ver >= 4) (line : String) -> Array<EitherType<Array<String>, String>>; #else String->
+	Array<EitherType<Array<String>, String>>; #end
 
 /**
 	Enumeration of possible directions for `Readline.clearLine`

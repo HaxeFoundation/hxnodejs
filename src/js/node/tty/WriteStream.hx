@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.tty;
 
 import js.node.events.EventEmitter;
@@ -30,7 +31,7 @@ import js.node.events.EventEmitter;
 	/**
 		Emitted by refreshSize() when either of the columns or rows properties has changed.
 	**/
-	var Resize : WriteStreamEvent<Void->Void> = "resize";
+	var Resize:WriteStreamEvent<Void->Void> = "resize";
 }
 
 /**
@@ -44,11 +45,11 @@ extern class WriteStream extends js.node.net.Socket {
 		The number of columns the TTY currently has.
 		This property gets updated on "resize" events.
 	**/
-	var columns(default,null):Int;
+	var columns(default, null):Int;
 
 	/**
 		The number of rows the TTY currently has.
 		This property gets updated on "resize" events.
 	**/
-	var rows(default,null):Int;
+	var rows(default, null):Int;
 }

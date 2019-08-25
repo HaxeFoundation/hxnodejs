@@ -19,8 +19,8 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-package js.node;
 
+package js.node;
 
 // IMPORTANT: this structure should contain a set of fields
 // matching statics of the `Path` class and is used as a type
@@ -36,12 +36,11 @@ private typedef PathModule = {
 	function dirname(path:String):String;
 	function basename(path:String, ?ext:String):String;
 	function extname(path:String):String;
-	var sep(default,null):String;
-	var delimiter(default,null):String;
+	var sep(default, null):String;
+	var delimiter(default, null):String;
 	function parse(pathString:String):PathObject;
 	function format(pathObject:PathObject):String;
 }
-
 
 /**
 	This module provides utilities for working with file and directory paths.
@@ -126,7 +125,7 @@ extern class Path {
 		`\` on Windows
 		`/` on POSIX
 	**/
-	static var sep(default,null):String;
+	static var sep(default, null):String;
 
 	/**
 		Platform-specific path delimiter:
@@ -134,7 +133,7 @@ extern class Path {
 		`;` for Windows
 		`:` for POSIX
 	**/
-	static var delimiter(default,null):String;
+	static var delimiter(default, null):String;
 
 	/**
 		Returns an object whose properties represent significant elements of the `path`.
@@ -149,7 +148,7 @@ extern class Path {
 	/**
 		Provides access to POSIX specific implementations of the path methods.
 	**/
-	static var posix(default,null):PathModule;
+	static var posix(default, null):PathModule;
 
 	/**
 		Provides access to Windows-specific implementations of the path methods.
@@ -157,9 +156,8 @@ extern class Path {
 		Note: On Windows, both the forward slash (/) and backward slash (\) characters are accepted as path delimiters;
 		however, only the backward slash (\) will be used in return values.
 	**/
-	static var win32(default,null):PathModule;
+	static var win32(default, null):PathModule;
 }
-
 
 /**
 	Path object returned from `Path.parse` and taken by `Path.format`.

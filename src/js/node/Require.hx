@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import haxe.DynamicAccess;
@@ -41,7 +42,7 @@ extern class Require {
 		Modules are cached in this object when they are required.
 		By deleting a key value from this object, the next require will reload the module.
 	**/
-	static var cache(default,null):DynamicAccess<Module>;
+	static var cache(default, null):DynamicAccess<Module>;
 
 	/**
 		Instruct require on how to handle certain file extensions.
@@ -54,11 +55,11 @@ extern class Require {
 		and complexities that are best left untouched.
 	**/
 	@:deprecated
-	static var extensions(default,null):DynamicAccess<Dynamic>;
+	static var extensions(default, null):DynamicAccess<Dynamic>;
 
 	/**
 		When a file is run directly from Node, `Require.main` is set to its module.
 		That means that you can determine whether a file has been run directly by testing `Require.main == module`.
 	**/
-	static var main(default,null):Module;
+	static var main(default, null):Module;
 }

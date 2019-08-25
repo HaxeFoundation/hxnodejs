@@ -19,11 +19,11 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.zlib;
 
 /**
 	Decompress either a Gzip- or Deflate-compressed stream by auto-detecting the header.
 **/
 @:jsRequire("zlib", "Unzip")
-extern class Unzip extends Zlib {
-}
+extern class Unzip extends Zlib {}

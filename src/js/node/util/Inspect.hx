@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.util;
 
 import haxe.DynamicAccess;
@@ -81,6 +82,6 @@ extern class Inspect {
 	#if haxe4
 	static final custom:js.lib.Symbol;
 	#else
-	static var custom(default,never):Dynamic;
+	static var custom(default, never):Dynamic;
 	#end
 }

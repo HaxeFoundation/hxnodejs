@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.util;
 
 /**
@@ -45,14 +46,14 @@ extern class Types {
 
 	/**
 		Returns `true` if the value is a built-in ArrayBuffer instance.
-		
+
 		This does not include SharedArrayBuffer instances. Usually, it is desirable to test for both.
 	**/
 	static function isArrayBuffer(value:Dynamic):Bool;
 
 	/**
 		Returns `true` if the value is an async function.
-		
+
 		Note that this only reports back what the JavaScript engine is seeing; in particular, the return value may not match
 		the original source code if a transpilation tool was used.
 	**/
@@ -107,15 +108,15 @@ extern class Types {
 
 	/**
 		Returns `true` if the value is a generator function.
-		
-		Note that this only reports back what the JavaScript engine is seeing; in particular, 
+
+		Note that this only reports back what the JavaScript engine is seeing; in particular,
 		the return value may not match the original source code if a transpilation tool was used.
 	**/
 	static function isGeneratorFunction(value:Dynamic):Bool;
 
 	/**
 		Returns `true` if the value is a generator object as returned from a built-in generator function.
-		
+
 		Note that this only reports back what the JavaScript engine is seeing; in particular,
 		the return value may not match the original source code if a transpilation tool was used.
 	**/
@@ -188,7 +189,7 @@ extern class Types {
 
 	/**
 		Returns `true` if the value is a built-in SharedArrayBuffer instance.
-		
+
 		This does not include ArrayBuffer instances. Usually, it is desirable to test for both.
 	**/
 	static function isSharedArrayBuffer(value:Dynamic):Bool;

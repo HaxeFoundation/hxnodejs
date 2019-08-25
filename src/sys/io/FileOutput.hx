@@ -17,25 +17,25 @@ class FileOutput extends haxe.io.Output {
 		pos = 0;
 	}
 
-	override public function writeByte( b : Int ) : Void {
+	override public function writeByte(b:Int):Void {
 		var buf = new Buffer(1);
 		buf[0] = b;
 		Fs.writeSync(fd, buf, 0, 1, pos);
 		pos++;
 	}
 
-	override public function writeBytes( s : Bytes, pos : Int, len : Int ) : Int {
+	override public function writeBytes(s:Bytes, pos:Int, len:Int):Int {
 		var buf = Buffer.hxFromBytes(s);
 		var wrote = Fs.writeSync(fd, buf, pos, len, this.pos);
 		this.pos += wrote;
 		return wrote;
 	}
 
-	override public function close() : Void {
+	override public function close():Void {
 		Fs.closeSync(fd);
 	}
 
-	public function seek( p : Int, pos : FileSeek ) : Void {
+	public function seek(p:Int, pos:FileSeek):Void {
 		switch (pos) {
 			case SeekBegin:
 				this.pos = p;
@@ -46,8 +46,7 @@ class FileOutput extends haxe.io.Output {
 		}
 	}
 
-	public function tell() : Int {
+	public function tell():Int {
 		return pos;
 	}
-
 }

@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.stream;
 
 import js.node.Buffer;
@@ -35,17 +36,16 @@ import js.Error;
 	Enumeration for `Writable` class events.
 **/
 @:enum abstract WritableEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
-
 	/**
 		If a `writable.write(chunk)` call returns `false`, then the `drain` event will indicate
 		when it is appropriate to begin writing more data to the stream.
 	**/
-	var Drain : WritableEvent<Void->Void> = "drain";
+	var Drain:WritableEvent<Void->Void> = "drain";
 
 	/**
 		When the `end()` method has been called, and all data has been flushed to the underlying system, this event is emitted.
 	**/
-	var Finish : WritableEvent<Void->Void> = "finish";
+	var Finish:WritableEvent<Void->Void> = "finish";
 
 	/**
 		Lister arguments:
@@ -54,7 +54,7 @@ import js.Error;
 		This is emitted whenever the `pipe()` method is called on a readable stream,
 		adding `this` writable to its set of destinations.
 	**/
-	var Pipe : WritableEvent<IReadable->Void> = "pipe";
+	var Pipe:WritableEvent<IReadable->Void> = "pipe";
 
 	/**
 		Listener arguments:
@@ -63,12 +63,12 @@ import js.Error;
 		This is emitted whenever the `unpipe()` method is called on a readable stream,
 		removing `this` writable from its set of destinations.
 	**/
-	var Unpipe : WritableEvent<IReadable->Void> = "unpipe";
+	var Unpipe:WritableEvent<IReadable->Void> = "unpipe";
 
 	/**
 		Emitted if there was an error when writing or piping data.
 	**/
-	var Error : WritableEvent<Error->Void> = "error";
+	var Error:WritableEvent<Error->Void> = "error";
 }
 
 /**
@@ -116,7 +116,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 		Terminal write streams (i.e. process.stdout) have this property set to true.
 		It is false for any other write streams.
 	**/
-	var isTTY(default,null):Bool;
+	var isTTY(default, null):Bool;
 
 	/**
 		The writable.cork() method forces all written data to be buffered in memory.
@@ -151,14 +151,13 @@ typedef WritableNewOptions = {
 	@:optional var objectMode:Bool;
 	@:optional var emitClose:Bool;
 	@:optional var write:Dynamic->String->(Null<Error>->Void)->Void;
-	@:optional var writev:Array<{chunk:Dynamic,encoding:String}>->(Null<Error>->Void)->Void;
+	@:optional var writev:Array<{chunk:Dynamic, encoding:String}>->(Null<Error>->Void)->Void;
 	@:optional var destroy:Null<Error>->(Null<Error>->Void)->Void;
 }
 
-
 /**
-    Writable interface used for type parameter constraints.
-    See `Writable` for actual class documentation.
+	Writable interface used for type parameter constraints.
+	See `Writable` for actual class documentation.
 **/
 @:remove
 extern interface IWritable extends IStream {
@@ -175,5 +174,5 @@ extern interface IWritable extends IStream {
 	function uncork():Void;
 	function setDefaultEncoding(encoding:String):IWritable;
 
-	var isTTY(default,null):Bool;
+	var isTTY(default, null):Bool;
 }

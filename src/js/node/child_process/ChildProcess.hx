@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.child_process;
 
 import js.node.events.EventEmitter;
@@ -34,7 +35,7 @@ import js.Error;
 /**
 	Enumeration of events emitted by `ChildProcess` objects.
 **/
-@:enum abstract ChildProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T>  {
+@:enum abstract ChildProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when:
 			1. The process could not be spawned, or
@@ -46,7 +47,7 @@ import js.Error;
 
 		See also `ChildProcess.kill` and `ChildProcess.send`.
 	**/
-	var Error : ChildProcessEvent<Error->Void> = "error";
+	var Error:ChildProcessEvent<Error->Void> = "error";
 
 	/**
 		This event is emitted after the child process ends.
@@ -64,7 +65,7 @@ import js.Error;
 		so it will not terminate due to receipt of those signals, it will exit.
 		See waitpid(2).
 	**/
-	var Exit : ChildProcessEvent<Int->String->Void> = "exit";
+	var Exit:ChildProcessEvent<Int->String->Void> = "exit";
 
 	/**
 		This event is emitted when the stdio streams of a child process have all terminated.
@@ -74,13 +75,13 @@ import js.Error;
 			code - the exit code, if it exited normally.
 			signal - the signal passed to kill the child process, if it was killed by the parent.
 	**/
-	var Close : ChildProcessEvent<Int->String->Void> = "close";
+	var Close:ChildProcessEvent<Int->String->Void> = "close";
 
 	/**
 		This event is emitted after calling the `disconnect` method in the parent or in the child.
 		After disconnecting it is no longer possible to send messages, and the `connected` property is false.
 	**/
-	var Disconnect : ChildProcessEvent<Void->Void> = "disconnect";
+	var Disconnect:ChildProcessEvent<Void->Void> = "disconnect";
 
 	/**
 		Messages send by `send` are obtained using the message event.
@@ -91,7 +92,7 @@ import js.Error;
 			message - a parsed JSON object or primitive value
 			sendHandle - a Socket or Server object
 	**/
-	var Message : ChildProcessEvent<Dynamic->Dynamic->Void> = "message";
+	var Message:ChildProcessEvent<Dynamic->Dynamic->Void> = "message";
 }
 
 typedef ChildProcessSendOptions = {
@@ -118,37 +119,37 @@ extern class ChildProcess extends EventEmitter<ChildProcess> {
 
 		If the child stdio streams are shared with the parent, then this will not be set.
 	**/
-	var stdin(default,null):IWritable;
+	var stdin(default, null):IWritable;
 
 	/**
 		A Readable Stream that represents the child process's stdout.
 
 		If the child stdio streams are shared with the parent, then this will not be set.
 	**/
-	var stdout(default,null):IReadable;
+	var stdout(default, null):IReadable;
 
 	/**
 		A Readable Stream that represents the child process's stderr.
 
 		If the child stdio streams are shared with the parent, then this will not be set.
 	**/
-	var stderr(default,null):IReadable;
+	var stderr(default, null):IReadable;
 
 	/**
 		The parent end of the stdio pipes.
 	**/
-	var stdio(default,null):Array<IStream>;
+	var stdio(default, null):Array<IStream>;
 
 	/**
 		The PID of the child process.
 	**/
-	var pid(default,null):Int;
+	var pid(default, null):Int;
 
 	/**
 		Set to false after `disconnect' is called
 		If `connected` is false, it is no longer possible to send messages.
 	**/
-	var connected(default,null):Bool;
+	var connected(default, null):Bool;
 
 	/**
 		Send a signal to the child process.

@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import haxe.DynamicAccess;
@@ -38,7 +39,7 @@ import js.node.fs.WriteStream;
 	Most FS functions now support passing `String` and `Buffer`.
 	This type is used for path arguments and allows passing either of those.
 **/
-typedef FsPath = EitherType<String,Buffer>;
+typedef FsPath = EitherType<String, Buffer>;
 
 /**
 	Possible options for `Fs.watchFile`.
@@ -49,6 +50,7 @@ typedef FsWatchFileOptions = {
 		default: true
 	**/
 	@:optional var persistent:Bool;
+
 	/**
 		indicates how often the target should be polled, in milliseconds
 		default: 5007
@@ -60,7 +62,7 @@ typedef FsWatchFileOptions = {
 	The `mode` argument used by `Fs.open` and related functions
 	can be either an integer or a string with octal number.
 **/
-typedef FsMode = EitherType<Int,String>;
+typedef FsMode = EitherType<Int, String>;
 
 /**
 	Possible options for `Fs.writeFile` and `Fs.appendFile`.
@@ -248,7 +250,7 @@ typedef FsCreateWriteStreamOptions = {
 	/**
 		Open file for reading and appending.
 		The file is created if it does not exist.
-	*/
+	 */
 	var AppendReadCreate = "a+";
 
 	/**
@@ -286,7 +288,6 @@ typedef FsConstants = {
 		Meant for use with `Fs.access`.
 	**/
 	var X_OK:Int;
-
 
 	/**
 		Flag indicating to open a file for read-only access.
@@ -362,7 +363,6 @@ typedef FsConstants = {
 		Flag indicating to open the file in nonblocking mode when possible.
 	**/
 	var O_NONBLOCK:Int;
-
 
 	/**
 		Bit mask used to extract the file type code.
@@ -483,7 +483,7 @@ extern class Fs {
 	/**
 		An object containing commonly used constants for file system operations.
 	**/
-	static var constants(default,null):FsConstants;
+	static var constants(default, null):FsConstants;
 
 	/**
 		Asynchronous rename(2).
@@ -711,7 +711,6 @@ extern class Fs {
 	**/
 	static function mkdtemp(prefix:String, callback:Error->String->Void):Void;
 
-
 	/**
 		The synchronous version of `mkdtemp`.
 
@@ -900,16 +899,16 @@ extern class Fs {
 	**/
 	@:overload(function(filename:FsPath, data:Buffer, callback:Error->Void):Void {})
 	@:overload(function(filename:FsPath, data:String, callback:Error->Void):Void {})
-	@:overload(function(filename:FsPath, data:Buffer, options:EitherType<String,FsWriteFileOptions>, callback:Error->Void):Void {})
-	static function writeFile(filename:FsPath, data:String, options:EitherType<String,FsWriteFileOptions>, callback:Error->Void):Void;
+	@:overload(function(filename:FsPath, data:Buffer, options:EitherType<String, FsWriteFileOptions>, callback:Error->Void):Void {})
+	static function writeFile(filename:FsPath, data:String, options:EitherType<String, FsWriteFileOptions>, callback:Error->Void):Void;
 
 	/**
 		The synchronous version of `writeFile`.
 	**/
 	@:overload(function(filename:FsPath, data:Buffer):Void {})
 	@:overload(function(filename:FsPath, data:String):Void {})
-	@:overload(function(filename:FsPath, data:Buffer, options:EitherType<String,FsWriteFileOptions>):Void {})
-	static function writeFileSync(filename:FsPath, data:String, options:EitherType<String,FsWriteFileOptions>):Void;
+	@:overload(function(filename:FsPath, data:Buffer, options:EitherType<String, FsWriteFileOptions>):Void {})
+	static function writeFileSync(filename:FsPath, data:String, options:EitherType<String, FsWriteFileOptions>):Void;
 
 	/**
 		Asynchronously append data to a file, creating the file if it not yet exists.
@@ -917,16 +916,16 @@ extern class Fs {
 	**/
 	@:overload(function(filename:FsPath, data:Buffer, callback:Error->Void):Void {})
 	@:overload(function(filename:FsPath, data:String, callback:Error->Void):Void {})
-	@:overload(function(filename:FsPath, data:Buffer, options:EitherType<String,FsWriteFileOptions>, callback:Error->Void):Void {})
-	static function appendFile(filename:FsPath, data:String, options:EitherType<String,FsWriteFileOptions>, callback:Error->Void):Void;
+	@:overload(function(filename:FsPath, data:Buffer, options:EitherType<String, FsWriteFileOptions>, callback:Error->Void):Void {})
+	static function appendFile(filename:FsPath, data:String, options:EitherType<String, FsWriteFileOptions>, callback:Error->Void):Void;
 
 	/**
 		The synchronous version of `appendFile`.
 	**/
 	@:overload(function(filename:FsPath, data:Buffer):Void {})
 	@:overload(function(filename:FsPath, data:String):Void {})
-	@:overload(function(filename:FsPath, data:Buffer, options:EitherType<String,FsWriteFileOptions>):Void {})
-	static function appendFileSync(filename:FsPath, data:String, options:EitherType<String,FsWriteFileOptions>):Void;
+	@:overload(function(filename:FsPath, data:Buffer, options:EitherType<String, FsWriteFileOptions>):Void {})
+	static function appendFileSync(filename:FsPath, data:String, options:EitherType<String, FsWriteFileOptions>):Void;
 
 	/**
 		Unstable. Use `watch` instead, if possible.
@@ -963,7 +962,7 @@ extern class Fs {
 		is the name of the file which triggered the event.
 	**/
 	@:overload(function(filename:FsPath):FSWatcher {})
-	@:overload(function(filename:FsPath, options:{persistent:Bool,?recursive:Bool}, listener:FSWatcherChangeType->String->Void):FSWatcher {})
+	@:overload(function(filename:FsPath, options:{persistent:Bool, ?recursive:Bool}, listener:FSWatcherChangeType->String->Void):FSWatcher {})
 	static function watch(filename:FsPath, listener:FSWatcherChangeType->FsPath->Void):FSWatcher;
 
 	/**
@@ -1012,21 +1011,21 @@ extern class Fs {
 		File is visible to the calling process.
 		This is useful for determining if a file exists, but says nothing about rwx permissions.
 	**/
-	static var F_OK(default,null):Int;
+	static var F_OK(default, null):Int;
 
 	/**
 		A mode flag for `access` and `accessSync` methods:
 
 		File can be read by the calling process.
 	**/
-	static var R_OK(default,null):Int;
+	static var R_OK(default, null):Int;
 
 	/**
 		A mode flag for `access` and `accessSync` methods:
 
 		File can be written by the calling process.
 	**/
-	static var W_OK(default,null):Int;
+	static var W_OK(default, null):Int;
 
 	/**
 		A mode flag for `access` and `accessSync` methods:
@@ -1034,7 +1033,7 @@ extern class Fs {
 		File can be executed by the calling process.
 		This has no effect on Windows.
 	**/
-	static var X_OK(default,null):Int;
+	static var X_OK(default, null):Int;
 
 	/**
 		Synchronous version of `access`.
@@ -1054,7 +1053,7 @@ extern class Fs {
 		It is your responsiblity to close it and make sure there's no file descriptor leak.
 		If `autoClose` is set to true (default behavior), on error or end the file descriptor will be closed automatically.
 	**/
-	static function createReadStream(path:FsPath, ?options:EitherType<String,FsCreateReadStreamOptions>):ReadStream;
+	static function createReadStream(path:FsPath, ?options:EitherType<String, FsCreateReadStreamOptions>):ReadStream;
 
 	/**
 		Returns a new WriteStream object (See Writable Stream).

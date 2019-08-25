@@ -86,7 +86,7 @@ extern class Url {
 		Resolves a target URL relative to a base URL in a manner similar to that of a Web browser resolving an anchor tag HREF.
 
 		Examples:
-		
+
 		```haxe
 		resolve('/one/two/three', 'four')         // '/one/two/four'
 		resolve('http://example.com/', '/one')    // 'http://example.com/one'
@@ -99,9 +99,9 @@ extern class Url {
 
 typedef UrlFormatOptions = {
 	/**
-			`true` if the serialized URL string should include the username and password, `false` otherwise.
+		`true` if the serialized URL string should include the username and password, `false` otherwise.
 
-			Default: `true`.
+		Default: `true`.
 	**/
 	@:optional var auth:Bool;
 

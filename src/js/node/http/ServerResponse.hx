@@ -19,10 +19,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.http;
 
 import haxe.DynamicAccess;
-
 import js.node.events.EventEmitter.Event;
 import js.node.stream.Writable;
 import js.node.net.Socket;
@@ -34,7 +34,7 @@ import js.node.net.Socket;
 	/**
 		Indicates that the underlying connection was terminated before `end` was called or able to flush.
 	**/
-	var Close : ServerResponseEvent<Void->Void> = "close";
+	var Close:ServerResponseEvent<Void->Void> = "close";
 
 	/**
 		Emitted when the response has been sent. More specifically, this event is emitted when
@@ -43,7 +43,7 @@ import js.node.net.Socket;
 
 		After this event, no more events will be emitted on the response object.
 	**/
-	var Finish : ServerResponseEvent<Void->Void> = "finish";
+	var Finish:ServerResponseEvent<Void->Void> = "finish";
 }
 
 /**
@@ -52,7 +52,6 @@ import js.node.net.Socket;
 **/
 @:jsRequire("http", "ServerResponse")
 extern class ServerResponse extends Writable<ServerResponse> {
-
 	/**
 		Sends a HTTP/1.1 100 Continue message to the client, indicating that the request body should be sent.
 		See the 'checkContinue' event on `Server`.
@@ -113,7 +112,7 @@ extern class ServerResponse extends Writable<ServerResponse> {
 	/**
 		True if headers were sent, false otherwise.
 	**/
-	var headersSent(default,null):Bool;
+	var headersSent(default, null):Bool;
 
 	/**
 		When true, the Date header will be automatically generated and sent in the response
@@ -129,7 +128,7 @@ extern class ServerResponse extends Writable<ServerResponse> {
 		Note that the name is case insensitive.
 		This can only be called before headers get implicitly flushed.
 	**/
-	function getHeader(name:String):haxe.extern.EitherType<String,Array<String>>;
+	function getHeader(name:String):haxe.extern.EitherType<String, Array<String>>;
 
 	/**
 		Sets a single header value for implicit headers.

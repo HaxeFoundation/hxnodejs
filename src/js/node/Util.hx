@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import haxe.Constraints.Function;
@@ -43,7 +44,6 @@ import js.Promise;
 **/
 @:jsRequire("util")
 extern class Util {
-
 	/**
 		Takes an async function (or a function that returns a `Promise`) and returns a function following
 		the error-first callback style, i.e. taking an `(err, value) => ...` callback as the last argument.
@@ -57,12 +57,12 @@ extern class Util {
 		a `Promise` with a falsy value as a reason, the value is wrapped in an `Error` with the original value
 		stored in a field named `reason`.
 	**/
-	static function callbackify(original:Function,args:Rest<Dynamic>):Null<Error>->Null<Dynamic>->Void;
+	static function callbackify(original:Function, args:Rest<Dynamic>):Null<Error>->Null<Dynamic>->Void;
 
 	/**
 		The `debuglog()` method is used to create a function that conditionally writes debug messages to `stderr`
 		based on the existence of the `NODE_DEBUG` environment variable.
-		
+
 		If the `section` name appears within the value of that environment variable, then the returned function operates
 		similar to `Console.error()`.
 		If not, then the returned function is a no-op.
@@ -105,7 +105,7 @@ extern class Util {
 		If there are more arguments passed to the `format()` method than the number of placeholders, the extra arguments are
 		coerced into strings then concatenated to the returned string, each delimited by a space. Excessive arguments whose `typeof`
 		is 'object' or 'symbol' (except null) will be transformed by `inspect()`.
-		
+
 		If the first argument is not a string then `format()` returns a string that is the concatenation of all arguments separated
 		by spaces. Each argument is converted to a string using `inspect()`.
 
@@ -298,7 +298,6 @@ extern class Util {
 	**/
 	@:deprecated("Use `readableStream.pipe(writableStream)` instead")
 	static function pump(readableStream:IReadable, writableStream:IWritable, ?callback:Error->Void):Void;
-
 }
 
 /**
@@ -308,7 +307,7 @@ typedef InspectOptionsBase = {
 	/**
 		If `true`, the `object`'s non-enumerable symbols and properties will be included in the formatted result
 		as well as WeakMap and WeakSet entries.
-		
+
 		Default: false.
 	**/
 	@:optional var showHidden:Bool;
@@ -317,7 +316,7 @@ typedef InspectOptionsBase = {
 		Specifies the number of times to recurse while formatting the `object`.
 		This is useful for inspecting large complicated objects.
 		To make it recurse up to the maximum call stack size pass `Math.POSITIVE_INFINITY` or `null`.
-		
+
 		Default: 2.
 	**/
 	@:optional var depth:Null<Int>;
@@ -331,29 +330,29 @@ typedef InspectOptionsBase = {
 }
 
 typedef InspectOptions = {
-	>InspectOptionsBase,
+	> InspectOptionsBase,
 
 	/**
 		If `false`, then custom `inspect(depth, opts)` functions will not be called.
-		
+
 		Default: true.
 	**/
 	@:optional var customInspect:Bool;
 
 	/**
 		If `true`, then objects and functions that are Proxy objects will be introspected to show their `target` and `handler` objects.
-		
+
 		Default: false.
 	**/
 	@:optional var showProxy:Bool;
 
 	/**
-		Specifies the maximum number of Array, TypedArray, WeakMap and WeakSet elements to include when formatting. 
-		
+		Specifies the maximum number of Array, TypedArray, WeakMap and WeakSet elements to include when formatting.
+
 		Set to `null` or `Math.POSITIVE_INFINITY` to show all elements.
-		
+
 		Set to `0` or negative to show no elements.
-		
+
 		Default: 100.
 	**/
 	@:optional var maxArrayLength:Int;
@@ -362,7 +361,7 @@ typedef InspectOptions = {
 		The length at which an object's keys are split across multiple lines.
 
 		Set to `Math.POSITIVE_INFINITY` to format an object as a single line.
-		
+
 		Default: 60 for legacy compatibility.
 	**/
 	@:optional var breakLength:Float;
@@ -371,9 +370,9 @@ typedef InspectOptions = {
 		Setting this to false changes the default indentation to use a line break for each object key instead of lining up
 		multiple properties in one line. It will also break text that is above the breakLength size into smaller and better
 		readable chunks and indents objects the same as arrays.
-		
+
 		Note that no text will be reduced below 16 characters, no matter the breakLength size.
-		
+
 		Default: true.
 	**/
 	@:optional var compact:Int;
@@ -382,5 +381,5 @@ typedef InspectOptions = {
 		If set to `true` or a function, all properties of an object and Set and Map entries will be sorted in the returned string.
 		If set to `true` the default sort is going to be used. If set to a function, it is used as a compare function.
 	**/
-	@:optional var sorted:EitherType<Bool,Dynamic->Dynamic->Int>;
+	@:optional var sorted:EitherType<Bool, Dynamic->Dynamic->Int>;
 }

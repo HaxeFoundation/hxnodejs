@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import haxe.DynamicAccess;
@@ -32,6 +33,7 @@ typedef HttpRequestOptions = {
 		Protocol to use. Defaults to 'http'.
 	**/
 	@:optional var protocol:String;
+
 	/**
 		A domain name or IP address of the server to issue the request to.
 		Defaults to 'localhost'.
@@ -95,7 +97,7 @@ typedef HttpRequestOptions = {
 
 			Sending an Authorization header will override using the auth option to compute basic authentication.
 	**/
-	@:optional var headers:DynamicAccess<haxe.extern.EitherType<String,Array<String>>>;
+	@:optional var headers:DynamicAccess<haxe.extern.EitherType<String, Array<String>>>;
 
 	/**
 		Basic authentication i.e. 'user:password' to compute an Authorization header.
@@ -111,7 +113,7 @@ typedef HttpRequestOptions = {
 			`Agent` object: explicitly use the passed in `Agent`.
 			false: opts out of connection pooling with an `Agent`, defaults request to 'Connection: close'.
 	**/
-	@:optional var agent:haxe.extern.EitherType<Agent,Bool>;
+	@:optional var agent:haxe.extern.EitherType<Agent, Bool>;
 }
 
 /**
@@ -140,7 +142,7 @@ extern class Http {
 		A collection of all the standard HTTP response status codes, and the short description of each.
 		For example, http.STATUS_CODES["404"] == 'Not Found'.
 	**/
-	static var STATUS_CODES(default,null):DynamicAccess<String>;
+	static var STATUS_CODES(default, null):DynamicAccess<String>;
 
 	/**
 		Global instance of Agent which is used as the default for all http client requests.

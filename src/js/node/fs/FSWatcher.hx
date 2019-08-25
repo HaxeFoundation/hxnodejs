@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.fs;
 
 import js.node.events.EventEmitter;
@@ -48,19 +49,18 @@ import js.Error;
 			event - The type of fs change
 			filename - The filename that changed (if relevant/available)
 	**/
-	var Change : FSWatcherEvent<FSWatcherChangeType->FsPath->Void> = "change";
+	var Change:FSWatcherEvent<FSWatcherChangeType->FsPath->Void> = "change";
 
 	/**
 		Emitted when an error occurs.
 	**/
-	var Error : FSWatcherEvent<Error->Void> = "error";
+	var Error:FSWatcherEvent<Error->Void> = "error";
 }
 
 /**
 	Objects returned from `Fs.watch` are of this type.
 **/
 extern class FSWatcher extends EventEmitter<FSWatcher> {
-
 	/**
 		Stop watching for changes on the given `FSWatcher`.
 	**/

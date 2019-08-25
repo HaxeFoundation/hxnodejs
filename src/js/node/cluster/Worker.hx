@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.cluster;
 
 import js.node.child_process.ChildProcess;
@@ -32,19 +33,13 @@ import js.Error;
 #end
 
 @:enum abstract WorkerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
-	var Message : WorkerEvent<Dynamic->Dynamic->Void> = "message";
-
-	var Online : WorkerEvent<Void->Void> = "online";
-
-	var Listening : WorkerEvent<ListeningEventAddress->Void> = "listening";
-
-	var Disconnect : WorkerEvent<Void->Void> = "disconnect";
-
-	var Exit : WorkerEvent<Int->String->Void> = "exit";
-
-	var Error : WorkerEvent<Error->Void> = "error";
+	var Message:WorkerEvent<Dynamic->Dynamic->Void> = "message";
+	var Online:WorkerEvent<Void->Void> = "online";
+	var Listening:WorkerEvent<ListeningEventAddress->Void> = "listening";
+	var Disconnect:WorkerEvent<Void->Void> = "disconnect";
+	var Exit:WorkerEvent<Int->String->Void> = "exit";
+	var Error:WorkerEvent<Error->Void> = "error";
 }
-
 
 /**
 	A Worker object contains all public information and method about a worker.
@@ -57,7 +52,7 @@ extern class Worker extends EventEmitter<Worker> {
 
 		While a worker is alive, this is the key that indexes it in `Cluster.workers`
 	**/
-	var id(default,null):String;
+	var id(default, null):String;
 
 	/**
 		All workers are created using `ChildProcess.fork`, the returned object from this function is stored as `process`.

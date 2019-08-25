@@ -19,10 +19,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import haxe.extern.EitherType;
-
 #if haxe4
 import js.lib.Error;
 #else
@@ -121,13 +121,12 @@ extern class Crypto {
 	**/
 	static function createHash(algorithm:CryptoAlgorithm):Hash;
 
-
 	/**
 		Creates and returns a hmac object, a cryptographic hmac with the given algorithm and key.
 		`algorithm` is dependent on the available algorithms supported by OpenSSL - see `createHash` above.
 		`key` is the hmac key to be used.
 	**/
-	static function createHmac(algorithm:CryptoAlgorithm, key:EitherType<String,Buffer>):Hmac;
+	static function createHmac(algorithm:CryptoAlgorithm, key:EitherType<String, Buffer>):Hmac;
 
 	/**
 		Creates and returns a cipher object, with the given algorithm and password.
@@ -141,7 +140,7 @@ extern class Crypto {
 		Once the writable side of the stream is ended, use the `read` method to get the computed hash digest.
 		The legacy `update` and `digest` methods are also supported.
 	**/
-	static function createCipher(algorithm:String, password:EitherType<String,Buffer>):Cipher;
+	static function createCipher(algorithm:String, password:EitherType<String, Buffer>):Cipher;
 
 	/**
 		Creates and returns a cipher object, with the given algorithm, key and iv.
@@ -154,20 +153,19 @@ extern class Crypto {
 
 		`key` and `iv` must be 'binary' encoded strings or buffers.
 	**/
-	static function createCipheriv(algorithm:String, key:EitherType<String,Buffer>, iv:EitherType<String,Buffer>):Cipher;
+	static function createCipheriv(algorithm:String, key:EitherType<String, Buffer>, iv:EitherType<String, Buffer>):Cipher;
 
 	/**
 		Creates and returns a decipher object, with the given algorithm and key.
 		This is the mirror of the `createCipher` above.
 	**/
-	static function createDecipher(algorithm:String, password:EitherType<String,Buffer>):Decipher;
+	static function createDecipher(algorithm:String, password:EitherType<String, Buffer>):Decipher;
 
 	/**
 		Creates and returns a decipher object, with the given algorithm, key and iv.
 		This is the mirror of the `createCipheriv` above.
 	**/
-	static function createDecipheriv(algorithm:String, key:EitherType<String,Buffer>, iv:EitherType<String,Buffer>):Decipher;
-
+	static function createDecipheriv(algorithm:String, key:EitherType<String, Buffer>, iv:EitherType<String, Buffer>):Decipher;
 
 	/**
 		Creates and returns a signing object, with the given algorithm.
@@ -181,7 +179,6 @@ extern class Crypto {
 		This is the mirror of the signing object above.
 	**/
 	static function createVerify(algorithm:String):Verify;
-
 
 	/**
 		Creates a Diffie-Hellman key exchange object using the supplied `prime` or generated prime of given bit `prime_length`.
@@ -215,13 +212,15 @@ extern class Crypto {
 		Asynchronous PBKDF2 applies pseudorandom function HMAC-SHA1 to derive a key of given length
 		from the given password, salt and iterations.
 	**/
-	@:overload(function(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, digest:String, callback:Error->Buffer->Void):Void {})
-	static function pbkdf2(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, callback:Error->Buffer->Void):Void;
+	@:overload(function(password:EitherType<String, Buffer>, salt:EitherType<String, Buffer>, iterations:Int, keylen:Int, digest:String,
+		callback:Error->Buffer->Void):Void {})
+	static function pbkdf2(password:EitherType<String, Buffer>, salt:EitherType<String, Buffer>, iterations:Int, keylen:Int,
+		callback:Error->Buffer->Void):Void;
 
 	/**
 		Synchronous PBKDF2 function. Returns derivedKey or throws error.
 	**/
-	static function pbkdf2Sync(password:EitherType<String,Buffer>, salt:EitherType<String,Buffer>, iterations:Int, keylen:Int, ?digest:String):Buffer;
+	static function pbkdf2Sync(password:EitherType<String, Buffer>, salt:EitherType<String, Buffer>, iterations:Int, keylen:Int, ?digest:String):Buffer;
 
 	/**
 		Generates cryptographically strong pseudo-random data.
@@ -299,9 +298,9 @@ typedef CryptoKeyOptions = {
 
 	/**
 		Padding value, one of the following:
-		 * `Constants.RSA_NO_PADDING`
-		 * `Constants.RSA_PKCS1_PADDING`
-		 * `Constants.RSA_PKCS1_OAEP_PADDING`
+		* `Constants.RSA_NO_PADDING`
+		* `Constants.RSA_PKCS1_PADDING`
+		* `Constants.RSA_PKCS1_OAEP_PADDING`
 	**/
 	@:optional var padding:Int;
 }

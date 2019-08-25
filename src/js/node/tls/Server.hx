@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.tls;
 
 import js.node.Buffer;
@@ -38,7 +39,7 @@ import js.Error;
 	/**
 		This event is emitted after a new connection has been successfully handshaked.
 	**/
-	var SecureConnection : ServerEvent<TLSSocket->Void> = "secureConnection";
+	var SecureConnection:ServerEvent<TLSSocket->Void> = "secureConnection";
 
 	/**
 		When a client connection emits an 'error' event before secure connection is established -
@@ -48,7 +49,7 @@ import js.Error;
 			exception - error object
 			securePair - the `TLSSocket` that the error originated from
 	**/
-	var ClientError : ServerEvent<Error->TLSSocket->Void> = "clientError";
+	var ClientError:ServerEvent<Error->TLSSocket->Void> = "clientError";
 
 	/**
 		Emitted on creation of TLS session.
@@ -61,7 +62,7 @@ import js.Error;
 			sessionData
 			callback
 	**/
-	var NewSession : ServerEvent<Buffer->Buffer->(Void->Void)->Void> = "newSession";
+	var NewSession:ServerEvent<Buffer->Buffer->(Void->Void)->Void> = "newSession";
 
 	/**
 		Emitted when client wants to resume previous TLS session.
@@ -77,7 +78,7 @@ import js.Error;
 			sessionId
 			callback
 	**/
-	var ResumeSession : ServerEvent<Buffer->(Error->?Buffer->Void)->Void>= "resumeSession";
+	var ResumeSession:ServerEvent<Buffer->(Error->?Buffer->Void)->Void> = "resumeSession";
 
 	/**
 		Emitted when the client sends a certificate status request.
@@ -90,7 +91,7 @@ import js.Error;
 
 		Calling `callback(err)` will result in a `socket.destroy(err)` call.
 	**/
-	var OCSPRequest : ServerEvent<Buffer->Buffer->(Error->?Buffer->Void)->Void> = "OCSPRequest";
+	var OCSPRequest:ServerEvent<Buffer->Buffer->(Error->?Buffer->Void)->Void> = "OCSPRequest";
 }
 
 /**

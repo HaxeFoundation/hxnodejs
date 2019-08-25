@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 /**
@@ -108,6 +109,7 @@ typedef CPU = {
 	Objects containing information about network interface addresses.
 **/
 typedef NetworkInterface = Array<NetworkInterfaceAddressInfo>;
+
 typedef NetworkInterfaceAddressInfo = {
 	/**
 		IP address family (either IPv4 or IPv6).
@@ -1043,13 +1045,13 @@ extern class Os {
 		* `\n` on POSIX
 		* `\r\n` on Windows
 	**/
-	static var EOL(default,null):String;
+	static var EOL(default, null):String;
 
 	/**
 		Returns an object containing commonly used operating system specific constants for error codes,
 		process signals, and so on.
 	**/
-	static var constants(default,null):OsConstants;
+	static var constants(default, null):OsConstants;
 
 	/**
 		Returns a string specifying the operating system's default directory for temporary files.

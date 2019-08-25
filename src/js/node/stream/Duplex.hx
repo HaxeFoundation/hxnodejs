@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.stream;
 
 import js.node.Buffer;
@@ -71,7 +72,7 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 		Terminal write streams (i.e. process.stdout) have this property set to true.
 		It is false for any other write streams.
 	**/
-	var isTTY(default,null):Bool;
+	var isTTY(default, null):Bool;
 
 	/**
 		The writable.cork() method forces all written data to be buffered in memory.
@@ -100,8 +101,8 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 	For stream implementors only, see node.js API documentation
 **/
 typedef DuplexNewOptions = {
-	>Readable.ReadableNewOptions,
-	>Writable.WritableNewOptions,
+	> Readable.ReadableNewOptions,
+	> Writable.WritableNewOptions,
 	@:optional var allowHalfOpen:Bool;
 }
 

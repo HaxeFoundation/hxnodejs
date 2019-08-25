@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.buffer;
 
 #if haxe4
@@ -38,13 +39,13 @@ import js.html.Uint8Array;
 **/
 @:jsRequire("buffer", "Buffer")
 extern class Buffer extends Uint8Array {
-
 	/**
 		How many bytes will be returned when `buffer.inspect()` is called.
 		This can be overridden by user modules.
 		Default: 50
 	**/
-	public static var INSPECT_MAX_BYTES(get,set):Int;
+	public static var INSPECT_MAX_BYTES(get, set):Int;
+
 	private inline static function get_INSPECT_MAX_BYTES():Int {
 		return js.Lib.require("buffer").INSPECT_MAX_BYTES;
 	}
@@ -55,7 +56,8 @@ extern class Buffer extends Uint8Array {
 	/**
 		Maximum length of a `Buffer`.
 	**/
-	public static var kMaxLength(get,never):Int;
+	public static var kMaxLength(get, never):Int;
+
 	private inline static function get_kMaxLength():Int {
 		return js.Lib.require("buffer").kMaxLength;
 	}
@@ -90,8 +92,11 @@ extern class Buffer extends Uint8Array {
 		This is not the same as `String.length` since that
 		returns the number of characters in a string.
 	**/
-	#if (haxe_ver >= 3.3) @:deprecated("In haxe 3.3+, use Buffer.byteLength instead!") #end
-	inline static function _byteLength(string:String, ?encoding:String):Int return untyped Buffer['byteLength'](string, encoding);
+	#if (haxe_ver >= 3.3)
+	@:deprecated("In haxe 3.3+, use Buffer.byteLength instead!")
+	#end
+	inline static function _byteLength(string:String, ?encoding:String):Int
+		return untyped Buffer['byteLength'](string, encoding);
 
 	/**
 		Returns a buffer which is the result of concatenating all the buffers in the `list` together.

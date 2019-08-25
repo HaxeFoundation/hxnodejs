@@ -19,10 +19,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import haxe.extern.EitherType;
-
 import js.node.Buffer;
 import js.node.tls.TLSSocket;
 import js.node.tls.SecurePair;
@@ -45,11 +45,11 @@ typedef TlsOptionsBase = {
 	/**
 		possible NPN protocols. (Protocols should be ordered by their priority).
 	**/
-	@:optional var NPNProtocols:EitherType<Array<String>,Buffer>;
+	@:optional var NPNProtocols:EitherType<Array<String>, Buffer>;
 }
 
 typedef TlsServerOptionsBase = {
-	>TlsOptionsBase,
+	> TlsOptionsBase,
 
 	/**
 		If true the server will request a certificate from clients that connect
@@ -65,11 +65,11 @@ typedef TlsServerOptionsBase = {
 		(You can use tls.createSecureContext(...) to get proper `SecureContext`).
 		If `SNICallback` wasn't provided - default callback with high-level API will be used.
 	**/
-	@:optional var SNICallback:#if (haxe_ver >= 4) (servername:String, cb:(Error->SecureContext))->Void #else String->(Error->SecureContext)->Void #end;
+	@:optional var SNICallback:#if (haxe_ver >= 4)(servername:String, cb:(Error->SecureContext)) -> Void #else String->(Error->SecureContext)->Void #end;
 }
 
 typedef TlsClientOptionsBase = {
-	>TlsOptionsBase,
+	> TlsOptionsBase,
 
 	/**
 		A Buffer instance, containing TLS session.
@@ -83,13 +83,12 @@ typedef TlsClientOptionsBase = {
 	@:optional var requestOCSP:Bool;
 }
 
-
 /**
 	Base structure for options object used in tls methods.
 **/
 typedef TlsCreateServerOptions = {
-	>TlsServerOptionsBase,
-	>SecureContextOptions,
+	> TlsServerOptionsBase,
+	> SecureContextOptions,
 
 	/**
 		Abort the connection if the SSL/TLS handshake does not finish in this many milliseconds.
@@ -112,12 +111,11 @@ typedef TlsCreateServerOptions = {
 		NOTE: Automatically shared between cluster module workers.
 	**/
 	@:optional var ticketKeys:Buffer;
-
 }
 
 typedef TlsConnectOptions = {
-	>TlsClientOptionsBase,
-	>SecureContextOptions,
+	> TlsClientOptionsBase,
+	> SecureContextOptions,
 
 	/**
 		Host the client should connect to.
@@ -151,9 +149,9 @@ typedef TlsConnectOptions = {
 		An override for checking server's hostname against the certificate.
 		Should return an error if verification fails. Return `js.Lib.undefined` if passing.
 	**/
-	@:optional var checkServerIdentity:String->{}->Dynamic; // TODO: peer cerficicate structure
-}
+	@:optional var checkServerIdentity:String -> {}->Dynamic; // TODO: peer cerficicate structure
 
+}
 
 /**
 	The tls module uses OpenSSL to provide Transport Layer Security
@@ -161,7 +159,6 @@ typedef TlsConnectOptions = {
 **/
 @:jsRequire("tls")
 extern class Tls {
-
 	/**
 		renegotiation limit, default is 3.
 	**/

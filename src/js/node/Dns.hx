@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import haxe.extern.EitherType;
@@ -113,9 +114,10 @@ typedef DnsLookupOptions = {
 	Types of address data returned by `resolve` functions.
 **/
 typedef DnsResolvedAddressMX = {priority:Int, exchange:String};
+
 typedef DnsResolvedAddressSRV = {priority:Int, weight:Int, port:Int, name:String};
 typedef DnsResolvedAddressSOA = {nsname:String, hostmaster:String, serial:Int, refresh:Int, retry:Int, expire:Int, minttl:Int};
-typedef DnsResolvedAddress = EitherType<String,EitherType<DnsResolvedAddressMX,EitherType<DnsResolvedAddressSOA,DnsResolvedAddressSRV>>>;
+typedef DnsResolvedAddress = EitherType<String, EitherType<DnsResolvedAddressMX, EitherType<DnsResolvedAddressSOA, DnsResolvedAddressSRV>>>;
 
 /**
 	Error objects returned by dns lookups are of this type
@@ -124,9 +126,8 @@ extern class DnsError extends Error {
 	/**
 		Values for error codes are listed in `Dns` class.
 	**/
-	var code(default,null):DnsErrorCode;
+	var code(default, null):DnsErrorCode;
 }
-
 
 /**
 	Each DNS query can return one of the following error codes
@@ -254,20 +255,10 @@ extern class DnsError extends Error {
 	var CANCELLED;
 }
 
-typedef DnsLookupCallbackSingle =
-	#if (haxe_ver >= 4)
-	(err:DnsError, address:String, family:DnsAddressFamily) -> Void;
-	#else
-	DnsError->String->DnsAddressFamily->Void
-	#end
-
-typedef DnsLookupCallbackAll =
-	#if (haxe_ver >= 4)
-	(err:DnsError, addresses:Array<DnsLookupCallbackAllEntry>) -> Void;
-	#else
-	DnsError->Array<DnsLookupCallbackAllEntry>->Void;
-	#end
-
+typedef DnsLookupCallbackSingle = #if (haxe_ver >= 4) (err : DnsError, address : String, family : DnsAddressFamily) -> Void; #else DnsError->String->
+	DnsAddressFamily->Void #end
+typedef DnsLookupCallbackAll = #if (haxe_ver >= 4) (err : DnsError, addresses : Array<DnsLookupCallbackAllEntry>) -> Void; #else DnsError->
+	Array<DnsLookupCallbackAllEntry>->Void; #end
 typedef DnsLookupCallbackAllEntry = {address:String, family:DnsAddressFamily};
 
 /**
@@ -286,7 +277,6 @@ typedef DnsLookupCallbackAllEntry = {address:String, family:DnsAddressFamily};
 **/
 @:jsRequire("dns")
 extern class Dns {
-
 	/**
 		Resolves a `hostname` (e.g. 'google.com') into the first found A (IPv4) or AAAA (IPv6) record.
 
@@ -308,7 +298,8 @@ extern class Dns {
 		`lookup` doesn't necessarily have anything to do with the DNS protocol. It's only an operating system facility
 		that can associate name with addresses, and vice versa.
 	**/
-	@:overload(function(hostname:String, options:EitherType<DnsAddressFamily,DnsLookupOptions>, callback:EitherType<DnsLookupCallbackSingle, DnsLookupCallbackAll>):Void {})
+	@:overload(function(hostname:String, options:EitherType<DnsAddressFamily, DnsLookupOptions>,
+		callback:EitherType<DnsLookupCallbackSingle, DnsLookupCallbackAll>):Void {})
 	static function lookup(hostname:String, callback:DnsLookupCallbackSingle):Void;
 
 	/**
@@ -318,7 +309,7 @@ extern class Dns {
 		For example, IPv4 addresses are only returned if the current system has at least one IPv4 address configured.
 		Loopback addresses are not considered.
 	**/
-	static var ADDRCONFIG(default,null):Int;
+	static var ADDRCONFIG(default, null):Int;
 
 	/**
 		A flag passed in the `hints` argument of `lookup` method.
@@ -326,7 +317,7 @@ extern class Dns {
 		If the IPv6 family was specified, but no IPv6 addresses were found, then return IPv4 mapped IPv6 addresses.
 		Note that it is not supported on some operating systems (e.g FreeBSD 10.1).
 	**/
-	static var V4MAPPED(default,null):Int;
+	static var V4MAPPED(default, null):Int;
 
 	/**
 		Resolves the given `address` and `port` into a hostname and service using `getnameinfo`.

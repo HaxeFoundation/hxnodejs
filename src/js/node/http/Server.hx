@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.http;
 
 import js.node.Buffer;
@@ -40,7 +41,7 @@ import js.Error;
 
 		Note that there may be multiple requests per connection (in the case of keep-alive connections).
 	**/
-	var Request : ServerEvent<IncomingMessage->ServerResponse->Void> = "request";
+	var Request:ServerEvent<IncomingMessage->ServerResponse->Void> = "request";
 
 	/**
 		When a new TCP stream is established.
@@ -48,12 +49,12 @@ import js.Error;
 		In particular, the socket will not emit readable events because of how the protocol parser attaches to the socket.
 		The socket can also be accessed at request.socket.
 	**/
-	var Connection : ServerEvent<Socket->Void> = "connection";
+	var Connection:ServerEvent<Socket->Void> = "connection";
 
 	/**
 		Emitted when the server closes.
 	**/
-	var Close : ServerEvent<Void->Void> = "close";
+	var Close:ServerEvent<Void->Void> = "close";
 
 	/**
 		Emitted each time a request with an http Expect: 100-continue is received.
@@ -66,7 +67,7 @@ import js.Error;
 
 		Note that when this event is emitted and handled, the 'request' event will not be emitted.
 	**/
-	var CheckContinue : ServerEvent<IncomingMessage->ServerResponse->Void> = "checkContinue";
+	var CheckContinue:ServerEvent<IncomingMessage->ServerResponse->Void> = "checkContinue";
 
 	/**
 		Emitted each time a client requests a http CONNECT method.
@@ -81,7 +82,7 @@ import js.Error;
 		After this event is emitted, the request's socket will not have a 'data' event listener,
 		meaning you will need to bind to it in order to handle data sent to the server on that socket.
 	**/
-	var Connect : ServerEvent<IncomingMessage->Socket->Buffer->Void> = "connect";
+	var Connect:ServerEvent<IncomingMessage->Socket->Buffer->Void> = "connect";
 
 	/**
 		Emitted each time a client requests a http upgrade.
@@ -96,12 +97,12 @@ import js.Error;
 		After this event is emitted, the request's socket will not have a data event listener,
 		meaning you will need to bind to it in order to handle data sent to the server on that socket.
 	**/
-	var Upgrade : ServerEvent<IncomingMessage->Socket->Buffer->Void> = "upgrade";
+	var Upgrade:ServerEvent<IncomingMessage->Socket->Buffer->Void> = "upgrade";
 
 	/**
 		If a client connection emits an 'error' event - it will forwarded here.
 	**/
-	var ClientError : ServerEvent<Error->Socket->Void> = "clientError";
+	var ClientError:ServerEvent<Error->Socket->Void> = "clientError";
 }
 
 /**

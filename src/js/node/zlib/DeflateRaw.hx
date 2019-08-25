@@ -19,11 +19,11 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.zlib;
 
 /**
 	Compress data using deflate, and do not append a zlib header.
 **/
 @:jsRequire("zlib", "DeflateRaw")
-extern class DeflateRaw extends Zlib {
-}
+extern class DeflateRaw extends Zlib {}

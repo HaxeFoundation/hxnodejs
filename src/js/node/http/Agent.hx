@@ -19,10 +19,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.http;
 
 import haxe.DynamicAccess;
-
 import js.node.net.Socket;
 
 /**
@@ -59,13 +59,13 @@ extern class Agent {
 		An object which contains arrays of sockets currently in use by the Agent.
 		Do not modify.
 	**/
-	var sockets(default,null):DynamicAccess<Array<Socket>>;
+	var sockets(default, null):DynamicAccess<Array<Socket>>;
 
 	/**
 		An object which contains queues of requests that have not yet been assigned to sockets.
 		Do not modify.
 	**/
-	var requests(default,null):DynamicAccess<Array<ClientRequest>>;
+	var requests(default, null):DynamicAccess<Array<ClientRequest>>;
 
 	function new(?options:AgentOptions);
 
@@ -85,7 +85,6 @@ extern class Agent {
 	**/
 	function getName(options:js.node.Http.HttpRequestOptions):String;
 }
-
 
 /**
 	Options for `Agent` constructor.

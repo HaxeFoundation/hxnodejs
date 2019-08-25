@@ -19,11 +19,11 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.zlib;
 
 /**
 	Decompress a deflate stream.
 **/
 @:jsRequire("zlib", "Inflate")
-extern class Inflate extends Zlib {
-}
+extern class Inflate extends Zlib {}

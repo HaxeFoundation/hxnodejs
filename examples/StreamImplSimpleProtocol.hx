@@ -16,7 +16,6 @@ import js.Error;
 
 @:keep
 class SimpleProtocol extends Readable<SimpleProtocol> {
-
 	var _inBody = false;
 	var _sawFirstCr = false;
 	var _rawHeader = [];
@@ -68,11 +67,11 @@ class SimpleProtocol extends Readable<SimpleProtocol> {
 				_inBody = true;
 				_rawHeader.push(chunk.slice(0, split));
 				var header = try {
-						haxe.Json.parse(Buffer.concat(_rawHeader).toString());
-					} catch (_:Dynamic) {
-						emit('error', new Error('invalid simple protocol data'));
-						return;
-					}
+					haxe.Json.parse(Buffer.concat(_rawHeader).toString());
+				} catch (_:Dynamic) {
+					emit('error', new Error('invalid simple protocol data'));
+					return;
+				}
 				// now, because we got some extra data, unshift the rest
 				// back into the read queue so that our consumer will see it.
 				var b = chunk.slice(split);
@@ -85,7 +84,8 @@ class SimpleProtocol extends Readable<SimpleProtocol> {
 			// from there on, just provide the data to our consumer.
 			// careful not to push(null), since that would indicate EOF.
 			var chunk = this._source.read();
-			if (chunk != null) this.push(chunk);
+			if (chunk != null)
+				this.push(chunk);
 		}
 	}
 }

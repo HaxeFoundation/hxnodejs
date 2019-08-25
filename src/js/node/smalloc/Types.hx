@@ -19,20 +19,21 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.smalloc;
 
 /**
-    Enum of possible external array types.
+	Enum of possible external array types.
 **/
 @:jsRequire("smalloc", "Types")
 @:enum extern abstract Types(Int) {
-    var Int8;
-    var Uint8;
-    var Int16;
-    var Uint16;
-    var Int32;
-    var Uint32;
-    var Float;
-    var Double;
-    var Uint8Clamped;
+	var Int8;
+	var Uint8;
+	var Int16;
+	var Uint16;
+	var Int32;
+	var Uint32;
+	var Float;
+	var Double;
+	var Uint8Clamped;
 }

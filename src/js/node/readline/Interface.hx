@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.readline;
 
 import haxe.extern.EitherType;
@@ -32,18 +33,18 @@ import js.node.events.EventEmitter;
 		Emitted whenever the input stream receives a \n, usually received when the user hits enter, or return.
 		This is a good hook to listen for user input.
 	**/
-	var Line : InterfaceEvent<String->Void> = "line";
+	var Line:InterfaceEvent<String->Void> = "line";
 
 	/**
 		Emitted whenever the input stream is paused.
 		Also emitted whenever the input stream is not paused and receives the SIGCONT event. (See events SIGTSTP and SIGCONT)
 	**/
-	var Pause : InterfaceEvent<Void->Void> = "pause";
+	var Pause:InterfaceEvent<Void->Void> = "pause";
 
 	/**
 		Emitted whenever the input stream is resumed.
 	**/
-	var Resume : InterfaceEvent<Void->Void> = "resume";
+	var Resume:InterfaceEvent<Void->Void> = "resume";
 
 	/**
 		Emitted when close() is called.
@@ -55,13 +56,13 @@ import js.node.events.EventEmitter;
 		This event is also called if there is no SIGINT event listener present when the input stream receives a ^C,
 		respectively known as SIGINT.
 	**/
-	var Close : InterfaceEvent<Void->Void> = "close";
+	var Close:InterfaceEvent<Void->Void> = "close";
 
 	/**
 		Emitted whenever the input stream receives a ^C, respectively known as SIGINT.
 		If there is no SIGINT event listener present when the input stream receives a SIGINT, pause will be triggered.
 	**/
-	var SIGINT : InterfaceEvent<Void->Void> = "SIGINT";
+	var SIGINT:InterfaceEvent<Void->Void> = "SIGINT";
 
 	/**
 		This does not work on Windows.
@@ -76,7 +77,7 @@ import js.node.events.EventEmitter;
 		The pause and SIGCONT events will not be triggered if the stream was paused
 		before the program was sent to the background.
 	**/
-	var SIGTSTP : InterfaceEvent<Void->Void> = "SIGTSTP";
+	var SIGTSTP:InterfaceEvent<Void->Void> = "SIGTSTP";
 
 	/**
 		This does not work on Windows.
@@ -85,7 +86,7 @@ import js.node.events.EventEmitter;
 		and then continued with fg(1). This event only emits if the stream was not paused before sending
 		the program to the background.
 	**/
-	var SIGCONT : InterfaceEvent<Void->Void> = "SIGCONT";
+	var SIGCONT:InterfaceEvent<Void->Void> = "SIGCONT";
 }
 
 /**
@@ -152,5 +153,5 @@ extern class Interface extends EventEmitter<Interface> {
 
 		This will also resume the input stream if it has been paused.
 	**/
-	function write(data:EitherType<Buffer,String>, ?key:InterfaceWriteKey):Void;
+	function write(data:EitherType<Buffer, String>, ?key:InterfaceWriteKey):Void;
 }

@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import haxe.extern.EitherType;
@@ -56,7 +57,7 @@ typedef QuerystringStringifyOptions = {
 /**
 	The result type of `Querystring.parse`. Is a collection of either strings or array of strings.
 **/
-typedef QuerystringParseResult = DynamicAccess<EitherType<String,Array<String>>>;
+typedef QuerystringParseResult = DynamicAccess<EitherType<String, Array<String>>>;
 
 /**
 	This module provides utilities for dealing with query strings.

@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 /**
@@ -27,7 +28,6 @@ package js.node;
 	Module isn't actually a global but rather local to each module.
 **/
 extern class Module {
-
 	/**
 		The `exports` object is created by the Module system.
 		Sometimes this is not acceptable; many want their module to be an instance of some class.
@@ -48,25 +48,25 @@ extern class Module {
 		The identifier for the module.
 		Typically this is the fully resolved filename.
 	**/
-	var id(default,null):String;
+	var id(default, null):String;
 
 	/**
 		The fully resolved filename to the module.
 	**/
-	var filename(default,null):String;
+	var filename(default, null):String;
 
 	/**
 		Whether or not the module is done loading, or is in the process of loading.
 	**/
-	var loaded(default,null):Bool;
+	var loaded(default, null):Bool;
 
 	/**
 		The module that required this one.
 	**/
-	var parent(default,null):Module;
+	var parent(default, null):Module;
 
 	/**
 		The module objects required by this one.
 	**/
-	var children(default,null):Array<Module>;
+	var children(default, null):Array<Module>;
 }

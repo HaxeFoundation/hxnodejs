@@ -6,7 +6,7 @@ import js.Node.process;
 	Example from the REPL page
 **/
 class ReplExample {
-    static function main() {
+	static function main() {
 		var connections = 0;
 
 		Repl.start({
@@ -15,7 +15,7 @@ class ReplExample {
 			output: process.stdout
 		});
 
-		Net.createServer(function (socket) {
+		Net.createServer(function(socket) {
 			connections += 1;
 			Repl.start({
 				prompt: "node via Unix socket> ",
@@ -26,7 +26,7 @@ class ReplExample {
 			});
 		}).listen("/tmp/node-repl-sock");
 
-		Net.createServer(function (socket) {
+		Net.createServer(function(socket) {
 			connections += 1;
 			Repl.start({
 				prompt: "node via TCP socket> ",
@@ -36,5 +36,5 @@ class ReplExample {
 				socket.end();
 			});
 		}).listen(5001);
-    }
+	}
 }

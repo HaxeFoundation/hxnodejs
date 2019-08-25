@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node;
 
 import js.node.vm.Script;
@@ -27,8 +28,8 @@ import js.node.vm.Script;
 	Options object used by Vm.run* methods.
 **/
 typedef VmRunOptions = {
-	>ScriptOptions,
-	>ScriptRunOptions,
+	> ScriptOptions,
+	> ScriptRunOptions,
 }
 
 /**

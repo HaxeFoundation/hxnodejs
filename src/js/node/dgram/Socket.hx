@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.dgram;
 
 import js.node.events.EventEmitter;
@@ -39,34 +40,34 @@ import js.Error;
 			msg - received data
 			rinfo - sender's address information and the number of bytes in the datagram
 	**/
-	var Message : SocketEvent<MessageListener> = "message";
+	var Message:SocketEvent<MessageListener> = "message";
 
 	/**
 		Emitted when a socket starts listening for datagrams.
 		This happens as soon as UDP sockets are created.
 	**/
-	var Listening : SocketEvent<Void->Void> = "listening";
+	var Listening:SocketEvent<Void->Void> = "listening";
 
 	/**
 		Emitted when a socket is closed with `close`.
 		No new message events will be emitted on this socket.
 	**/
-	var Close : SocketEvent<Void->Void> = "close";
+	var Close:SocketEvent<Void->Void> = "close";
 
 	/**
 		Emitted when an error occurs.
 	**/
-	var Error : SocketEvent<Error->Void>= "error";
+	var Error:SocketEvent<Error->Void> = "error";
 }
 
 typedef MessageListener = Buffer->SocketAdress->Void;
 
 /**
-    Enumeration of possible datagram socket types
+	Enumeration of possible datagram socket types
 **/
 @:enum abstract SocketType(String) from String to String {
-    var Udp4 = "udp4";
-    var Udp6 = "udp6";
+	var Udp4 = "udp4";
+	var Udp6 = "udp6";
 }
 
 /**
@@ -105,9 +106,8 @@ typedef SocketBindOptions = {
 **/
 @:jsRequire("dgram", "Socket")
 extern class Socket extends EventEmitter<Socket> {
-
-    @:overload(function(type:SocketType, ?callback:MessageListener):Void {})
-    private function new(options:SocketOptions, ?callback:MessageListener);
+	@:overload(function(type:SocketType, ?callback:MessageListener):Void {})
+	private function new(options:SocketOptions, ?callback:MessageListener);
 
 	/**
 		The destination `port` and `address` must be specified.

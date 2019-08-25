@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.tls;
 
 import js.node.events.EventEmitter;
@@ -34,13 +35,13 @@ import js.node.events.EventEmitter;
 		`SecurePair.cleartext.authorized` should be checked to confirm whether
 		the certificate used properly authorized.
 	**/
-	var Secure : SecurePairEvent<Void->Void> = "secure";
+	var Secure:SecurePairEvent<Void->Void> = "secure";
 }
 
 /**
 	Returned by `Tls.createSecurePair`.
 **/
 extern class SecurePair extends EventEmitter<SecurePair> {
-	var cleartext(default,null):TLSSocket;
-	var encrypted(default,null):js.node.stream.Duplex.IDuplex;
+	var cleartext(default, null):TLSSocket;
+	var encrypted(default, null):js.node.stream.Duplex.IDuplex;
 }

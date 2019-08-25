@@ -19,11 +19,11 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.zlib;
 
 /**
 	Decompress a gzip stream.
 **/
 @:jsRequire("zlib", "Gunzip")
-extern class Gunzip extends Zlib {
-}
+extern class Gunzip extends Zlib {}

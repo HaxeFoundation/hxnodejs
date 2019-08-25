@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.tls;
 
 import haxe.Constraints.Function;
@@ -46,7 +47,7 @@ import js.Error;
 		can be found in `TLSSocket.authorizationError`. Also if NPN was used - you can
 		check `TLSSocket.npnProtocol` for negotiated protocol.
 	**/
-	var SecureConnect : TLSSocketEvent<Void->Void> = "secureConnect";
+	var SecureConnect:TLSSocketEvent<Void->Void> = "secureConnect";
 
 	/**
 		This event will be emitted if `requestOCSP` option was set.
@@ -56,13 +57,12 @@ import js.Error;
 		Traditionally, the response is a signed object from the server's CA
 		that contains information about server's certificate revocation status.
 	**/
-	var OCSPResponse : TLSSocketEvent<Buffer->Void> = "OCSPResponse";
+	var OCSPResponse:TLSSocketEvent<Buffer->Void> = "OCSPResponse";
 }
 
-
 typedef TLSSocketOptions = {
-	>TlsServerOptionsBase,
-	>TlsClientOptionsBase,
+	> TlsServerOptionsBase,
+	> TlsClientOptionsBase,
 
 	/**
 		An optional TLS context object from `Tls.createSecureContext`
@@ -76,7 +76,6 @@ typedef TLSSocketOptions = {
 
 	@:optional var server:js.node.net.Server;
 }
-
 
 /**
 	This is a wrapped version of `net.Socket` that does transparent encryption
@@ -94,19 +93,19 @@ extern class TLSSocket extends js.node.net.Socket {
 	/**
 		true if the peer certificate was signed by one of the specified CAs, otherwise false
 	**/
-	var authorized(default,null):Bool;
+	var authorized(default, null):Bool;
 
 	/**
 		The reason why the peer's certificate has not been verified.
 
 		This property becomes available only when `authorized` is false.
 	**/
-	var authorizationError(default,null):Null<String>;
+	var authorizationError(default, null):Null<String>;
 
 	/**
 		Negotiated protocol name.
 	**/
-	var npnProtocol(default,null):String;
+	var npnProtocol(default, null):String;
 
 	/**
 		Returns an object representing the peer's certificate.

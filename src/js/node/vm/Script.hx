@@ -19,10 +19,10 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.vm;
 
 import js.node.Vm.VmContext;
-
 
 typedef ScriptOptions = {
 	/**
@@ -58,7 +58,6 @@ typedef ScriptRunOptions = {
 	**/
 	@:optional var timeout:Int;
 }
-
 
 /**
 	A class for holding precompiled scripts, and running them in specific sandboxes.

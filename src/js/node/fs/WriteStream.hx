@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.fs;
 
 import js.node.events.EventEmitter.Event;
@@ -31,7 +32,7 @@ import js.node.Fs.FsPath;
 		Listener arguments:
 			fd - file descriptor used by the `WriteStream`.
 	**/
-	var Open : WriteStreamEvent<Int->Void> = "open";
+	var Open:WriteStreamEvent<Int->Void> = "open";
 }
 
 /**

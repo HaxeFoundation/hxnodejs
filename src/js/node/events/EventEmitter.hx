@@ -19,6 +19,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+
 package js.node.events;
 
 import haxe.Constraints.Function;
@@ -36,7 +37,7 @@ import haxe.Constraints.Function;
 
 		It is unspecified if listener is in the list returned by emitter.listeners(event).
 	**/
-	var NewListener : EventEmitterEvent<String->Function->Void> = "newListener";
+	var NewListener:EventEmitterEvent<String->Function->Void> = "newListener";
 
 	/**
 		This event is emitted any time someone removes a listener.
@@ -47,7 +48,7 @@ import haxe.Constraints.Function;
 
 		It is unspecified if listener is in the list returned by emitter.listeners(event).
 	**/
-	var RemoveListener : EventEmitterEvent<String->Function->Void> = "removeListener";
+	var RemoveListener:EventEmitterEvent<String->Function->Void> = "removeListener";
 }
 
 /**
@@ -74,7 +75,6 @@ abstract Event<T:Function>(String) from String to String {}
 **/
 @:jsRequire("events", "EventEmitter")
 extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
-
 	function new();
 
 	/**
@@ -163,7 +163,6 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	**/
 	static function listenerCount<T:Function>(emitter:IEventEmitter, event:Event<T>):Int;
 }
-
 
 /**
 	`IEventEmitter` interface is used as "any EventEmitter".
