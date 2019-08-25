@@ -58,9 +58,15 @@ extern class URLSearchParams {
 	/**
 		Iterates over each name-value pair in the query and invokes the given function.
 	 */
+	#if haxe4
 	@:overload(function(fn:(value:String) -> Void, ?thisArg:Dynamic):Void {})
 	@:overload(function(fn:(value:String, name:String) -> Void, ?thisArg:Dynamic):Void {})
 	function forEach(fn:(value:String, name:String, searchParams:URLSearchParams) -> Void, ?thisArg:Dynamic):Void;
+	#else
+	@:overload(function(fn:String -> Void, ?thisArg:Dynamic):Void {})
+	@:overload(function(fn:String -> String -> Void, ?thisArg:Dynamic):Void {})
+	function forEach(fn:String -> String -> URLSearchParams -> Void, ?thisArg:Dynamic):Void;
+	#end
 
 	/**
 		Returns the value of the first name-value pair whose name is `name`.
