@@ -141,3 +141,7 @@ extern class Node {
 	**/
 	static function setTimeout(callback:Function, delay:Int, args:Rest<Dynamic>):Timeout;
 }
+
+@:deprecated typedef TimeoutObject = js.node.Timers.Timeout;
+@:deprecated typedef IntervalObject = js.node.Timers.Timeout;
+@:deprecated typedef ImmediateObject = js.node.Timers.Immediate;
