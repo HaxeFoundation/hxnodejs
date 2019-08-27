@@ -155,9 +155,9 @@ typedef HttpRequestOptions = {
 		Any `Duplex` stream is a valid return value.
 	**/
 	#if haxe4
-	@:optional var createConnection:(options:SocketConnectOptionsTcp, ?callabck:(err:Error, stream:Duplex<Dynamic>) -> Void) -> Duplex<Dynamic>;
+	@:optional var createConnection:(options:SocketConnectOptionsTcp, ?callabck:(err:Error, stream:IDuplex) -> Void) -> IDuplex;
 	#else
-	@:optional var createConnection:SocketConnectOptionsTcp->?(Error->Duplex<Dynamic>->Void)->Duplex<Dynamic>;
+	@:optional var createConnection:SocketConnectOptionsTcp->?(Error->IDuplex->Void)->IDuplex;
 	#end
 
 	/**
