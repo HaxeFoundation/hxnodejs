@@ -23,7 +23,13 @@
 package js.node.http;
 
 import haxe.DynamicAccess;
+import haxe.extern.EitherType;
 import js.node.net.Socket;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	An `Agent` is responsible for managing connection persistence and reuse for HTTP clients.
@@ -61,6 +67,38 @@ extern class Agent {
 	function new(?options:AgentOptions);
 
 	/**
+		Produces a socket/stream to be used for HTTP requests.
+
+		By default, this function is the same as `net.createConnection()`.
+		However, custom agents may override this method in case greater flexibility is desired.
+
+		A socket/stream can be supplied in one of two ways: by returning the socket/stream from this function,
+		or by passing the socket/stream to `callback`.
+
+		`callback` has a signature of `(err, stream)`.
+	**/
+	#if haxe4
+	function createConnection(options:SocketConnectOptionsTcp, ?callback:(err:Error, stream:Socket) -> Void):Socket;
+	#else
+	function createConnection(options:SocketConnectOptionsTcp, ?callback:Error->Socket->Void):Socket;
+	#end
+
+	/**
+		Called when `socket` is detached from a request and could be persisted by the `Agent`.
+
+		This method can be overridden by a particular `Agent` subclass.
+		If this method returns a falsy value, the socket will be destroyed instead of persisting it for use with the next request.
+	**/
+	function keepSocketAlive(socket:Socket):Void;
+
+	/**
+		Called when `socket` is attached to `request` after being persisted because of the keep-alive options. 
+		
+		This method can be overridden by a particular `Agent` subclass.
+	**/
+	function reuseSocket(socket:Socket, request:ClientRequest):Void;
+
+	/**
 		Destroy any sockets that are currently in use by the agent.
 
 		It is usually not necessary to do this. However, if using an agent with `keepAlive` enabled,
@@ -90,7 +128,7 @@ extern class Agent {
 
 	/**
 		By default set to `Infinity`.
-		Determines how many concurrent sockets the agent can have open per origin. Origin is the returned value of `agent.getName()`.
+		Determines how many concurrent sockets the agent can have open per origin. Origin is the returned value of `getName()`.
 	**/
 	var maxSockets:Float;
 
@@ -117,8 +155,8 @@ typedef AgentOptions = {
 		Not to be confused with the `keep-alive` value of the `Connection` header.
 		The `Connection: keep-alive` header is always sent when using an agent except when the `Connection` header
 		is explicitly specified or when the `keepAlive` and `maxSockets` options are respectively set to `false` and `Infinity`,
-		in which case `Connection: close` will be used. 
-		
+		in which case `Connection: close` will be used.
+
 		Default: `false`
 	**/
 	@:optional var keepAlive:Bool;
@@ -140,7 +178,7 @@ typedef AgentOptions = {
 
 	/**
 		Maximum number of sockets to leave open in a free state. Only relevant if `keepAlive` is set to `true`.
-		
+
 		Default: `256`.
 	**/
 	@:optional var maxFreeSockets:Int;
