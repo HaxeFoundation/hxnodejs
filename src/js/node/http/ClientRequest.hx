@@ -37,7 +37,7 @@ import js.node.stream.Writable;
 		This event is only emitted on the first call to `abort()`.
 	**/
 	var Abort:ClientRequestEvent<Void->Void> = "abort";
-	
+
 	/**
 		Emitted each time a server responds to a request with a `CONNECT` method.
 		If this event is not being listened for, clients receiving a `CONNECT` method will have their connections closed.
@@ -47,7 +47,7 @@ import js.node.stream.Writable;
 	#else
 	var Connect:ClientRequestEvent<IncomingMessage->Socket->Buffer->Void> = "connect";
 	#end
-	
+
 	/**
 		Emitted when the server sends a '100 Continue' HTTP response,
 		usually because the request contained 'Expect: 100-continue'.
@@ -61,7 +61,7 @@ import js.node.stream.Writable;
 		key-value headers object, and array with the raw header names followed by their respective values.
 	**/
 	var Information:ClientRequestEvent<InformationEventData->Void> = "information";
-	
+
 	/**
 		Emitted when a response is received to this request. This event is emitted only once.
 	**/

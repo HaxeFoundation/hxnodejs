@@ -92,8 +92,8 @@ extern class Agent {
 	function keepSocketAlive(socket:Socket):Void;
 
 	/**
-		Called when `socket` is attached to `request` after being persisted because of the keep-alive options. 
-		
+		Called when `socket` is attached to `request` after being persisted because of the keep-alive options.
+
 		This method can be overridden by a particular `Agent` subclass.
 	**/
 	function reuseSocket(socket:Socket, request:ClientRequest):Void;
