@@ -4,7 +4,6 @@
 		{
 			"type": "hxml",
 			"file": "build.hxml",
-			"problemMatcher": "$haxe",
 			"group": {
 				"kind": "build",
 				"isDefault": true
