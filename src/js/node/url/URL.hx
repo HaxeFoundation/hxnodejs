@@ -32,8 +32,8 @@ extern class URL {
 		Creates a new `URL` object by parsing the `input` relative to the `base`.
 		If `base` is passed as a string, it will be parsed equivalent to `new URL(base)`.
 	**/
-	@:overload(function(input:String, base:URL):Void {})
-	function new(input:String, base:String):Void;
+	@:overload(function(input:String, ?base:URL):Void {})
+	function new(input:String, ?base:String):Void;
 
 	/**
 		Gets and sets the fragment portion of the URL.
