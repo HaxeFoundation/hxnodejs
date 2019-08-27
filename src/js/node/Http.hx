@@ -23,98 +23,16 @@
 package js.node;
 
 import haxe.DynamicAccess;
+import haxe.extern.EitherType;
 import js.node.http.*;
-
-/**
-	Type of the options object passed to `Http.request`.
-**/
-typedef HttpRequestOptions = {
-	/**
-		Protocol to use. Defaults to 'http'.
-	**/
-	@:optional var protocol:String;
-
-	/**
-		A domain name or IP address of the server to issue the request to.
-		Defaults to 'localhost'.
-	**/
-	@:optional var host:String;
-
-	/**
-		To support `Url.parse` `hostname` is preferred over `host`
-	**/
-	@:optional var hostname:String;
-
-	/**
-		IP address family to use when resolving host and hostname.
-		Valid values are 4 or 6.
-		When unspecified, both IP v4 and v6 will be used.
-	**/
-	@:optional var family:js.node.Dns.DnsAddressFamily;
-
-	/**
-		Port of remote server.
-		Defaults to 80.
-	**/
-	@:optional var port:Int;
-
-	/**
-		Local interface to bind for network connections.
-	**/
-	@:optional var localAddress:String;
-
-	/**
-		Unix Domain Socket (use one of `host`:`port` or `socketPath`)
-	**/
-	@:optional var socketPath:String;
-
-	/**
-		A string specifying the HTTP request method.
-		Defaults to 'GET'.
-	**/
-	@:optional var method:Method;
-
-	/**
-		Request path.
-		Defaults to '/'.
-		Should include query string if any. E.G. '/index.html?page=12'
-	**/
-	@:optional var path:String;
-
-	/**
-		An object containing request headers.
-
-		There are a few special headers that should be noted:
-
-			Sending a 'Connection: keep-alive' will notify Node that the connection to the server
-			should be persisted until the next request.
-
-			Sending a 'Content-length' header will disable the default chunked encoding.
-
-			Sending an 'Expect' header will immediately send the request headers.
-			Usually, when sending 'Expect: 100-continue', you should both set a timeout
-			and listen for the continue event. See RFC2616 Section 8.2.3 for more information.
-
-			Sending an Authorization header will override using the auth option to compute basic authentication.
-	**/
-	@:optional var headers:DynamicAccess<haxe.extern.EitherType<String, Array<String>>>;
-
-	/**
-		Basic authentication i.e. 'user:password' to compute an Authorization header.
-	**/
-	@:optional var auth:String;
-
-	/**
-		Controls Agent behavior.
-		When an Agent is used request will default to Connection: keep-alive.
-
-		Possible values:
-			null (default): use global `Agent` for this `host` and `port`.
-			`Agent` object: explicitly use the passed in `Agent`.
-			false: opts out of connection pooling with an `Agent`, defaults request to 'Connection: close'.
-	**/
-	@:optional var agent:haxe.extern.EitherType<Agent, Bool>;
-}
+import js.node.net.Socket;
+import js.node.stream.Duplex;
+import js.node.url.URL;
+#if haxe4
+import js.lib.Error;
+#else
+import js.Error;
+#end
 
 /**
 	The HTTP interfaces in Node are designed to support many features of the protocol
@@ -140,21 +58,38 @@ extern class Http {
 
 	/**
 		A collection of all the standard HTTP response status codes, and the short description of each.
-		For example, http.STATUS_CODES["404"] == 'Not Found'.
+		For example, `http.STATUS_CODES[404] === 'Not Found'`.
 	**/
 	static var STATUS_CODES(default, null):DynamicAccess<String>;
+
+	/**
+		Returns a new web server object.
+
+		The `requestListener` is a function which is automatically added to the `'request'` event.
+	**/
+	#if haxe4
+	@:overload(function(options:CreateServerOptions, ?requestListener:(request:IncomingMessage, response:ServerResponse) -> Void):Server {})
+	static function createServer(?requestListener:(request:IncomingMessage, response:ServerResponse) -> Void):Server;
+	#else
+	@:overload(function(options:CreateServerOptions, ?requestListener:IncomingMessage->ServerResponse->Void):Server {})
+	static function createServer(?requestListener:IncomingMessage->ServerResponse->Void):Server;
+	#end
+
+	/**
+		Since most requests are GET requests without bodies, Node provides this convenience method.
+		The only difference between this method and `request` is that it sets the method to GET
+		and calls req.end() automatically.
+	**/
+	@:overload(function(options:URL, ?callback:IncomingMessage->Void):ClientRequest {})
+	@:overload(function(options:String, ?callback:IncomingMessage->Void):ClientRequest {})
+	static function get(options:HttpRequestOptions, ?callback:IncomingMessage->Void):ClientRequest;
 
 	/**
 		Global instance of Agent which is used as the default for all http client requests.
 	**/
 	static var globalAgent:Agent;
 
-	/**
-		Returns a new web server object.
-
-		The `requestListener` is a function which is automatically added to the 'request' event.
-	**/
-	static function createServer(?requestListener:IncomingMessage->ServerResponse->Void):Server;
+	static var maxHeaderSize:Int;
 
 	/**
 		Node maintains several connections per server to make HTTP requests.
@@ -166,12 +101,136 @@ extern class Http {
 	**/
 	@:overload(function(options:String, ?callback:IncomingMessage->Void):ClientRequest {})
 	static function request(options:HttpRequestOptions, ?callback:IncomingMessage->Void):ClientRequest;
+}
+
+typedef CreateServerOptions = {
+	/**
+		Specifies the `IncomingMessage` class to be used. Useful for extending the original `IncomingMessage`.
+
+		Default: `js.node.http.IncomingMessage`.
+	**/
+	@:optional var IncomingMessage:Class<Dynamic>;
 
 	/**
-		Since most requests are GET requests without bodies, Node provides this convenience method.
-		The only difference between this method and `request` is that it sets the method to GET
-		and calls req.end() automatically.
+		Specifies the `ServerResponse` class to be used. Useful for extending the original `ServerResponse`.
+
+		Default: `ServerResponse`.
 	**/
-	@:overload(function(options:String, ?callback:IncomingMessage->Void):ClientRequest {})
-	static function get(options:HttpRequestOptions, ?callback:IncomingMessage->Void):ClientRequest;
+	@:optional var ServerResponse:Class<Dynamic>;
+}
+
+/**
+	Type of the options object passed to `Http.request`.
+**/
+typedef HttpRequestOptions = {
+	/**
+		Controls Agent behavior.
+
+		Possible values:
+
+		- `undefined` (default): use http.globalAgent for this host and port.
+		- `Agent` object: explicitly use the passed in `Agent`.
+		- `false` : causes a new `Agent` with default values to be used.
+	**/
+	@:optional var agent:EitherType<Agent, Bool>;
+
+	/**
+		Basic authentication i.e. `'user:password'` to compute an Authorization header.
+	**/
+	@:optional var auth:String;
+
+	/**
+		A function that produces a socket/stream to use for the request when the `agent` option is not used.
+		This can be used to avoid creating a custom `Agent` class just to override the default `createConnection` function.
+		See [agent.createConnection()](https://nodejs.org/api/http.html#http_agent_createconnection_options_callback) for more details.
+		Any `Duplex` stream is a valid return value.
+	**/
+	#if haxe4
+	@:optional var createConnection:(options:SocketConnectOptionsTcp, ?callabck:(err:Error, stream:Duplex<Dynamic>) -> Void) -> Duplex<Dynamic>;
+	#else
+	@:optional var createConnection:SocketConnectOptionsTcp->?(Error->Duplex<Dynamic>->Void)->Duplex<Dynamic>;
+	#end
+
+	/**
+		Default port for the protocol.
+
+		Default: `agent.defaultPort` if an Agent is used, else `undefined`.
+	**/
+	@:optional var defaultPort:Int;
+
+	/**
+		IP address family to use when resolving `host` or `hostname`.
+		Valid values are `4` or `6`. When unspecified, both IP v4 and v6 will be used.
+	**/
+	@:optional var family:js.node.Dns.DnsAddressFamily;
+
+	/**
+		An object containing request headers.
+	**/
+	@:optional var headers:DynamicAccess<EitherType<String, Array<String>>>;
+
+	/**
+		A domain name or IP address of the server to issue the request to.
+
+		Default: `'localhost'`.
+	**/
+	@:optional var host:String;
+
+	/**
+		Alias for `host`.
+		To support `url.parse()`, hostname will be used if both `host` and `hostname` are specified.
+	**/
+	@:optional var hostname:String;
+
+	/**
+		Local interface to bind for network connections.
+	**/
+	@:optional var localAddress:String;
+
+	/**
+		A string specifying the HTTP request method.
+
+		Default: `'GET'`.
+	**/
+	@:optional var method:Method;
+
+	/**
+		Request path. Should include query string if any. E.G. `'/index.html?page=12'`.
+		An exception is thrown when the request path contains illegal characters.
+		Currently, only spaces are rejected but that may change in the future.
+
+		Default: `'/'`.
+	**/
+	@:optional var path:String;
+
+	/**
+		Port of remote server.
+
+		Default: `defaultPort` if set, else `80`.
+	**/
+	@:optional var port:Int;
+
+	/**
+		Protocol to use.
+
+		Default: `'http:'`.
+	**/
+	@:optional var protocol:String;
+
+	/**
+		Specifies whether or not to automatically add the Host header.
+		Defaults to `true`.
+	**/
+	@:optional var setHost:Bool;
+
+	/**
+		Unix Domain Socket (cannot be used if one of host or port is specified, those specify a TCP Socket).
+	**/
+	@:optional var socketPath:String;
+
+	/**
+		A number specifying the socket timeout in milliseconds.
+		This will set the timeout before the socket is connected.
+	**/
+	@:optional var timeout:Int;
 }
