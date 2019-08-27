@@ -23,7 +23,29 @@
 package js.node.https;
 
 /**
-	An Agent object for HTTPS similar to http.Agent.
-	See `Https.request` for more information.
+	An Agent object for HTTPS similar to `http.Agent`.
+	See [https.request](https://nodejs.org/dist/latest-v12.x/docs/api/https.html#https_https_request_options_callback) for more information.
 **/
-extern class Agent extends js.node.http.Agent {}
+@:jsRequire("https", "Agent")
+extern class Agent extends js.node.http.Agent {
+	function new(?options:HttpsAgentOptions);
+}
+
+typedef HttpsAgentOptions = {
+	> js.node.http.Agent.HttpAgentOptions,
+
+	/**
+		maximum number of TLS cached sessions. Use `0` to disable TLS session caching.
+
+		Default: `100`.
+	**/
+	@:optional var maxCachedSessions:Int;
+
+	/**
+		the value of [Server Name Indication extension](https://en.wikipedia.org/wiki/Server_Name_Indication) to be sent to the server.
+		Use empty string `''` to disable sending the extension.
+
+		Default: hostname of the target server, unless the target server is specified using an IP address, in which case the default is `''` (no extension).
+	**/
+	@:optional var servername:String;
+}
