@@ -64,7 +64,7 @@ extern class Agent {
 
 		To configure any of them, a custom `http.Agent` instance must be created.
 	**/
-	function new(?options:AgentOptions);
+	function new(?options:HttpAgentOptions);
 
 	/**
 		Produces a socket/stream to be used for HTTP requests.
@@ -148,7 +148,7 @@ extern class Agent {
 /**
 	Options for `Agent` constructor.
 **/
-typedef AgentOptions = {
+typedef HttpAgentOptions = {
 	/**
 		Keep sockets around even when there are no outstanding requests, so they can be used for future requests
 		without having to reestablish a TCP connection.

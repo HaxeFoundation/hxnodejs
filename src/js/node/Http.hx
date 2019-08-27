@@ -68,20 +68,20 @@ extern class Http {
 		The `requestListener` is a function which is automatically added to the `'request'` event.
 	**/
 	#if haxe4
-	@:overload(function(options:CreateServerOptions, ?requestListener:(request:IncomingMessage, response:ServerResponse) -> Void):Server {})
+	@:overload(function(options:HttpCreateServerOptions, ?requestListener:(request:IncomingMessage, response:ServerResponse) -> Void):Server {})
 	static function createServer(?requestListener:(request:IncomingMessage, response:ServerResponse) -> Void):Server;
 	#else
-	@:overload(function(options:CreateServerOptions, ?requestListener:IncomingMessage->ServerResponse->Void):Server {})
+	@:overload(function(options:HttpCreateServerOptions, ?requestListener:IncomingMessage->ServerResponse->Void):Server {})
 	static function createServer(?requestListener:IncomingMessage->ServerResponse->Void):Server;
 	#end
 
 	/**
-		Since most requests are GET requests without bodies, Node provides this convenience method.
-		The only difference between this method and `request` is that it sets the method to GET
-		and calls req.end() automatically.
+		Since most requests are GET requests without bodies, Node.js provides this convenience method.
+		The only difference between this method and `request()` is that it sets the method to GET and calls `end()` automatically.
+		The callback must take care to consume the response data for reasons stated in `http.ClientRequest` section.
 	**/
-	@:overload(function(options:URL, ?callback:IncomingMessage->Void):ClientRequest {})
-	@:overload(function(options:String, ?callback:IncomingMessage->Void):ClientRequest {})
+	@:overload(function(url:URL, ?options:HttpRequestOptions, ?callback:IncomingMessage->Void):ClientRequest {})
+	@:overload(function(url:String, ?options:HttpRequestOptions, ?callback:IncomingMessage->Void):ClientRequest {})
 	static function get(options:HttpRequestOptions, ?callback:IncomingMessage->Void):ClientRequest;
 
 	/**
@@ -92,18 +92,27 @@ extern class Http {
 	static var maxHeaderSize:Int;
 
 	/**
-		Node maintains several connections per server to make HTTP requests.
+		Node.js maintains several connections per server to make HTTP requests.
 		This function allows one to transparently issue requests.
 
-		`options` can be an object or a string. If `options` is a string, it is automatically parsed with `Url.parse`.
+		`url` can be a string or a URL object.
+		If `url` is a string, it is automatically parsed with `new URL()`.
+		If it is a `URL` object, it will be automatically converted to an ordinary `options` object.
 
-		The optional `callback` parameter will be added as a one time listener for the 'response' event.
+		If both `url` and `options` are specified, the objects are merged, with the `options` properties taking precedence.
+
+		The optional `callback` parameter will be added as a one-time listener for the `'response'` event.
+
+		`request()` returns an instance of the `http.ClientRequest` class.
+		The `ClientRequest` instance is a writable stream.
+		If one needs to upload a file with a POST request, then write to the `ClientRequest` object.
 	**/
-	@:overload(function(options:String, ?callback:IncomingMessage->Void):ClientRequest {})
+	@:overload(function(url:URL, ?options:HttpRequestOptions, ?callback:IncomingMessage->Void):ClientRequest {})
+	@:overload(function(url:String, ?options:HttpRequestOptions, ?callback:IncomingMessage->Void):ClientRequest {})
 	static function request(options:HttpRequestOptions, ?callback:IncomingMessage->Void):ClientRequest;
 }
 
-typedef CreateServerOptions = {
+typedef HttpCreateServerOptions = {
 	/**
 		Specifies the `IncomingMessage` class to be used. Useful for extending the original `IncomingMessage`.
 
