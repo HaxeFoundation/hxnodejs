@@ -40,6 +40,8 @@ extern class Console {
 		`stderr` is used for warning or error output. If `stderr` isn't passed,
 		the warning and error output will be sent to the `stdout`.
 	**/
+	//TODO:overload new Console(stdout[, stderr][, ignoreErrors])
+	//TODO:overload new Console(options)
 	function new(stdout:IWritable, ?stderr:IWritable);
 	/**
 		Similar to `Assert.ok`, but the error message is formatted as `Util.format(message...)`.
@@ -54,6 +56,24 @@ extern class Console {
   		On Windows, `console.clear()` will clear only the output in the current terminal viewport for the Node.js binary.
 	**/
 	function clear():Void;
+
+	/**
+		* `label` <string> The display label for the counter. `Default`: 'default'.
+
+	Maintains an internal counter specific to `label` and outputs to `stdout` the number of times `console.count()` has been called with the given `label`.**/
+	function count(?label:String):Void;
+	/**
+		* `label` <string> The display label for the counter. `Default`: 'default'.
+
+		Resets the internal counter specific to `label`.
+	**/
+	function countReset(?label:String):Void;
+	/**
+		* `data` <any>
+		* `...args` <any>
+		The `console.debug()` function is an alias for console.log().**/
+	function debug(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
+
 	/**
 		Uses util.inspect on obj and prints resulting string to stdout.
 
