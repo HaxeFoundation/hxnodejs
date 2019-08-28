@@ -161,13 +161,14 @@ extern class Console {
 	function groupEnd():Void;
 
 	/**
-		Prints to stdout with newline. This function can take multiple arguments in a printf()-like way.
-		Example: console.log('count: %d', count);
-		If formatting elements are not found in the first string then `Util.inspect` is used on each argument.
-		See `Util.format` for more information.
+		* `data` <any>
+		* `...args` <any>
+
+		Prints to `stdout` with newline. Multiple arguments can be passed, 
+		with the first used as the primary message and all additional used as substitution values similar to `printf(3)` (the arguments are all passed to `util.format()`).
+		See `util.format()` for more information.
 	**/
-	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
-	function log(data:String, args:haxe.extern.Rest<Dynamic>):Void;
+	function log(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
 		* `tabularData` <any>
@@ -180,15 +181,21 @@ extern class Console {
 
 
 	/**
-		Mark a time with `label`.
-		Finish with `timeEnd`
+		* `label` <string> Default: `'default'`
+
+		Starts a timer that can be used to compute the duration of an operation. 
+		Timers are identified by a unique `label`. 
+		Use the same `label` when calling `console.timeEnd()` to stop the timer and output the elapsed time in milliseconds to stdout. 
+		Timer durations are accurate to the sub-millisecond.
 	**/
-	function time(label:String):Void;
+	function time(?label:String):Void;
 
 	/**
-		Finish timer marked with `label`, record output.
+		* `label` <string> Default: `'default'`
+
+		Stops a timer that was previously started by calling `console.time()` and prints the result to `stdout`:
 	**/
-	function timeEnd(label:String):Void;
+	function timeEnd(?label:String):Void;
 
 	/**
 		* `label` <string> Default: `'default'`
@@ -198,15 +205,20 @@ extern class Console {
 	function timeLog(?label:String,data:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
-		Print to stderr 'Trace :', followed by the formatted message and stack trace to the current position.
+		* `message` <any>
+		* `...args` <any>
+
+		Prints to `stderr` the string `'Trace: '`, 
+		followed by the `util.format()` formatted message and stack trace to the current position in the code.
 	**/
-	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
-	function trace(message:String, args:haxe.extern.Rest<Dynamic>):Void;
+	function trace(message:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
 	/**
-		Same as `error`.
+		* `data` <any>
+		* `...args` <any>
+
+		The `console.warn()` function is an alias for `console.error()`.
 	**/
-	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
-	function warn(data:String, args:haxe.extern.Rest<Dynamic>):Void;
+	function warn(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
 
 	//
 	//Inspector only methods
