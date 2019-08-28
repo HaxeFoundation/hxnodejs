@@ -1050,7 +1050,7 @@ typedef OsConstants = {
 		var RTLD_GLOBAL:Int;
 
 		/**
-			The converse of RTLD_GLOBAL. This is the default behavior if neither flag is specified.
+			The converse of `RTLD_GLOBAL`. This is the default behavior if neither flag is specified.
 		**/
 		var RTLD_LOCAL:Int;
 
@@ -1058,6 +1058,44 @@ typedef OsConstants = {
 			Make a self-contained library use its own symbols in preference to symbols from previously loaded libraries.
 		**/
 		var RTLD_DEEPBIND:Int;
+	}
+
+	/**
+		The following process scheduling constants are exported by os.constants.priority:
+
+		@see https://nodejs.org/api/os.html#os_priority_constants
+	**/
+	var priority:{
+		/**
+			The lowest process scheduling priority. This corresponds to `IDLE_PRIORITY_CLASS` on Windows, and a nice value of `19` on all other platforms.
+
+		**/
+		var PRIORITY_LOW:Int;
+
+		/**
+			The process scheduling priority above `PRIORITY_LOW` and below `PRIORITY_NORMAL`. This corresponds to `BELOW_NORMAL_PRIORITY_CLASS` on Windows, and a nice value of `10` on all other platforms.
+		**/
+		var PRIORITY_BELOW_NORMAL:Int;
+
+		/**
+			The default process scheduling priority. This corresponds to `NORMAL_PRIORITY_CLASS` on Windows, and a nice value of `0` on all other platforms.
+		**/
+		var PRIORITY_NORMAL:Int;
+
+		/**
+			The process scheduling priority above `PRIORITY_NORMAL` and below `PRIORITY_HIGH`. This corresponds to `ABOVE_NORMAL_PRIORITY_CLASS` on Windows, and a nice value of `-7` on all other platforms.
+		**/
+		var PRIORITY_ABOVE_NORMAL:Int;
+
+		/**
+			The process scheduling priority above `PRIORITY_ABOVE_NORMAL` and below `PRIORITY_HIGHEST`. This corresponds to `HIGH_PRIORITY_CLASS` on Windows, and a nice value of `-14` on all other platforms.
+		**/
+		var PRIORITY_HIGH:Int;
+
+		/**
+			The highest process scheduling priority. This corresponds to `REALTIME_PRIORITY_CLASS` on Windows, and a nice value of `-20` on all other platforms.
+		**/
+		var PRIORITY_HIGHEST:Int;
 	}
 
 	/**
