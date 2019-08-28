@@ -153,6 +153,13 @@ extern class Path {
 	static var sep(default, null):String;
 
 	/**
+		On Windows systems only, returns an equivalent namespace-prefixed path for the given `path`. If `path` is not a string, `path` will be returned without modifications.
+
+		@see https://nodejs.org/api/path.html#path_path_tonamespacedpath_path
+	**/
+	static function toNamespacedPath(path:String):String;
+
+	/**
 		Provides access to Windows-specific implementations of the path methods.
 
 		Note: On Windows, both the forward slash (/) and backward slash (\) characters are accepted as path delimiters;
