@@ -1173,24 +1173,4 @@ extern class Os {
 		@see https://nodejs.org/api/os.html#os_os_userinfo_options
 	**/
 	static function userInfo(?options:{encoding:String}):OsUserInfo;
-
-	/**
-		Returns a string specifying the operating system's default directory for temporary files.
-	**/
-	static function tmpdir():String;
-
-	/**
-		Returns the total amount of system memory in bytes.
-	**/
-	static function totalmem():Float;
-
-	/**
-		Returns a string identifying the operating system name as returned by `uname(3)`.
-
-		For example 'Linux' on Linux, 'Darwin' on OS X and 'Windows_NT' on Windows.
-
-		Please see https://en.wikipedia.org/wiki/Uname#Examples for additional information about
-		the output of running `uname(3)` on various operating systems.
-	**/
-	static function type():String;
 }
