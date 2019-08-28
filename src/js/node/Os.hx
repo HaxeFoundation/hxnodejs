@@ -1036,42 +1036,50 @@ typedef OsConstants = {
 
 /**
 	Provides a number of operating system-related utility methods
+
+	@see https://nodejs.org/api/os.html#os_os
 **/
 @:jsRequire("os")
 extern class Os {
 	/**
-		Returns a string identifying the operating system CPU architecture for which the Node.js binary was compiled.
-
-		The current possible values are: 'arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'.
-	**/
-	static function arch():String;
-
-	/**
-		Returns an array of objects containing information about each CPU/core installed.
-	**/
-	static function cpus():Array<CPU>;
-
-	/**
-		Returns an object containing commonly used operating system specific constants for error codes,
-		process signals, and so on.
-	**/
-	static var constants(default, null):OsConstants;
-
-	/**
 		A string constant defining the operating system-specific end-of-line marker:
 
-		* `\n` on POSIX
-		* `\r\n` on Windows
+		@see https://nodejs.org/api/os.html#os_os_eol
 	**/
 	static var EOL(default, null):String;
 
 	/**
-		Returns a string identifying the endianness of the CPU for which the Node.js binary was compiled.
+		The os.arch() method returns a string identifying the operating system CPU architecture for which the Node.js binary was compiled.
+
+		@see https://nodejs.org/api/os.html#os_os_arch
+	**/
+	static function arch():String;
+
+	/**
+		Returns an object containing commonly used operating system specific constants for error codes, process signals, and so on. The specific constants currently defined are described in OS Constants.
+
+		@see https://nodejs.org/api/os.html#os_os_constants
+	**/
+	static var constants(default, null):OsConstants;
+
+	/**
+		The os.cpus() method returns an array of objects containing information about each logical CPU core.
+
+		@see https://nodejs.org/api/os.html#os_os_cpus
+	**/
+	static function cpus():Array<CPU>;
+
+	/**
+		The os.endianness() method returns a string identifying the endianness of the CPU for which the Node.js binary was compiled.
+
+		@see https://nodejs.org/api/os.html#os_os_endianness
 	**/
 	static function endianness():Endianness;
 
 	/**
-		Returns the amount of free system memory in bytes.
+		The os.freemem() method returns the amount of free system memory in bytes as an integer.
+
+		@see https://nodejs.org/api/os.html#os_os_freemem
 	**/
 	static function freemem():Float;
 
