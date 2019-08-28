@@ -34,6 +34,15 @@ import js.node.stream.Writable;
 **/
 @:jsRequire("console", "Console")
 extern class Console {
+
+	typedef ConsoleOptions={
+		var stdout:Writable;
+		@optional var stderr:Writable;
+		@optional var ignoreErrors:Bool;
+		@optional var colorMode:haxe.extern.EitherType<Bool,String>;
+		@optional var inspectOptions:Util.InspectOptions;
+	};
+
 	/**
 		Create a new `Console` by passing one or two writable stream instances.
 		`stdout` is a writable stream to print log or info output.
@@ -56,7 +65,7 @@ extern class Console {
 
 		The global `console` is a special `Console` whose output is sent to `process.stdout` and `process.stderr`. It is equivalent to calling:
 	**/
-	@:overload(function(options:Dynamic):Void { })
+	@:overload(function(options:ConsoleOptions):Void { })
 	function new(stdout:IWritable, ?stderr:IWritable,?ignoreerrors:Bool):Void;
 
 
