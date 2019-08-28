@@ -1112,34 +1112,53 @@ extern class Os {
 	static function loadavg():Array<Float>;
 
 	/**
-		Returns an object containing only network interfaces that have been assigned a network address.
+		The os.networkInterfaces() method returns an object containing only network interfaces that have been assigned a network address.
+
+		@see https://nodejs.org/api/os.html#os_os_networkinterfaces
 	**/
 	static function networkInterfaces():haxe.DynamicAccess<NetworkInterface>;
 
 	/**
-		Returns a string identifying the operating system platform as set during compile time of Node.js.
+		The os.platform() method returns a string identifying the operating system platform as set during compile time of Node.js.
 
-		Currently possible values are:
-		* 'aix'
-		* 'darwin'
-		* 'freebsd'
-		* 'linux'
-		* 'openbsd'
-		* 'sunos'
-		* 'win32'
-
-		Note: The value 'android' may also be returned if the Node.js is built on the Android operating system.
-		However, Android support in Node.js is considered to be experimental at this time.
+		@see https://nodejs.org/api/os.html#os_os_platform
 	**/
 	static function platform():String;
 
 	/**
-		Returns a string identifying the operating system release.
+		The os.release() method returns a string identifying the operating system release.
 
-		Note: On POSIX systems, the operating system release is determined by calling `uname(3)`.
-		On Windows, `GetVersionExW()` is used. Please see https://en.wikipedia.org/wiki/Uname#Examples for more information.
+		@see https://nodejs.org/api/os.html#os_os_release
 	**/
 	static function release():String;
+
+	/**
+		The os.setPriority() method attempts to set the scheduling priority for the process specified by pid. If pid is not provided, or is 0, the priority of the current process is used.
+
+		@see https://nodejs.org/api/os.html#os_os_setpriority_pid_priority
+	**/
+	static function setPriority(?pid:Int, priority:Int):Void;
+
+	/**
+		The os.tmpdir() method returns a string specifying the operating system's default directory for temporary files.
+
+		@see https://nodejs.org/api/os.html#os_os_tmpdir
+	**/
+	function tmpdir():String;
+
+	/**
+		The os.totalmem() method returns the total amount of system memory in bytes as an integer.
+
+		@see https://nodejs.org/api/os.html#os_os_totalmem
+	**/
+	function totalmem():Int;
+
+	/**
+		The os.type() method returns a string identifying the operating system name as returned by uname(3). For example, 'Linux' on Linux, 'Darwin' on macOS, and 'Windows_NT' on Windows.
+
+		@see https://nodejs.org/api/os.html#os_os_type
+	**/
+	function type():String;
 
 	/**
 		Returns the system uptime in number of seconds.
