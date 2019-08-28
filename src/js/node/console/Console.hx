@@ -135,10 +135,12 @@ extern class Console {
 	function error(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
-		Same as `log`.
+		* `data` <any>
+		* `...args` <any>
+
+		The `console.info()` function is an alias for `console.log()`.
 	**/
-	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
-	function info(data:String, args:haxe.extern.Rest<Dynamic>):Void;
+	function info(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
 
 
 	/**
