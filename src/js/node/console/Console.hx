@@ -41,6 +41,34 @@ extern class Console {
 		the warning and error output will be sent to the `stdout`.
 	**/
 	function new(stdout:IWritable, ?stderr:IWritable);
+	/**
+		Similar to `Assert.ok`, but the error message is formatted as `Util.format(message...)`.
+	**/
+	@:overload(function(value:Bool, args:haxe.extern.Rest<Dynamic>):Void {})
+	@:overload(function(value:Bool, message:String, args:haxe.extern.Rest<Dynamic>):Void {})
+	function assert(value:Bool):Void;
+
+	/**
+		Uses util.inspect on obj and prints resulting string to stdout.
+
+		This function bypasses any custom inspect() function on obj.
+		An optional options object may be passed that alters certain aspects
+		of the formatted string.
+	**/
+	function dir(obj:Dynamic, ?options:Util.InspectOptionsBase):Void;
+
+	/**
+		Same as `log` but prints to stderr.
+	**/
+	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
+	function error(data:String, args:haxe.extern.Rest<Dynamic>):Void;
+
+	/**
+		Same as `log`.
+	**/
+	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
+	function info(data:String, args:haxe.extern.Rest<Dynamic>):Void;
+
 
 	/**
 		Prints to stdout with newline. This function can take multiple arguments in a printf()-like way.
@@ -51,32 +79,9 @@ extern class Console {
 	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
 	function log(data:String, args:haxe.extern.Rest<Dynamic>):Void;
 
-	/**
-		Same as `log`.
-	**/
-	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
-	function info(data:String, args:haxe.extern.Rest<Dynamic>):Void;
 
-	/**
-		Same as `log` but prints to stderr.
-	**/
-	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
-	function error(data:String, args:haxe.extern.Rest<Dynamic>):Void;
 
-	/**
-		Same as `error`.
-	**/
-	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
-	function warn(data:String, args:haxe.extern.Rest<Dynamic>):Void;
 
-	/**
-		Uses util.inspect on obj and prints resulting string to stdout.
-
-		This function bypasses any custom inspect() function on obj.
-		An optional options object may be passed that alters certain aspects
-		of the formatted string.
-	**/
-	function dir(obj:Dynamic, ?options:Util.InspectOptionsBase):Void;
 
 	/**
 		Mark a time with `label`.
@@ -94,11 +99,10 @@ extern class Console {
 	**/
 	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
 	function trace(message:String, args:haxe.extern.Rest<Dynamic>):Void;
-
 	/**
-		Similar to `Assert.ok`, but the error message is formatted as `Util.format(message...)`.
+		Same as `error`.
 	**/
-	@:overload(function(value:Bool, args:haxe.extern.Rest<Dynamic>):Void {})
-	@:overload(function(value:Bool, message:String, args:haxe.extern.Rest<Dynamic>):Void {})
-	function assert(value:Bool):Void;
+	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
+	function warn(data:String, args:haxe.extern.Rest<Dynamic>):Void;
+
 }
