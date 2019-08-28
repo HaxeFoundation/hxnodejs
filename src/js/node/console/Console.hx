@@ -23,7 +23,8 @@
 package js.node.console;
 
 import js.node.stream.Writable;
-import haxe.extern.*;
+import haxe.extern.Rest;
+import haxe.extern.EitherType;
 
 /**
 	The console module provides a simple debugging console that is similar to the JavaScript console mechanism provided by web browsers.
