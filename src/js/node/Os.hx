@@ -26,6 +26,8 @@ package js.node;
 	Information about the currently effective user (returned by `Os.userInfo` method).
 
 	On POSIX platforms, this is typically a subset of the password file.
+
+	@see https://nodejs.org/api/os.html#os_os_userinfo_options
 **/
 typedef OsUserInfo = {
 	/**
@@ -55,6 +57,8 @@ typedef OsUserInfo = {
 
 /**
 	Object containing the number of milliseconds the CPU/core spent in: user, nice, sys, idle, and irq
+
+	@see https://nodejs.org/api/os.html#os_os_cpus
 **/
 typedef CPUTime = {
 	/**
@@ -85,6 +89,8 @@ typedef CPUTime = {
 
 /**
 	Object containing information about each CPU/core installed. Returned by `Os.cpus` method.
+
+	@see https://nodejs.org/api/os.html#os_os_cpus
 **/
 typedef CPU = {
 	/**
@@ -107,15 +113,12 @@ typedef CPU = {
 
 /**
 	Objects containing information about network interface addresses.
+
+	@see https://nodejs.org/api/os.html#os_os_networkinterfaces
 **/
 typedef NetworkInterface = Array<NetworkInterfaceAddressInfo>;
 
 typedef NetworkInterfaceAddressInfo = {
-	/**
-		IP address family (either IPv4 or IPv6).
-	**/
-	var family:js.node.net.Socket.SocketAdressFamily;
-
 	/**
 		The assigned IPv4 or IPv6 address.
 	**/
@@ -127,19 +130,29 @@ typedef NetworkInterfaceAddressInfo = {
 	var netmask:String;
 
 	/**
+		IP address family (either `IPv4` or `IPv6`).
+	**/
+	var family:js.node.net.Socket.SocketAdressFamily;
+
+	/**
 		The MAC address of the network interface.
 	**/
 	var mac:String;
 
 	/**
-		True if the network interface is a loopback or similar interface that is not remotely accessible; otherwise false
+		`True` if the network interface is a loopback or similar interface that is not remotely accessible; otherwise `false`
 	**/
 	var internal:Bool;
 
 	/**
-		The numeric IPv6 scope ID (only specified when family is IPv6)
+		The numeric IPv6 scope ID (only specified when `family` is `IPv6`)
 	**/
 	@:optional var scopeid:Int;
+
+	/**
+		The assigned IPv4 or IPv6 address with the routing prefix in CIDR notation. If the `netmask` is invalid, this property is set to `null`.
+	**/
+	var cidr:String;
 }
 
 @:enum abstract Endianness(String) to String {
@@ -150,11 +163,13 @@ typedef NetworkInterfaceAddressInfo = {
 /**
 	Constants object returned by `Os.constants`.
 
-	Note: Not all constants will be available on every operating system.
+	@see https://nodejs.org/api/os.html#os_os_constants_1
 **/
 typedef OsConstants = {
 	/**
-		Signal Constants
+		The following signal constants are exported by os.constants.signals:
+
+		@see https://nodejs.org/api/os.html#os_signal_constants
 	**/
 	var signals:{
 		/**
@@ -339,7 +354,9 @@ typedef OsConstants = {
 	};
 
 	/**
-		Error Constants
+		The following error constants are exported by os.constants.errno:
+
+		@see https://nodejs.org/api/os.html#os_error_constants
 	**/
 	var errno:{
 		/**
