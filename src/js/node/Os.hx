@@ -1081,7 +1081,7 @@ extern class Os {
 
 		@see https://nodejs.org/api/os.html#os_os_freemem
 	**/
-	static function freemem():Float;
+	static function freemem():Int;
 
 	/**
 		Returns the home directory of the current user.
