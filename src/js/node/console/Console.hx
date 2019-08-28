@@ -39,15 +39,38 @@ extern class Console {
 		`stdout` is a writable stream to print log or info output.
 		`stderr` is used for warning or error output. If `stderr` isn't passed,
 		the warning and error output will be sent to the `stdout`.
+
+		* `options` <Object>
+			* `stdout` <stream.Writable>
+			* `stderr` <stream.Writable>
+			* `ignoreErrors` <boolean> Ignore errors when writing to the underlying streams. Default: `true`.
+			* `colorMode` <boolean> | <string> Set color support for this `Console` instance.
+					Setting to `true` enables coloring while inspecting values,
+					setting to `'auto'` will make color support depend on the value of the `isTTY` property and the value returned by `getColorDepth()` on the respective stream. 
+					This option can not be used, if `inspectOptions.colors` is set as well. Default: `'auto'`.
+			* `inspectOptions` <Object> Specifies options that are passed along to `util.inspect()`.
+
+		Creates a new `Console` with one or two writable stream instances. 
+		`stdout` is a writable stream to print log or info output. 
+		`stderr` is used for warning or error output. If `stderr` is not provided, `stdout` is used for `stderr`.
+
+		The global `console` is a special `Console` whose output is sent to `process.stdout` and `process.stderr`. It is equivalent to calling:
 	**/
 	@:overload(function(options:Dynamic):Void { })
 	function new(stdout:IWritable, ?stderr:IWritable,?ignoreerrors:Bool):Void;
+
+
 	/**
-		Similar to `Assert.ok`, but the error message is formatted as `Util.format(message...)`.
+		* `value` <any> The value tested for being truthy.
+		* `...message` <any> All arguments besides `value` are used as error message.
+
+		A simple assertion test that verifies whether `value` is truthy. If it is not, `Assertion failed` is logged. 
+		If provided, the error `message` is formatted using util.format() by passing along all message arguments. The output is used as the error message.
+
+		Calling `console.assert()` with a falsy assertion will only cause the `message` to be printed to the console without interrupting execution of subsequent code.
 	**/
-	@:overload(function(value:Bool, args:haxe.extern.Rest<Dynamic>):Void {})
-	@:overload(function(value:Bool, message:String, args:haxe.extern.Rest<Dynamic>):Void {})
-	function assert(value:Bool):Void;
+
+	function assert(value:Dynamic,message:haxe.extern.Rest<Dynamic>):Void;
 	/**
 		When `stdout` is a TTY, calling `console.clear()` will attempt to clear the TTY. When `stdout` is not a TTY, this method does nothing.
 
