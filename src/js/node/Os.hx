@@ -1091,23 +1091,23 @@ extern class Os {
 	static function getPriority(?pid:Int):Int;
 
 	/**
-		Returns the home directory of the current user.
+		The os.homedir() method returns the home directory of the current user as a string.
+
+		@see https://nodejs.org/api/os.html#os_os_homedir
 	**/
 	static function homedir():String;
 
 	/**
-		Returns the hostname of the operating system.
+		The os.hostname() method returns the hostname of the operating system as a string.
+
+		@see https://nodejs.org/api/os.html#os_os_hostname
 	**/
 	static function hostname():String;
 
 	/**
-		Returns an array containing the 1, 5, and 15 minute load averages.
+		The os.loadavg() method returns an array containing the 1, 5, and 15 minute load averages.
 
-		The load average is a measure of system activity, calculated by the operating system and expressed as a fractional number.
-		As a rule of thumb, the load average should ideally be less than the number of logical CPUs in the system.
-
-		The load average is a UNIX-specific concept with no real equivalent on Windows platforms.
-		On Windows, the return value is always `[0, 0, 0]`.
+		@see https://nodejs.org/api/os.html#os_os_loadavg
 	**/
 	static function loadavg():Array<Float>;
 
