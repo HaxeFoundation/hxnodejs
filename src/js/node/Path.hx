@@ -43,10 +43,58 @@ private typedef PathModule = {
 }
 
 /**
-	This module provides utilities for working with file and directory paths.
+	The `path` module provides utilities for working with file and directory paths.
+
+	@see https://nodejs.org/api/path.html#path_path
 **/
 @:jsRequire("path")
 extern class Path {
+	/**
+		Return the last portion of a `path`. Similar to the Unix `basename` command.
+	**/
+	static function basename(path:String, ?ext:String):String;
+
+	/**
+		Platform-specific path delimiter:
+
+		`;` for Windows
+		`:` for POSIX
+	**/
+	static var delimiter(default, null):String;
+
+	/**
+		Return the directory name of a `path`. Similar to the Unix `dirname` command.
+	**/
+	static function dirname(path:String):String;
+
+	/**
+		Return the extension of the `path`, from the last '.' (period) to end of string in the last portion of the `path`.
+		If there is no '.' in the last portion of the `path` or the first character of it is '.',
+		then it returns an empty string.
+	**/
+	static function extname(path:String):String;
+
+	/**
+		Returns a path string from an object, the opposite of `Path.parse` above.
+	**/
+	static function format(pathObject:PathObject):String;
+
+	/**
+		Determines if path is an absolute path.
+
+		If the given `path` is a zero-length string, false will be returned.
+	**/
+	static function isAbsolute(path:String):Bool;
+
+	/**
+		Joins all given `path` segments together using the platform specific separator as a delimiter,
+		then normalizes the resulting path.
+
+		Zero-length `path` segments are ignored. If the joined path string is a zero-length string
+		then '.' will be returned, representing the current working directory.
+	**/
+	static function join(paths:haxe.extern.Rest<String>):String;
+
 	/**
 		Normalizes the given `path`, resolving '..' and '.' segments.
 
@@ -59,13 +107,24 @@ extern class Path {
 	static function normalize(path:String):String;
 
 	/**
-		Joins all given `path` segments together using the platform specific separator as a delimiter,
-		then normalizes the resulting path.
-
-		Zero-length `path` segments are ignored. If the joined path string is a zero-length string
-		then '.' will be returned, representing the current working directory.
+		Returns an object whose properties represent significant elements of the `path`.
 	**/
-	static function join(paths:haxe.extern.Rest<String>):String;
+	static function parse(path:String):PathObject;
+
+	/**
+		Provides access to POSIX specific implementations of the path methods.
+	**/
+	static var posix(default, null):PathModule;
+
+	/**
+		Returns the relative path from `from` to `to`.
+
+		If `from` and `to` each resolve to the same path (after calling `resolve` on each), a zero-length string is returned.
+
+		If a zero-length string is passed as `from` or `to`, the current working directory will be used
+		instead of the zero-length strings.
+	**/
+	static function relative(from:String, to:String):String;
 
 	/**
 		Resolves a sequence of paths or path segments into an absolute path.
@@ -86,69 +145,12 @@ extern class Path {
 	static function resolve(paths:haxe.extern.Rest<String>):String;
 
 	/**
-		Determines if path is an absolute path.
-
-		If the given `path` is a zero-length string, false will be returned.
-	**/
-	static function isAbsolute(path:String):Bool;
-
-	/**
-		Returns the relative path from `from` to `to`.
-
-		If `from` and `to` each resolve to the same path (after calling `resolve` on each), a zero-length string is returned.
-
-		If a zero-length string is passed as `from` or `to`, the current working directory will be used
-		instead of the zero-length strings.
-	**/
-	static function relative(from:String, to:String):String;
-
-	/**
-		Return the directory name of a `path`. Similar to the Unix `dirname` command.
-	**/
-	static function dirname(path:String):String;
-
-	/**
-		Return the last portion of a `path`. Similar to the Unix `basename` command.
-	**/
-	static function basename(path:String, ?ext:String):String;
-
-	/**
-		Return the extension of the `path`, from the last '.' (period) to end of string in the last portion of the `path`.
-		If there is no '.' in the last portion of the `path` or the first character of it is '.',
-		then it returns an empty string.
-	**/
-	static function extname(path:String):String;
-
-	/**
 		Platform-specific path segment separator:
 
 		`\` on Windows
 		`/` on POSIX
 	**/
 	static var sep(default, null):String;
-
-	/**
-		Platform-specific path delimiter:
-
-		`;` for Windows
-		`:` for POSIX
-	**/
-	static var delimiter(default, null):String;
-
-	/**
-		Returns an object whose properties represent significant elements of the `path`.
-	**/
-	static function parse(path:String):PathObject;
-
-	/**
-		Returns a path string from an object, the opposite of `Path.parse` above.
-	**/
-	static function format(pathObject:PathObject):String;
-
-	/**
-		Provides access to POSIX specific implementations of the path methods.
-	**/
-	static var posix(default, null):PathModule;
 
 	/**
 		Provides access to Windows-specific implementations of the path methods.
