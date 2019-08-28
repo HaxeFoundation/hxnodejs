@@ -91,7 +91,9 @@ extern class Console {
 	function dirxml(data:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
-		Prints to stderr with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()).
+		Prints to stderr with newline. Multiple arguments can be passed,
+		with the first used as the primary message and all additional used as substitution values similar to printf(3)
+		(the arguments are all passed to util.format()).
 
 		@see https://nodejs.org/api/console.html#console_console_error_data_args
 	**/
@@ -126,21 +128,26 @@ extern class Console {
 	function info(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
-		Prints to stdout with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()).
+		Prints to stdout with newline. Multiple arguments can be passed,
+		with the first used as the primary message and all additional used as substitution values similar to printf(3)
+		(the arguments are all passed to util.format()).
 
 		@see https://nodejs.org/api/console.html#console_console_log_data_args
 	**/
 	function log(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
-		Try to construct a table with the columns of the properties of tabularData (or use properties) and rows of tabularData and log it. Falls back to just logging the argument if it can’t be parsed as tabular.
+		Try to construct a table with the columns of the properties of tabularData (or use properties)
+		and rows of tabularData and log it. Falls back to just logging the argument if it can’t be parsed as tabular.
 
 		@see https://nodejs.org/api/console.html#console_console_table_tabulardata_properties
 	**/
 	function table(tabularData:Dynamic, ?properties:Array<String>):Void;
 
 	/**
-		Starts a timer that can be used to compute the duration of an operation. Timers are identified by a unique label. Use the same label when calling console.timeEnd() to stop the timer and output the elapsed time in milliseconds to stdout. Timer durations are accurate to the sub-millisecond.
+		Starts a timer that can be used to compute the duration of an operation. Timers are identified by a unique label.
+		Use the same label when calling console.timeEnd() to stop the timer and output the elapsed time in milliseconds to stdout.
+		Timer durations are accurate to the sub-millisecond.
 
 		@see https://nodejs.org/api/console.html#console_console_time_label
 	**/
@@ -174,13 +181,6 @@ extern class Console {
 	**/
 	function warn(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
 
-	//
-	//
-	// Inspector only methods
-	// The following methods are exposed by the V8 engine in the general API but do not display anything unless used in conjunction with the inspector (`--inspect` flag).
-	//
-	//
-
 	/**
 		This method does not display anything unless used in the inspector. The console.markTimeline() method is the deprecated form of console.timeStamp().
 
@@ -189,21 +189,26 @@ extern class Console {
 	function markTimeline(?label:String):Void;
 
 	/**
-		This method does not display anything unless used in the inspector. The console.profile() method starts a JavaScript CPU profile with an optional label until console.profileEnd() is called. The profile is then added to the Profile panel of the inspector.
+		This method does not display anything unless used in the inspector.
+		The console.profile() method starts a JavaScript CPU profile with an optional label until console.profileEnd() is called.
+		The profile is then added to the Profile panel of the inspector.
 
 		@see https://nodejs.org/api/console.html#console_console_profile_label
 	**/
 	function profile(?label:String):Void;
 
 	/**
-		This method does not display anything unless used in the inspector. Stops the current JavaScript CPU profiling session if one has been started and prints the report to the Profiles panel of the inspector. See console.profile() for an example.
+		This method does not display anything unless used in the inspector.
+		Stops the current JavaScript CPU profiling session if one has been started and prints the report to the Profiles panel of the inspector.
+		See console.profile() for an example.
 
 		@see https://nodejs.org/api/console.html#console_console_profileend_label
 	**/
 	function profileEnd(?label:String):Void;
 
 	/**
-		This method does not display anything unless used in the inspector. The console.timeStamp() method adds an event with the label 'label' to the Timeline panel of the inspector.
+		This method does not display anything unless used in the inspector.
+		The console.timeStamp() method adds an event with the label 'label' to the Timeline panel of the inspector.
 
 		@see https://nodejs.org/api/console.html#console_console_timestamp_label
 	**/
@@ -225,9 +230,30 @@ extern class Console {
 }
 
 typedef ConsoleOptions = {
+	/**
+		stdout is a writable stream to print log or info output.
+	**/
 	var stdout:IWritable;
+
+	/**
+		stderr is used for warning or error output. If stderr is not provided, stdout is used for stderr.
+	**/
 	@optional var stderr:IWritable;
+
+	/**
+		Ignore errors when writing to the underlying streams. Default: true.
+	**/
 	@optional var ignoreErrors:Bool;
+
+	/**
+		Set color support for this Console instance. Setting to true enables coloring while inspecting values,
+		setting to 'auto' will make color support depend on the value of the isTTY property and the value returned by getColorDepth() on the respective stream.
+		 This option can not be used, if inspectOptions.colors is set as well. Default: 'auto'.
+	**/
 	@optional var colorMode:haxe.extern.EitherType<Bool, String>;
+
+	/**
+		Specifies options that are passed along to util.inspect().
+	**/
 	@optional var inspectOptions:Util.InspectOptions;
 }
