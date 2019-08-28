@@ -82,6 +82,12 @@ extern class Console {
 		of the formatted string.
 	**/
 	function dir(obj:Dynamic, ?options:Util.InspectOptionsBase):Void;
+	/**
+		* `...data` <any>
+		
+		This method calls console.log() passing it the arguments received. This method does not produce any XML formatting.
+	**/
+	function dirxml(data:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
 		Same as `log` but prints to stderr.
