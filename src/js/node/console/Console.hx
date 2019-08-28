@@ -40,9 +40,8 @@ extern class Console {
 		`stderr` is used for warning or error output. If `stderr` isn't passed,
 		the warning and error output will be sent to the `stdout`.
 	**/
-	//TODO:overload new Console(stdout[, stderr][, ignoreErrors])
-	//TODO:overload new Console(options)
-	function new(stdout:IWritable, ?stderr:IWritable);
+	@:overload(function(options:Dynamic):Void { })
+	function new(stdout:IWritable, ?stderr:IWritable,?ignoreerrors:Bool):Void;
 	/**
 		Similar to `Assert.ok`, but the error message is formatted as `Util.format(message...)`.
 	**/
