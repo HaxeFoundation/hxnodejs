@@ -1040,12 +1040,16 @@ typedef OsConstants = {
 @:jsRequire("os")
 extern class Os {
 	/**
-		A string constant defining the operating system-specific end-of-line marker:
+		Returns a string identifying the operating system CPU architecture for which the Node.js binary was compiled.
 
-		* `\n` on POSIX
-		* `\r\n` on Windows
+		The current possible values are: 'arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'.
 	**/
-	static var EOL(default, null):String;
+	static function arch():String;
+
+	/**
+		Returns an array of objects containing information about each CPU/core installed.
+	**/
+	static function cpus():Array<CPU>;
 
 	/**
 		Returns an object containing commonly used operating system specific constants for error codes,
@@ -1054,14 +1058,22 @@ extern class Os {
 	static var constants(default, null):OsConstants;
 
 	/**
-		Returns a string specifying the operating system's default directory for temporary files.
+		A string constant defining the operating system-specific end-of-line marker:
+
+		* `\n` on POSIX
+		* `\r\n` on Windows
 	**/
-	static function tmpdir():String;
+	static var EOL(default, null):String;
 
 	/**
 		Returns a string identifying the endianness of the CPU for which the Node.js binary was compiled.
 	**/
 	static function endianness():Endianness;
+
+	/**
+		Returns the amount of free system memory in bytes.
+	**/
+	static function freemem():Float;
 
 	/**
 		Returns the home directory of the current user.
@@ -1074,14 +1086,20 @@ extern class Os {
 	static function hostname():String;
 
 	/**
-		Returns a string identifying the operating system name as returned by `uname(3)`.
+		Returns an array containing the 1, 5, and 15 minute load averages.
 
-		For example 'Linux' on Linux, 'Darwin' on OS X and 'Windows_NT' on Windows.
+		The load average is a measure of system activity, calculated by the operating system and expressed as a fractional number.
+		As a rule of thumb, the load average should ideally be less than the number of logical CPUs in the system.
 
-		Please see https://en.wikipedia.org/wiki/Uname#Examples for additional information about
-		the output of running `uname(3)` on various operating systems.
+		The load average is a UNIX-specific concept with no real equivalent on Windows platforms.
+		On Windows, the return value is always `[0, 0, 0]`.
 	**/
-	static function type():String;
+	static function loadavg():Array<Float>;
+
+	/**
+		Returns an object containing only network interfaces that have been assigned a network address.
+	**/
+	static function networkInterfaces():haxe.DynamicAccess<NetworkInterface>;
 
 	/**
 		Returns a string identifying the operating system platform as set during compile time of Node.js.
@@ -1099,13 +1117,6 @@ extern class Os {
 		However, Android support in Node.js is considered to be experimental at this time.
 	**/
 	static function platform():String;
-
-	/**
-		Returns a string identifying the operating system CPU architecture for which the Node.js binary was compiled.
-
-		The current possible values are: 'arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'.
-	**/
-	static function arch():String;
 
 	/**
 		Returns a string identifying the operating system release.
@@ -1129,15 +1140,9 @@ extern class Os {
 	static function userInfo(?options:{encoding:String}):OsUserInfo;
 
 	/**
-		Returns an array containing the 1, 5, and 15 minute load averages.
-
-		The load average is a measure of system activity, calculated by the operating system and expressed as a fractional number.
-		As a rule of thumb, the load average should ideally be less than the number of logical CPUs in the system.
-
-		The load average is a UNIX-specific concept with no real equivalent on Windows platforms.
-		On Windows, the return value is always `[0, 0, 0]`.
+		Returns a string specifying the operating system's default directory for temporary files.
 	**/
-	static function loadavg():Array<Float>;
+	static function tmpdir():String;
 
 	/**
 		Returns the total amount of system memory in bytes.
@@ -1145,17 +1150,12 @@ extern class Os {
 	static function totalmem():Float;
 
 	/**
-		Returns the amount of free system memory in bytes.
-	**/
-	static function freemem():Float;
+		Returns a string identifying the operating system name as returned by `uname(3)`.
 
-	/**
-		Returns an array of objects containing information about each CPU/core installed.
-	**/
-	static function cpus():Array<CPU>;
+		For example 'Linux' on Linux, 'Darwin' on OS X and 'Windows_NT' on Windows.
 
-	/**
-		Returns an object containing only network interfaces that have been assigned a network address.
+		Please see https://en.wikipedia.org/wiki/Uname#Examples for additional information about
+		the output of running `uname(3)` on various operating systems.
 	**/
-	static function networkInterfaces():haxe.DynamicAccess<NetworkInterface>;
+	static function type():String;
 }
