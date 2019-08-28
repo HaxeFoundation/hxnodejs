@@ -145,6 +145,8 @@ extern class Path {
 
 /**
 	Path object returned from `Path.parse` and taken by `Path.format`.
+
+	@see https://nodejs.org/api/path.html#path_path_format_pathobject
 **/
 typedef PathObject = {
 	/**
