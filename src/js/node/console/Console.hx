@@ -27,9 +27,9 @@ import haxe.extern.Rest;
 import haxe.extern.EitherType;
 
 /**
-	The console module provides a simple debugging console that is similar to the JavaScript console mechanism provided by web browsers.
+	The Console class can be used to create a simple logger with configurable output streams and can be accessed using either require('console').
 
-	@see https://nodejs.org/api/console.html
+	@see https://nodejs.org/api/console.html#console_class_console
 **/
 @:jsRequire("console", "Console")
 extern class Console {
