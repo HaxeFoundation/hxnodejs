@@ -1161,15 +1161,16 @@ extern class Os {
 	function type():String;
 
 	/**
-		Returns the system uptime in number of seconds.
+		The os.uptime() method returns the system uptime in number of seconds.
 
-		Note: Within Node.js' internals, this number is represented as a double. However, fractional seconds are not
-		returned and the value can typically be treated as an integer.
+		@see https://nodejs.org/api/os.html#os_os_uptime
 	**/
 	static function uptime():Int;
 
 	/**
-		Returns information about the currently effective user -- on POSIX platforms, this is typically a subset of the password file.
+		The os.userInfo() method returns information about the currently effective user — on POSIX platforms, this is typically a subset of the password file. The returned object includes the username, uid, gid, shell, and homedir. On Windows, the uid and gid fields are -1, and shell is null.
+
+		@see https://nodejs.org/api/os.html#os_os_userinfo_options
 	**/
 	static function userInfo(?options:{encoding:String}):OsUserInfo;
 
