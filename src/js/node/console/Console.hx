@@ -106,11 +106,16 @@ extern class Console {
 	function debug(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
-		Uses util.inspect on obj and prints resulting string to stdout.
+		* `obj` <any>
+		* `options` <Object>
+			* `showHidden` <boolean> If `true` then the object's non-enumerable and symbol properties will be shown too. Default: `false`.
+			* `depth` <number> Tells `util.inspect()` how many times to recurse while formatting the object. This is useful for inspecting large complicated objects. 
+				To make it recurse indefinitely, pass `null`. Default: `2`.
+			* `colors` <boolean> If `true`, then the output will be styled with ANSI color codes. 
+				Colors are customizable; see customizing `util.inspect()` colors. Default: `false`.
 
-		This function bypasses any custom inspect() function on obj.
-		An optional options object may be passed that alters certain aspects
-		of the formatted string.
+		Uses `util.inspect()` on `obj` and prints the resulting string to stdout. 
+		This function bypasses any custom `inspect()` function defined on `obj`.
 	**/
 	function dir(obj:Dynamic, ?options:Util.InspectOptionsBase):Void;
 	/**
@@ -121,10 +126,13 @@ extern class Console {
 	function dirxml(data:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
-		Same as `log` but prints to stderr.
+		* `data` <any>
+		* `...args` <any>
+
+		Prints to `stderr` with newline. 
+		Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to `printf(3)` (the arguments are all passed to `util.format()`).
 	**/
-	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
-	function error(data:String, args:haxe.extern.Rest<Dynamic>):Void;
+	function error(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
 
 	/**
 		Same as `log`.
