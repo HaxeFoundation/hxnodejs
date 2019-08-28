@@ -128,7 +128,13 @@ extern class Console {
 	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
 	function log(data:String, args:haxe.extern.Rest<Dynamic>):Void;
 
-
+	/**
+		* `tabularData` <any>
+		* `properties` <string[]> Alternate properties for constructing the table.
+		Try to construct a table with the columns of the properties of `tabularData` (or use `properties`) and rows of `tabularData` and log it. 
+		Falls back to just logging the argument if it can’t be parsed as tabular.
+	**/
+	function table(tabularData:Dynamic,?properties:Array<String>):Void;
 
 
 
