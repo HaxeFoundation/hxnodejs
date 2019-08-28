@@ -150,6 +150,13 @@ extern class Console {
 	function timeEnd(label:String):Void;
 
 	/**
+		* `label` <string> Default: `'default'`
+		* `...data` <any>
+		For a timer that was previously started by calling `console.time()`, prints the elapsed time and other `data` arguments to `stdout`:
+	**/
+	function timeLog(?label:String,data:haxe.extern.Rest<Dynamic>):Void;
+
+	/**
 		Print to stderr 'Trace :', followed by the formatted message and stack trace to the current position.
 	**/
 	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
