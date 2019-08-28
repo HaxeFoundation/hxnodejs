@@ -103,6 +103,23 @@ extern class Console {
 
 
 	/**
+		* `...label` <any>
+
+		Increases indentation of subsequent lines by two spaces.
+
+		If one or more `label`s are provided, those are printed first without the additional indentation.
+	**/
+	function group(label:haxe.extern.Rest<Dynamic>):Void;
+	/**
+		An alias for `console.group()`.
+	**/
+	function groupCollapsed():Void;
+	/**
+		Decreases indentation of subsequent lines by two spaces.
+	**/
+	function groupEnd():Void;
+
+	/**
 		Prints to stdout with newline. This function can take multiple arguments in a printf()-like way.
 		Example: console.log('count: %d', count);
 		If formatting elements are not found in the first string then `Util.inspect` is used on each argument.
