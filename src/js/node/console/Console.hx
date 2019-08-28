@@ -23,6 +23,7 @@
 package js.node.console;
 
 import js.node.stream.Writable;
+import haxe.extern.*;
 
 /**
 	The console module provides a simple debugging console that is similar to the JavaScript console mechanism provided by web browsers.
@@ -46,7 +47,7 @@ extern class Console {
 
 		@see https://nodejs.org/api/console.html#console_console_assert_value_message
 	**/
-	function assert(value:Dynamic, message:haxe.extern.Rest<Dynamic>):Void;
+	function assert(value:Dynamic, message:Rest<Dynamic>):Void;
 
 	/**
 		When stdout is a TTY, calling console.clear() will attempt to clear the TTY. When stdout is not a TTY, this method does nothing.
@@ -74,7 +75,7 @@ extern class Console {
 
 		@see https://nodejs.org/api/console.html#console_console_debug_data_args
 	**/
-	function debug(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
+	function debug(data:Dynamic, args:Rest<Dynamic>):Void;
 
 	/**
 		Uses util.inspect() on obj and prints the resulting string to stdout. This function bypasses any custom inspect() function defined on obj.
@@ -88,7 +89,7 @@ extern class Console {
 
 		@see https://nodejs.org/api/console.html#console_console_dirxml_data
 	**/
-	function dirxml(data:haxe.extern.Rest<Dynamic>):Void;
+	function dirxml(data:Rest<Dynamic>):Void;
 
 	/**
 		Prints to stderr with newline. Multiple arguments can be passed,
@@ -97,14 +98,14 @@ extern class Console {
 
 		@see https://nodejs.org/api/console.html#console_console_error_data_args
 	**/
-	function error(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
+	function error(data:Dynamic, args:Rest<Dynamic>):Void;
 
 	/**
 		If one or more labels are provided, those are printed first without the additional indentation.
 
 		@see https://nodejs.org/api/console.html#console_console_group_label
 	**/
-	function group(label:haxe.extern.Rest<Dynamic>):Void;
+	function group(label:Rest<Dynamic>):Void;
 
 	/**
 		An alias for console.group().
@@ -125,7 +126,7 @@ extern class Console {
 
 		@see https://nodejs.org/api/console.html#console_console_info_data_args
 	**/
-	function info(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
+	function info(data:Dynamic, args:Rest<Dynamic>):Void;
 
 	/**
 		Prints to stdout with newline. Multiple arguments can be passed,
@@ -134,7 +135,7 @@ extern class Console {
 
 		@see https://nodejs.org/api/console.html#console_console_log_data_args
 	**/
-	function log(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
+	function log(data:Dynamic, args:Rest<Dynamic>):Void;
 
 	/**
 		Try to construct a table with the columns of the properties of tabularData (or use properties)
@@ -165,21 +166,21 @@ extern class Console {
 
 		@see https://nodejs.org/api/console.html#console_console_timelog_label_data
 	**/
-	function timeLog(?label:String, data:haxe.extern.Rest<Dynamic>):Void;
+	function timeLog(?label:String, data:Rest<Dynamic>):Void;
 
 	/**
 		Prints to stderr the string 'Trace: ', followed by the util.format() formatted message and stack trace to the current position in the code.
 
 		@see https://nodejs.org/api/console.html#console_console_trace_message_args
 	**/
-	function trace(message:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
+	function trace(message:Dynamic, args:Rest<Dynamic>):Void;
 
 	/**
 		The console.warn() function is an alias for console.error().
 
 		@see https://nodejs.org/api/console.html#console_console_warn_data_args
 	**/
-	function warn(data:Dynamic, args:haxe.extern.Rest<Dynamic>):Void;
+	function warn(data:Dynamic, args:Rest<Dynamic>):Void;
 
 	/**
 		This method does not display anything unless used in the inspector. The console.markTimeline() method is the deprecated form of console.timeStamp().
@@ -250,7 +251,7 @@ typedef ConsoleOptions = {
 		setting to 'auto' will make color support depend on the value of the isTTY property and the value returned by getColorDepth() on the respective stream.
 		 This option can not be used, if inspectOptions.colors is set as well. Default: 'auto'.
 	**/
-	@optional var colorMode:haxe.extern.EitherType<Bool, String>;
+	@optional var colorMode:EitherType<Bool, String>;
 
 	/**
 		Specifies options that are passed along to util.inspect().
