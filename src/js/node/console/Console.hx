@@ -167,4 +167,53 @@ extern class Console {
 	@:overload(function(args:haxe.extern.Rest<Dynamic>):Void {})
 	function warn(data:String, args:haxe.extern.Rest<Dynamic>):Void;
 
+	//
+	//Inspector only methods
+	//
+
+	/**
+		* `label` <string> Default: `'default'`
+
+		This method does not display anything unless used in the inspector. The `console.markTimeline()` method is the deprecated form of console.timeStamp().
+	**/
+	function markTimeline(?label:String):Void;
+	/**
+		`label` <string>
+
+		This method does not display anything unless used in the inspector.
+		The `console.profile()` method starts a JavaScript CPU profile with an optional label until `console.profileEnd()` is called. 
+		The profile is then added to the Profile panel of the inspector.
+	**/
+	function profile(?label:String):Void;
+	/**
+		* `label` <string>
+
+		This method does not display anything unless used in the inspector. 
+		Stops the current JavaScript CPU profiling session if one has been started and prints the report to the Profiles panel of the inspector. 
+		See `console.profile()` for an example.
+
+		If this method is called without a label, the most recently started profile is stopped.
+	**/
+	function profileEnd(?label:String):Void;
+	/**
+		* `label` <string>
+
+		This method does not display anything unless used in the inspector. 
+		The `console.timeStamp()` method adds an event with the label `'label'` to the Timeline panel of the inspector.
+	**/
+	function timeStamp(?label:String):Void;
+	/**
+		* `label` <string> Default: `'default'`
+
+		This method does not display anything unless used in the inspector. The `console.timeline()` method is the deprecated form of `console.time()`.
+	**/
+	function timeline(?label:String):Void;
+	/**
+		* `label` <string> Default: `'default'`
+
+		This method does not display anything unless used in the inspector. The `console.timelineEnd()` method is the deprecated form of `console.timeEnd()`.
+	**/
+	function timelineEnd(?label:String):Void;
+
+
 }
