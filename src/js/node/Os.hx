@@ -1084,6 +1084,13 @@ extern class Os {
 	static function freemem():Int;
 
 	/**
+		The os.getPriority() method returns the scheduling priority for the process specified by pid. If pid is not provided, or is 0, the priority of the current process is returned.
+
+		@see https://nodejs.org/api/os.html#os_os_getpriority_pid
+	**/
+	static function getPriority(?pid:Int):Int;
+
+	/**
 		Returns the home directory of the current user.
 	**/
 	static function homedir():String;
