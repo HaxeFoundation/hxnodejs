@@ -154,7 +154,7 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_string_encoding
 	**/
 	@:overload(function(array:Array<Int>):Buffer {})
-	@:overload(arrayBuffer: ArrayBuffer, ?byteOffset: Int, ?length: Int) :Buffer;
+	@:overload(function(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer {})
 	@:overload(function(buffer:Buffer):Buffer {})
 	@:overload(function(object:Object, ?offsetOrEncoding:EitherType<Int, String>):Buffer {})
 	@:overload(function(object:Object, offsetOrEncoding:EitherType<Int, String>, ?length:Int):Buffer {})
