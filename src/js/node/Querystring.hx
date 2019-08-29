@@ -37,7 +37,7 @@ extern class Querystring {
 
 		@see https://nodejs.org/api/querystring.html#querystring_querystring_decode
 	**/
-	@:overload(function(str:String, ?sep:String {}))
+	@:overload(function(str:String, ?sep:String):QuerystringParseResult {})
 	static function decode(str:String, sep:String, eq:String, ?options:QuerystringParseOptions):QuerystringParseResult;
 
 	/**
