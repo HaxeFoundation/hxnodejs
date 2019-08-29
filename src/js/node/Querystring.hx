@@ -85,34 +85,39 @@ extern class Querystring {
 
 /**
 	Options used for `Querystring.parse` method.
+
+	@see https://nodejs.org/api/querystring.html#querystring_querystring_parse_str_sep_eq_options
 **/
 typedef QuerystringParseOptions = {
 	/**
-		Specifies the maximum number of keys to parse.
-		Defaults to 1000.
-		Specify 0 to remove key counting limitations.
-	**/
-	@:optional var maxKeys:Int;
-
-	/**
-		The function to use when decoding percent-encoded characters in the query string.
-		Defaults to `Querystring.unescape`.
+		The function to use when decoding percent-encoded characters in the query string. Default: `querystring.unescape()`.
 	**/
 	@:optional var decodeURIComponent:String->String;
-}
 
-/**
-	Options for `Querystring.stringify` method.
-**/
-typedef QuerystringStringifyOptions = {
 	/**
-		The function to use when converting URL-unsafe characters to percent-encoding in the query string.
-		Defaults to `Querystring.escape`.
+		Specifies the maximum number of keys to parse. Specify `0` to remove key counting limitations. Default: `1000`.
 	**/
-	@:optional var encodeURIComponent:String->String;
+	@:optional var maxKeys:Int;
 }
 
 /**
 	The result type of `Querystring.parse`. Is a collection of either strings or array of strings.
+
+	The object returned by the `querystring.parse()` method does not prototypically inherit from the JavaScript `Object`.
+	This means that typical `Object` methods such as `obj.toString()`, `obj.hasOwnProperty()`, and others are not defined and will not work.
+
+	@see https://nodejs.org/api/querystring.html#querystring_querystring_parse_str_sep_eq_options
 **/
 typedef QuerystringParseResult = DynamicAccess<EitherType<String, Array<String>>>;
+
+/**
+	Options for `Querystring.stringify` method.
+
+	@see https://nodejs.org/api/querystring.html#querystring_querystring_stringify_obj_sep_eq_options
+**/
+typedef QuerystringStringifyOptions = {
+	/**
+		The function to use when converting URL-unsafe characters to percent-encoding in the query string. Default: `querystring.escape()`.
+	**/
+	@:optional var encodeURIComponent:String->String;
+}
