@@ -38,6 +38,7 @@ extern class Querystring {
 		@see https://nodejs.org/api/querystring.html#querystring_querystring_decode
 	**/
 	@:overload(function(str:String, ?sep:String):QuerystringParseResult {})
+	@:overload(function(str:String, sep:String, ?eq:String):QuerystringParseResult {})
 	static function decode(str:String, sep:String, eq:String, ?options:QuerystringParseOptions):QuerystringParseResult;
 
 	/**
@@ -46,6 +47,7 @@ extern class Querystring {
 		@see https://nodejs.org/api/querystring.html#querystring_querystring_decode
 	**/
 	@:overload(function(obj:{}, ?sep:String):String {})
+	@:overload(function(obj:{}, sep:String, ?eq:String):String {})
 	static function encode(obj:{}, sep:String, eq:String, ?options:QuerystringStringifyOptions):String;
 
 	/**
@@ -61,6 +63,7 @@ extern class Querystring {
 		@see https://nodejs.org/api/querystring.html#querystring_querystring_parse_str_sep_eq_options
 	**/
 	@:overload(function(str:String, ?sep:String):QuerystringParseResult {})
+	@:overload(function(str:String, sep:String, ?eq:String):QuerystringParseResult {})
 	static function parse(str:String, sep:String, eq:String, ?options:QuerystringParseOptions):QuerystringParseResult;
 
 	/**
@@ -69,6 +72,7 @@ extern class Querystring {
 		@see https://nodejs.org/api/querystring.html#querystring_querystring_stringify_obj_sep_eq_options
 	**/
 	@:overload(function(obj:{}, ?sep:String):String {})
+	@:overload(function(obj:{}, sep:String, ?eq:String):String {})
 	static function stringify(obj:{}, sep:String, eq:String, ?options:QuerystringStringifyOptions):String;
 
 	/**
