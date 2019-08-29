@@ -175,9 +175,6 @@ typedef PathObject = {
 	var ext:String;
 }
 
-/**
-	@see https://nodejs.org/api/path.html#path_path_win32
-**/
 // IMPORTANT: this structure should contain a set of fields
 // matching statics of the `Path` class and is used as a type
 // for `posix` and `win32` fields of `Path` class.
