@@ -197,7 +197,7 @@ typedef OsUserInfo = {
 }
 
 /**
-	Object containing the number of milliseconds the CPU/core spent in: user, nice, sys, idle, and irq
+	Object containing the number of milliseconds the CPU/core spent in: `user`, `nice`, `sys`, `idle`, and `irq`
 
 	@see https://nodejs.org/api/os.html#os_os_cpus
 **/
