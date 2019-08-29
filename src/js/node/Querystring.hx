@@ -26,10 +26,28 @@ import haxe.extern.EitherType;
 import haxe.DynamicAccess;
 
 /**
-	This module provides utilities for dealing with query strings.
+	The `querystring` module provides utilities for parsing and formatting URL query strings.
+
+	@see https://nodejs.org/api/querystring.html#querystring_query_string
 **/
 @:jsRequire("querystring")
 extern class Querystring {
+	/**
+		The `querystring.decode()` function is an alias for `querystring.parse()`.
+
+		@see https://nodejs.org/api/querystring.html#querystring_querystring_decode
+	**/
+	@:overload(function(str:String, ?sep:String {}))
+	static function decode(str:String, sep:String, eq:String, ?options:QuerystringParseOptions):QuerystringParseResult;
+
+	/**
+		The `querystring.encode()` function is an alias for `querystring.stringify()`.
+
+		@see https://nodejs.org/api/querystring.html#querystring_querystring_decode
+	**/
+	@:overload(function(obj:{}, ?sep:String):String {})
+	static function encode(obj:{}, sep:String, eq:String, ?options:QuerystringStringifyOptions):String;
+
 	/**
 		Performs URL percent-encoding on the given `str` in a manner that is optimized for
 		the specific requirements of URL query strings.
