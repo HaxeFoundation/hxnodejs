@@ -171,6 +171,8 @@ extern class Os {
 	@see https://nodejs.org/api/os.html#os_os_userinfo_options
 **/
 typedef OsUserInfo = {
+	var username:String;
+
 	/**
 		-1 on Windows
 	**/
@@ -181,7 +183,10 @@ typedef OsUserInfo = {
 	**/
 	var gid:Int;
 
-	var username:String;
+	/**
+		null on Windows
+	**/
+	var shell:Null<String>;
 
 	/**
 		Provided by the operating system. This differs from the result of `Os.homedir`,
@@ -189,11 +194,6 @@ typedef OsUserInfo = {
 		before falling back to the operating system response.
 	**/
 	var homedir:String;
-
-	/**
-		null on Windows
-	**/
-	var shell:Null<String>;
 }
 
 /**
@@ -319,7 +319,7 @@ typedef OsConstants = {
 		var SIGHUP:Int;
 
 		/**
-			Sent to indicate when a user wishes to interrupt a process ((Ctrl+C)).
+			Sent to indicate when a user wishes to interrupt a process (`(Ctrl+C)`).
 		**/
 		var SIGINT:Int;
 
@@ -344,7 +344,7 @@ typedef OsConstants = {
 		var SIGABRT:Int;
 
 		/**
-			Synonym for SIGABRT
+			Synonym for `SIGABRT`
 		**/
 		var SIGIOT:Int;
 
