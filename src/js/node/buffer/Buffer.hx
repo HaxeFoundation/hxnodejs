@@ -141,60 +141,13 @@ extern class Buffer extends Uint8Array {
 	**/
 	static var poolSize:Int;
 
-	//
-	//
-	// INSERT ABOVE HERE
-	//
-	//
-
 	/**
-		How many bytes will be returned when `buffer.inspect()` is called.
-		This can be overridden by user modules.
-		Default: 50
+		Returns a number indicating whether `this` comes before or after or is the same as the `otherBuffer` in sort order.
+
+		The optional `targetStart`, `targetEnd`, `sourceStart`, and `sourceEnd` arguments can be used
+		to limit the comparison to specific ranges within the two `Buffer` objects.
 	**/
-	public static var INSPECT_MAX_BYTES(get, set):Int;
-
-	private inline static function get_INSPECT_MAX_BYTES():Int {
-		return js.Lib.require("buffer").INSPECT_MAX_BYTES;
-	}
-	private inline static function set_INSPECT_MAX_BYTES(value:Int):Int {
-		return js.Lib.require("buffer").INSPECT_MAX_BYTES = value;
-	}
-
-	/**
-		Maximum length of a `Buffer`.
-	**/
-	public static var kMaxLength(get, never):Int;
-
-	private inline static function get_kMaxLength():Int {
-		return js.Lib.require("buffer").kMaxLength;
-	}
-
-	/**
-		Returns a JSON-representation of the `Buffer` instance.
-	**/
-	function toJSON():Dynamic;
-
-	/**
-		Writes `string` to the buffer at `offset` using the given `encoding`.
-
-		`offset` defaults to 0, encoding defaults to 'utf8'. `length` is the number of bytes to write.
-
-		Returns number of octets written. If buffer did not contain enough space to fit the entire `string`,
-		it will write a partial amount of the `string`. `length` defaults to `buffer.length - offset`.
-
-		The method will not write partial characters.
-	**/
-	@:overload(function(string:String, offset:Int, length:Int, ?encoding:String):Int {})
-	@:overload(function(string:String, offset:Int, ?encoding:String):Int {})
-	function write(string:String, ?encoding:String):Int;
-
-	/**
-		Decodes and returns a string from buffer data encoded with `encoding` (defaults to 'utf8')
-		beginning at `start` (defaults to 0) and ending at `end` (defaults to `buffer.length`).
-	**/
-	@:overload(function(encoding:String, ?start:Int, ?end:Int):String {})
-	function toString():String;
+	function compare(otherBuffer:Buffer, ?targetStart:Int, ?targetEnd:Int, ?sourceStart:Int, ?sourceEnd:Int):Int;
 
 	/**
 		Does copy between buffers.
@@ -202,6 +155,236 @@ extern class Buffer extends Uint8Array {
 		`targetStart` and `sourceStart` default to 0. `sourceEnd` defaults to `buffer.length`.
 	**/
 	function copy(targetBuffer:Buffer, ?targetStart:Int, ?sourceStart:Int, ?sourceEnd:Int):Void;
+
+	/**
+		@see https://nodejs.org/api/buffer.html#buffer_buf_entries
+	**/
+	// よくわからない
+	// return Iterator
+	// [index,byte]のペアを返す
+	var entries:Array<Dynamic>;
+
+	/**
+		Returns a boolean of whether `this` and `otherBuffer` have the same bytes.
+	**/
+	function equals(otherBuffer:Buffer):Bool;
+
+	/**
+		Fills the buffer with the specified `value`.
+		If the `offset` (defaults to 0) and `end` (defaults to `buffer.length`)
+		are not given it will fill the entire buffer.
+
+		The method returns a reference to the `Buffer`, so calls can be chained.
+	**/
+	@:overload(function(value:String, encoding:String):Buffer {})
+	@:overload(function(value:String, offset:Int, encoding:String):Buffer {})
+	@:overload(function(value:String, offset:Int, end:Int, encoding:String):Buffer {})
+	@:overload(function(value:String, ?offset:Int, ?end:Int):Buffer {})
+	function fill(value:Int, ?offset:Int, ?end:Int):Buffer;
+
+	// TODO: we don't have Array.includes in Haxe yet, so the doc would be lying
+	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Bool {})
+	@:overload(function(value:String, ?encoding:String):Bool {})
+	@:overload(function(value:Buffer, ?byteOffset:Int):Bool {})
+	function includes(value:Int, ?byteOffset:Int):Bool;
+
+	/**
+		Operates similar to `Array.indexOf` in that it returns either
+
+		the starting index position of value in `Buffer` or -1 if the `Buffer` does not contain value.
+		The value can be a String, Buffer or Number. Strings are by default interpreted as UTF8.
+		Buffers will use the entire `Buffer` (to compare a partial `Buffer` use buf.slice()).
+		Numbers can range from 0 to 255.
+	**/
+	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Int {})
+	@:overload(function(value:String, ?encoding:String):Int {})
+	@:overload(function(value:Buffer, ?byteOffset:Int):Int {})
+	function indexOf(value:Int, ?byteOffset:Int):Int;
+
+	/**
+		Creates and returns an iterator of `buf` keys (indices).
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_keys
+	**/
+	function keys():Iterator<Int>;
+
+	/**
+		Identical to `indexOf`, but searches the `Buffer` from back to front instead of front to back.
+
+		Returns the starting index position of value in `Buffer` or -1 if the `Buffer` does not contain value.
+		The value can be a String, Buffer or Number. Strings are by default interpreted as UTF8.
+		If `byteOffset` is provided, will return the last match that begins at or before `byteOffset`.
+	**/
+	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Int {})
+	@:overload(function(value:String, ?encoding:String):Int {})
+	@:overload(function(value:Buffer, ?byteOffset:Int):Int {})
+	function lastIndexOf(value:Int, ?byteOffset:Int):Int;
+
+	/**
+		Returns the amount of memory allocated for buf in bytes. This does not necessarily reflect the amount of "usable" data within buf.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_length
+	**/
+	// var length(default, null):Int;
+	//
+	//-----------------------------------------------------------------------------------------------------------------------------------
+	// INSERT ABOVE HERE
+	//-----------------------------------------------------------------------------------------------------------------------------------
+	//
+
+	/**
+		Reads a signed 64-bit integer from `buf` at the specified `offset` with the specified endian format
+		(`readBigInt64BE()` returns big endian, `readBigInt64LE()` returns little endian).
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readbigint64be_offset
+	**/
+	function readBigInt64BE(?offset:Int):Int;
+
+	/**
+		Reads a signed 64-bit integer from `buf` at the specified `offset` with the specified endian format
+		(`readBigInt64BE()` returns big endian, `readBigInt64LE()` returns little endian).
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readbigint64le_offset
+	**/
+	function readBigInt64LE(?offset:Int):Int;
+
+	/**
+		Reads an unsigned 64-bit integer from `buf` at the specified `offset` with specified endian format
+		(`readBigUInt64BE()` returns big endian, `readBigUInt64LE()` returns little endian).
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readbiguint64be_offset
+	**/
+	function readBigUInt64BE(?offset:Int):Int;
+
+	/**
+		Reads an unsigned 64-bit integer from `buf` at the specified `offset` with specified endian format
+		(`readBigUInt64BE()` returns big endian, `readBigUInt64LE()` returns little endian).
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readbiguint64le_offset
+	**/
+	function readBigUInt64LE(?offset:Int):Int;
+
+	/**
+		Reads a 64 bit double from the buffer at the specified `offset` with big-endian format.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+	**/
+	function readDoubleBE(offset:Int, ?noAssert:Bool):Float;
+
+	/**
+		Reads a 64 bit double from the buffer at the specified `offset` with little-endian format.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+	**/
+	function readDoubleLE(offset:Int, ?noAssert:Bool):Float;
+
+	/**
+		Reads a 32 bit float from the buffer at the specified `offset` with big-endian format.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+	**/
+	function readFloatBE(offset:Int, ?noAssert:Bool):Float;
+
+	/**
+		Reads a 32 bit float from the buffer at the specified `offset` with little-endian format.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+	**/
+	function readFloatLE(offset:Int, ?noAssert:Bool):Float;
+
+	/**
+		Reads a signed 8 bit integer from the buffer at the specified `offset`.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+
+		Works as `readUInt8`, except buffer contents are treated as two's complement signed values.
+	**/
+	function readInt8(offset:Int, ?noAssert:Bool):Int;
+
+	/**
+		Reads a signed 16 bit integer from the buffer at the specified `offset` with big-endian format.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+
+		Works as `readUInt16BE`, except buffer contents are treated as two's complement signed values.
+	**/
+	function readInt16BE(offset:Int, ?noAssert:Bool):Int;
+
+	/**
+		Reads a signed 16 bit integer from the buffer at the specified `offset` with little-endian format.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+
+		Works as `readUInt16LE`, except buffer contents are treated as two's complement signed values.
+	**/
+	function readInt16LE(offset:Int, ?noAssert:Bool):Int;
+
+	/**
+		Reads a signed 32 bit integer from the buffer at the specified `offset` with big-endian format.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+
+		Works as `readUInt32BE`, except buffer contents are treated as two's complement signed values.
+	**/
+	function readInt32BE(offset:Int, ?noAssert:Bool):Int;
+
+	/**
+		Reads a signed 32 bit integer from the buffer at the specified `offset` with little-endian format.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+
+		Works as `readUInt32LE`, except buffer contents are treated as two's complement signed values.
+	**/
+	function readInt32LE(offset:Int, ?noAssert:Bool):Int;
+
+	/**
+		Reads an unsigned 8 bit integer from the buffer at the specified offset.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+	**/
+	function readUInt8(offset:Int, ?noAssert:Bool):Int;
+
+	/**
+		Reads an unsigned 16 bit integer from the buffer at the specified `offset` with big-endian format.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+	**/
+	function readUInt16BE(offset:Int, ?noAssert:Bool):Int;
+
+	/**
+		Reads an unsigned 16 bit integer from the buffer at the specified `offset` with little-endian format.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+	**/
+	function readUInt16LE(offset:Int, ?noAssert:Bool):Int;
+
+	/**
+		Reads an unsigned 32 bit integer from the buffer at the specified `offset` with big-endian format.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+	**/
+	function readUInt32BE(offset:Int, ?noAssert:Bool):Int;
+
+	/**
+		Reads an unsigned 32 bit integer from the buffer at the specified `offset` with little-endian format.
+
+		Set `noAssert` to `true` to skip validation of `offset`.
+		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+	**/
+	function readUInt32LE(offset:Int, ?noAssert:Bool):Int;
 
 	/**
 		Returns a new buffer which references the same memory as the old,
@@ -237,154 +420,34 @@ extern class Buffer extends Uint8Array {
 	function swap64():Buffer;
 
 	/**
-		Reads an unsigned 8 bit integer from the buffer at the specified offset.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+		Returns a JSON-representation of the `Buffer` instance.
 	**/
-	function readUInt8(offset:Int, ?noAssert:Bool):Int;
+	function toJSON():Dynamic;
 
 	/**
-		Reads an unsigned 16 bit integer from the buffer at the specified `offset` with little-endian format.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+		Decodes and returns a string from buffer data encoded with `encoding` (defaults to 'utf8')
+		beginning at `start` (defaults to 0) and ending at `end` (defaults to `buffer.length`).
 	**/
-	function readUInt16LE(offset:Int, ?noAssert:Bool):Int;
+	@:overload(function(encoding:String, ?start:Int, ?end:Int):String {})
+	function toString():String;
 
 	/**
-		Reads an unsigned 16 bit integer from the buffer at the specified `offset` with big-endian format.
+		Writes `string` to the buffer at `offset` using the given `encoding`.
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+		`offset` defaults to 0, encoding defaults to 'utf8'. `length` is the number of bytes to write.
+
+		Returns number of octets written. If buffer did not contain enough space to fit the entire `string`,
+		it will write a partial amount of the `string`. `length` defaults to `buffer.length - offset`.
+
+		The method will not write partial characters.
 	**/
-	function readUInt16BE(offset:Int, ?noAssert:Bool):Int;
-
-	/**
-		Reads an unsigned 32 bit integer from the buffer at the specified `offset` with little-endian format.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-	**/
-	function readUInt32LE(offset:Int, ?noAssert:Bool):Int;
-
-	/**
-		Reads an unsigned 32 bit integer from the buffer at the specified `offset` with big-endian format.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-	**/
-	function readUInt32BE(offset:Int, ?noAssert:Bool):Int;
-
-	/**
-		Reads a signed 8 bit integer from the buffer at the specified `offset`.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-
-		Works as `readUInt8`, except buffer contents are treated as two's complement signed values.
-	**/
-	function readInt8(offset:Int, ?noAssert:Bool):Int;
-
-	/**
-		Reads a signed 16 bit integer from the buffer at the specified `offset` with little-endian format.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-
-		Works as `readUInt16LE`, except buffer contents are treated as two's complement signed values.
-	**/
-	function readInt16LE(offset:Int, ?noAssert:Bool):Int;
-
-	/**
-		Reads a signed 16 bit integer from the buffer at the specified `offset` with big-endian format.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-
-		Works as `readUInt16BE`, except buffer contents are treated as two's complement signed values.
-	**/
-	function readInt16BE(offset:Int, ?noAssert:Bool):Int;
-
-	/**
-		Reads a signed 32 bit integer from the buffer at the specified `offset` with little-endian format.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-
-		Works as `readUInt32LE`, except buffer contents are treated as two's complement signed values.
-	**/
-	function readInt32LE(offset:Int, ?noAssert:Bool):Int;
-
-	/**
-		Reads a signed 32 bit integer from the buffer at the specified `offset` with big-endian format.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-
-		Works as `readUInt32BE`, except buffer contents are treated as two's complement signed values.
-	**/
-	function readInt32BE(offset:Int, ?noAssert:Bool):Int;
-
-	/**
-		Reads a 32 bit float from the buffer at the specified `offset` with little-endian format.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-	**/
-	function readFloatLE(offset:Int, ?noAssert:Bool):Float;
-
-	/**
-		Reads a 32 bit float from the buffer at the specified `offset` with big-endian format.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-	**/
-	function readFloatBE(offset:Int, ?noAssert:Bool):Float;
-
-	/**
-		Reads a 64 bit double from the buffer at the specified `offset` with little-endian format.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-	**/
-	function readDoubleLE(offset:Int, ?noAssert:Bool):Float;
-
-	/**
-		Reads a 64 bit double from the buffer at the specified `offset` with big-endian format.
-
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-	**/
-	function readDoubleBE(offset:Int, ?noAssert:Bool):Float;
-
-	/**
-		Writes `value` to the buffer at the specified `offset`.
-		Note, `value` must be a valid unsigned 8 bit integer.
-
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
-	**/
-	function writeUInt8(value:Int, offset:Int, ?noAssert:Bool):Void;
-
-	/**
-		Writes `value` to the buffer at the specified `offset` with little-endian format.
-		Note, `value` must be a valid unsigned 16 bit integer.
-
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
-	**/
-	function writeUInt16LE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	@:overload(function(string:String, offset:Int, length:Int, ?encoding:String):Int {})
+	@:overload(function(string:String, offset:Int, ?encoding:String):Int {})
+	function write(string:String, ?encoding:String):Int;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with big-endian format.
-		Note, `value` must be a valid unsigned 16 bit integer.
+		Note, `value` must be a valid 64 bit double.
 
 		Set `noAssert` to `true` to skip validation of `value` and `offset`.
 		This means that `value` may be too large for the specific function
@@ -392,11 +455,11 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeUInt16BE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeDoubleBE(value:Float, offset:Int, ?noAssert:Bool):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with little-endian format.
-		Note, `value` must be a valid unsigned 32 bit integer.
+		Note, `value` must be a valid 64 bit double.
 
 		Set `noAssert` to `true` to skip validation of `value` and `offset`.
 		This means that `value` may be too large for the specific function
@@ -404,11 +467,11 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeUInt32LE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeDoubleLE(value:Float, offset:Int, ?noAssert:Bool):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with big-endian format.
-		Note, `value` must be a valid unsigned 32 bit integer.
+		Note, behavior is unspecified if `value` is not a 32 bit float.
 
 		Set `noAssert` to `true` to skip validation of `value` and `offset`.
 		This means that `value` may be too large for the specific function
@@ -416,7 +479,19 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeUInt32BE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeFloatBE(value:Float, offset:Int, ?noAssert:Bool):Void;
+
+	/**
+		Writes `value` to the buffer at the specified `offset` with little-endian format.
+		Note, behavior is unspecified if `value` is not a 32 bit float.
+
+		Set `noAssert` to `true` to skip validation of `value` and `offset`.
+		This means that `value` may be too large for the specific function
+		and `offset` may be beyond the end of the buffer leading to the values
+		being silently dropped. This should not be used unless you are certain
+		of correctness. Defaults to `false`.
+	**/
+	function writeFloatLE(value:Float, offset:Int, ?noAssert:Bool):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset`.
@@ -431,20 +506,6 @@ extern class Buffer extends Uint8Array {
 		Works as `writeUInt8`, except `value` is written out as a two's complement signed integer into buffer.
 	**/
 	function writeInt8(value:Int, offset:Int, ?noAssert:Bool):Void;
-
-	/**
-		Writes `value` to the buffer at the specified `offset` with little-endian format.
-		Note, value must be a valid signed 16 bit integer.
-
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
-
-		Works as `writeUInt16LE`, except `value` is written out as a two's complement signed integer into buffer.
-	**/
-	function writeInt16LE(value:Int, offset:Int, ?noAssert:Bool):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with big-endian format.
@@ -462,7 +523,7 @@ extern class Buffer extends Uint8Array {
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with little-endian format.
-		Note, value must be a valid signed 32 bit integer.
+		Note, value must be a valid signed 16 bit integer.
 
 		Set `noAssert` to `true` to skip validation of `value` and `offset`.
 		This means that `value` may be too large for the specific function
@@ -470,9 +531,9 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 
-		Works as `writeUInt32LE`, except `value` is written out as a two's complement signed integer into buffer.
+		Works as `writeUInt16LE`, except `value` is written out as a two's complement signed integer into buffer.
 	**/
-	function writeInt32LE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeInt16LE(value:Int, offset:Int, ?noAssert:Bool):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with big-endian format.
@@ -490,7 +551,21 @@ extern class Buffer extends Uint8Array {
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with little-endian format.
-		Note, behavior is unspecified if `value` is not a 32 bit float.
+		Note, value must be a valid signed 32 bit integer.
+
+		Set `noAssert` to `true` to skip validation of `value` and `offset`.
+		This means that `value` may be too large for the specific function
+		and `offset` may be beyond the end of the buffer leading to the values
+		being silently dropped. This should not be used unless you are certain
+		of correctness. Defaults to `false`.
+
+		Works as `writeUInt32LE`, except `value` is written out as a two's complement signed integer into buffer.
+	**/
+	function writeInt32LE(value:Int, offset:Int, ?noAssert:Bool):Void;
+
+	/**
+		Writes `value` to the buffer at the specified `offset`.
+		Note, `value` must be a valid unsigned 8 bit integer.
 
 		Set `noAssert` to `true` to skip validation of `value` and `offset`.
 		This means that `value` may be too large for the specific function
@@ -498,11 +573,11 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeFloatLE(value:Float, offset:Int, ?noAssert:Bool):Void;
+	function writeUInt8(value:Int, offset:Int, ?noAssert:Bool):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with big-endian format.
-		Note, behavior is unspecified if `value` is not a 32 bit float.
+		Note, `value` must be a valid unsigned 16 bit integer.
 
 		Set `noAssert` to `true` to skip validation of `value` and `offset`.
 		This means that `value` may be too large for the specific function
@@ -510,11 +585,11 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeFloatBE(value:Float, offset:Int, ?noAssert:Bool):Void;
+	function writeUInt16BE(value:Int, offset:Int, ?noAssert:Bool):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with little-endian format.
-		Note, `value` must be a valid 64 bit double.
+		Note, `value` must be a valid unsigned 16 bit integer.
 
 		Set `noAssert` to `true` to skip validation of `value` and `offset`.
 		This means that `value` may be too large for the specific function
@@ -522,11 +597,11 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeDoubleLE(value:Float, offset:Int, ?noAssert:Bool):Void;
+	function writeUInt16LE(value:Int, offset:Int, ?noAssert:Bool):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with big-endian format.
-		Note, `value` must be a valid 64 bit double.
+		Note, `value` must be a valid unsigned 32 bit integer.
 
 		Set `noAssert` to `true` to skip validation of `value` and `offset`.
 		This means that `value` may be too large for the specific function
@@ -534,64 +609,49 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeDoubleBE(value:Float, offset:Int, ?noAssert:Bool):Void;
+	function writeUInt32BE(value:Int, offset:Int, ?noAssert:Bool):Void;
 
 	/**
-		Fills the buffer with the specified `value`.
-		If the `offset` (defaults to 0) and `end` (defaults to `buffer.length`)
-		are not given it will fill the entire buffer.
+		Writes `value` to the buffer at the specified `offset` with little-endian format.
+		Note, `value` must be a valid unsigned 32 bit integer.
 
-		The method returns a reference to the `Buffer`, so calls can be chained.
+		Set `noAssert` to `true` to skip validation of `value` and `offset`.
+		This means that `value` may be too large for the specific function
+		and `offset` may be beyond the end of the buffer leading to the values
+		being silently dropped. This should not be used unless you are certain
+		of correctness. Defaults to `false`.
 	**/
-	@:overload(function(value:String, encoding:String):Buffer {})
-	@:overload(function(value:String, offset:Int, encoding:String):Buffer {})
-	@:overload(function(value:String, offset:Int, end:Int, encoding:String):Buffer {})
-	@:overload(function(value:String, ?offset:Int, ?end:Int):Buffer {})
-	function fill(value:Int, ?offset:Int, ?end:Int):Buffer;
+	function writeUInt32LE(value:Int, offset:Int, ?noAssert:Bool):Void;
 
 	/**
-		Returns a boolean of whether `this` and `otherBuffer` have the same bytes.
+		How many bytes will be returned when `buffer.inspect()` is called.
+		This can be overridden by user modules.
+		Default: 50
 	**/
-	function equals(otherBuffer:Buffer):Bool;
+	public static var INSPECT_MAX_BYTES(get, set):Int;
+
+	private inline static function get_INSPECT_MAX_BYTES():Int {
+		return js.Lib.require("buffer").INSPECT_MAX_BYTES;
+	}
+	private inline static function set_INSPECT_MAX_BYTES(value:Int):Int {
+		return js.Lib.require("buffer").INSPECT_MAX_BYTES = value;
+	}
 
 	/**
-		Returns a number indicating whether `this` comes before or after or is the same as the `otherBuffer` in sort order.
-
-		The optional `targetStart`, `targetEnd`, `sourceStart`, and `sourceEnd` arguments can be used
-		to limit the comparison to specific ranges within the two `Buffer` objects.
+		Maximum length of a `Buffer`.
 	**/
-	function compare(otherBuffer:Buffer, ?targetStart:Int, ?targetEnd:Int, ?sourceStart:Int, ?sourceEnd:Int):Int;
+	public static var kMaxLength(get, never):Int;
+
+	private inline static function get_kMaxLength():Int {
+		return js.Lib.require("buffer").kMaxLength;
+	}
 
 	/**
-		Operates similar to `Array.indexOf` in that it returns either
+		Re-encodes the given `Buffer` or `Uint8Array` instance from one character encoding to another. Returns a new `Buffer` instance.
 
-		the starting index position of value in `Buffer` or -1 if the `Buffer` does not contain value.
-		The value can be a String, Buffer or Number. Strings are by default interpreted as UTF8.
-		Buffers will use the entire `Buffer` (to compare a partial `Buffer` use buf.slice()).
-		Numbers can range from 0 to 255.
+		@see https://nodejs.org/api/buffer.html#buffer_buffer_transcode_source_fromenc_toenc
 	**/
-	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Int {})
-	@:overload(function(value:String, ?encoding:String):Int {})
-	@:overload(function(value:Buffer, ?byteOffset:Int):Int {})
-	function indexOf(value:Int, ?byteOffset:Int):Int;
-
-	/**
-		Identical to `indexOf`, but searches the `Buffer` from back to front instead of front to back.
-
-		Returns the starting index position of value in `Buffer` or -1 if the `Buffer` does not contain value.
-		The value can be a String, Buffer or Number. Strings are by default interpreted as UTF8.
-		If `byteOffset` is provided, will return the last match that begins at or before `byteOffset`.
-	**/
-	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Int {})
-	@:overload(function(value:String, ?encoding:String):Int {})
-	@:overload(function(value:Buffer, ?byteOffset:Int):Int {})
-	function lastIndexOf(value:Int, ?byteOffset:Int):Int;
-
-	// TODO: we don't have Array.includes in Haxe yet, so the doc would be lying
-	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Bool {})
-	@:overload(function(value:String, ?encoding:String):Bool {})
-	@:overload(function(value:Buffer, ?byteOffset:Int):Bool {})
-	function includes(value:Int, ?byteOffset:Int):Bool;
+	function transcode(source:haxe.extern.EitherType<Buffer, Uint8Array>, fromEnc:String, toEnc:String):Buffer;
 
 	/**
 		Create `haxe.io.Bytes` object that uses the same underlying data storage as `this` buffer.
