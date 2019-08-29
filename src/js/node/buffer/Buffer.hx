@@ -32,90 +32,12 @@ import js.html.Uint8Array;
 #end
 
 /**
-	The Buffer class is a global type for dealing with binary data directly. It can be constructed in a variety of ways.
+	The `Buffer` class is a global type for dealing with binary data directly. It can be constructed in a variety of ways.
 
-	It supports array access syntax to get and set the octet at index. The values refer to individual bytes,
-	so the legal range is between 0x00 and 0xFF hex or 0 and 255.
+	@see https://nodejs.org/api/buffer.html#buffer_class_buffer
 **/
 @:jsRequire("buffer", "Buffer")
 extern class Buffer extends Uint8Array {
-	/**
-		How many bytes will be returned when `buffer.inspect()` is called.
-		This can be overridden by user modules.
-		Default: 50
-	**/
-	public static var INSPECT_MAX_BYTES(get, set):Int;
-
-	private inline static function get_INSPECT_MAX_BYTES():Int {
-		return js.Lib.require("buffer").INSPECT_MAX_BYTES;
-	}
-	private inline static function set_INSPECT_MAX_BYTES(value:Int):Int {
-		return js.Lib.require("buffer").INSPECT_MAX_BYTES = value;
-	}
-
-	/**
-		Maximum length of a `Buffer`.
-	**/
-	public static var kMaxLength(get, never):Int;
-
-	private inline static function get_kMaxLength():Int {
-		return js.Lib.require("buffer").kMaxLength;
-	}
-
-	/**
-		Returns `true` if the encoding is a valid encoding argument, or `false` otherwise.
-	**/
-	static function isEncoding(encoding:String):Bool;
-
-	/**
-		Tests if `obj` is a `Buffer`.
-	**/
-	static function isBuffer(obj:Dynamic):Bool;
-
-	/**
-		Gives the actual byte length of a string.
-
-		`encoding` defaults to 'utf8'.
-
-		This is not the same as `String.length` since that
-		returns the number of characters in a string.
-	**/
-	#if (haxe_ver >= 3.3)
-	static function byteLength(string:String, ?encoding:String):Int;
-	#end
-
-	/**
-		Gives the actual byte length of a string.
-
-		`encoding` defaults to 'utf8'.
-
-		This is not the same as `String.length` since that
-		returns the number of characters in a string.
-	**/
-	#if (haxe_ver >= 3.3)
-	@:deprecated("In haxe 3.3+, use Buffer.byteLength instead!")
-	#end
-	inline static function _byteLength(string:String, ?encoding:String):Int
-		return untyped Buffer['byteLength'](string, encoding);
-
-	/**
-		Returns a buffer which is the result of concatenating all the buffers in the `list` together.
-
-		If the `list` has no items, or if the `totalLength` is 0, then it returns a zero-length buffer.
-		If the `list` has exactly one item, then the first item of the `list` is returned.
-		If the `list` has more than one item, then a new `Buffer` is created.
-
-		If `totalLength` is not provided, it is read from the buffers in the `list`.
-		However, this adds an additional loop to the function, so it is faster to provide the length explicitly.
-	**/
-	static function concat(list:Array<Buffer>, ?totalLength:Int):Buffer;
-
-	/**
-		The same as `buf1.compare(buf2)`. Useful for sorting an Array of Buffers.
-	**/
-	@:native("compare")
-	static function compareBuffers(buf1:Buffer, buf2:Buffer):Int;
-
 	/**
 		Allocates a new buffer.
 	**/
@@ -154,9 +76,99 @@ extern class Buffer extends Uint8Array {
 	**/
 	static function allocUnsafeSlow(size:Int):Buffer;
 
+	/**
+		Gives the actual byte length of a string.
+
+		`encoding` defaults to 'utf8'.
+
+		This is not the same as `String.length` since that
+		returns the number of characters in a string.
+	**/
+	#if (haxe_ver >= 3.3)
+	static function byteLength(string:String, ?encoding:String):Int;
+	#end
+
+	/**
+		Gives the actual byte length of a string.
+
+		`encoding` defaults to 'utf8'.
+
+		This is not the same as `String.length` since that
+		returns the number of characters in a string.
+	**/
+	#if (haxe_ver >= 3.3)
+	@:deprecated("In haxe 3.3+, use Buffer.byteLength instead!")
+	#end
+	inline static function _byteLength(string:String, ?encoding:String):Int
+		return untyped Buffer['byteLength'](string, encoding);
+
+	/**
+		The same as `buf1.compare(buf2)`. Useful for sorting an Array of Buffers.
+	**/
+	@:native("compare")
+	static function compareBuffers(buf1:Buffer, buf2:Buffer):Int;
+
+	/**
+		Returns a buffer which is the result of concatenating all the buffers in the `list` together.
+
+		If the `list` has no items, or if the `totalLength` is 0, then it returns a zero-length buffer.
+		If the `list` has exactly one item, then the first item of the `list` is returned.
+		If the `list` has more than one item, then a new `Buffer` is created.
+
+		If `totalLength` is not provided, it is read from the buffers in the `list`.
+		However, this adds an additional loop to the function, so it is faster to provide the length explicitly.
+	**/
+	static function concat(list:Array<Buffer>, ?totalLength:Int):Buffer;
+
 	@:overload(function(buffer:Buffer):Buffer {})
 	@:overload(function(str:String, ?encoding:String):Buffer {})
 	static function from(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer;
+
+	/**
+		Tests if `obj` is a `Buffer`.
+	**/
+	static function isBuffer(obj:Dynamic):Bool;
+
+	/**
+		Returns `true` if the encoding is a valid encoding argument, or `false` otherwise.
+	**/
+	static function isEncoding(encoding:String):Bool;
+
+	/**
+		This is the size (in bytes) of pre-allocated internal `Buffer` instances used for pooling. This value may be modified.
+
+		@see https://nodejs.org/api/buffer.html#buffer_class_property_buffer_poolsize
+	**/
+	static var poolSize:Int;
+
+	//
+	//
+	// INSERT ABOVE HERE
+	//
+	//
+
+	/**
+		How many bytes will be returned when `buffer.inspect()` is called.
+		This can be overridden by user modules.
+		Default: 50
+	**/
+	public static var INSPECT_MAX_BYTES(get, set):Int;
+
+	private inline static function get_INSPECT_MAX_BYTES():Int {
+		return js.Lib.require("buffer").INSPECT_MAX_BYTES;
+	}
+	private inline static function set_INSPECT_MAX_BYTES(value:Int):Int {
+		return js.Lib.require("buffer").INSPECT_MAX_BYTES = value;
+	}
+
+	/**
+		Maximum length of a `Buffer`.
+	**/
+	public static var kMaxLength(get, never):Int;
+
+	private inline static function get_kMaxLength():Int {
+		return js.Lib.require("buffer").kMaxLength;
+	}
 
 	/**
 		Returns a JSON-representation of the `Buffer` instance.
