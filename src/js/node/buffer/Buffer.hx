@@ -39,13 +39,39 @@ import js.html.Uint8Array;
 @:jsRequire("buffer", "Buffer")
 extern class Buffer extends Uint8Array {
 	/**
-		Allocates a new buffer.
+		Stability: 0 - Deprecated: Use Buffer.from(array) instead.
+		Allocates a new `Buffer` using an `array` of octets.
+
+		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_array
+
+		Stability: 0 - Deprecated: Use Buffer.from(arrayBuffer[, byteOffset[, length]]) instead.
+		This creates a view of the ArrayBuffer or SharedArrayBuffer without copying the underlying memory.
+		For example, when passed a reference to the `.buffer` property of a TypedArray instance,
+		the newly created `Buffer` will share the same allocated memory as the TypedArray.
+
+		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_arraybuffer_byteoffset_length
+
+		Stability: 0 - Deprecated: Use Buffer.from(buffer) instead.
+		Copies the passed `buffer` data onto a new `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_buffer
+
+		Stability: 0 - Deprecated: Use Buffer.alloc() instead (also see Buffer.allocUnsafe()).
+		Allocates a new `Buffer` of `size` bytes. If `size` is larger than buffer.constants.MAX_LENGTH or smaller than 0,
+		ERR_INVALID_OPT_VALUE is thrown. A zero-length `Buffer` is created if `size` is 0.
+
+		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_size
+
+		Stability: 0 - Deprecated: Use Buffer.from(string[, encoding]) instead.
+		Creates a new `Buffer` containing `string`. The `encoding` parameter identifies the character encoding of `string`.
+
+		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_string_encoding
 	**/
-	@:overload(function(string:String, ?encoding:String):Void {})
-	@:overload(function(buffer:Buffer):Void {})
-	@:overload(function(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Void {})
 	@:overload(function(array:Array<Int>):Void {})
-	function new(size:Int):Void;
+	@:overload(function(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Void {})
+	@:overload(function(buffer:Buffer):Void {})
+	@:overload(function(size:Int):Void {})
+	function new(string:String, ?encoding:String):Void;
 
 	/**
 		Allocates a new `Buffer` of `size` bytes.
