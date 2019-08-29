@@ -23,6 +23,147 @@
 package js.node;
 
 /**
+	Provides a number of operating system-related utility methods
+
+	@see https://nodejs.org/api/os.html#os_os
+**/
+@:jsRequire("os")
+extern class Os {
+	/**
+		A string constant defining the operating system-specific end-of-line marker:
+
+		@see https://nodejs.org/api/os.html#os_os_eol
+	**/
+	static var EOL(default, null):String;
+
+	/**
+		The os.arch() method returns a string identifying the operating system CPU architecture for which the Node.js binary was compiled.
+
+		@see https://nodejs.org/api/os.html#os_os_arch
+	**/
+	static function arch():String;
+
+	/**
+		Returns an object containing commonly used operating system specific constants for error codes, process signals, and so on. The specific constants currently defined are described in OS Constants.
+
+		@see https://nodejs.org/api/os.html#os_os_constants
+	**/
+	static var constants(default, null):OsConstants;
+
+	/**
+		The os.cpus() method returns an array of objects containing information about each logical CPU core.
+
+		@see https://nodejs.org/api/os.html#os_os_cpus
+	**/
+	static function cpus():Array<CPU>;
+
+	/**
+		The os.endianness() method returns a string identifying the endianness of the CPU for which the Node.js binary was compiled.
+
+		@see https://nodejs.org/api/os.html#os_os_endianness
+	**/
+	static function endianness():Endianness;
+
+	/**
+		The os.freemem() method returns the amount of free system memory in bytes as an integer.
+
+		@see https://nodejs.org/api/os.html#os_os_freemem
+	**/
+	static function freemem():Int;
+
+	/**
+		The os.getPriority() method returns the scheduling priority for the process specified by pid. If pid is not provided, or is 0, the priority of the current process is returned.
+
+		@see https://nodejs.org/api/os.html#os_os_getpriority_pid
+	**/
+	static function getPriority(?pid:Int):Int;
+
+	/**
+		The os.homedir() method returns the home directory of the current user as a string.
+
+		@see https://nodejs.org/api/os.html#os_os_homedir
+	**/
+	static function homedir():String;
+
+	/**
+		The os.hostname() method returns the hostname of the operating system as a string.
+
+		@see https://nodejs.org/api/os.html#os_os_hostname
+	**/
+	static function hostname():String;
+
+	/**
+		The os.loadavg() method returns an array containing the 1, 5, and 15 minute load averages.
+
+		@see https://nodejs.org/api/os.html#os_os_loadavg
+	**/
+	static function loadavg():Array<Float>;
+
+	/**
+		The os.networkInterfaces() method returns an object containing only network interfaces that have been assigned a network address.
+
+		@see https://nodejs.org/api/os.html#os_os_networkinterfaces
+	**/
+	static function networkInterfaces():haxe.DynamicAccess<NetworkInterface>;
+
+	/**
+		The os.platform() method returns a string identifying the operating system platform as set during compile time of Node.js.
+
+		@see https://nodejs.org/api/os.html#os_os_platform
+	**/
+	static function platform():String;
+
+	/**
+		The os.release() method returns a string identifying the operating system release.
+
+		@see https://nodejs.org/api/os.html#os_os_release
+	**/
+	static function release():String;
+
+	/**
+		The os.setPriority() method attempts to set the scheduling priority for the process specified by pid. If pid is not provided, or is 0, the priority of the current process is used.
+
+		@see https://nodejs.org/api/os.html#os_os_setpriority_pid_priority
+	**/
+	static function setPriority(?pid:Int, priority:Int):Void;
+
+	/**
+		The os.tmpdir() method returns a string specifying the operating system's default directory for temporary files.
+
+		@see https://nodejs.org/api/os.html#os_os_tmpdir
+	**/
+	function tmpdir():String;
+
+	/**
+		The os.totalmem() method returns the total amount of system memory in bytes as an integer.
+
+		@see https://nodejs.org/api/os.html#os_os_totalmem
+	**/
+	function totalmem():Int;
+
+	/**
+		The os.type() method returns a string identifying the operating system name as returned by uname(3). For example, 'Linux' on Linux, 'Darwin' on macOS, and 'Windows_NT' on Windows.
+
+		@see https://nodejs.org/api/os.html#os_os_type
+	**/
+	function type():String;
+
+	/**
+		The os.uptime() method returns the system uptime in number of seconds.
+
+		@see https://nodejs.org/api/os.html#os_os_uptime
+	**/
+	static function uptime():Int;
+
+	/**
+		The os.userInfo() method returns information about the currently effective user — on POSIX platforms, this is typically a subset of the password file. The returned object includes the username, uid, gid, shell, and homedir. On Windows, the uid and gid fields are -1, and shell is null.
+
+		@see https://nodejs.org/api/os.html#os_os_userinfo_options
+	**/
+	static function userInfo(?options:{encoding:String}):OsUserInfo;
+}
+
+/**
 	Information about the currently effective user (returned by `Os.userInfo` method).
 
 	On POSIX platforms, this is typically a subset of the password file.
@@ -1119,145 +1260,4 @@ typedef OsConstants = {
 		libuv-specific constant
 	**/
 	var UV_UDP_REUSEADDR:Int;
-}
-
-/**
-	Provides a number of operating system-related utility methods
-
-	@see https://nodejs.org/api/os.html#os_os
-**/
-@:jsRequire("os")
-extern class Os {
-	/**
-		A string constant defining the operating system-specific end-of-line marker:
-
-		@see https://nodejs.org/api/os.html#os_os_eol
-	**/
-	static var EOL(default, null):String;
-
-	/**
-		The os.arch() method returns a string identifying the operating system CPU architecture for which the Node.js binary was compiled.
-
-		@see https://nodejs.org/api/os.html#os_os_arch
-	**/
-	static function arch():String;
-
-	/**
-		Returns an object containing commonly used operating system specific constants for error codes, process signals, and so on. The specific constants currently defined are described in OS Constants.
-
-		@see https://nodejs.org/api/os.html#os_os_constants
-	**/
-	static var constants(default, null):OsConstants;
-
-	/**
-		The os.cpus() method returns an array of objects containing information about each logical CPU core.
-
-		@see https://nodejs.org/api/os.html#os_os_cpus
-	**/
-	static function cpus():Array<CPU>;
-
-	/**
-		The os.endianness() method returns a string identifying the endianness of the CPU for which the Node.js binary was compiled.
-
-		@see https://nodejs.org/api/os.html#os_os_endianness
-	**/
-	static function endianness():Endianness;
-
-	/**
-		The os.freemem() method returns the amount of free system memory in bytes as an integer.
-
-		@see https://nodejs.org/api/os.html#os_os_freemem
-	**/
-	static function freemem():Int;
-
-	/**
-		The os.getPriority() method returns the scheduling priority for the process specified by pid. If pid is not provided, or is 0, the priority of the current process is returned.
-
-		@see https://nodejs.org/api/os.html#os_os_getpriority_pid
-	**/
-	static function getPriority(?pid:Int):Int;
-
-	/**
-		The os.homedir() method returns the home directory of the current user as a string.
-
-		@see https://nodejs.org/api/os.html#os_os_homedir
-	**/
-	static function homedir():String;
-
-	/**
-		The os.hostname() method returns the hostname of the operating system as a string.
-
-		@see https://nodejs.org/api/os.html#os_os_hostname
-	**/
-	static function hostname():String;
-
-	/**
-		The os.loadavg() method returns an array containing the 1, 5, and 15 minute load averages.
-
-		@see https://nodejs.org/api/os.html#os_os_loadavg
-	**/
-	static function loadavg():Array<Float>;
-
-	/**
-		The os.networkInterfaces() method returns an object containing only network interfaces that have been assigned a network address.
-
-		@see https://nodejs.org/api/os.html#os_os_networkinterfaces
-	**/
-	static function networkInterfaces():haxe.DynamicAccess<NetworkInterface>;
-
-	/**
-		The os.platform() method returns a string identifying the operating system platform as set during compile time of Node.js.
-
-		@see https://nodejs.org/api/os.html#os_os_platform
-	**/
-	static function platform():String;
-
-	/**
-		The os.release() method returns a string identifying the operating system release.
-
-		@see https://nodejs.org/api/os.html#os_os_release
-	**/
-	static function release():String;
-
-	/**
-		The os.setPriority() method attempts to set the scheduling priority for the process specified by pid. If pid is not provided, or is 0, the priority of the current process is used.
-
-		@see https://nodejs.org/api/os.html#os_os_setpriority_pid_priority
-	**/
-	static function setPriority(?pid:Int, priority:Int):Void;
-
-	/**
-		The os.tmpdir() method returns a string specifying the operating system's default directory for temporary files.
-
-		@see https://nodejs.org/api/os.html#os_os_tmpdir
-	**/
-	function tmpdir():String;
-
-	/**
-		The os.totalmem() method returns the total amount of system memory in bytes as an integer.
-
-		@see https://nodejs.org/api/os.html#os_os_totalmem
-	**/
-	function totalmem():Int;
-
-	/**
-		The os.type() method returns a string identifying the operating system name as returned by uname(3). For example, 'Linux' on Linux, 'Darwin' on macOS, and 'Windows_NT' on Windows.
-
-		@see https://nodejs.org/api/os.html#os_os_type
-	**/
-	function type():String;
-
-	/**
-		The os.uptime() method returns the system uptime in number of seconds.
-
-		@see https://nodejs.org/api/os.html#os_os_uptime
-	**/
-	static function uptime():Int;
-
-	/**
-		The os.userInfo() method returns information about the currently effective user — on POSIX platforms, this is typically a subset of the password file. The returned object includes the username, uid, gid, shell, and homedir. On Windows, the uid and gid fields are -1, and shell is null.
-
-		@see https://nodejs.org/api/os.html#os_os_userinfo_options
-	**/
-	static function userInfo(?options:{encoding:String}):OsUserInfo;
 }
