@@ -156,8 +156,8 @@ extern class Buffer extends Uint8Array {
 	@:overload(function(array:Array<Int>):Buffer {})
 	@:overload(arrayBuffer: ArrayBuffer, ?byteOffset: Int, ?length: Int) :Buffer;
 	@:overload(function(buffer:Buffer):Buffer {})
-	@:overload(function(object:Object, ?offsetOrEncoding:Either<Int, String>):Buffer {})
-	@:overload(function(object:Object, offsetOrEncoding:Either<Int, String>, ?length:Int):Buffer {})
+	@:overload(function(object:Object, ?offsetOrEncoding:EitherType<Int, String>):Buffer {})
+	@:overload(function(object:Object, offsetOrEncoding:EitherType<Int, String>, ?length:Int):Buffer {})
 	static function from(string:String, ?encoding:String):Buffer;
 
 	/**
