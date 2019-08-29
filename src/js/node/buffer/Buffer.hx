@@ -91,34 +91,23 @@ extern class Buffer extends Uint8Array {
 	static function allocUnsafe(size:Int):Buffer;
 
 	/**
-		Allocates a new non-zero-filled and non-pooled `Buffer` of `size` bytes.
+		Allocates a new `Buffer` of `size` bytes. If `size` is larger than buffer.constants.MAX_LENGTH or smaller than 0,
+		ERR_INVALID_OPT_VALUE is thrown. A zero-length `Buffer` is created if `size` is 0.
 
-		The underlying memory for `Buffer` instances created in this way is not initialized.
-		The contents of the newly created `Buffer` are unknown and may contain sensitive data.
-		Use `buf.fill(0)` to initialize such `Buffer` instances to zeroes.
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_allocunsafeslow_size
 	**/
 	static function allocUnsafeSlow(size:Int):Buffer;
 
 	/**
-		Gives the actual byte length of a string.
+		Returns the actual byte length of a string.
+		This is not the same as String.prototype.length since that returns the number of characters in a string.
 
-		`encoding` defaults to 'utf8'.
-
-		This is not the same as `String.length` since that
-		returns the number of characters in a string.
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_bytelength_string_encoding
 	**/
 	#if (haxe_ver >= 3.3)
-	static function byteLength(string:String, ?encoding:String):Int;
+	static function byteLength(string:EitherType<String, EitherType<Buffer, ArrayBuffer>>, ?encoding:String):Int;
 	#end
 
-	/**
-		Gives the actual byte length of a string.
-
-		`encoding` defaults to 'utf8'.
-
-		This is not the same as `String.length` since that
-		returns the number of characters in a string.
-	**/
 	#if (haxe_ver >= 3.3)
 	@:deprecated("In haxe 3.3+, use Buffer.byteLength instead!")
 	#end
@@ -126,26 +115,50 @@ extern class Buffer extends Uint8Array {
 		return untyped Buffer['byteLength'](string, encoding);
 
 	/**
-		The same as `buf1.compare(buf2)`. Useful for sorting an Array of Buffers.
+		Compares `buf1` to `buf2` typically for the purpose of sorting arrays of `Buffer` instances. This is equivalent to calling buf1.compare(buf2).
+
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_compare_buf1_buf2
 	**/
 	@:native("compare")
 	static function compareBuffers(buf1:Buffer, buf2:Buffer):Int;
 
 	/**
-		Returns a buffer which is the result of concatenating all the buffers in the `list` together.
+		Returns a new `Buffer` which is the result of concatenating all the `Buffer` instances in the `list` together.
 
-		If the `list` has no items, or if the `totalLength` is 0, then it returns a zero-length buffer.
-		If the `list` has exactly one item, then the first item of the `list` is returned.
-		If the `list` has more than one item, then a new `Buffer` is created.
-
-		If `totalLength` is not provided, it is read from the buffers in the `list`.
-		However, this adds an additional loop to the function, so it is faster to provide the length explicitly.
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_concat_list_totallength
 	**/
 	static function concat(list:Array<Buffer>, ?totalLength:Int):Buffer;
 
+	/**
+		Allocates a new `Buffer` using an `array` of octets.
+
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_array
+
+		This creates a view of the ArrayBuffer without copying the underlying memory.
+		For example, when passed a reference to the `.buffer` property of a TypedArray instance,
+		the newly created `Buffer` will share the same allocated memory as the TypedArray.
+
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_arraybuffer_byteoffset_length
+
+		Copies the passed `buffer` data onto a new `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_buffer
+
+		For objects whose `valueOf()` function returns a value not strictly equal to `object`,
+		returns `Buffer.from(object.valueOf(), offsetOrEncoding, length)`.
+
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_object_offsetorencoding_length
+
+		Creates a new `Buffer` containing `string`. The `encoding` parameter identifies the character encoding of `string`.
+
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_string_encoding
+	**/
+	@:overload(function(array:Array<Int>):Buffer {})
+	@:overload(arrayBuffer: ArrayBuffer, ?byteOffset: Int, ?length: Int) :Buffer;
 	@:overload(function(buffer:Buffer):Buffer {})
-	@:overload(function(str:String, ?encoding:String):Buffer {})
-	static function from(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer;
+	@:overload(function(object:Object, ?offsetOrEncoding:Either<Int, String>):Buffer {})
+	@:overload(function(object:Object, offsetOrEncoding:Either<Int, String>, ?length:Int):Buffer {})
+	static function from(string:String, ?encoding:String):Buffer;
 
 	/**
 		Tests if `obj` is a `Buffer`.
