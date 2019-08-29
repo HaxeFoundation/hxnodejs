@@ -59,6 +59,7 @@ extern class Punycode {
 	static var version(default, null):String;
 }
 
+@:deprecated
 extern class PunycodeUcs2 {
 	/**
 		Creates an array containing the decimal code points of each Unicode character in the string.
