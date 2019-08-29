@@ -30,6 +30,7 @@ import js.lib.Object;
 import js.html.ArrayBuffer;
 import js.html.Uint8Array;
 #end
+import haxe.extern.EitherType;
 
 /**
 	The `Buffer` class is a global type for dealing with binary data directly. It can be constructed in a variety of ways.
@@ -74,22 +75,18 @@ extern class Buffer extends Uint8Array {
 	function new(string:String, ?encoding:String):Void;
 
 	/**
-		Allocates a new `Buffer` of `size` bytes.
+		Allocates a new `Buffer` of `size` bytes. If `fill` is `undefined`, the `Buffer` will be zero-filled.
 
-		If `fill` is undefined, the `Buffer` will be zero-filled.
-
-		Calling `Buffer.alloc(size)` can be significantly slower than the alternative `Buffer.allocUnsafe(size)`
-		but ensures that the newly created `Buffer` instance contents will never contain sensitive data.
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_alloc_size_fill_encoding
 	**/
-	@:overload(function(size:Int, fill:String, ?encoding:String):Buffer {})
-	static function alloc(size:Int, ?fill:Int):Buffer;
+	@:overload(function(size:Int, fill:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, ?encoding:String):Buffer {})
+	static function alloc(size:Int, ?fill:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>):Buffer;
 
 	/**
-		Allocates a new non-zero-filled `Buffer` of `size` bytes.
+		Allocates a new `Buffer` of `size` bytes. If `size` is larger than buffer.constants.MAX_LENGTH or smaller than 0,
+		ERR_INVALID_OPT_VALUE is thrown. A zero-length `Buffer` is created if `size` is 0.
 
-		The underlying memory for `Buffer` instances created in this way is not initialized.
-		The contents of the newly created `Buffer` are unknown and may contain sensitive data.
-		Use `buf.fill(0)` to initialize such `Buffer` instances to zeroes.
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_allocunsafe_size
 	**/
 	static function allocUnsafe(size:Int):Buffer;
 
