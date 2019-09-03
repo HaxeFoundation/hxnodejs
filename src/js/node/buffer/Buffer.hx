@@ -238,17 +238,14 @@ extern class Buffer extends Uint8Array {
 	function equals(otherBuffer:EitherType<Buffer, Uint8Array>):Bool;
 
 	/**
-		Fills the buffer with the specified `value`.
-		If the `offset` (defaults to 0) and `end` (defaults to `buffer.length`)
-		are not given it will fill the entire buffer.
+		Fills `buf` with the specified `value`. If the `offset` and `end` are not given, the entire `buf` will be filled:
 
-		The method returns a reference to the `Buffer`, so calls can be chained.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_fill_value_offset_end_encoding
 	**/
-	@:overload(function(value:String, encoding:String):Buffer {})
-	@:overload(function(value:String, offset:Int, encoding:String):Buffer {})
-	@:overload(function(value:String, offset:Int, end:Int, encoding:String):Buffer {})
-	@:overload(function(value:String, ?offset:Int, ?end:Int):Buffer {})
-	function fill(value:Int, ?offset:Int, ?end:Int):Buffer;
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>):Buffer {})
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, offset:Int):Buffer {})
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, offset:Int, end:Int):Buffer {})
+	function fill(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, offset:Int, end:Int, encoding:String):Buffer;
 
 	// TODO: we don't have Array.includes in Haxe yet, so the doc would be lying
 	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Bool {})
