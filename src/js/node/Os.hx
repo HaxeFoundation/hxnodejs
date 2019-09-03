@@ -295,7 +295,7 @@ typedef NetworkInterfaceAddressInfo = {
 	/**
 		The assigned IPv4 or IPv6 address with the routing prefix in CIDR notation. If the `netmask` is invalid, this property is set to `null`.
 	**/
-	var cidr:String;
+	var cidr:Null<String>;
 }
 
 @:enum abstract Endianness(String) to String {
