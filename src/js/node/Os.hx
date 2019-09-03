@@ -22,6 +22,8 @@
 
 package js.node;
 
+import haxe.extern.EitherType;
+
 /**
 	The `os` module provides a number of operating system-related utility methods.
 
@@ -171,7 +173,7 @@ extern class Os {
 	@see https://nodejs.org/api/os.html#os_os_userinfo_options
 **/
 typedef OsUserInfo = {
-	var username:String;
+	var username:EitherType<String, Buffer>;
 
 	/**
 		-1 on Windows
@@ -186,14 +188,14 @@ typedef OsUserInfo = {
 	/**
 		null on Windows
 	**/
-	var shell:Null<String>;
+	var shell:Null<EitherType<String, Buffer>>;
 
 	/**
 		Provided by the operating system. This differs from the result of `Os.homedir`,
 		which queries several environment variables for the home directory
 		before falling back to the operating system response.
 	**/
-	var homedir:String;
+	var homedir:EitherType<String, Buffer>;
 }
 
 /**
