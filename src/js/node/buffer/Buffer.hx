@@ -22,6 +22,8 @@
 
 package js.node.buffer;
 
+import haxe.io.Bytes;
+import haxe.io.Bytes;
 #if haxe4
 import js.lib.ArrayBuffer;
 import js.lib.Uint8Array;
@@ -234,7 +236,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_entries
 	**/
-	function entries():Array<Dynamic>;
+	function entries():Iterator<PairIndexAndByte>;
 
 	/**
 		Returns `true` if both `buf` and `otherBuffer` have exactly the same bytes, `false` otherwise.
@@ -285,21 +287,20 @@ extern class Buffer extends Uint8Array {
 	function keys():Iterator<Int>;
 
 	/**
-		Identical to `indexOf`, but searches the `Buffer` from back to front instead of front to back.
+		Identical to buf.indexOf(), except the last occurrence of `value` is found rather than the first occurrence.
 
-		Returns the starting index position of value in `Buffer` or -1 if the `Buffer` does not contain value.
-		The value can be a String, Buffer or Number. Strings are by default interpreted as UTF8.
-		If `byteOffset` is provided, will return the last match that begins at or before `byteOffset`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_lastindexof_value_byteoffset_encoding
 	**/
-	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Int {})
-	@:overload(function(value:String, ?encoding:String):Int {})
-	@:overload(function(value:Buffer, ?byteOffset:Int):Int {})
-	function lastIndexOf(value:Int, ?byteOffset:Int):Int;
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>):Bool {})
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int):Bool {})
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, encoding:String):Bool {})
+	function lastIndexOf(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int, encoding:String):Bool;
 
 	/**
 		Returns the amount of memory allocated for buf in bytes. This does not necessarily reflect the amount of "usable" data within buf.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_length
+		define on Uint8Array
 	**/
 	// var length(default, null):Int;
 	//
@@ -771,4 +772,9 @@ private class Helper {
 		b.bytes = b;
 		return o;
 	}
+}
+
+typedef PairIndexAndByte = {
+	var index:Null<Int>;
+	var byte:Bytes;
 }
