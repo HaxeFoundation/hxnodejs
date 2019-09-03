@@ -900,292 +900,292 @@ typedef OsConstants = {
 		/**
 			Indicates an interrupted function call.
 		**/
-		var WSAEINTR:Int;
+		@:optional var WSAEINTR:Int;
 
 		/**
 			Indicates an invalid file handle.
 		**/
-		var WSAEBADF:Int;
+		@:optional var WSAEBADF:Int;
 
 		/**
 			Indicates insufficient permissions to complete the operation.
 		**/
-		var WSAEACCES:Int;
+		@:optional var WSAEACCES:Int;
 
 		/**
 			Indicates an invalid pointer address.
 		**/
-		var WSAEFAULT:Int;
+		@:optional var WSAEFAULT:Int;
 
 		/**
 			Indicates that an invalid argument was passed.
 		**/
-		var WSAEINVAL:Int;
+		@:optional var WSAEINVAL:Int;
 
 		/**
 			Indicates that there are too many open files.
 		**/
-		var WSAEMFILE:Int;
+		@:optional var WSAEMFILE:Int;
 
 		/**
 			Indicates that a resource is temporarily unavailable.
 		**/
-		var WSAEWOULDBLOCK:Int;
+		@:optional var WSAEWOULDBLOCK:Int;
 
 		/**
 			Indicates that an operation is currently in progress.
 		**/
-		var WSAEINPROGRESS:Int;
+		@:optional var WSAEINPROGRESS:Int;
 
 		/**
 			Indicates that an operation is already in progress.
 		**/
-		var WSAEALREADY:Int;
+		@:optional var WSAEALREADY:Int;
 
 		/**
-			Indicates that the resource is not a socket.
+			Indicates that the resource is not @:optional a socket.
 		**/
-		var WSAENOTSOCK:Int;
+		@:optional var WSAENOTSOCK:Int;
 
 		/**
 			Indicates that a destination address is required.
 		**/
-		var WSAEDESTADDRREQ:Int;
+		@:optional var WSAEDESTADDRREQ:Int;
 
 		/**
 			Indicates that the message size is too long.
 		**/
-		var WSAEMSGSIZE:Int;
+		@:optional var WSAEMSGSIZE:Int;
 
 		/**
 			Indicates the wrong protocol type for the socket.
 		**/
-		var WSAEPROTOTYPE:Int;
+		@:optional var WSAEPROTOTYPE:Int;
 
 		/**
 			Indicates a bad protocol option.
 		**/
-		var WSAENOPROTOOPT:Int;
+		@:optional var WSAENOPROTOOPT:Int;
 
 		/**
 			Indicates that the protocol is not supported.
 		**/
-		var WSAEPROTONOSUPPORT:Int;
+		@:optional var WSAEPROTONOSUPPORT:Int;
 
 		/**
 			Indicates that the socket type is not supported.
 		**/
-		var WSAESOCKTNOSUPPORT:Int;
+		@:optional var WSAESOCKTNOSUPPORT:Int;
 
 		/**
 			Indicates that the operation is not supported.
 		**/
-		var WSAEOPNOTSUPP:Int;
+		@:optional var WSAEOPNOTSUPP:Int;
 
 		/**
 			Indicates that the protocol family is not supported.
 		**/
-		var WSAEPFNOSUPPORT:Int;
+		@:optional var WSAEPFNOSUPPORT:Int;
 
 		/**
 			Indicates that the address family is not supported.
 		**/
-		var WSAEAFNOSUPPORT:Int;
+		@:optional var WSAEAFNOSUPPORT:Int;
 
 		/**
 			Indicates that the network address is already in use.
 		**/
-		var WSAEADDRINUSE:Int;
+		@:optional var WSAEADDRINUSE:Int;
 
 		/**
 			Indicates that the network address is not available.
 		**/
-		var WSAEADDRNOTAVAIL:Int;
+		@:optional var WSAEADDRNOTAVAIL:Int;
 
 		/**
 			Indicates that the network is down.
 		**/
-		var WSAENETDOWN:Int;
+		@:optional var WSAENETDOWN:Int;
 
 		/**
 			Indicates that the network is unreachable.
 		**/
-		var WSAENETUNREACH:Int;
+		@:optional var WSAENETUNREACH:Int;
 
 		/**
 			Indicates that the network connection has been reset.
 		**/
-		var WSAENETRESET:Int;
+		@:optional var WSAENETRESET:Int;
 
 		/**
 			Indicates that the connection has been aborted.
 		**/
-		var WSAECONNABORTED:Int;
+		@:optional var WSAECONNABORTED:Int;
 
 		/**
 			Indicates that the connection has been reset by the peer.
 		**/
-		var WSAECONNRESET:Int;
+		@:optional var WSAECONNRESET:Int;
 
 		/**
 			Indicates that there is no buffer space available.
 		**/
-		var WSAENOBUFS:Int;
+		@:optional var WSAENOBUFS:Int;
 
 		/**
 			Indicates that the socket is already connected.
 		**/
-		var WSAEISCONN:Int;
+		@:optional var WSAEISCONN:Int;
 
 		/**
 			Indicates that the socket is not connected.
 		**/
-		var WSAENOTCONN:Int;
+		@:optional var WSAENOTCONN:Int;
 
 		/**
 			Indicates that data cannot be sent after the socket has been shutdown.
 		**/
-		var WSAESHUTDOWN:Int;
+		@:optional var WSAESHUTDOWN:Int;
 
 		/**
 			Indicates that there are too many references.
 		**/
-		var WSAETOOMANYREFS:Int;
+		@:optional var WSAETOOMANYREFS:Int;
 
 		/**
 			Indicates that the connection has timed out.
 		**/
-		var WSAETIMEDOUT:Int;
+		@:optional var WSAETIMEDOUT:Int;
 
 		/**
 			Indicates that the connection has been refused.
 		**/
-		var WSAECONNREFUSED:Int;
+		@:optional var WSAECONNREFUSED:Int;
 
 		/**
 			Indicates that a name cannot be translated.
 		**/
-		var WSAELOOP:Int;
+		@:optional var WSAELOOP:Int;
 
 		/**
 			Indicates that a name was too long.
 		**/
-		var WSAENAMETOOLONG:Int;
+		@:optional var WSAENAMETOOLONG:Int;
 
 		/**
 			Indicates that a network host is down.
 		**/
-		var WSAEHOSTDOWN:Int;
+		@:optional var WSAEHOSTDOWN:Int;
 
 		/**
 			Indicates that there is no route to a network host.
 		**/
-		var WSAEHOSTUNREACH:Int;
+		@:optional var WSAEHOSTUNREACH:Int;
 
 		/**
 			Indicates that the directory is not empty.
 		**/
-		var WSAENOTEMPTY:Int;
+		@:optional var WSAENOTEMPTY:Int;
 
 		/**
 			Indicates that there are too many processes.
 		**/
-		var WSAEPROCLIM:Int;
+		@:optional var WSAEPROCLIM:Int;
 
 		/**
 			Indicates that the user quota has been exceeded.
 		**/
-		var WSAEUSERS:Int;
+		@:optional var WSAEUSERS:Int;
 
 		/**
 			Indicates that the disk quota has been exceeded.
 		**/
-		var WSAEDQUOT:Int;
+		@:optional var WSAEDQUOT:Int;
 
 		/**
 			Indicates a stale file handle reference.
 		**/
-		var WSAESTALE:Int;
+		@:optional var WSAESTALE:Int;
 
 		/**
 			Indicates that the item is remote.
 		**/
-		var WSAEREMOTE:Int;
+		@:optional var WSAEREMOTE:Int;
 
 		/**
 			Indicates that the network subsystem is not ready.
 		**/
-		var WSASYSNOTREADY:Int;
+		@:optional var WSASYSNOTREADY:Int;
 
 		/**
 			Indicates that the winsock.dll version is out of range.
 		**/
-		var WSAVERNOTSUPPORTED:Int;
+		@:optional var WSAVERNOTSUPPORTED:Int;
 
 		/**
 			Indicates that successful WSAStartup has not yet been performed.
 		**/
-		var WSANOTINITIALISED:Int;
+		@:optional var WSANOTINITIALISED:Int;
 
 		/**
 			Indicates that a graceful shutdown is in progress.
 		**/
-		var WSAEDISCON:Int;
+		@:optional var WSAEDISCON:Int;
 
 		/**
 			Indicates that there are no more results.
 		**/
-		var WSAENOMORE:Int;
+		@:optional var WSAENOMORE:Int;
 
 		/**
 			Indicates that an operation has been canceled.
 		**/
-		var WSAECANCELLED:Int;
+		@:optional var WSAECANCELLED:Int;
 
 		/**
 			Indicates that the procedure call table is invalid.
 		**/
-		var WSAEINVALIDPROCTABLE:Int;
+		@:optional var WSAEINVALIDPROCTABLE:Int;
 
 		/**
 			Indicates an invalid service provider.
 		**/
-		var WSAEINVALIDPROVIDER:Int;
+		@:optional var WSAEINVALIDPROVIDER:Int;
 
 		/**
 			Indicates that the service provider failed to initialized.
 		**/
-		var WSAEPROVIDERFAILEDINIT:Int;
+		@:optional var WSAEPROVIDERFAILEDINIT:Int;
 
 		/**
 			Indicates a system call failure.
 		**/
-		var WSASYSCALLFAILURE:Int;
+		@:optional var WSASYSCALLFAILURE:Int;
 
 		/**
 			Indicates that a service was not found.
 		**/
-		var WSASERVICE_NOT_FOUND:Int;
+		@:optional var WSASERVICE_NOT_FOUND:Int;
 
 		/**
 			Indicates that a class type was not found.
 		**/
-		var WSATYPE_NOT_FOUND:Int;
+		@:optional var WSATYPE_NOT_FOUND:Int;
 
 		/**
 			Indicates that there are no more results.
 		**/
-		var WSA_E_NO_MORE:Int;
+		@:optional var WSA_E_NO_MORE:Int;
 
 		/**
 			Indicates that the call was canceled.
 		**/
-		var WSA_E_CANCELLED:Int;
+		@:optional var WSA_E_CANCELLED:Int;
 
 		/**
 			Indicates that a database query was refused.
 		**/
-		var WSAEREFUSED:Int;
+		@:optional var WSAEREFUSED:Int;
 	};
 
 	/**
