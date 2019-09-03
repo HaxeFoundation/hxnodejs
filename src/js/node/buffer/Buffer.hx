@@ -264,17 +264,18 @@ extern class Buffer extends Uint8Array {
 	function includes(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int, encoding:String):Bool;
 
 	/**
-		Operates similar to `Array.indexOf` in that it returns either
+		If `value` is:
 
-		the starting index position of value in `Buffer` or -1 if the `Buffer` does not contain value.
-		The value can be a String, Buffer or Number. Strings are by default interpreted as UTF8.
-		Buffers will use the entire `Buffer` (to compare a partial `Buffer` use buf.slice()).
-		Numbers can range from 0 to 255.
+		* a string, `value` is interpreted according to the character encoding in `encoding`.
+		* a `Buffer` or Uint8Array, `value` will be used in its entirety. To compare a partial `Buffer`, use buf.slice().
+		* a number, `value` will be interpreted as an unsigned 8-bit integer value between `0` and `255`.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_indexof_value_byteoffset_encoding
 	**/
-	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Int {})
-	@:overload(function(value:String, ?encoding:String):Int {})
-	@:overload(function(value:Buffer, ?byteOffset:Int):Int {})
-	function indexOf(value:Int, ?byteOffset:Int):Int;
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>):Bool {})
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int):Bool {})
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, encoding:String):Bool {})
+	function indexOf(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int, encoding:String):Bool;
 
 	/**
 		Creates and returns an iterator of `buf` keys (indices).
