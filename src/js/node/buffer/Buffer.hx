@@ -161,12 +161,16 @@ extern class Buffer extends Uint8Array {
 	static function from(string:String, ?encoding:String):Buffer;
 
 	/**
-		Tests if `obj` is a `Buffer`.
+		Returns `true` if `obj` is a `Buffer`, `false` otherwise.
+
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_isbuffer_obj
 	**/
 	static function isBuffer(obj:Dynamic):Bool;
 
 	/**
-		Returns `true` if the encoding is a valid encoding argument, or `false` otherwise.
+		Returns `true` if `encoding` contains a supported character encoding, or `false` otherwise.
+
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_isencoding_encoding
 	**/
 	static function isEncoding(encoding:String):Bool;
 
@@ -177,6 +181,17 @@ extern class Buffer extends Uint8Array {
 	**/
 	static var poolSize:Int;
 
+	/**
+		The index operator [index] can be used to get and set the octet at position index in buf. The values refer to individual bytes, so the legal value range is between 0x00 and 0xFF (hex) or 0 and 255 (decimal).
+
+
+	**/
+	/**
+		The index operator `[index]` can be used to get and set the octet at position `index` in `buf`.
+		The values refer to individual bytes, so the legal value range is between `0x00` and `0xFF` (hex) or `0` and `255` (decimal).
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_index
+	**/
 	/**
 		Returns a number indicating whether `this` comes before or after or is the same as the `otherBuffer` in sort order.
 
@@ -262,11 +277,6 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_buf_length
 	**/
 	// var length(default, null):Int;
-	//
-	//-----------------------------------------------------------------------------------------------------------------------------------
-	// INSERT ABOVE HERE
-	//-----------------------------------------------------------------------------------------------------------------------------------
-	//
 
 	/**
 		Reads a signed 64-bit integer from `buf` at the specified `offset` with the specified endian format
