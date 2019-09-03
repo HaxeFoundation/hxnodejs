@@ -374,82 +374,65 @@ extern class Buffer extends Uint8Array {
 	function readInt8(offset:Int):Int;
 
 	/**
-		Reads a signed 16 bit integer from the buffer at the specified `offset` with big-endian format.
+		Reads a signed 16-bit integer from `buf` at the specified `offset` with the specified endian format (`readInt16BE()` returns big endian, `readInt16LE()` returns little endian).
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-
-		Works as `readUInt16BE`, except buffer contents are treated as two's complement signed values.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readint16be_offset
 	**/
 	function readInt16BE(offset:Int):Int;
 
 	/**
-		Reads a signed 16 bit integer from the buffer at the specified `offset` with little-endian format.
+		Reads a signed 16-bit integer from `buf` at the specified `offset` with the specified endian format (`readInt16BE()` returns big endian, `readInt16LE()` returns little endian).
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-
-		Works as `readUInt16LE`, except buffer contents are treated as two's complement signed values.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readint16le_offset
 	**/
 	function readInt16LE(offset:Int):Int;
 
 	/**
-		Reads a signed 32 bit integer from the buffer at the specified `offset` with big-endian format.
+		Reads a signed 32-bit integer from buf at the specified offset with the specified endian format (readInt32BE() returns big endian, readInt32LE() returns little endian).
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-
-		Works as `readUInt32BE`, except buffer contents are treated as two's complement signed values.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readint32be_offset
 	**/
 	function readInt32BE(offset:Int):Int;
 
 	/**
-		Reads a signed 32 bit integer from the buffer at the specified `offset` with little-endian format.
+		Reads a signed 32-bit integer from buf at the specified offset with the specified endian format (readInt32BE() returns big endian, readInt32LE() returns little endian).
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-
-		Works as `readUInt32LE`, except buffer contents are treated as two's complement signed values.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readint32be_offset
 	**/
 	function readInt32LE(offset:Int):Int;
 
 	/**
-		Reads an unsigned 8 bit integer from the buffer at the specified offset.
+		Reads an unsigned 8-bit integer from `buf` at the specified `offset`.
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint8_offset
 	**/
 	function readUInt8(offset:Int):Int;
 
 	/**
-		Reads an unsigned 16 bit integer from the buffer at the specified `offset` with big-endian format.
+		Reads an unsigned 16-bit integer from `buf` at the specified `offset` with specified endian format (`readUInt16BE()` returns big endian, `readUInt16LE()` returns little endian).
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint16be_offset
 	**/
 	function readUInt16BE(offset:Int):Int;
 
 	/**
-		Reads an unsigned 16 bit integer from the buffer at the specified `offset` with little-endian format.
+		Reads an unsigned 16-bit integer from `buf` at the specified `offset` with specified endian format (`readUInt16BE()` returns big endian, `readUInt16LE()` returns little endian).
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint16le_offset
 	**/
 	function readUInt16LE(offset:Int):Int;
 
 	/**
-		Reads an unsigned 32 bit integer from the buffer at the specified `offset` with big-endian format.
+		Reads an unsigned 32-bit integer from `buf` at the specified `offset` with specified endian format (`readUInt32BE()` returns big endian, `readUInt32LE()` returns little endian).
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint32be_offset
 	**/
 	function readUInt32BE(offset:Int):Int;
 
 	/**
-		Reads an unsigned 32 bit integer from the buffer at the specified `offset` with little-endian format.
+		Reads an unsigned 32-bit integer from `buf` at the specified `offset` with specified endian format (`readUInt32BE()` returns big endian, `readUInt32LE()` returns little endian).
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint32be_offset
 	**/
 	function readUInt32LE(offset:Int):Int;
 
