@@ -192,13 +192,26 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_index
 	**/
+	// buf[index]:int
 	/**
-		Returns a number indicating whether `this` comes before or after or is the same as the `otherBuffer` in sort order.
+		<ArrayBuffer> The underlying `ArrayBuffer` object based on which this Buffer object is created.
 
-		The optional `targetStart`, `targetEnd`, `sourceStart`, and `sourceEnd` arguments can be used
-		to limit the comparison to specific ranges within the two `Buffer` objects.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_buffer
+		define on Uint8Array
 	**/
-	function compare(otherBuffer:Buffer, ?targetStart:Int, ?targetEnd:Int, ?sourceStart:Int, ?sourceEnd:Int):Int;
+	// var buffer:ArrayBuffer;
+
+	/**
+		Compares `buf` with `target` and returns a number indicating whether `buf` comes before, after,
+		or is the same as `target` in sort order. Comparison is based on the actual sequence of bytes in each `Buffer`.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_compare_target_targetstart_targetend_sourcestart_sourceend
+	**/
+	@:overload(function(target:Buffer):Int {})
+	@:overload(function(target:Buffer, targetStart:Int):Int {})
+	@:overload(function(target:Buffer, targetStart:Int, targetEnd:Int):Int {})
+	@:overload(function(target:Buffer, targetStart:Int, targetEnd:Int, sourceStart:Int):Int {})
+	function compare(target:Buffer, targetStart:Int, targetEnd:Int, sourceStart:Int, sourceEnd:Int):Int;
 
 	/**
 		Does copy between buffers.
