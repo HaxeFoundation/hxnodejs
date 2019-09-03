@@ -236,7 +236,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_entries
 	**/
-	function entries():Iterator<PairIndexAndByte>;
+	function entries():Iterator<Int>;
 
 	/**
 		Returns `true` if both `buf` and `otherBuffer` have exactly the same bytes, `false` otherwise.
@@ -339,46 +339,39 @@ extern class Buffer extends Uint8Array {
 	// function readBigUInt64LE(?offset:Int):Int;
 
 	/**
-		Reads a 64 bit double from the buffer at the specified `offset` with big-endian format.
+		Reads a 64-bit double from `buf` at the specified `offset` with specified endian format (`readDoubleBE()` returns big endian, `readDoubleLE()` returns little endian).
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readdoublebe_offset
 	**/
-	function readDoubleBE(offset:Int, ?noAssert:Bool):Float;
+	function readDoubleBE(offset:Int):Float;
 
 	/**
-		Reads a 64 bit double from the buffer at the specified `offset` with little-endian format.
+		Reads a 64-bit double from `buf` at the specified `offset` with specified endian format (`readDoubleBE()` returns big endian, `readDoubleLE()` returns little endian).
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readdoublele_offset
 	**/
-	function readDoubleLE(offset:Int, ?noAssert:Bool):Float;
+	function readDoubleLE(offset:Int):Float;
 
 	/**
-		Reads a 32 bit float from the buffer at the specified `offset` with big-endian format.
+		Reads a 32-bit float from `buf` at the specified `offset` with specified endian format (`readFloatBE()` returns big endian, `readFloatLE()` returns little endian).
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readfloatbe_offset
 	**/
-	function readFloatBE(offset:Int, ?noAssert:Bool):Float;
+	function readFloatBE(offset:Int):Float;
 
 	/**
-		Reads a 32 bit float from the buffer at the specified `offset` with little-endian format.
+		Reads a 32-bit float from `buf` at the specified `offset` with specified endian format (`readFloatBE()` returns big endian, `readFloatLE()` returns little endian).
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readfloatle_offset
 	**/
-	function readFloatLE(offset:Int, ?noAssert:Bool):Float;
+	function readFloatLE(offset:Int):Float;
 
 	/**
-		Reads a signed 8 bit integer from the buffer at the specified `offset`.
+		Reads a signed 8-bit integer from `buf` at the specified `offset`.
 
-		Set `noAssert` to `true` to skip validation of `offset`.
-		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
-
-		Works as `readUInt8`, except buffer contents are treated as two's complement signed values.
+		https://nodejs.org/api/buffer.html#buffer_buf_readint8_offset
 	**/
-	function readInt8(offset:Int, ?noAssert:Bool):Int;
+	function readInt8(offset:Int):Int;
 
 	/**
 		Reads a signed 16 bit integer from the buffer at the specified `offset` with big-endian format.
@@ -388,7 +381,7 @@ extern class Buffer extends Uint8Array {
 
 		Works as `readUInt16BE`, except buffer contents are treated as two's complement signed values.
 	**/
-	function readInt16BE(offset:Int, ?noAssert:Bool):Int;
+	function readInt16BE(offset:Int):Int;
 
 	/**
 		Reads a signed 16 bit integer from the buffer at the specified `offset` with little-endian format.
@@ -398,7 +391,7 @@ extern class Buffer extends Uint8Array {
 
 		Works as `readUInt16LE`, except buffer contents are treated as two's complement signed values.
 	**/
-	function readInt16LE(offset:Int, ?noAssert:Bool):Int;
+	function readInt16LE(offset:Int):Int;
 
 	/**
 		Reads a signed 32 bit integer from the buffer at the specified `offset` with big-endian format.
@@ -408,7 +401,7 @@ extern class Buffer extends Uint8Array {
 
 		Works as `readUInt32BE`, except buffer contents are treated as two's complement signed values.
 	**/
-	function readInt32BE(offset:Int, ?noAssert:Bool):Int;
+	function readInt32BE(offset:Int):Int;
 
 	/**
 		Reads a signed 32 bit integer from the buffer at the specified `offset` with little-endian format.
@@ -418,7 +411,7 @@ extern class Buffer extends Uint8Array {
 
 		Works as `readUInt32LE`, except buffer contents are treated as two's complement signed values.
 	**/
-	function readInt32LE(offset:Int, ?noAssert:Bool):Int;
+	function readInt32LE(offset:Int):Int;
 
 	/**
 		Reads an unsigned 8 bit integer from the buffer at the specified offset.
@@ -426,7 +419,7 @@ extern class Buffer extends Uint8Array {
 		Set `noAssert` to `true` to skip validation of `offset`.
 		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
 	**/
-	function readUInt8(offset:Int, ?noAssert:Bool):Int;
+	function readUInt8(offset:Int):Int;
 
 	/**
 		Reads an unsigned 16 bit integer from the buffer at the specified `offset` with big-endian format.
@@ -434,7 +427,7 @@ extern class Buffer extends Uint8Array {
 		Set `noAssert` to `true` to skip validation of `offset`.
 		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
 	**/
-	function readUInt16BE(offset:Int, ?noAssert:Bool):Int;
+	function readUInt16BE(offset:Int):Int;
 
 	/**
 		Reads an unsigned 16 bit integer from the buffer at the specified `offset` with little-endian format.
@@ -442,7 +435,7 @@ extern class Buffer extends Uint8Array {
 		Set `noAssert` to `true` to skip validation of `offset`.
 		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
 	**/
-	function readUInt16LE(offset:Int, ?noAssert:Bool):Int;
+	function readUInt16LE(offset:Int):Int;
 
 	/**
 		Reads an unsigned 32 bit integer from the buffer at the specified `offset` with big-endian format.
@@ -450,7 +443,7 @@ extern class Buffer extends Uint8Array {
 		Set `noAssert` to `true` to skip validation of `offset`.
 		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
 	**/
-	function readUInt32BE(offset:Int, ?noAssert:Bool):Int;
+	function readUInt32BE(offset:Int):Int;
 
 	/**
 		Reads an unsigned 32 bit integer from the buffer at the specified `offset` with little-endian format.
@@ -458,7 +451,7 @@ extern class Buffer extends Uint8Array {
 		Set `noAssert` to `true` to skip validation of `offset`.
 		This means that `offset` may be beyond the end of the buffer. Defaults to `false`.
 	**/
-	function readUInt32LE(offset:Int, ?noAssert:Bool):Int;
+	function readUInt32LE(offset:Int):Int;
 
 	/**
 		Returns a new buffer which references the same memory as the old,
@@ -543,7 +536,7 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeDoubleBE(value:Float, offset:Int, ?noAssert:Bool):Void;
+	function writeDoubleBE(value:Float, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with little-endian format.
@@ -555,7 +548,7 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeDoubleLE(value:Float, offset:Int, ?noAssert:Bool):Void;
+	function writeDoubleLE(value:Float, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with big-endian format.
@@ -567,7 +560,7 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeFloatBE(value:Float, offset:Int, ?noAssert:Bool):Void;
+	function writeFloatBE(value:Float, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with little-endian format.
@@ -579,7 +572,7 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeFloatLE(value:Float, offset:Int, ?noAssert:Bool):Void;
+	function writeFloatLE(value:Float, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset`.
@@ -593,7 +586,7 @@ extern class Buffer extends Uint8Array {
 
 		Works as `writeUInt8`, except `value` is written out as a two's complement signed integer into buffer.
 	**/
-	function writeInt8(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeInt8(value:Int, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with big-endian format.
@@ -607,7 +600,7 @@ extern class Buffer extends Uint8Array {
 
 		Works as `writeUInt16BE`, except `value` is written out as a two's complement signed integer into buffer.
 	**/
-	function writeInt16BE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeInt16BE(value:Int, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with little-endian format.
@@ -621,7 +614,7 @@ extern class Buffer extends Uint8Array {
 
 		Works as `writeUInt16LE`, except `value` is written out as a two's complement signed integer into buffer.
 	**/
-	function writeInt16LE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeInt16LE(value:Int, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with big-endian format.
@@ -635,7 +628,7 @@ extern class Buffer extends Uint8Array {
 
 		Works as `writeUInt32BE`, except `value` is written out as a two's complement signed integer into buffer.
 	**/
-	function writeInt32BE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeInt32BE(value:Int, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with little-endian format.
@@ -649,7 +642,7 @@ extern class Buffer extends Uint8Array {
 
 		Works as `writeUInt32LE`, except `value` is written out as a two's complement signed integer into buffer.
 	**/
-	function writeInt32LE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeInt32LE(value:Int, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset`.
@@ -661,7 +654,7 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeUInt8(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeUInt8(value:Int, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with big-endian format.
@@ -673,7 +666,7 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeUInt16BE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeUInt16BE(value:Int, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with little-endian format.
@@ -685,7 +678,7 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeUInt16LE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeUInt16LE(value:Int, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with big-endian format.
@@ -697,7 +690,7 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeUInt32BE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeUInt32BE(value:Int, offset:Int):Void;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with little-endian format.
@@ -709,7 +702,7 @@ extern class Buffer extends Uint8Array {
 		being silently dropped. This should not be used unless you are certain
 		of correctness. Defaults to `false`.
 	**/
-	function writeUInt32LE(value:Int, offset:Int, ?noAssert:Bool):Void;
+	function writeUInt32LE(value:Int, offset:Int):Void;
 
 	/**
 		How many bytes will be returned when `buffer.inspect()` is called.
@@ -772,9 +765,4 @@ private class Helper {
 		b.bytes = b;
 		return o;
 	}
-}
-
-typedef PairIndexAndByte = {
-	var index:Null<Int>;
-	var byte:Bytes;
 }
