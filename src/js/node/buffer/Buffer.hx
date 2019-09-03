@@ -218,7 +218,10 @@ extern class Buffer extends Uint8Array {
 		The source and target regions can be overlapped.
 		`targetStart` and `sourceStart` default to 0. `sourceEnd` defaults to `buffer.length`.
 	**/
-	function copy(targetBuffer:Buffer, ?targetStart:Int, ?sourceStart:Int, ?sourceEnd:Int):Void;
+	@:overload(function(targer:Buffer):Void {})
+	@:overload(function(targer:Buffer, targetStart:Int):Void {})
+	@:overload(function(targer:Buffer, targetStart:Int, sourceStart:Int):Void {})
+	function copy(target:Buffer, targetStart:Int, sourceStart:Int, sourceEnd:Int):Void;
 
 	/**
 		@see https://nodejs.org/api/buffer.html#buffer_buf_entries
