@@ -437,35 +437,41 @@ extern class Buffer extends Uint8Array {
 	function readUInt32LE(offset:Int):Int;
 
 	/**
-		Returns a new buffer which references the same memory as the old,
-		but offset and cropped by the `start` (defaults to 0) and `end` (defaults to `buffer.length`) indexes.
-		Negative indexes start from the end of the buffer.
+		Returns a new `Buffer` that references the same memory as the original, but offset and cropped by the `start` and `end` indices.
 
-		Modifying the new buffer slice will modify memory in the original buffer!
+		@see https://nodejs.org/api/buffer.html#buffer_buf_subarray_start_end
 	**/
-	function slice(?start:Int, ?end:Int):Buffer;
+	@:overload(function():Buffer {})
+	@:overload(function(start:Int):Buffer {})
+	function subarray(start:Int, end:Int):Buffer;
 
 	/**
-		Interprets the `Buffer` as an array of unsigned 16-bit integers and swaps the byte-order in-place.
+		Returns a new `Buffer` that references the same memory as the original, but offset and cropped by the `start` and `end` indices.
 
-		Throws a `RangeError` if the `Buffer` length is not a multiple of 16 bits.
-		The method returns a reference to the `Buffer`, so calls can be chained.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_slice_start_end
+	**/
+	@:overload(function():Buffer {})
+	@:overload(function(start:Int):Buffer {})
+	function slice(start:Int, end:Int):Buffer;
+
+	/**
+		Interprets `buf` as an array of unsigned 16-bit integers and swaps the byte order in-place. Throws ERR_INVALID_BUFFER_SIZE if buf.length is not a multiple of 2.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_swap16
 	**/
 	function swap16():Buffer;
 
 	/**
-		Interprets the `Buffer` as an array of unsigned 32-bit integers and swaps the byte-order in-place.
+		Interprets `buf` as an array of unsigned 32-bit integers and swaps the byte order in-place. Throws ERR_INVALID_BUFFER_SIZE if buf.length is not a multiple of 4.
 
-		Throws a `RangeError` if the `Buffer` length is not a multiple of 32 bits.
-		The method returns a reference to the `Buffer`, so calls can be chained.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_swap32
 	**/
 	function swap32():Buffer;
 
 	/**
-		Interprets the `Buffer` as an array of 64-bit numbers and swaps the byte-order in-place.
+		Interprets `buf` as an array of 64-bit numbers and swaps byte order in-place. Throws ERR_INVALID_BUFFER_SIZE if buf.length is not a multiple of 8.
 
-		Throws a `RangeError` if the `Buffer` length is not a multiple of 64 bits.
-		The method returns a reference to the `Buffer`, so calls can be chained.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_swap64
 	**/
 	function swap64():Buffer;
 
