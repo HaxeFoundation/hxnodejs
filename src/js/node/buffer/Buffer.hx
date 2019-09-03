@@ -224,17 +224,18 @@ extern class Buffer extends Uint8Array {
 	function copy(target:Buffer, targetStart:Int, sourceStart:Int, sourceEnd:Int):Void;
 
 	/**
+		Creates and returns an iterator of `[index, byte]` pairs from the contents of `buf`.
+
 		@see https://nodejs.org/api/buffer.html#buffer_buf_entries
 	**/
-	// よくわからない
-	// return Iterator
-	// [index,byte]のペアを返す
-	var entries:Array<Dynamic>;
+	function entries():Array<Dynamic>;
 
 	/**
-		Returns a boolean of whether `this` and `otherBuffer` have the same bytes.
+		Returns `true` if both `buf` and `otherBuffer` have exactly the same bytes, `false` otherwise.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_equals_otherbuffer
 	**/
-	function equals(otherBuffer:Buffer):Bool;
+	function equals(otherBuffer:EitherType<Buffer, Uint8Array>):Bool;
 
 	/**
 		Fills the buffer with the specified `value`.
