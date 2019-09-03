@@ -187,12 +187,18 @@ extern class Buffer extends Uint8Array {
 
 	**/
 	/**
+		buf[index]
+
 		The index operator `[index]` can be used to get and set the octet at position `index` in `buf`.
 		The values refer to individual bytes, so the legal value range is between `0x00` and `0xFF` (hex) or `0` and `255` (decimal).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_index
 	**/
-	// buf[index]:int
+	@:arrayAccess
+	public inline function get(key:Int):Buffer {
+		return this.get(key);
+	}
+
 	/**
 		<ArrayBuffer> The underlying `ArrayBuffer` object based on which this Buffer object is created.
 
@@ -247,11 +253,15 @@ extern class Buffer extends Uint8Array {
 	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, offset:Int, end:Int):Buffer {})
 	function fill(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, offset:Int, end:Int, encoding:String):Buffer;
 
-	// TODO: we don't have Array.includes in Haxe yet, so the doc would be lying
-	@:overload(function(value:String, byteOffset:Int, ?encoding:String):Bool {})
-	@:overload(function(value:String, ?encoding:String):Bool {})
-	@:overload(function(value:Buffer, ?byteOffset:Int):Bool {})
-	function includes(value:Int, ?byteOffset:Int):Bool;
+	/**
+		Equivalent to buf.indexOf() !== -1.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_includes_value_byteoffset_encoding
+	**/
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>):Bool {})
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int):Bool {})
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, encoding:String):Bool {})
+	function includes(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int, encoding:String):Bool;
 
 	/**
 		Operates similar to `Array.indexOf` in that it returns either
