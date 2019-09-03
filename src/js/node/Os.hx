@@ -1197,27 +1197,27 @@ typedef OsConstants = {
 		/**
 			Perform lazy binding. Node.js sets this flag by default.
 		**/
-		var RTLD_LAZY:Int;
+		@:optional var RTLD_LAZY:Int;
 
 		/**
 			Resolve all undefined symbols in the library before dlopen(3) returns.
 		**/
-		var RTLD_NOW:Int;
+		@:optional var RTLD_NOW:Int;
 
 		/**
 			Symbols defined by the library will be made available for symbol resolution of subsequently loaded libraries.
 		**/
-		var RTLD_GLOBAL:Int;
+		@:optional var RTLD_GLOBAL:Int;
 
 		/**
 			The converse of `RTLD_GLOBAL`. This is the default behavior if neither flag is specified.
 		**/
-		var RTLD_LOCAL:Int;
+		@:optional var RTLD_LOCAL:Int;
 
 		/**
 			Make a self-contained library use its own symbols in preference to symbols from previously loaded libraries.
 		**/
-		var RTLD_DEEPBIND:Int;
+		@:optional var RTLD_DEEPBIND:Int;
 	}
 
 	/**
