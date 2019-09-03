@@ -277,38 +277,40 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_buf_length
 	**/
 	// var length(default, null):Int;
-
+	//
+	//
+	//
+	//
+	//
+	// these functions need BigInt implementation.
 	/**
 		Reads a signed 64-bit integer from `buf` at the specified `offset` with the specified endian format
 		(`readBigInt64BE()` returns big endian, `readBigInt64LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readbigint64be_offset
 	**/
-	function readBigInt64BE(?offset:Int):Int;
-
+	// function readBigInt64BE(?offset:Int):Int;
 	/**
 		Reads a signed 64-bit integer from `buf` at the specified `offset` with the specified endian format
 		(`readBigInt64BE()` returns big endian, `readBigInt64LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readbigint64le_offset
 	**/
-	function readBigInt64LE(?offset:Int):Int;
-
+	//	function readBigInt64LE(?offset:Int):Int;
 	/**
 		Reads an unsigned 64-bit integer from `buf` at the specified `offset` with specified endian format
 		(`readBigUInt64BE()` returns big endian, `readBigUInt64LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readbiguint64be_offset
 	**/
-	function readBigUInt64BE(?offset:Int):Int;
-
+	// function readBigUInt64BE(?offset:Int):Int;
 	/**
 		Reads an unsigned 64-bit integer from `buf` at the specified `offset` with specified endian format
 		(`readBigUInt64BE()` returns big endian, `readBigUInt64LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readbiguint64le_offset
 	**/
-	function readBigUInt64LE(?offset:Int):Int;
+	// function readBigUInt64LE(?offset:Int):Int;
 
 	/**
 		Reads a 64 bit double from the buffer at the specified `offset` with big-endian format.
