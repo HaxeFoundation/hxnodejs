@@ -493,19 +493,19 @@ extern class Buffer extends Uint8Array {
 	@:overload(function(string:String, offset:Int, ?encoding:String):Int {})
 	function write(string:String, ?encoding:String):Int;
 
+	// these functions need Bigint Implementation.
 	/**
 		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeBigInt64BE()` writes big endian, `writeBigInt64LE()` writes little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writebigint64be_value_offset
 	**/
-	function writeBigInt64BE(value:Int, ?offset:Int):Int;
-
+	// function writeBigInt64BE(value:Int, ?offset:Int):Int;
 	/**
 		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeBigInt64BE()` writes big endian, `writeBigInt64LE()` writes little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writebigint64le_value_offset
 	**/
-	function writeBigInt64LE(value:Int, ?offset:Int):Int;
+	// function writeBigInt64LE(value:Int, ?offset:Int):Int;
 
 	/**
 		Writes `value` to the buffer at the specified `offset` with big-endian format.
