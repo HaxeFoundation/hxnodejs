@@ -214,9 +214,9 @@ extern class Buffer extends Uint8Array {
 	function compare(target:Buffer, targetStart:Int, targetEnd:Int, sourceStart:Int, sourceEnd:Int):Int;
 
 	/**
-		Does copy between buffers.
-		The source and target regions can be overlapped.
-		`targetStart` and `sourceStart` default to 0. `sourceEnd` defaults to `buffer.length`.
+		Copies data from a region of `buf` to a region in `target` even if the `target` memory region overlaps with `buf`.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_copy_target_targetstart_sourcestart_sourceend
 	**/
 	@:overload(function(targer:Buffer):Void {})
 	@:overload(function(targer:Buffer, targetStart:Int):Void {})
