@@ -138,9 +138,11 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 	function end(chunk:String, encoding:String, ?callback:Null<Error>->Void):Void;
 
 	/**
-		The writable.setDefaultEncoding() method sets the default encoding for a Writable stream.
+		The `writable.setDefaultEncoding()` method sets the default `encoding` for a Writable stream.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_setdefaultencoding_encoding
 	**/
-	function setDefaultEncoding(encoding:String):TSelf;
+	function setDefaultEncoding(encoding:String):Writable<TSelf>;
 
 	/**
 		The writable.uncork() method flushes all data buffered since stream.cork() was called.
