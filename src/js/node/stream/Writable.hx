@@ -318,7 +318,7 @@ extern interface IWritable extends IStream {
 	var isTTY(default, null):Bool;
 }
 
-typedef Chunks = {
+typedef Chunk = {
 	var chunk:EitherType<Buffer, EitherType<String, Any>>;
 	var encoding:String;
 }
