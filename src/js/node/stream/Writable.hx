@@ -22,14 +22,17 @@
 
 package js.node.stream;
 
+import haxe.extern.EitherType;
 import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
 import js.node.Stream;
 import js.node.stream.Readable.IReadable;
 #if haxe4
 import js.lib.Error;
+import js.lib.Uint8Array;
 #else
 import js.Error;
+import js.html.Uint8Array;
 #end
 
 /**
@@ -100,6 +103,51 @@ import js.Error;
 @:jsRequire("stream", "Writable")
 extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IWritable {
 	/**
+		The `writable.cork()` method forces all written data to be buffered in memory. The buffered data will be flushed when either the stream.uncork() or stream.end() methods are called.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_cork
+	**/
+	function cork():Void;
+
+	/**
+		Destroy the stream. Optionally emit an `'error'` event, and emit a `'close'` event unless `emitClose` is set in `false`.
+		After this call, the writable stream has ended and subsequent calls to `write()` or `end()` will result in an `ERR_STREAM_DESTROYED` error.
+		This is a destructive and immediate way to destroy a stream. Previous calls to `write()` may not have drained, and may trigger an `ERR_STREAM_DESTROYED` error.
+		Use `end()` instead of destroy if data should flush before close, or wait for the `'drain'` event before destroying the stream. Implementors should not override this method, but instead implement writable._destroy().
+
+		@see https://nodejs.org/api/stream.html#stream_writable_destroy_error
+	**/
+	function destroy(?error:Error):Writable<TSelf>;
+
+	/**
+		Is `true` after writable.destroy() has been called.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_destroyed
+	**/
+	var destroyed:Bool;
+
+	/**
+		Calling the `writable.end()` method signals that no more data will be written to the Writable.
+		The optional `chunk` and `encoding` arguments allow one final additional chunk of data to be written immediately before closing the stream.
+		If provided, the optional `callback` function is attached as a listener for the 'finish' event.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_end_chunk_encoding_callback
+	**/
+	@:overload(function(?callback:Void->Void):Void {})
+	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Void {})
+	function end(chunk:String, encoding:String, ?callback:Null<Error>->Void):Void;
+
+	/**
+		The writable.setDefaultEncoding() method sets the default encoding for a Writable stream.
+	**/
+	function setDefaultEncoding(encoding:String):TSelf;
+
+	/**
+		The writable.uncork() method flushes all data buffered since stream.cork() was called.
+	**/
+	function uncork():Void;
+
+	/**
 		This method writes some data to the underlying system,
 		and calls the supplied callback once the data has been fully handled.
 
@@ -115,42 +163,20 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 	function write(chunk:String, encoding:String, ?callback:Void->Void):Bool;
 
 	/**
-		Call this method when no more data will be written to the stream.
-		If supplied, the callback is attached as a listener on the `finish` event.
+		The `stream.Writable` class is extended to implement a Writable stream.
 
-		Calling `write()` after calling `end()` will raise an error.
+		@see https://nodejs.org/api/stream.html#stream_implementing_a_writable_stream
 	**/
-	@:overload(function(?callback:Void->Void):Void {})
-	@:overload(function(chunk:Buffer, ?callback:Void->Void):Void {})
-	@:overload(function(chunk:String, ?callback:Void->Void):Void {})
-	function end(chunk:String, encoding:String, ?callback:Void->Void):Void;
+	private function new(?options:WritableNewOptions);
+
+	@:overload(function(chunk:String, encoding:String, callback:Error->Void):Void {})
+	private function _write(chunk:Buffer, encoding:String, callback:Error->Void):Void;
 
 	/**
 		Terminal write streams (i.e. process.stdout) have this property set to true.
 		It is false for any other write streams.
 	**/
 	var isTTY(default, null):Bool;
-
-	/**
-		The writable.cork() method forces all written data to be buffered in memory.
-		The buffered data will be flushed when either the stream.uncork() or stream.end() methods are called.
-	**/
-	function cork():Void;
-
-	/**
-		The writable.uncork() method flushes all data buffered since stream.cork() was called.
-	**/
-	function uncork():Void;
-
-	/**
-		The writable.setDefaultEncoding() method sets the default encoding for a Writable stream.
-	**/
-	function setDefaultEncoding(encoding:String):TSelf;
-
-	// --------- API for stream implementors - see node.js API documentation ---------
-	private function new(?options:WritableNewOptions);
-	@:overload(function(chunk:String, encoding:String, callback:Error->Void):Void {})
-	private function _write(chunk:Buffer, encoding:String, callback:Error->Void):Void;
 }
 
 /**
@@ -179,9 +205,8 @@ extern interface IWritable extends IStream {
 	function write(chunk:String, encoding:String, ?callback:Void->Void):Bool;
 
 	@:overload(function(?callback:Void->Void):Void {})
-	@:overload(function(chunk:Buffer, ?callback:Void->Void):Void {})
-	@:overload(function(chunk:String, ?callback:Void->Void):Void {})
-	function end(chunk:String, encoding:String, ?callback:Void->Void):Void;
+	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Void {})
+	function end(chunk:String, encoding:String, ?callback:Null<Error>->Void):Void;
 
 	function cork():Void;
 	function uncork():Void;
