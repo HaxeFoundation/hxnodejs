@@ -33,42 +33,55 @@ import js.Error;
 #end
 
 /**
+	Writable streams are an abstraction for a destination to which data is written.
+
+	@see https://nodejs.org/api/stream.html#stream_writable_streams
+**/
+/**
 	Enumeration for `Writable` class events.
 **/
 @:enum abstract WritableEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
-		If a `writable.write(chunk)` call returns `false`, then the `drain` event will indicate
-		when it is appropriate to begin writing more data to the stream.
+		The `'close'` event is emitted when the stream and any of its underlying resources (a file descriptor, for example) have been closed. The event indicates that no more events will be emitted, and no further computation will occur.
+
+		@see https://nodejs.org/api/stream.html#stream_event_close
+	**/
+	var Close:WritableEvent<Void->Void> = "close";
+
+	/**
+		If a call to stream.write(chunk) returns `false`, the `'drain'` event will be emitted when it is appropriate to resume writing data to the stream.
+
+		@see https://nodejs.org/api/stream.html#stream_event_drain
 	**/
 	var Drain:WritableEvent<Void->Void> = "drain";
 
 	/**
-		When the `end()` method has been called, and all data has been flushed to the underlying system, this event is emitted.
+		The `'error'` event is emitted if an `error` occurred while writing or piping data. The listener callback is passed a single Error argument when called.
+
+		@see https://nodejs.org/api/stream.html#stream_event_error
+	**/
+	var Error:WritableEvent<Error->Void> = "error";
+
+	/**
+		The `'finish'` event is emitted after the stream.end() method has been called, and all data has been flushed to the underlying system.
+
+		@see https://nodejs.org/api/stream.html#stream_event_finish
 	**/
 	var Finish:WritableEvent<Void->Void> = "finish";
 
 	/**
-		Lister arguments:
-			src - source stream that is piping to `this` writable
+		The `'pipe'` event is emitted when the stream.pipe() method is called on a readable stream, adding this writable to its set of destinations.
 
-		This is emitted whenever the `pipe()` method is called on a readable stream,
-		adding `this` writable to its set of destinations.
+		@see https://nodejs.org/api/stream.html#stream_event_pipe
 	**/
 	var Pipe:WritableEvent<IReadable->Void> = "pipe";
 
 	/**
-		Listener arguments:
-			src - source stream that unpiped `this` writable
+		The `'unpipe'` event is emitted when the stream.unpipe() method is called on a Readable stream, removing this Writable from its set of destinations.
 
-		This is emitted whenever the `unpipe()` method is called on a readable stream,
-		removing `this` writable from its set of destinations.
+		@see https://nodejs.org/api/stream.html#stream_event_unpipe
 	**/
 	var Unpipe:WritableEvent<IReadable->Void> = "unpipe";
-
-	/**
-		Emitted if there was an error when writing or piping data.
-	**/
-	var Error:WritableEvent<Error->Void> = "error";
 }
 
 /**
