@@ -145,29 +145,61 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 	function setDefaultEncoding(encoding:String):Writable<TSelf>;
 
 	/**
-		The writable.uncork() method flushes all data buffered since stream.cork() was called.
+		The `writable.uncork()` method flushes all data buffered since stream.cork() was called.
 
 		@see https://nodejs.org/api/stream.html#stream_writable_uncork
 	**/
 	function uncork():Void;
 
 	/**
-		Is true if it is safe to call writable.write().
+		Is `true` if it is safe to call writable.write().
 
 		@see https://nodejs.org/api/stream.html#stream_writable_writable
 	**/
-	var writable:Bool;
+	var writable(default, null):Bool;
 
 	/**
-		This method writes some data to the underlying system,
-		and calls the supplied callback once the data has been fully handled.
+		Is `true` after writable.end() has been called. This property does not indicate whether the data has been flushed, for this use writable.writableFinished instead.
 
-		The return value indicates if you should continue writing right now. If the data had to be buffered internally,
-		then it will return `false`. Otherwise, it will return `true`.
+		@seehttps://nodejs.org/api/stream.html#stream_writable_writableended
+	**/
+	var writableEnded(default, null):Bool;
 
-		This return value is strictly advisory. You MAY continue to write, even if it returns `false`.
-		However, writes will be buffered in memory, so it is best not to do this excessively.
-		Instead, wait for the `drain` event before writing more data.
+	/**
+		Is set to `true` immediately before the 'finish' event is emitted.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_writablefinished
+	**/
+	var writableFinished(default, null):Bool;
+
+	/**
+		Return the value of `highWaterMark` passed when constructing this `Writable`.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_writablehighwatermark
+	**/
+	var writablehighWaterMark(default, null):Int;
+
+	/**
+		This property contains the number of bytes (or objects) in the queue ready to be written.
+		The value provides introspection data regarding the status of the `highWaterMark`.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_writablelength
+	**/
+	var writableLength(default, null):Int;
+
+	/**
+		Getter for the property `objectMode` of a given `Writable` stream.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_writableobjectmode
+	**/
+	var writableObjectMode(default, null):Bool;
+
+	/**
+		The `writable.write()` method writes some data to the stream, and calls the supplied `callback` once the data has been fully handled.
+		If an error occurs, the `callback` may or may not be called with the error as its first argument.
+		To reliably detect write errors, add a listener for the `'error'` event.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback
 	**/
 	@:overload(function(chunk:Buffer, ?callback:Void->Void):Bool {})
 	@:overload(function(chunk:String, ?callback:Void->Void):Bool {})
