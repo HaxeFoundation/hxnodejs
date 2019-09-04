@@ -146,8 +146,17 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 	/**
 		The writable.uncork() method flushes all data buffered since stream.cork() was called.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_uncork
 	**/
 	function uncork():Void;
+
+	/**
+		Is true if it is safe to call writable.write().
+
+		@see https://nodejs.org/api/stream.html#stream_writable_writable
+	**/
+	var writable:Bool;
 
 	/**
 		This method writes some data to the underlying system,
