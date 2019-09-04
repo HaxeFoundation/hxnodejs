@@ -647,9 +647,12 @@ extern class Buffer extends Uint8Array {
 	function writeUInt32LE(value:Int, ?offset:Int):Void;
 
 	/**
-		How many bytes will be returned when `buffer.inspect()` is called.
-		This can be overridden by user modules.
-		Default: 50
+		* <integer> Default: `50`
+		Returns the maximum number of bytes that will be returned when `buf.inspect()` is called. This can be overridden by user modules. See util.inspect() for more details on `buf.inspect()` behavior.
+
+		This is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buffer_inspect_max_bytes
 	**/
 	public static var INSPECT_MAX_BYTES(get, set):Int;
 
@@ -661,7 +664,12 @@ extern class Buffer extends Uint8Array {
 	}
 
 	/**
-		Maximum length of a `Buffer`.
+		* <integer> The largest size allowed for a single `Buffer` instance.
+		An alias for buffer.constants.MAX_LENGTH.
+
+		This is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buffer_kmaxlength
 	**/
 	public static var kMaxLength(get, never):Int;
 
@@ -675,6 +683,15 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_buffer_transcode_source_fromenc_toenc
 	**/
 	function transcode(source:haxe.extern.EitherType<Buffer, Uint8Array>, fromEnc:String, toEnc:String):Buffer;
+
+	public static var constants(get, never):BufferConstants;
+
+	private inline static function get_constants():BufferConstants {
+		return {
+			MAX_LENGTH: js.Lib.require("buffer").MAX_LENGTH,
+			MAX_STRING_LENGTH: js.Lib.require("buffer").MAX_STRING_LENGTH
+		};
+	}
 
 	/**
 		Create `haxe.io.Bytes` object that uses the same underlying data storage as `this` buffer.
@@ -707,4 +724,9 @@ private class Helper {
 		b.bytes = b;
 		return o;
 	}
+}
+
+typedef BufferConstants = {
+	var MAX_LENGTH:Int;
+	var MAX_STRING_LENGTH:Int;
 }
