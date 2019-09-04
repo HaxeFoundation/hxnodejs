@@ -22,8 +22,6 @@
 
 package js.node.buffer;
 
-import haxe.io.Bytes;
-import haxe.io.Bytes;
 #if haxe4
 import js.lib.ArrayBuffer;
 import js.lib.Uint8Array;
@@ -476,26 +474,35 @@ extern class Buffer extends Uint8Array {
 	function swap64():Buffer;
 
 	/**
-		Returns a JSON-representation of the `Buffer` instance.
+		Returns a JSON representation of `buf`. JSON.stringify() implicitly calls this function when stringifying a `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_tojson
 	**/
 	function toJSON():Dynamic;
 
 	/**
-		Decodes and returns a string from buffer data encoded with `encoding` (defaults to 'utf8')
-		beginning at `start` (defaults to 0) and ending at `end` (defaults to `buffer.length`).
+		Decodes `buf` to a string according to the specified character encoding in `encoding`. `start` and `end` may be passed to decode only a subset of `buf`.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_tostring_encoding_start_end
 	**/
-	@:overload(function(encoding:String, ?start:Int, ?end:Int):String {})
+	@:overload(function(encoding:String):String {})
+	@:overload(function(encoding:String, start:Int):String {})
+	@:overload(function(encoding:String, start:Int, end:Int):String {})
 	function toString():String;
 
 	/**
-		Writes `string` to the buffer at `offset` using the given `encoding`.
+		Creates and returns an iterator for `buf` values (bytes). This function is called automatically when a `Buffer` is used in a `for..of` statement.
 
-		`offset` defaults to 0, encoding defaults to 'utf8'. `length` is the number of bytes to write.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_values
+	**/
+	function values():Iterator<Int>;
 
-		Returns number of octets written. If buffer did not contain enough space to fit the entire `string`,
-		it will write a partial amount of the `string`. `length` defaults to `buffer.length - offset`.
+	/**
+		Writes `string` to `buf` at `offset` according to the character encoding in `encoding`. The `length` parameter is the number of bytes to write.
+		If `buf` did not contain enough space to fit the entire `string`, only part of string will be written.
+		However, partially encoded characters will not be written.
 
-		The method will not write partial characters.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_write_string_offset_length_encoding
 	**/
 	@:overload(function(string:String, offset:Int, length:Int, ?encoding:String):Int {})
 	@:overload(function(string:String, offset:Int, ?encoding:String):Int {})
@@ -516,182 +523,128 @@ extern class Buffer extends Uint8Array {
 	// function writeBigInt64LE(value:Int, ?offset:Int):Int;
 
 	/**
-		Writes `value` to the buffer at the specified `offset` with big-endian format.
-		Note, `value` must be a valid 64 bit double.
+		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeDoubleBE()` writes big endian, `writeDoubleLE()` writes little endian).
+		`value` should be a valid 64-bit double. Behavior is undefined when `value` is anything other than a 64-bit double.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writedoublebe_value_offset
 	**/
-	function writeDoubleBE(value:Float, offset:Int):Void;
+	function writeDoubleBE(value:Float, ?offset:Int):Void;
 
 	/**
-		Writes `value` to the buffer at the specified `offset` with little-endian format.
-		Note, `value` must be a valid 64 bit double.
+		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeDoubleBE()` writes big endian, `writeDoubleLE()` writes little endian).
+		`value` should be a valid 64-bit double. Behavior is undefined when `value` is anything other than a 64-bit double.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writedoublele_value_offset
 	**/
-	function writeDoubleLE(value:Float, offset:Int):Void;
+	function writeDoubleLE(value:Float, ?offset:Int):Void;
 
 	/**
-		Writes `value` to the buffer at the specified `offset` with big-endian format.
-		Note, behavior is unspecified if `value` is not a 32 bit float.
+		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeFloatBE()` writes big endian, `writeFloatLE()` writes little endian).
+		`value` should be a valid 32-bit float. Behavior is undefined when `value` is anything other than a 32-bit float.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writefloatbe_value_offset
 	**/
-	function writeFloatBE(value:Float, offset:Int):Void;
+	function writeFloatBE(value:Float, ?offset:Int):Void;
 
 	/**
-		Writes `value` to the buffer at the specified `offset` with little-endian format.
-		Note, behavior is unspecified if `value` is not a 32 bit float.
+		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeFloatBE()` writes big endian, `writeFloatLE()` writes little endian).
+		`value` should be a valid 32-bit float. Behavior is undefined when `value` is anything other than a 32-bit float.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writefloatle_value_offset
 	**/
-	function writeFloatLE(value:Float, offset:Int):Void;
+	function writeFloatLE(value:Float, ?offset:Int):Void;
 
 	/**
-		Writes `value` to the buffer at the specified `offset`.
-		Note, `value` must be a valid signed 8 bit integer.
+		Writes `value` to `buf` at the specified `offset`. `value` should be a valid signed 8-bit integer. Behavior is undefined when `value` is anything other than a signed 8-bit integer.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
-
-		Works as `writeUInt8`, except `value` is written out as a two's complement signed integer into buffer.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writeint8_value_offset
 	**/
-	function writeInt8(value:Int, offset:Int):Void;
+	function writeInt8(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to the buffer at the specified `offset` with big-endian format.
-		Note, value must be a valid signed 16 bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeInt16BE()` writes big endian, `writeInt16LE()` writes little endian).
+		`value` should be a valid signed 16-bit integer. Behavior is undefined when value is anything other than a signed 16-bit integer.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
-
-		Works as `writeUInt16BE`, except `value` is written out as a two's complement signed integer into buffer.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writeint16be_value_offset
 	**/
-	function writeInt16BE(value:Int, offset:Int):Void;
+	function writeInt16BE(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to the buffer at the specified `offset` with little-endian format.
-		Note, value must be a valid signed 16 bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeInt16BE()` writes big endian, `writeInt16LE()` writes little endian).
+		`value` should be a valid signed 16-bit integer. Behavior is undefined when value is anything other than a signed 16-bit integer.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
-
-		Works as `writeUInt16LE`, except `value` is written out as a two's complement signed integer into buffer.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writeint16le_value_offset
 	**/
-	function writeInt16LE(value:Int, offset:Int):Void;
+	function writeInt16LE(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to the buffer at the specified `offset` with big-endian format.
-		Note, value must be a valid signed 32 bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeInt32BE()` writes big endian, `writeInt32LE()` writes little endian).
+		`value` should be a valid signed 32-bit integer. Behavior is undefined when `value` is anything other than a signed 32-bit integer.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
-
-		Works as `writeUInt32BE`, except `value` is written out as a two's complement signed integer into buffer.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writeint32be_value_offset
 	**/
-	function writeInt32BE(value:Int, offset:Int):Void;
+	function writeInt32BE(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to the buffer at the specified `offset` with little-endian format.
-		Note, value must be a valid signed 32 bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeInt32BE()` writes big endian, `writeInt32LE()` writes little endian).
+		`value` should be a valid signed 32-bit integer. Behavior is undefined when `value` is anything other than a signed 32-bit integer.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
-
-		Works as `writeUInt32LE`, except `value` is written out as a two's complement signed integer into buffer.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writeint32le_value_offset
 	**/
-	function writeInt32LE(value:Int, offset:Int):Void;
+	function writeInt32LE(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to the buffer at the specified `offset`.
-		Note, `value` must be a valid unsigned 8 bit integer.
+		Writes `byteLength` bytes of `value` to `buf` at the specified `offset`. Supports up to 48 bits of accuracy. Behavior is undefined when `value` is anything other than a signed integer.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writeintbe_value_offset_bytelength
 	**/
-	function writeUInt8(value:Int, offset:Int):Void;
+	function writeIntBE(value:Int, offset:Int, byteLength:Int):Int;
 
 	/**
-		Writes `value` to the buffer at the specified `offset` with big-endian format.
-		Note, `value` must be a valid unsigned 16 bit integer.
+		Writes `byteLength` bytes of `value` to `buf` at the specified `offset`. Supports up to 48 bits of accuracy. Behavior is undefined when `value` is anything other than a signed integer.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writeintle_value_offset_bytelength
 	**/
-	function writeUInt16BE(value:Int, offset:Int):Void;
+	function writeIntLE(value:Int, offset:Int, byteLength:Int):Int;
 
 	/**
-		Writes `value` to the buffer at the specified `offset` with little-endian format.
-		Note, `value` must be a valid unsigned 16 bit integer.
+		Writes `value` to `buf` at the specified `offset`. `value` should be a valid unsigned 8-bit integer. Behavior is undefined when `value` is anything other than an unsigned 8-bit integer.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writeuint8_value_offset
 	**/
-	function writeUInt16LE(value:Int, offset:Int):Void;
+	function writeUInt8(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to the buffer at the specified `offset` with big-endian format.
-		Note, `value` must be a valid unsigned 32 bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeUInt16BE()` writes big endian, `writeUInt16LE()` writes little endian).
+		`value` should be a valid unsigned 16-bit integer. Behavior is undefined when `value` is anything other than an unsigned 16-bit integer.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writeuint16be_value_offset
 	**/
-	function writeUInt32BE(value:Int, offset:Int):Void;
+	function writeUInt16BE(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to the buffer at the specified `offset` with little-endian format.
-		Note, `value` must be a valid unsigned 32 bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeUInt16BE()` writes big endian, `writeUInt16LE()` writes little endian).
+		`value` should be a valid unsigned 16-bit integer. Behavior is undefined when `value` is anything other than an unsigned 16-bit integer.
 
-		Set `noAssert` to `true` to skip validation of `value` and `offset`.
-		This means that `value` may be too large for the specific function
-		and `offset` may be beyond the end of the buffer leading to the values
-		being silently dropped. This should not be used unless you are certain
-		of correctness. Defaults to `false`.
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writeuint16le_value_offset
 	**/
-	function writeUInt32LE(value:Int, offset:Int):Void;
+	function writeUInt16LE(value:Int, ?offset:Int):Void;
+
+	/**
+		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeUInt32BE()` writes big endian, `writeUInt32LE()` writes little endian).
+		`value` should be a valid unsigned 32-bit integer. Behavior is undefined when `value` is anything other than an unsigned 32-bit integer.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writeuint32be_value_offset
+	**/
+	function writeUInt32BE(value:Int, ?offset:Int):Void;
+
+	/**
+		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeUInt32BE()` writes big endian, `writeUInt32LE()` writes little endian).
+		`value` should be a valid unsigned 32-bit integer. Behavior is undefined when `value` is anything other than an unsigned 32-bit integer.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_writeuint32le_value_offset
+	**/
+	function writeUInt32LE(value:Int, ?offset:Int):Void;
 
 	/**
 		How many bytes will be returned when `buffer.inspect()` is called.
