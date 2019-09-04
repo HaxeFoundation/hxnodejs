@@ -68,10 +68,15 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_string_encoding
 	**/
+	@:deprecated
 	@:overload(function(array:Array<Int>):Void {})
+	@:deprecated
 	@:overload(function(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Void {})
+	@:deprecated
 	@:overload(function(buffer:Buffer):Void {})
+	@:deprecated
 	@:overload(function(size:Int):Void {})
+	@:deprecated
 	function new(string:String, ?encoding:String):Void;
 
 	/**
