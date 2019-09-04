@@ -201,40 +201,63 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback
 	**/
-	@:overload(function(chunk:Buffer, ?callback:Void->Void):Bool {})
-	@:overload(function(chunk:String, ?callback:Void->Void):Bool {})
-	function write(chunk:String, encoding:String, ?callback:Void->Void):Bool;
+	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Bool {})
+	function write(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Bool;
 
 	/**
-		The `stream.Writable` class is extended to implement a Writable stream.
-
-		@see https://nodejs.org/api/stream.html#stream_implementing_a_writable_stream
+		@see https://nodejs.org/api/stream.html#stream_constructor_new_stream_writable_options
 	**/
 	private function new(?options:WritableNewOptions);
 
-	@:overload(function(chunk:String, encoding:String, callback:Error->Void):Void {})
-	private function _write(chunk:Buffer, encoding:String, callback:Error->Void):Void;
+	/**
+		All `Writable` stream implementations must provide a writable._write() method to send data to the underlying resource.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback_1
+	**/
+	private function _write(chunk:EitherType<Buffer, EitherType<String, Any>>, encoding:String, callback:Null<Error>->Void):Void;
+
+	/**
+		This function MUST NOT be called by application code directly. It should be implemented by child classes, and called by the internal `Writable` class methods only.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_writev_chunks_callback
+	**/
+	private function _writev(chunk:Array<Object>, callback:Null<Error>->Void):Void;
+
+	/**
+		The `_destroy()` method is called by writable.destroy(). It can be overridden by child classes but it must not be called directly.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_destroy_err_callback
+	**/
+	private function _destroy(err:Error, callback:Null<Error>->Void):Void;
+
+	/**
+		The `_final()` method must not be called directly. It may be implemented by child classes, and if so, will be called by the internal `Writable` class methods only.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_final_callback
+	**/
+	private function _final(callback:Null<Error>->Void):Void;
 
 	/**
 		Terminal write streams (i.e. process.stdout) have this property set to true.
 		It is false for any other write streams.
 	**/
 	var isTTY(default, null):Bool;
-}
-
-/**
+} /**
 	Options for `Writable` private constructor.
 	For stream implementors only, see node.js API documentation
 **/
+
 typedef WritableNewOptions = {
 	@:optional var highWaterMark:Int;
 	@:optional var decodeStrings:Bool;
 	@:optional var defaultEncoding:String;
 	@:optional var objectMode:Bool;
 	@:optional var emitClose:Bool;
-	@:optional var write:Dynamic->String->(Null<Error>->Void)->Void;
+	@:optional var write:(Dynamic, String, (Null<Error>->Void)) -> Void;
 	@:optional var writev:Array<{chunk:Dynamic, encoding:String}>->(Null<Error>->Void)->Void;
 	@:optional var destroy:Null<Error>->(Null<Error>->Void)->Void;
+	@:native("final")
+	@:optional var _final:Null<Error>->Void;
 }
 
 /**
@@ -243,17 +266,13 @@ typedef WritableNewOptions = {
 **/
 @:remove
 extern interface IWritable extends IStream {
-	@:overload(function(chunk:Buffer, ?callback:Void->Void):Bool {})
-	@:overload(function(chunk:String, ?callback:Void->Void):Bool {})
-	function write(chunk:String, encoding:String, ?callback:Void->Void):Bool;
-
+	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Bool {})
+	function write(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Bool;
 	@:overload(function(?callback:Void->Void):Void {})
 	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Void {})
 	function end(chunk:String, encoding:String, ?callback:Null<Error>->Void):Void;
-
 	function cork():Void;
 	function uncork():Void;
 	function setDefaultEncoding(encoding:String):IWritable;
-
 	var isTTY(default, null):Bool;
 }
