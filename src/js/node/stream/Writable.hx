@@ -221,14 +221,14 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_writev_chunks_callback
 	**/
-	private function _writev(chunk:Array<Object>, callback:Null<Error>->Void):Void;
+	private function _writev(chunks:Array<Chunk>, callback:Null<Error>->Void):Void;
 
 	/**
 		The `_destroy()` method is called by writable.destroy(). It can be overridden by child classes but it must not be called directly.
 
 		@see https://nodejs.org/api/stream.html#stream_writable_destroy_err_callback
 	**/
-	private function _destroy(err:Error, callback:Null<Error>->Void):Void;
+	private function _destroy(err:Null<Error>, callback:Null<Error>->Void):Void;
 
 	/**
 		The `_final()` method must not be called directly. It may be implemented by child classes, and if so, will be called by the internal `Writable` class methods only.
@@ -242,22 +242,63 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 		It is false for any other write streams.
 	**/
 	var isTTY(default, null):Bool;
-} /**
-	Options for `Writable` private constructor.
-	For stream implementors only, see node.js API documentation
-**/
+}
 
+/**
+	@see https://nodejs.org/api/stream.html#stream_constructor_new_stream_writable_options
+**/
 typedef WritableNewOptions = {
+	/**
+		`highWaterMark` <number> Buffer level when stream.write() starts returning `false`. Default: `16384` (16kb), or 16 for `objectMode` streams.
+	**/
 	@:optional var highWaterMark:Int;
+
+	/**
+		`decodeStrings` <boolean> Whether to encode `string`s passed to stream.write() to `Buffer`s (with the encoding specified in the stream.write() call) before passing them to stream._write().
+		Other types of data are not converted (i.e. `Buffer`s are not decoded into `string`s). Setting to false will prevent strings from being converted. Default: `true`.
+	**/
 	@:optional var decodeStrings:Bool;
+
+	/**
+		`defaultEncoding` <string> The default encoding that is used when no encoding is specified as an argument to stream.write(). Default: `'utf8'`.
+	**/
 	@:optional var defaultEncoding:String;
+
+	/**
+		`objectMode` <boolean> Whether or not the stream.write(anyObj) is a valid operation. When set, it becomes possible to write JavaScript values other than string, `Buffer` or `Uint8Array` if supported by the stream implementation. Default: `false`.
+	**/
 	@:optional var objectMode:Bool;
+
+	/**
+		`emitClose` <boolean> Whether or not the stream should emit `'close'` after it has been destroyed. Default: `true`.
+	**/
 	@:optional var emitClose:Bool;
-	@:optional var write:(Dynamic, String, (Null<Error>->Void)) -> Void;
-	@:optional var writev:Array<{chunk:Dynamic, encoding:String}>->(Null<Error>->Void)->Void;
-	@:optional var destroy:Null<Error>->(Null<Error>->Void)->Void;
+
+	/**
+		`write` <Function> Implementation for the stream._write() method.
+	**/
+	@:optional var write:(EitherType<Buffer, EitherType<String, Any>>, String, (Null<Error>->Void)) -> Void;
+
+	/**
+		`writev` <Function> Implementation for the stream._writev() method.
+	**/
+	@:optional var writev:(Array<Chunk>, (Null<Error>->Void)) -> Void;
+
+	/**
+		`destroy` <Function> Implementation for the stream._destroy() method.
+	**/
+	@:optional var destroy:(Null<Error>, (Null<Error>->Void)) -> Void;
+
+	/**
+		`final` <Function> Implementation for the stream._final() method.
+	**/
 	@:native("final")
 	@:optional var _final:Null<Error>->Void;
+
+	/**
+		`autoDestroy` <boolean> Whether this stream should automatically call .destroy() on itself after ending. Default: false.
+	**/
+	@:optional var autoDestroy:Bool;
 }
 
 /**
@@ -275,4 +316,9 @@ extern interface IWritable extends IStream {
 	function uncork():Void;
 	function setDefaultEncoding(encoding:String):IWritable;
 	var isTTY(default, null):Bool;
+}
+
+typedef Chunks = {
+	var chunk:EitherType<Buffer, EitherType<String, Any>>;
+	var encoding:String;
 }
