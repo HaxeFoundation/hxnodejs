@@ -38,9 +38,7 @@ extern class Querystring {
 		@see https://nodejs.org/api/querystring.html#querystring_querystring_decode
 	**/
 	@:overload(function(str:String):QuerystringParseResult {})
-	@:overload(function(str:String, sep:String):QuerystringParseResult {})
-	@:overload(function(str:String, sep:String, eq:String):QuerystringParseResult {})
-	static function decode(str:String, sep:String, eq:String, options:QuerystringParseOptions):QuerystringParseResult;
+	static function decode(str:String, ?sep:String, ?eq:String, ?options:QuerystringParseOptions):QuerystringParseResult;
 
 	/**
 		The `querystring.encode()` function is an alias for `querystring.stringify()`.
@@ -48,9 +46,7 @@ extern class Querystring {
 		@see https://nodejs.org/api/querystring.html#querystring_querystring_decode
 	**/
 	@:overload(function(obj:{}):String {})
-	@:overload(function(obj:{}, sep:String):String {})
-	@:overload(function(obj:{}, sep:String, eq:String):String {})
-	static function encode(obj:{}, sep:String, eq:String, options:QuerystringStringifyOptions):String;
+	static function encode(obj:{}, ?sep:String, ?eq:String, ?options:QuerystringStringifyOptions):String;
 
 	/**
 		The `querystring.escape()` method performs URL percent-encoding on the given `str` in a manner that is optimized for the specific requirements of URL query strings.
@@ -65,9 +61,7 @@ extern class Querystring {
 		@see https://nodejs.org/api/querystring.html#querystring_querystring_parse_str_sep_eq_options
 	**/
 	@:overload(function(str:String):QuerystringParseResult {})
-	@:overload(function(str:String, sep:String):QuerystringParseResult {})
-	@:overload(function(str:String, sep:String, eq:String):QuerystringParseResult {})
-	static function parse(str:String, sep:String, eq:String, options:QuerystringParseOptions):QuerystringParseResult;
+	static function parse(str:String, ?sep:String, ?eq:String, ?options:QuerystringParseOptions):QuerystringParseResult;
 
 	/**
 		The `querystring.stringify()` method produces a URL query string from a given `obj` by iterating through the object's "own properties".
@@ -75,9 +69,7 @@ extern class Querystring {
 		@see https://nodejs.org/api/querystring.html#querystring_querystring_stringify_obj_sep_eq_options
 	**/
 	@:overload(function(obj:{}):String {})
-	@:overload(function(obj:{}, sep:String):String {})
-	@:overload(function(obj:{}, sep:String, eq:String):String {})
-	static function stringify(obj:{}, sep:String, eq:String, options:QuerystringStringifyOptions):String;
+	static function stringify(obj:{}, ?sep:String, ?eq:String, ?options:QuerystringStringifyOptions):String;
 
 	/**
 		The `querystring.unescape()` method performs decoding of URL percent-encoded characters on the given `str`.
