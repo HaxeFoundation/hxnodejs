@@ -150,7 +150,7 @@ private class FileInput extends haxe.io.Input {
 	}
 
 	override public function readByte():Int {
-		var buf = new Buffer(1);
+		var buf = Buffer.alloc(1);
 		try {
 			Fs.readSync(fd, buf, 0, 1, null);
 		} catch (e:Dynamic) {
