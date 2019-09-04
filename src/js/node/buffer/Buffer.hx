@@ -70,13 +70,9 @@ extern class Buffer extends Uint8Array {
 	**/
 	@:deprecated
 	@:overload(function(array:Array<Int>):Void {})
-	@:deprecated
 	@:overload(function(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Void {})
-	@:deprecated
 	@:overload(function(buffer:Buffer):Void {})
-	@:deprecated
 	@:overload(function(size:Int):Void {})
-	@:deprecated
 	function new(string:String, ?encoding:String):Void;
 
 	/**
@@ -689,13 +685,15 @@ extern class Buffer extends Uint8Array {
 	**/
 	function transcode(source:haxe.extern.EitherType<Buffer, Uint8Array>, fromEnc:String, toEnc:String):Buffer;
 
+	/**
+		`buffer.constants` is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buffer_constants
+	**/
 	public static var constants(get, never):BufferConstants;
 
 	private inline static function get_constants():BufferConstants {
-		return {
-			MAX_LENGTH: js.Lib.require("buffer").MAX_LENGTH,
-			MAX_STRING_LENGTH: js.Lib.require("buffer").MAX_STRING_LENGTH
-		};
+		return js.Lib.require("buffer").constants;
 	}
 
 	/**
@@ -731,6 +729,11 @@ private class Helper {
 	}
 }
 
+/**
+	`buffer.constants` is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
+
+	@see https://nodejs.org/api/buffer.html#buffer_buffer_constants
+**/
 typedef BufferConstants = {
 	var MAX_LENGTH:Int;
 	var MAX_STRING_LENGTH:Int;
