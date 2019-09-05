@@ -287,22 +287,24 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 **/
 typedef ReadableNewOptions = {
 	/**
-		The maximum number of bytes to store in the internal buffer before ceasing to read from the underlying resource. Default: 16384 (16kb), or 16 for objectMode streams.
+		The maximum number of bytes to store in the internal buffer before ceasing to read from the underlying resource.
+		Default: `16384` (16kb), or `16` for `objectMode` streams.
 	**/
 	@:optional var highWaterMark:Int;
 
 	/**
-		If specified, then buffers will be decoded to strings using the specified encoding. Default: null.
+		If specified, then buffers will be decoded to strings using the specified encoding. Default: `null`.
 	**/
 	@:optional var encoding:String;
 
 	/**
-		Whether this stream should behave as a stream of objects. Meaning that stream.read(n) returns a single value instead of a Buffer of size n. Default: false.
+		Whether this stream should behave as a stream of objects.
+		Meaning that stream.read(n) returns a single value instead of a `Buffer` of size `n`. Default: `false`.
 	**/
 	@:optional var objectMode:Bool;
 
 	/**
-		Whether or not the stream should emit 'close' after it has been destroyed. Default: true.
+		Whether or not the stream should emit `'close'` after it has been destroyed. Default: `true`.
 	**/
 	@:optional var emitClose:Bool;
 
@@ -317,7 +319,7 @@ typedef ReadableNewOptions = {
 	@:optional var destroy:Null<Error>->(Null<Error>->Void)->Void;
 
 	/**
-		Whether this stream should automatically call .destroy() on itself after ending. Default: false.
+		Whether this stream should automatically call `.destroy()` on itself after ending. Default: `false`.
 	**/
 	@:optional var autoDestroy:Bool;
 }
