@@ -22,12 +22,159 @@
 
 package js.node;
 
+import haxe.extern.EitherType;
+
+/**
+	The `os` module provides a number of operating system-related utility methods.
+
+	@see https://nodejs.org/api/os.html#os_os
+**/
+@:jsRequire("os")
+extern class Os {
+	/**
+		A string constant defining the operating system-specific end-of-line marker:
+
+		@see https://nodejs.org/api/os.html#os_os_eol
+	**/
+	static var EOL(default, null):String;
+
+	/**
+		The `os.arch()` method returns a string identifying the operating system CPU architecture for which the Node.js binary was compiled.
+
+		@see https://nodejs.org/api/os.html#os_os_arch
+	**/
+	static function arch():String;
+
+	/**
+		Returns an object containing commonly used operating system specific constants for error codes, process signals, and so on. The specific constants currently defined are described in OS Constants.
+
+		@see https://nodejs.org/api/os.html#os_os_constants
+	**/
+	static var constants(default, null):OsConstants;
+
+	/**
+		The `os.cpus()` method returns an array of objects containing information about each logical CPU core.
+
+		@see https://nodejs.org/api/os.html#os_os_cpus
+	**/
+	static function cpus():Array<CPU>;
+
+	/**
+		The `os.endianness()` method returns a string identifying the endianness of the CPU for which the Node.js binary was compiled.
+
+		@see https://nodejs.org/api/os.html#os_os_endianness
+	**/
+	static function endianness():Endianness;
+
+	/**
+		The `os.freemem()` method returns the amount of free system memory in bytes as an integer.
+
+		@see https://nodejs.org/api/os.html#os_os_freemem
+	**/
+	static function freemem():Int;
+
+	/**
+		The `os.getPriority()` method returns the scheduling priority for the process specified by `pid`. If `pid` is not provided, or is `0`, the priority of the current process is returned.
+
+		@see https://nodejs.org/api/os.html#os_os_getpriority_pid
+	**/
+	static function getPriority(?pid:Int):Int;
+
+	/**
+		The `os.homedir()` method returns the home directory of the current user as a string.
+
+		@see https://nodejs.org/api/os.html#os_os_homedir
+	**/
+	static function homedir():String;
+
+	/**
+		The `os.hostname()` method returns the hostname of the operating system as a string.
+
+		@see https://nodejs.org/api/os.html#os_os_hostname
+	**/
+	static function hostname():String;
+
+	/**
+		The `os.loadavg()` method returns an array containing the 1, 5, and 15 minute load averages.
+
+		@see https://nodejs.org/api/os.html#os_os_loadavg
+	**/
+	static function loadavg():Array<Float>;
+
+	/**
+		The `os.networkInterfaces()` method returns an object containing only network interfaces that have been assigned a network address.
+
+		@see https://nodejs.org/api/os.html#os_os_networkinterfaces
+	**/
+	static function networkInterfaces():haxe.DynamicAccess<NetworkInterface>;
+
+	/**
+		The `os.platform()` method returns a string identifying the operating system platform as set during compile time of Node.js.
+
+		@see https://nodejs.org/api/os.html#os_os_platform
+	**/
+	static function platform():String;
+
+	/**
+		The `os.release()` method returns a string identifying the operating system release.
+
+		@see https://nodejs.org/api/os.html#os_os_release
+	**/
+	static function release():String;
+
+	/**
+		The `os.setPriority()` method attempts to set the scheduling priority for the process specified by `pid`. If `pid` is not provided, or is `0`, the priority of the current process is used.
+
+		@see https://nodejs.org/api/os.html#os_os_setpriority_pid_priority
+	**/
+	static function setPriority(?pid:Int, priority:Int):Void;
+
+	/**
+		The `os.tmpdir()` method returns a string specifying the operating system's default directory for temporary files.
+
+		@see https://nodejs.org/api/os.html#os_os_tmpdir
+	**/
+	function tmpdir():String;
+
+	/**
+		The `os.totalmem()` method returns the total amount of system memory in bytes as an integer.
+
+		@see https://nodejs.org/api/os.html#os_os_totalmem
+	**/
+	function totalmem():Int;
+
+	/**
+		The `os.type()` method returns a string identifying the operating system name as returned by uname(3). For example, `'Linux'` on Linux, `'Darwin'` on macOS, and `'Windows_NT'` on Windows.
+
+		@see https://nodejs.org/api/os.html#os_os_type
+	**/
+	function type():String;
+
+	/**
+		The `os.uptime()` method returns the system uptime in number of seconds.
+
+		@see https://nodejs.org/api/os.html#os_os_uptime
+	**/
+	static function uptime():Int;
+
+	/**
+		The `os.userInfo()` method returns information about the currently effective user — on POSIX platforms, this is typically a subset of the password file. The returned object includes the `username`, `uid`, `gid`, `shell`, and `homedir`. On Windows, the `uid` and `gid` fields are `-1`, and `shell` is `null`.
+
+		@see https://nodejs.org/api/os.html#os_os_userinfo_options
+	**/
+	static function userInfo(?options:{encoding:String}):OsUserInfo;
+}
+
 /**
 	Information about the currently effective user (returned by `Os.userInfo` method).
 
 	On POSIX platforms, this is typically a subset of the password file.
+
+	@see https://nodejs.org/api/os.html#os_os_userinfo_options
 **/
 typedef OsUserInfo = {
+	var username:EitherType<String, Buffer>;
+
 	/**
 		-1 on Windows
 	**/
@@ -38,23 +185,23 @@ typedef OsUserInfo = {
 	**/
 	var gid:Int;
 
-	var username:String;
+	/**
+		null on Windows
+	**/
+	var shell:Null<EitherType<String, Buffer>>;
 
 	/**
 		Provided by the operating system. This differs from the result of `Os.homedir`,
 		which queries several environment variables for the home directory
 		before falling back to the operating system response.
 	**/
-	var homedir:String;
-
-	/**
-		null on Windows
-	**/
-	var shell:Null<String>;
+	var homedir:EitherType<String, Buffer>;
 }
 
 /**
-	Object containing the number of milliseconds the CPU/core spent in: user, nice, sys, idle, and irq
+	Object containing the number of milliseconds the CPU/core spent in: `user`, `nice`, `sys`, `idle`, and `irq`
+
+	@see https://nodejs.org/api/os.html#os_os_cpus
 **/
 typedef CPUTime = {
 	/**
@@ -85,6 +232,8 @@ typedef CPUTime = {
 
 /**
 	Object containing information about each CPU/core installed. Returned by `Os.cpus` method.
+
+	@see https://nodejs.org/api/os.html#os_os_cpus
 **/
 typedef CPU = {
 	/**
@@ -107,15 +256,12 @@ typedef CPU = {
 
 /**
 	Objects containing information about network interface addresses.
+
+	@see https://nodejs.org/api/os.html#os_os_networkinterfaces
 **/
 typedef NetworkInterface = Array<NetworkInterfaceAddressInfo>;
 
 typedef NetworkInterfaceAddressInfo = {
-	/**
-		IP address family (either IPv4 or IPv6).
-	**/
-	var family:js.node.net.Socket.SocketAdressFamily;
-
 	/**
 		The assigned IPv4 or IPv6 address.
 	**/
@@ -127,19 +273,29 @@ typedef NetworkInterfaceAddressInfo = {
 	var netmask:String;
 
 	/**
+		IP address family (either `IPv4` or `IPv6`).
+	**/
+	var family:js.node.net.Socket.SocketAdressFamily;
+
+	/**
 		The MAC address of the network interface.
 	**/
 	var mac:String;
 
 	/**
-		True if the network interface is a loopback or similar interface that is not remotely accessible; otherwise false
+		`True` if the network interface is a loopback or similar interface that is not remotely accessible; otherwise `false`
 	**/
 	var internal:Bool;
 
 	/**
-		The numeric IPv6 scope ID (only specified when family is IPv6)
+		The numeric IPv6 scope ID (only specified when `family` is `IPv6`)
 	**/
 	@:optional var scopeid:Int;
+
+	/**
+		The assigned IPv4 or IPv6 address with the routing prefix in CIDR notation. If the `netmask` is invalid, this property is set to `null`.
+	**/
+	var cidr:Null<String>;
 }
 
 @:enum abstract Endianness(String) to String {
@@ -150,11 +306,13 @@ typedef NetworkInterfaceAddressInfo = {
 /**
 	Constants object returned by `Os.constants`.
 
-	Note: Not all constants will be available on every operating system.
+	@see https://nodejs.org/api/os.html#os_os_constants_1
 **/
 typedef OsConstants = {
 	/**
-		Signal Constants
+		The following signal constants are exported by os.constants.signals:
+
+		@see https://nodejs.org/api/os.html#os_signal_constants
 	**/
 	var signals:{
 		/**
@@ -163,7 +321,7 @@ typedef OsConstants = {
 		var SIGHUP:Int;
 
 		/**
-			Sent to indicate when a user wishes to interrupt a process ((Ctrl+C)).
+			Sent to indicate when a user wishes to interrupt a process (`(Ctrl+C)`).
 		**/
 		var SIGINT:Int;
 
@@ -188,7 +346,7 @@ typedef OsConstants = {
 		var SIGABRT:Int;
 
 		/**
-			Synonym for SIGABRT
+			Synonym for `SIGABRT`
 		**/
 		var SIGIOT:Int;
 
@@ -339,7 +497,9 @@ typedef OsConstants = {
 	};
 
 	/**
-		Error Constants
+		The following error constants are exported by os.constants.errno:
+
+		@see https://nodejs.org/api/os.html#os_error_constants
 	**/
 	var errno:{
 		/**
@@ -740,422 +900,366 @@ typedef OsConstants = {
 		/**
 			Indicates an interrupted function call.
 		**/
-		var WSAEINTR:Int;
+		@:optional var WSAEINTR:Int;
 
 		/**
 			Indicates an invalid file handle.
 		**/
-		var WSAEBADF:Int;
+		@:optional var WSAEBADF:Int;
 
 		/**
 			Indicates insufficient permissions to complete the operation.
 		**/
-		var WSAEACCES:Int;
+		@:optional var WSAEACCES:Int;
 
 		/**
 			Indicates an invalid pointer address.
 		**/
-		var WSAEFAULT:Int;
+		@:optional var WSAEFAULT:Int;
 
 		/**
 			Indicates that an invalid argument was passed.
 		**/
-		var WSAEINVAL:Int;
+		@:optional var WSAEINVAL:Int;
 
 		/**
 			Indicates that there are too many open files.
 		**/
-		var WSAEMFILE:Int;
+		@:optional var WSAEMFILE:Int;
 
 		/**
 			Indicates that a resource is temporarily unavailable.
 		**/
-		var WSAEWOULDBLOCK:Int;
+		@:optional var WSAEWOULDBLOCK:Int;
 
 		/**
 			Indicates that an operation is currently in progress.
 		**/
-		var WSAEINPROGRESS:Int;
+		@:optional var WSAEINPROGRESS:Int;
 
 		/**
 			Indicates that an operation is already in progress.
 		**/
-		var WSAEALREADY:Int;
+		@:optional var WSAEALREADY:Int;
 
 		/**
-			Indicates that the resource is not a socket.
+			Indicates that the resource is not @:optional a socket.
 		**/
-		var WSAENOTSOCK:Int;
+		@:optional var WSAENOTSOCK:Int;
 
 		/**
 			Indicates that a destination address is required.
 		**/
-		var WSAEDESTADDRREQ:Int;
+		@:optional var WSAEDESTADDRREQ:Int;
 
 		/**
 			Indicates that the message size is too long.
 		**/
-		var WSAEMSGSIZE:Int;
+		@:optional var WSAEMSGSIZE:Int;
 
 		/**
 			Indicates the wrong protocol type for the socket.
 		**/
-		var WSAEPROTOTYPE:Int;
+		@:optional var WSAEPROTOTYPE:Int;
 
 		/**
 			Indicates a bad protocol option.
 		**/
-		var WSAENOPROTOOPT:Int;
+		@:optional var WSAENOPROTOOPT:Int;
 
 		/**
 			Indicates that the protocol is not supported.
 		**/
-		var WSAEPROTONOSUPPORT:Int;
+		@:optional var WSAEPROTONOSUPPORT:Int;
 
 		/**
 			Indicates that the socket type is not supported.
 		**/
-		var WSAESOCKTNOSUPPORT:Int;
+		@:optional var WSAESOCKTNOSUPPORT:Int;
 
 		/**
 			Indicates that the operation is not supported.
 		**/
-		var WSAEOPNOTSUPP:Int;
+		@:optional var WSAEOPNOTSUPP:Int;
 
 		/**
 			Indicates that the protocol family is not supported.
 		**/
-		var WSAEPFNOSUPPORT:Int;
+		@:optional var WSAEPFNOSUPPORT:Int;
 
 		/**
 			Indicates that the address family is not supported.
 		**/
-		var WSAEAFNOSUPPORT:Int;
+		@:optional var WSAEAFNOSUPPORT:Int;
 
 		/**
 			Indicates that the network address is already in use.
 		**/
-		var WSAEADDRINUSE:Int;
+		@:optional var WSAEADDRINUSE:Int;
 
 		/**
 			Indicates that the network address is not available.
 		**/
-		var WSAEADDRNOTAVAIL:Int;
+		@:optional var WSAEADDRNOTAVAIL:Int;
 
 		/**
 			Indicates that the network is down.
 		**/
-		var WSAENETDOWN:Int;
+		@:optional var WSAENETDOWN:Int;
 
 		/**
 			Indicates that the network is unreachable.
 		**/
-		var WSAENETUNREACH:Int;
+		@:optional var WSAENETUNREACH:Int;
 
 		/**
 			Indicates that the network connection has been reset.
 		**/
-		var WSAENETRESET:Int;
+		@:optional var WSAENETRESET:Int;
 
 		/**
 			Indicates that the connection has been aborted.
 		**/
-		var WSAECONNABORTED:Int;
+		@:optional var WSAECONNABORTED:Int;
 
 		/**
 			Indicates that the connection has been reset by the peer.
 		**/
-		var WSAECONNRESET:Int;
+		@:optional var WSAECONNRESET:Int;
 
 		/**
 			Indicates that there is no buffer space available.
 		**/
-		var WSAENOBUFS:Int;
+		@:optional var WSAENOBUFS:Int;
 
 		/**
 			Indicates that the socket is already connected.
 		**/
-		var WSAEISCONN:Int;
+		@:optional var WSAEISCONN:Int;
 
 		/**
 			Indicates that the socket is not connected.
 		**/
-		var WSAENOTCONN:Int;
+		@:optional var WSAENOTCONN:Int;
 
 		/**
 			Indicates that data cannot be sent after the socket has been shutdown.
 		**/
-		var WSAESHUTDOWN:Int;
+		@:optional var WSAESHUTDOWN:Int;
 
 		/**
 			Indicates that there are too many references.
 		**/
-		var WSAETOOMANYREFS:Int;
+		@:optional var WSAETOOMANYREFS:Int;
 
 		/**
 			Indicates that the connection has timed out.
 		**/
-		var WSAETIMEDOUT:Int;
+		@:optional var WSAETIMEDOUT:Int;
 
 		/**
 			Indicates that the connection has been refused.
 		**/
-		var WSAECONNREFUSED:Int;
+		@:optional var WSAECONNREFUSED:Int;
 
 		/**
 			Indicates that a name cannot be translated.
 		**/
-		var WSAELOOP:Int;
+		@:optional var WSAELOOP:Int;
 
 		/**
 			Indicates that a name was too long.
 		**/
-		var WSAENAMETOOLONG:Int;
+		@:optional var WSAENAMETOOLONG:Int;
 
 		/**
 			Indicates that a network host is down.
 		**/
-		var WSAEHOSTDOWN:Int;
+		@:optional var WSAEHOSTDOWN:Int;
 
 		/**
 			Indicates that there is no route to a network host.
 		**/
-		var WSAEHOSTUNREACH:Int;
+		@:optional var WSAEHOSTUNREACH:Int;
 
 		/**
 			Indicates that the directory is not empty.
 		**/
-		var WSAENOTEMPTY:Int;
+		@:optional var WSAENOTEMPTY:Int;
 
 		/**
 			Indicates that there are too many processes.
 		**/
-		var WSAEPROCLIM:Int;
+		@:optional var WSAEPROCLIM:Int;
 
 		/**
 			Indicates that the user quota has been exceeded.
 		**/
-		var WSAEUSERS:Int;
+		@:optional var WSAEUSERS:Int;
 
 		/**
 			Indicates that the disk quota has been exceeded.
 		**/
-		var WSAEDQUOT:Int;
+		@:optional var WSAEDQUOT:Int;
 
 		/**
 			Indicates a stale file handle reference.
 		**/
-		var WSAESTALE:Int;
+		@:optional var WSAESTALE:Int;
 
 		/**
 			Indicates that the item is remote.
 		**/
-		var WSAEREMOTE:Int;
+		@:optional var WSAEREMOTE:Int;
 
 		/**
 			Indicates that the network subsystem is not ready.
 		**/
-		var WSASYSNOTREADY:Int;
+		@:optional var WSASYSNOTREADY:Int;
 
 		/**
 			Indicates that the winsock.dll version is out of range.
 		**/
-		var WSAVERNOTSUPPORTED:Int;
+		@:optional var WSAVERNOTSUPPORTED:Int;
 
 		/**
 			Indicates that successful WSAStartup has not yet been performed.
 		**/
-		var WSANOTINITIALISED:Int;
+		@:optional var WSANOTINITIALISED:Int;
 
 		/**
 			Indicates that a graceful shutdown is in progress.
 		**/
-		var WSAEDISCON:Int;
+		@:optional var WSAEDISCON:Int;
 
 		/**
 			Indicates that there are no more results.
 		**/
-		var WSAENOMORE:Int;
+		@:optional var WSAENOMORE:Int;
 
 		/**
 			Indicates that an operation has been canceled.
 		**/
-		var WSAECANCELLED:Int;
+		@:optional var WSAECANCELLED:Int;
 
 		/**
 			Indicates that the procedure call table is invalid.
 		**/
-		var WSAEINVALIDPROCTABLE:Int;
+		@:optional var WSAEINVALIDPROCTABLE:Int;
 
 		/**
 			Indicates an invalid service provider.
 		**/
-		var WSAEINVALIDPROVIDER:Int;
+		@:optional var WSAEINVALIDPROVIDER:Int;
 
 		/**
 			Indicates that the service provider failed to initialized.
 		**/
-		var WSAEPROVIDERFAILEDINIT:Int;
+		@:optional var WSAEPROVIDERFAILEDINIT:Int;
 
 		/**
 			Indicates a system call failure.
 		**/
-		var WSASYSCALLFAILURE:Int;
+		@:optional var WSASYSCALLFAILURE:Int;
 
 		/**
 			Indicates that a service was not found.
 		**/
-		var WSASERVICE_NOT_FOUND:Int;
+		@:optional var WSASERVICE_NOT_FOUND:Int;
 
 		/**
 			Indicates that a class type was not found.
 		**/
-		var WSATYPE_NOT_FOUND:Int;
+		@:optional var WSATYPE_NOT_FOUND:Int;
 
 		/**
 			Indicates that there are no more results.
 		**/
-		var WSA_E_NO_MORE:Int;
+		@:optional var WSA_E_NO_MORE:Int;
 
 		/**
 			Indicates that the call was canceled.
 		**/
-		var WSA_E_CANCELLED:Int;
+		@:optional var WSA_E_CANCELLED:Int;
 
 		/**
 			Indicates that a database query was refused.
 		**/
-		var WSAEREFUSED:Int;
+		@:optional var WSAEREFUSED:Int;
 	};
+
+	/**
+		If available on the operating system, the following constants are exported in os.constants.dlopen. See dlopen(3) for detailed information.
+
+		@see https://nodejs.org/api/os.html#os_dlopen_constants
+	**/
+	var dlopen:{
+		/**
+			Perform lazy binding. Node.js sets this flag by default.
+		**/
+		@:optional var RTLD_LAZY:Int;
+
+		/**
+			Resolve all undefined symbols in the library before dlopen(3) returns.
+		**/
+		@:optional var RTLD_NOW:Int;
+
+		/**
+			Symbols defined by the library will be made available for symbol resolution of subsequently loaded libraries.
+		**/
+		@:optional var RTLD_GLOBAL:Int;
+
+		/**
+			The converse of `RTLD_GLOBAL`. This is the default behavior if neither flag is specified.
+		**/
+		@:optional var RTLD_LOCAL:Int;
+
+		/**
+			Make a self-contained library use its own symbols in preference to symbols from previously loaded libraries.
+		**/
+		@:optional var RTLD_DEEPBIND:Int;
+	}
+
+	/**
+		The following process scheduling constants are exported by os.constants.priority:
+
+		@see https://nodejs.org/api/os.html#os_priority_constants
+	**/
+	var priority:{
+		/**
+			The lowest process scheduling priority. This corresponds to `IDLE_PRIORITY_CLASS` on Windows, and a nice value of `19` on all other platforms.
+
+		**/
+		var PRIORITY_LOW:Int;
+
+		/**
+			The process scheduling priority above `PRIORITY_LOW` and below `PRIORITY_NORMAL`. This corresponds to `BELOW_NORMAL_PRIORITY_CLASS` on Windows, and a nice value of `10` on all other platforms.
+		**/
+		var PRIORITY_BELOW_NORMAL:Int;
+
+		/**
+			The default process scheduling priority. This corresponds to `NORMAL_PRIORITY_CLASS` on Windows, and a nice value of `0` on all other platforms.
+		**/
+		var PRIORITY_NORMAL:Int;
+
+		/**
+			The process scheduling priority above `PRIORITY_NORMAL` and below `PRIORITY_HIGH`. This corresponds to `ABOVE_NORMAL_PRIORITY_CLASS` on Windows, and a nice value of `-7` on all other platforms.
+		**/
+		var PRIORITY_ABOVE_NORMAL:Int;
+
+		/**
+			The process scheduling priority above `PRIORITY_ABOVE_NORMAL` and below `PRIORITY_HIGHEST`. This corresponds to `HIGH_PRIORITY_CLASS` on Windows, and a nice value of `-14` on all other platforms.
+		**/
+		var PRIORITY_HIGH:Int;
+
+		/**
+			The highest process scheduling priority. This corresponds to `REALTIME_PRIORITY_CLASS` on Windows, and a nice value of `-20` on all other platforms.
+		**/
+		var PRIORITY_HIGHEST:Int;
+	}
 
 	/**
 		libuv-specific constant
 	**/
 	var UV_UDP_REUSEADDR:Int;
-}
-
-/**
-	Provides a number of operating system-related utility methods
-**/
-@:jsRequire("os")
-extern class Os {
-	/**
-		A string constant defining the operating system-specific end-of-line marker:
-
-		* `\n` on POSIX
-		* `\r\n` on Windows
-	**/
-	static var EOL(default, null):String;
-
-	/**
-		Returns an object containing commonly used operating system specific constants for error codes,
-		process signals, and so on.
-	**/
-	static var constants(default, null):OsConstants;
-
-	/**
-		Returns a string specifying the operating system's default directory for temporary files.
-	**/
-	static function tmpdir():String;
-
-	/**
-		Returns a string identifying the endianness of the CPU for which the Node.js binary was compiled.
-	**/
-	static function endianness():Endianness;
-
-	/**
-		Returns the home directory of the current user.
-	**/
-	static function homedir():String;
-
-	/**
-		Returns the hostname of the operating system.
-	**/
-	static function hostname():String;
-
-	/**
-		Returns a string identifying the operating system name as returned by `uname(3)`.
-
-		For example 'Linux' on Linux, 'Darwin' on OS X and 'Windows_NT' on Windows.
-
-		Please see https://en.wikipedia.org/wiki/Uname#Examples for additional information about
-		the output of running `uname(3)` on various operating systems.
-	**/
-	static function type():String;
-
-	/**
-		Returns a string identifying the operating system platform as set during compile time of Node.js.
-
-		Currently possible values are:
-		* 'aix'
-		* 'darwin'
-		* 'freebsd'
-		* 'linux'
-		* 'openbsd'
-		* 'sunos'
-		* 'win32'
-
-		Note: The value 'android' may also be returned if the Node.js is built on the Android operating system.
-		However, Android support in Node.js is considered to be experimental at this time.
-	**/
-	static function platform():String;
-
-	/**
-		Returns a string identifying the operating system CPU architecture for which the Node.js binary was compiled.
-
-		The current possible values are: 'arm', 'arm64', 'ia32', 'mips', 'mipsel', 'ppc', 'ppc64', 's390', 's390x', 'x32', 'x64', and 'x86'.
-	**/
-	static function arch():String;
-
-	/**
-		Returns a string identifying the operating system release.
-
-		Note: On POSIX systems, the operating system release is determined by calling `uname(3)`.
-		On Windows, `GetVersionExW()` is used. Please see https://en.wikipedia.org/wiki/Uname#Examples for more information.
-	**/
-	static function release():String;
-
-	/**
-		Returns the system uptime in number of seconds.
-
-		Note: Within Node.js' internals, this number is represented as a double. However, fractional seconds are not
-		returned and the value can typically be treated as an integer.
-	**/
-	static function uptime():Int;
-
-	/**
-		Returns information about the currently effective user -- on POSIX platforms, this is typically a subset of the password file.
-	**/
-	static function userInfo(?options:{encoding:String}):OsUserInfo;
-
-	/**
-		Returns an array containing the 1, 5, and 15 minute load averages.
-
-		The load average is a measure of system activity, calculated by the operating system and expressed as a fractional number.
-		As a rule of thumb, the load average should ideally be less than the number of logical CPUs in the system.
-
-		The load average is a UNIX-specific concept with no real equivalent on Windows platforms.
-		On Windows, the return value is always `[0, 0, 0]`.
-	**/
-	static function loadavg():Array<Float>;
-
-	/**
-		Returns the total amount of system memory in bytes.
-	**/
-	static function totalmem():Float;
-
-	/**
-		Returns the amount of free system memory in bytes.
-	**/
-	static function freemem():Float;
-
-	/**
-		Returns an array of objects containing information about each CPU/core installed.
-	**/
-	static function cpus():Array<CPU>;
-
-	/**
-		Returns an object containing only network interfaces that have been assigned a network address.
-	**/
-	static function networkInterfaces():haxe.DynamicAccess<NetworkInterface>;
 }
