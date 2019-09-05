@@ -250,7 +250,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 		@see https://nodejs.org/api/stream.html#stream_readable_unshift_chunk_encoding
 	**/
-	function unshift(chunk:Null<EitherType<Buffer, EitherType<UInt8Array, EitherType<String, Any>>>>, ?encoding:String:):Void;
+	function unshift(chunk:Null<EitherType<Buffer, EitherType<Uint8Array, EitherType<String, Any>>>>, ?encoding:String):Void;
 
 	/**
 		Prior to Node.js 0.10, streams did not implement the entire `stream` module API
@@ -277,8 +277,8 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	private function new(?options:ReadableNewOptions);
 
 	private function _read(size:Int):Void;
-	private function _destroy(err:Error, callback:Null<Error>->Void);
-	private function push(chunk:Null<EitherType<Buffer, EitherType<Uint8Array, EitherType<Strig, Any>>>>, ?encoding:String):Bool;
+	private function _destroy(err:Error, callback:Null<Error>->Void):Void;
+	private function push(chunk:Null<EitherType<Buffer, EitherType<Uint8Array, EitherType<String, Any>>>>, ?encoding:String):Bool;
 }
 
 /**
@@ -337,6 +337,6 @@ extern interface IReadable extends IStream {
 	function pause():IReadable;
 	function pipe<T:IWritable>(destination:T, ?options:{?end:Bool}):T;
 	function unpipe(?destination:IWritable):IReadable;
-	function unshift(chunk:Null<EitherType<Buffer, EitherType<UInt8Array, EitherType<String, Any>>>>, ?encoding:String:):Void;
+	function unshift(chunk:Null<EitherType<Buffer, EitherType<Uint8Array, EitherType<String, Any>>>>, ?encoding:String):Void;
 	function wrap(stream:Dynamic):IReadable;
 }
