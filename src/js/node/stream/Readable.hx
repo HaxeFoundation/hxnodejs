@@ -261,6 +261,8 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	function wrap(stream:Dynamic):IReadable;
 
 	/**
+		it need AsyncIterator
+
 		If the loop terminates with a `break` or a `throw`, the stream will be
 		destroyed. In other terms, iterating over a stream will consume the stream
 		fully. The stream will be read in chunks of size equal to the `highWaterMark`
@@ -270,7 +272,6 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 		@see https://nodejs.org/api/stream.html#stream_readable_symbol_asynciterator
 	**/
-	// it need AsyncIterator?
 	// function readable():Dynamic;
 	// --------- API for stream implementors - see node.js API documentation ---------
 	// TODO: add state objects here and in other streams
