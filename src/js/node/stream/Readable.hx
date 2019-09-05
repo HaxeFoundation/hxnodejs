@@ -270,8 +270,8 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 		@see https://nodejs.org/api/stream.html#stream_readable_symbol_asynciterator
 	**/
-	function readable():Dynamic;
-
+	// it need AsyncIterator?
+	// function readable():Dynamic;
 	// --------- API for stream implementors - see node.js API documentation ---------
 	// TODO: add state objects here and in other streams
 	private function new(?options:ReadableNewOptions);
