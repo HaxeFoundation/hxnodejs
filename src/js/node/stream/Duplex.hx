@@ -22,10 +22,13 @@
 
 package js.node.stream;
 
+import haxe.extern.EitherType;
 import js.node.Buffer;
 #if haxe4
+import js.lib.Uint8Array;
 import js.lib.Error;
 #else
+import js.html.Uint8Array;
 import js.Error;
 #end
 
@@ -54,9 +57,8 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 		However, writes will be buffered in memory, so it is best not to do this excessively.
 		Instead, wait for the `drain` event before writing more data.
 	**/
-	@:overload(function(chunk:Buffer, ?callback:Void->Void):Bool {})
-	@:overload(function(chunk:String, ?callback:Void->Void):Bool {})
-	function write(chunk:String, encoding:String, ?callback:Void->Void):Bool;
+	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Bool {})
+	function write(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Bool;
 
 	/**
 		Call this method when no more data will be written to the stream.
@@ -65,8 +67,8 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 		Calling `write()` after calling `end()` will raise an error.
 	**/
 	@:overload(function(?callback:Void->Void):Void {})
-	@:overload(function(chunk:Buffer, ?callback:Void->Void):Void {})
-	function end(chunk:String, encoding:String, ?callback:Void->Void):Void;
+	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Void {})
+	function end(chunk:String, encoding:String, ?callback:Null<Error>->Void):Void;
 
 	/**
 		Terminal write streams (i.e. process.stdout) have this property set to true.
