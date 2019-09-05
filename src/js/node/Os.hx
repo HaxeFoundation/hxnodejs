@@ -943,7 +943,7 @@ typedef OsConstants = {
 		@:optional var WSAEALREADY:Int;
 
 		/**
-			Indicates that the resource is not @:optional a socket.
+			Indicates that the resource is not a socket.
 		**/
 		@:optional var WSAENOTSOCK:Int;
 
