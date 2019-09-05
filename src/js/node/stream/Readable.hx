@@ -286,12 +286,39 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	For stream implementors only, see node.js API documentation
 **/
 typedef ReadableNewOptions = {
+	/**
+		The maximum number of bytes to store in the internal buffer before ceasing to read from the underlying resource. Default: 16384 (16kb), or 16 for objectMode streams.
+	**/
 	@:optional var highWaterMark:Int;
+
+	/**
+		If specified, then buffers will be decoded to strings using the specified encoding. Default: null.
+	**/
 	@:optional var encoding:String;
+
+	/**
+		Whether this stream should behave as a stream of objects. Meaning that stream.read(n) returns a single value instead of a Buffer of size n. Default: false.
+	**/
 	@:optional var objectMode:Bool;
+
+	/**
+		Whether or not the stream should emit 'close' after it has been destroyed. Default: true.
+	**/
 	@:optional var emitClose:Bool;
+
+	/**
+		Implementation for the stream._read() method.
+	**/
 	@:optional var read:Int->Void;
+
+	/**
+		Implementation for the stream._destroy() method.
+	**/
 	@:optional var destroy:Null<Error>->(Null<Error>->Void)->Void;
+
+	/**
+		Whether this stream should automatically call .destroy() on itself after ending. Default: false.
+	**/
 	@:optional var autoDestroy:Bool;
 }
 
