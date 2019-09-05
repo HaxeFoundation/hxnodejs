@@ -77,24 +77,9 @@ import js.Error;
 }
 
 /**
-	The Readable stream interface is the abstraction for a source of data that you are reading from.
-	In other words, data comes out of a Readable stream.
+	Readable streams are an abstraction for a source from which data is consumed.
 
-	A Readable stream will not start emitting data until you indicate that you are ready to receive it.
-
-	Readable streams have two "modes": a flowing mode and a non-flowing mode.
-	When in flowing mode, data is read from the underlying system and provided to your program as fast as possible.
-	In non-flowing mode, you must explicitly call `read` to get chunks of data out.
-
-	Examples of readable streams include:
-		- http responses, on the client
-		- http requests, on the server
-		- fs read streams
-		- zlib streams
-		- crypto streams
-		- tcp sockets
-		- child process stdout and stderr
-		- process.stdin
+	@see https://nodejs.org/api/stream.html#stream_readable_streams
 **/
 @:jsRequire("stream", "Readable")
 extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IReadable {
