@@ -62,6 +62,7 @@ extern class Transform<TSelf:Transform<TSelf>> extends Duplex<TSelf> {
 **/
 typedef TransformNewoptions = {
 	> Duplex.DuplexNewOptions,
-	@:optional var transform;
+	@:optional var transform:(chunk:EitherType<Buffer, EitherType<String, Any>>, encoding:String,
+		callback:(Null<Error>, EitherType<String, Buffer>) -> Void) -> Void;
 	@:optional var flush:Null<Error>->Void;
 }
