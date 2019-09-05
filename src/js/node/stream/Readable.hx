@@ -34,52 +34,25 @@ import js.Error;
 #end
 
 /**
-	Enumeration of events emitted by the `Readable` class.
-**/
-@:enum abstract ReadableEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
-	/**
-		When a chunk of data can be read from the stream, it will emit a `readable` event.
-
-		In some cases, listening for a `readable` event will cause some data to be read into
-		the internal buffer from the underlying system, if it hadn't already.
-
-		Once the internal buffer is drained, a 'readable' event will fire again when more data is available.
-	**/
-	var Readable:ReadableEvent<Void->Void> = "readable";
-
-	/**
-		If you attach a 'data' event listener, then it will switch the stream into flowing mode,
-		and data will be passed to your handler as soon as it is available.
-
-		If you just want to get all the data out of the stream as fast as possible, this is the best way to do so.
-	**/
-	var Data:ReadableEvent<EitherType<Buffer, String>->Void> = "data";
-
-	/**
-		This event fires when there will be no more data to read.
-
-		Note that the 'end' event will not fire unless the data is completely consumed.
-		This can be done by switching into flowing mode, or by calling 'read' repeatedly until you get to the end.
-	**/
-	var End:ReadableEvent<Void->Void> = "end";
-
-	/**
-		Emitted when the underlying resource (for example, the backing file descriptor) has been closed.
-
-		Not all streams will emit this.
-	**/
-	var Close:ReadableEvent<Void->Void> = "close";
-
-	/**
-		Emitted if there was an error receiving data.
-	**/
-	var Error:ReadableEvent<Error->Void> = "error";
-}
-
-/**
 	Readable streams are an abstraction for a source from which data is consumed.
 
 	@see https://nodejs.org/api/stream.html#stream_readable_streams
+**/
+/**
+	Enumeration of events emitted by the `Readable` class.
+**/
+@:enum abstract ReadableEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
+	var Close:ReadableEvent<Void->Void> = "close";
+	var Data:ReadableEvent<EitherType<Buffer, String>->Void> = "data";
+	var End:ReadableEvent<Void->Void> = "end";
+	var Error:ReadableEvent<Error->Void> = "error";
+	var Pause:ReadableEvent<Error->Void> = "pause";
+	var Readable:ReadableEvent<Void->Void> = "readable";
+	var Resume:ReadableEvent<Void->Void> = "resume";
+}
+
+/**
+	@see https://nodejs.org/api/stream.html#stream_class_stream_readable
 **/
 @:jsRequire("stream", "Readable")
 extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IReadable {
