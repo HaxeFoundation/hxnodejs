@@ -33,79 +33,114 @@ import js.Error;
 #end
 
 /**
-	Duplex streams are streams that implement both the `Readable` and `Writable` interfaces.
+	Duplex streams are streams that implement both the Readable and Writable interfaces.
 
-	Use relevant event enumeration types from `Readable` and `Writable` modules.
-
-	Examples of `Duplex` streams include:
-		- tcp sockets
-		- zlib streams
-		- crypto streams
+	@see https://nodejs.org/api/stream.html#stream_class_stream_duplex
 **/
 @:jsRequire("stream", "Duplex")
 extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDuplex {
 	// --------- Writable interface implementation ---------
 
 	/**
-		This method writes some data to the underlying system,
-		and calls the supplied callback once the data has been fully handled.
+		The `writable.cork()` method forces all written data to be buffered in memory.
+		The buffered data will be flushed when either the `stream.uncork()` or
+		`stream.end()` methods are called.
 
-		The return value indicates if you should continue writing right now. If the data had to be buffered internally,
-		then it will return `false`. Otherwise, it will return `true`.
-
-		This return value is strictly advisory. You MAY continue to write, even if it returns `false`.
-		However, writes will be buffered in memory, so it is best not to do this excessively.
-		Instead, wait for the `drain` event before writing more data.
+		@see https://nodejs.org/api/stream.html#stream_writable_cork
 	**/
-	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Bool {})
-	function write(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Bool;
+	function cork():Void;
 
 	/**
-		Call this method when no more data will be written to the stream.
-		If supplied, the callback is attached as a listener on the `finish` event.
+		Calling the `writable.end()` method signals that no more data will be written
+		to the `Writable`. The optional `chunk` and `encoding` arguments allow one
+		final additional chunk of data to be written immediately before closing the
+		stream. If provided, the optional `callback` function is attached as a listener
+		for the `'finish'` event.
 
-		Calling `write()` after calling `end()` will raise an error.
+		@see https://nodejs.org/api/stream.html#stream_writable_end_chunk_encoding_callback
 	**/
 	@:overload(function(?callback:Void->Void):Void {})
 	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Void {})
 	function end(chunk:String, encoding:String, ?callback:Null<Error>->Void):Void;
 
 	/**
-		Terminal write streams (i.e. process.stdout) have this property set to true.
-		It is false for any other write streams.
-	**/
-	var isTTY(default, null):Bool;
+		The `writable.uncork()` method flushes all data buffered since
+		`stream.cork()` was called.
 
-	/**
-		The writable.cork() method forces all written data to be buffered in memory.
-		The buffered data will be flushed when either the stream.uncork() or stream.end() methods are called.
-	**/
-	function cork():Void;
-
-	/**
-		The writable.uncork() method flushes all data buffered since stream.cork() was called.
+		@see https://nodejs.org/api/stream.html#stream_writable_uncork
 	**/
 	function uncork():Void;
 
 	/**
-		The writable.setDefaultEncoding() method sets the default encoding for a Writable stream.
+		The `writable.write()` method writes some data to the stream, and calls the
+		supplied `callback` once the data has been fully handled. If an error
+		occurs, the `callback` may or may not be called with the error as its
+		first argument. To reliably detect write errors, add a listener for the
+		`'error'` event.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback
+	**/
+	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Bool {})
+	function write(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Bool;
+
+	/**
+		The `writable.setDefaultEncoding()` method sets the default `encoding` for a
+		`Writable` stream.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_setdefaultencoding_encoding
 	**/
 	function setDefaultEncoding(encoding:String):TSelf;
 
+	/**
+		@see https://nodejs.org/api/stream.html#stream_implementing_a_duplex_stream
+	**/
 	// --------- API for stream implementors - see node.js API documentation ---------
 	private function new(?options:DuplexNewOptions);
+
 	@:overload(function(chunk:String, encoding:String, callback:Error->Void):Void {})
 	private function _write(chunk:Buffer, encoding:String, callback:Error->Void):Void;
+	private function _read(size:Int):Void;
+
+	/**
+		Terminal write streams (i.e. process.stdout) have this property set to true.
+		It is false for any other write streams.
+	**/
+	var isTTY(default, null):Bool;
 }
 
 /**
-	Options for `Duplex` private constructor.
-	For stream implementors only, see node.js API documentation
+	Passed to both `Writable` and `Readable` constructors. Also has the following fields:
+
+	@see https://nodejs.org/api/stream.html#stream_new_stream_duplex_options
 **/
 typedef DuplexNewOptions = {
 	> Readable.ReadableNewOptions,
 	> Writable.WritableNewOptions,
+
+	/**
+		If set to `false`, then the stream will automatically end the writable side when the readable side ends. Default: `true`.
+	**/
 	@:optional var allowHalfOpen:Bool;
+
+	/**
+		Sets `objectMode` for readable side of the stream. Has no effect if `objectMode` is `true`. Default: `false`.
+	**/
+	@:optional var readableObjectMode:Bool;
+
+	/**
+		Sets `objectMode` for writable side of the stream. Has no effect if `objectMode` is `true`. Default: `false`.
+	**/
+	@:optional var writableObjectMode:Bool;
+
+	/**
+		Sets `highWaterMark` for the readable side of the stream. Has no effect if `highWaterMark` is provided.
+	**/
+	@:optional var readableHighWaterMark:Int;
+
+	/**
+		Sets `highWaterMark` for the writable side of the stream. Has no effect if `highWaterMark` is provided.
+	**/
+	@:optional var writableHighWaterMark:Int;
 }
 
 @:remove
