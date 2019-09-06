@@ -36,140 +36,89 @@ import js.Promise;
 #end
 
 /**
-	The util module is primarily designed to support the needs of node.js's internal APIs.
-	Many of these utilities are useful for your own programs. If you find that these functions
-	are lacking for your purposes, however, you are encouraged to write your own utilities.
-	We are not interested in any future additions to the util module that are unnecessary
-	for node.js's internal functionality.
+	The util module is primarily designed to support the needs of Node.js' own internal APIs.
+
+	@see https://nodejs.org/api/util.html#util_util
 **/
 @:jsRequire("util")
 extern class Util {
 	/**
-		Takes an async function (or a function that returns a `Promise`) and returns a function following
-		the error-first callback style, i.e. taking an `(err, value) => ...` callback as the last argument.
-		In the callback, the first argument will be the rejection reason (or `null` if the `Promise` resolved),
-		and the second argument will be the resolved value.
+		Takes an async function (or a function that returns a `Promise`) and returns a function following the
+		error-first callback style.
 
-		The callback is executed asynchronously, and will have a limited stack trace. If the callback throws,
-		the process will emit an 'uncaughtException' event, and if not handled will exit.
-
-		Since `null` has a special meaning as the first argument to a callback, if a wrapped function rejects
-		a `Promise` with a falsy value as a reason, the value is wrapped in an `Error` with the original value
-		stored in a field named `reason`.
+		@see https://nodejs.org/api/util.html#util_util_callbackify_original
 	**/
 	static function callbackify(original:Function, args:Rest<Dynamic>):Null<Error>->Null<Dynamic>->Void;
 
 	/**
-		The `debuglog()` method is used to create a function that conditionally writes debug messages to `stderr`
+		The `util.debuglog()` method is used to create a function that conditionally writes debug messages to `stderr`
 		based on the existence of the `NODE_DEBUG` environment variable.
 
-		If the `section` name appears within the value of that environment variable, then the returned function operates
-		similar to `Console.error()`.
-		If not, then the returned function is a no-op.
-
-		Multiple comma-separated `section` names may be specified in the `NODE_DEBUG` environment variable: `NODE_DEBUG=fs,net,tls`.
+		@see https://nodejs.org/api/util.html#util_util_debuglog_section
 	**/
 	static function debuglog(section:String):Rest<Dynamic>->Void;
 
 	/**
-		The `deprecate()` method wraps fn (which may be a function or class) in such a way that it is marked as deprecated.
+		The `util.deprecate()` method wraps fn (which may be a function or class) in such a way that it is marked as
+		deprecated.
 
-		When called, `deprecate()` will return a function that will emit a DeprecationWarning using the 'warning' event.
-		The warning will be emitted and printed to `stderr` the first time the returned function is called. After the warning
-		is emitted, the wrapped function is called without emitting a warning.
-
-		If the same optional `code` is supplied in multiple calls to `deprecate()`, the warning will be emitted only once
-		for that code.
+		@see https://nodejs.org/api/util.html#util_util_deprecate_fn_msg_code
 	**/
 	static function deprecate<T:haxe.Constraints.Function>(fun:T, msg:String, ?code:String):T;
 
 	/**
-		The `format()` method returns a formatted string using the first argument as a printf-like format.
+		The `util.format()` method returns a formatted string using the first argument as a `printf`-like format string
+		which can contain zero or more format specifiers.
 
-		The first argument is a string that contains zero or more placeholders.
-		Each placeholder is replaced with the converted value from its corresponding argument.
-		Supported placeholders are:
-			%s - String.
-			%d - Number (both integer and float) or BigInt.
-			%i - Integer or BigInt.
-			%f - Floating point value.
-			%j - JSON. Replaced with the string '[Circular]' if the argument contains circular references.
-			%o - Object. A string representation of an object with generic JavaScript object formatting. Similar to util.inspect()
-			with options { showHidden: true, showProxy: true }. This will show the full object including non-enumerable properties
-			and proxies.
-			%O - Object. A string representation of an object with generic JavaScript object formatting. Similar to util.inspect()
-			without options. This will show the full object not including non-enumerable properties and proxies.
-			%% - single percent sign ('%'). This does not consume an argument.
-		If the placeholder does not have a corresponding argument, the placeholder is not replaced.
-
-		If there are more arguments passed to the `format()` method than the number of placeholders, the extra arguments are
-		coerced into strings then concatenated to the returned string, each delimited by a space. Excessive arguments whose `typeof`
-		is 'object' or 'symbol' (except null) will be transformed by `inspect()`.
-
-		If the first argument is not a string then `format()` returns a string that is the concatenation of all arguments separated
-		by spaces. Each argument is converted to a string using `inspect()`.
-
-		If only one argument is passed to `format()`, it is returned as it is without any formatting.
+		@see https://nodejs.org/api/util.html#util_util_format_format_args
 	**/
 	@:overload(function(args:Rest<Dynamic>):String {})
 	static function format(format:String, args:Rest<Dynamic>):String;
 
 	/**
-		This function is identical to `format()`, except in that it takes an `inspectOptions` argument which specifies options
-		that are passed along to `inspect()`.
+		This function is identical to `util.format()`, except in that it takes an `inspectOptions` argument which
+		specifies options that are passed along to `util.inspect()`.
+
+		@see https://nodejs.org/api/util.html#util_util_formatwithoptions_inspectoptions_format_args
 	**/
+	@:overload(function(inspectOptions:InspectOptions, args:Rest<Dynamic>):String {})
 	static function formatWithOptions(inspectOptions:InspectOptions, format:String, args:Rest<Dynamic>):String;
 
 	/**
 		Returns the string name for a numeric error code that comes from a Node.js API.
-		The mapping between error codes and error names is platform-dependent.
+
+		@see https://nodejs.org/api/util.html#util_util_getsystemerrorname_err
 	**/
 	static function getSystemErrorName(err:Int):String;
 
 	/**
-		Usage of `inherits()` is discouraged.
-		Please use the ES6 `class` and `extends` keywords to get language level inheritance support.
-		Also note that the two styles are semantically incompatible.
-
 		Inherit the prototype methods from one constructor into another.
-		The prototype of `constructor` will be set to a new object created from `superConstructor`.
 
-		As an additional convenience, `superConstructor` will be accessible through the `constructor.super_` property.
+		@see https://nodejs.org/api/util.html#util_util_inherits_constructor_superconstructor
 	**/
-	static function inherits(constructor:Class<Dynamic>, superConstructor:Class<Dynamic>):Bool;
+	@:deprecated
+	static function inherits(constructor:Class<Dynamic>, superConstructor:Class<Dynamic>):Void;
 
 	/**
-		The `inspect()` method returns a string representation of `object` that is intended for debugging.
-		The output of `inspect` may change at any time and should not be depended upon programmatically.
-		Additional `options` may be passed that alter certain aspects of the formatted string.
-		`inspect()` will use the constructor's name and/or `@@toStringTag` to make an identifiable tag for an inspected value.
+		The `util.inspect()` method returns a string representation of `object` that is intended for debugging.
 
-		Values may supply their own custom `inspect(depth, opts)` functions, when called these receive the current `depth`
-		in the recursive inspection, as well as the options object passed to `inspect()`.
-
-		Using the `showHidden` option allows to inspect WeakMap and WeakSet entries.
-		If there are more entries than `maxArrayLength`, there is no guarantee which entries are displayed.
-		That means retrieving the same WeakSet entries twice might actually result in a different output.
-		Besides this any item might be collected at any point of time by the garbage collectorif there is no strong reference
-		left to that object. Therefore there is no guarantee to get a reliable output.
+		@see https://nodejs.org/api/util.html#util_util_inspect_object_options
 	**/
 	@:overload(function(object:Dynamic, ?showHidden:Bool, ?depth:Int, ?colors:Bool):String {})
 	static function inspect(object:Dynamic, ?options:InspectOptions):String;
 
 	/**
-		Returns `true` if there is deep strict equality between `val1` and `val2`. Otherwise, returns `false`.
+		Returns `true` if there is deep strict equality between `val1` and `val2`.
+
+		@see https://nodejs.org/api/util.html#util_util_isdeepstrictequal_val1_val2
 	**/
 	static function isDeepStrictEqual(val1:Dynamic, val2:Dynamic):Bool;
 
 	/**
-		Takes a function following the common error-first callback style, i.e. taking an `(err, value) => ...`
-		callback as the last argument, and returns a version that returns promises.
+		Takes a function following the common error-first callback style, i.e. taking an `(err, value) => ...` callback
+		as the last argument, and returns a version that returns promises.
 
-		If there is an `original[util.promisify.custom]` property present, promisify will return its value.
-
-		`promisify()` assumes that `original` is a function taking a callback as its final argument in all cases.
-		If `original` is not a function, `promisify()` will throw an error. If original is a function but its last
-		argument is not an error-first callback, it will still be passed an error-first callback as its last argument.
+		@see https://nodejs.org/api/util.html#util_util_promisify_original
 	**/
 	static function promisify(original:Function):Rest<Dynamic>->Promise<Dynamic>;
 
@@ -376,10 +325,3 @@ typedef InspectOptions = {
 		Default: true.
 	**/
 	@:optional var compact:Int;
-
-	/**
-		If set to `true` or a function, all properties of an object and Set and Map entries will be sorted in the returned string.
-		If set to `true` the default sort is going to be used. If set to a function, it is used as a compare function.
-	**/
-	@:optional var sorted:EitherType<Bool, Dynamic->Dynamic->Int>;
-}
