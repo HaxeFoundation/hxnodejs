@@ -250,78 +250,107 @@ extern class Util {
 }
 
 /**
-	Options object used by `Util.inspect`.
+	Options object used by `console.dir()`.
+
+	@see https://nodejs.org/api/console.html#console_console_dir_obj_options
 **/
 typedef InspectOptionsBase = {
 	/**
-		If `true`, the `object`'s non-enumerable symbols and properties will be included in the formatted result
-		as well as WeakMap and WeakSet entries.
+		If `true`, `object`'s non-enumerable symbols and properties are included in the formatted result.
+		`WeakMap` and `WeakSet` entries are also included.
 
-		Default: false.
+		Default: `false`.
 	**/
 	@:optional var showHidden:Bool;
 
 	/**
-		Specifies the number of times to recurse while formatting the `object`.
-		This is useful for inspecting large complicated objects.
-		To make it recurse up to the maximum call stack size pass `Math.POSITIVE_INFINITY` or `null`.
+		Specifies the number of times to recurse while formatting `object`.
+		This is useful for inspecting large objects. To recurse up to the maximum call stack size pass `Infinity` or
+		`null`.
 
-		Default: 2.
+		Default: `2`.
 	**/
 	@:optional var depth:Null<Int>;
 
 	/**
-		If `true`, then the output will be styled with ANSI color codes.
+		If `true`, the output is styled with ANSI color codes.
+		Colors are customizable.
+		See Customizing `util.inspect` colors.
 
-		Default: false.
+		Default: `false`.
 	**/
 	@:optional var colors:Bool;
 }
 
+/**
+	Options object used by `util.inspect()`.
+
+	@see https://nodejs.org/api/util.html#util_util_inspect_object_options
+**/
 typedef InspectOptions = {
 	> InspectOptionsBase,
 
 	/**
-		If `false`, then custom `inspect(depth, opts)` functions will not be called.
+		If `false`, `[util.inspect.custom](depth, opts)` functions are not invoked.
 
-		Default: true.
+		Default: `true`.
 	**/
 	@:optional var customInspect:Bool;
 
 	/**
-		If `true`, then objects and functions that are Proxy objects will be introspected to show their `target` and `handler` objects.
+		If `true`, `Proxy` inspection includes the `target` and `handler` objects.
 
-		Default: false.
+		Default: `false`.
 	**/
 	@:optional var showProxy:Bool;
 
 	/**
-		Specifies the maximum number of Array, TypedArray, WeakMap and WeakSet elements to include when formatting.
-
-		Set to `null` or `Math.POSITIVE_INFINITY` to show all elements.
-
+		Specifies the maximum number of `Array`, `TypedArray`, `WeakMap` and `WeakSet` elements to include when
+		formatting.
+		Set to `null` or `Infinity` to show all elements.
 		Set to `0` or negative to show no elements.
 
-		Default: 100.
+		Default: `100`.
 	**/
-	@:optional var maxArrayLength:Int;
+	@:optional var maxArrayLength:Null<Int>;
 
 	/**
-		The length at which an object's keys are split across multiple lines.
+		The length at which input values are split across multiple lines.
+		Set to `Infinity` to format the input as a single line (in combination with `compact` set to `true` or any
+		number >= `1`).
 
-		Set to `Math.POSITIVE_INFINITY` to format an object as a single line.
-
-		Default: 60 for legacy compatibility.
+		Default: `80`.
 	**/
 	@:optional var breakLength:Float;
 
 	/**
-		Setting this to false changes the default indentation to use a line break for each object key instead of lining up
-		multiple properties in one line. It will also break text that is above the breakLength size into smaller and better
-		readable chunks and indents objects the same as arrays.
+		Setting this to `false` causes each object key to be displayed on a new line.
+		It will also add new lines to text that is longer than `breakLength`.
+		If set to a number, the most `n` inner elements are united on a single line as long as all properties fit into
+		`breakLength`.
+		Short array elements are also grouped together.
+		No text will be reduced below 16 characters, no matter the `breakLength` size.
+		For more information, see the example below.
 
-		Note that no text will be reduced below 16 characters, no matter the breakLength size.
-
-		Default: true.
+		Default: `3`.
 	**/
-	@:optional var compact:Int;
+	@:optional var compact:EitherType<Bool, Int>;
+
+	/**
+		If set to `true` or a function, all properties of an object, and `Set` and `Map` entries are sorted in the
+		resulting string.
+		If set to `true` the default sort is used.
+		If set to a function, it is used as a compare function.
+	**/
+	@:optional var sorted:EitherType<Bool, Dynamic->Dynamic->Int>;
+
+	/**
+		If set to `true`, getters are inspected.
+		If set to `'get'`, only getters without a corresponding setter are inspected.
+		If set to `'set'`, only getters with a corresponding setter are inspected.
+		This might cause side effects depending on the getter function.
+
+		Default: `false`.
+	**/
+	@:optional var getters:EitherType<Bool, String>;
+}
