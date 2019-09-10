@@ -40,9 +40,6 @@ import js.html.Uint8Array;
 
 	@see https://nodejs.org/api/stream.html#stream_readable_streams
 **/
-/**
-	Enumeration of events emitted by the `Readable` class.
-**/
 @:enum abstract ReadableEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		The `'close'` event is emitted when the stream and any of its underlying
@@ -124,7 +121,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 		@see https://nodejs.org/api/stream.html#stream_readable_destroy_error
 	**/
-	function destroy(?error:Null<Error>):Readable<TSelf>;
+	function destroy(?error:Error):Readable<TSelf>;
 
 	/**
 		Is `true` after `readable.destroy()` has been called.
