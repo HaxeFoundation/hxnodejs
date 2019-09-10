@@ -289,8 +289,9 @@ typedef WritableNewOptions = {
 	/**
 		`final` <Function> Implementation for the stream._final() method.
 	**/
-	@:native("final")
-	@:optional var _final:Null<Error>->Void;
+	// TODO @native in typedef cannot work now
+	//	@:native("final")
+	//	@:optional var _final:Null<Error>->Void;
 
 	/**
 		`autoDestroy` <boolean> Whether this stream should automatically call .destroy() on itself after ending. Default: false.
