@@ -121,7 +121,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_destroyed
 	**/
-	var destroyed:Bool;
+	var destroyed(default, null):Bool;
 
 	/**
 		Calling the `writable.end()` method signals that no more data will be written to the Writable.
