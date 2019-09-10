@@ -60,8 +60,8 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 		@see https://nodejs.org/api/stream.html#stream_writable_end_chunk_encoding_callback
 	**/
 	@:overload(function(?callback:Void->Void):Void {})
-	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Void {})
-	function end(chunk:String, encoding:String, ?callback:Null<Error>->Void):Void;
+	@:overload(function(chunk:Dynamic, ?callback:Null<Error>->Void):Void {})
+	function end(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Void;
 
 	/**
 		The `writable.uncork()` method flushes all data buffered since
@@ -80,7 +80,7 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 
 		@see https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback
 	**/
-	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Bool {})
+	@:overload(function(chunk:Dynamic, ?callback:Null<Error>->Void):Bool {})
 	function write(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Bool;
 
 	/**
@@ -97,8 +97,8 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 	// --------- API for stream implementors - see node.js API documentation ---------
 	private function new(?options:DuplexNewOptions);
 
-	@:overload(function(chunk:String, encoding:String, callback:Error->Void):Void {})
-	private function _write(chunk:Buffer, encoding:String, callback:Error->Void):Void;
+	@:overload(function(chunk:Dynamic, ?callback:Error->Void):Void {})
+	private function _write(chunk:String, ?encoding:String, ?callback:Error->Void):Void;
 	private function _read(size:Int):Void;
 
 	/**
