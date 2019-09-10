@@ -748,7 +748,7 @@ private class Helper {
 }
 
 @:jsRequire("buffer")
-extern class BufferModule {
+private extern class BufferModule {
 	/**
 		* <integer> Default: `50`
 		Returns the maximum number of bytes that will be returned when `buf.inspect()` is called. This can be overridden by user modules. See util.inspect() for more details on `buf.inspect()` behavior.
