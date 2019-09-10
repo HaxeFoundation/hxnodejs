@@ -75,8 +75,11 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_alloc_size_fill_encoding
 	**/
-	@:overload(function(size:Int, fill:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, ?encoding:String):Buffer {})
-	static function alloc(size:Int, ?fill:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>):Buffer;
+	@:overload(function(size:Int, fill:String, ?encoding:String):Buffer {})
+	@:overload(function(size:Int, fill:Buffer):Buffer {})
+	@:overload(function(size:Int, fill:Uint8Array):Buffer {})
+	@:overload(function(size:Int, fill:Int):Buffer {})
+	static function alloc(size:Int):Buffer;
 
 	/**
 		Allocates a new `Buffer` of `size` bytes. If `size` is larger than buffer.constants.MAX_LENGTH or smaller than 0,
