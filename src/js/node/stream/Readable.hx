@@ -89,7 +89,7 @@ import js.html.Uint8Array;
 
 		@see https://nodejs.org/api/stream.html#stream_event_pause
 	**/
-	var Pause:ReadableEvent<Error->Void> = "pause";
+	var Pause:ReadableEvent<Void->Void> = "pause";
 
 	/**
 		The `'readable'` event is emitted when there is data available to be read from
