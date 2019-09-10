@@ -109,6 +109,8 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_bytelength_string_encoding
 	**/
 	#if (haxe_ver >= 3.3)
+	// it need extern SharedArrayBuffer for Node
+	// @:overload(function(string:SharedArrayBuffer):Int {})
 	@:overload(function(string:String, ?encoding:String):Int {})
 	@:overload(function(string:Array<Int>):Int {})
 	@:overload(function(string:Array<Float>):Int {})
@@ -166,6 +168,8 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_string_encoding
 	**/
 	@:overload(function(array:Array<Int>):Buffer {})
+	// it need extern SharedArrayBuffer for node
+	// @:overload(function(arrayBuffer:SharedArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer {})
 	@:overload(function(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer {})
 	@:overload(function(buffer:EitherType<Buffer, Uint8Array>):Buffer {})
 	@:overload(function(object:Dynamic, ?offsetOrEncoding:EitherType<Int, String>, ?length:Int):Buffer {})
