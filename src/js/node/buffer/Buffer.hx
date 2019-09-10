@@ -320,12 +320,9 @@ extern class Buffer extends Uint8Array {
 		define on Uint8Array
 	**/
 	// var length(default, null):Int;
-	//
-	//
-	//
-	//
-	//
-	// these functions need BigInt implementation.
+	/**
+		these functions need BigInt implementation.
+	**/
 	/**
 		Reads a signed 64-bit integer from `buf` at the specified `offset` with the specified endian format
 		(`readBigInt64BE()` returns big endian, `readBigInt64LE()` returns little endian).
@@ -360,98 +357,98 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readdoublebe_offset
 	**/
-	function readDoubleBE(offset:Int):Float;
+	function readDoubleBE(?offset:Int):Float;
 
 	/**
 		Reads a 64-bit double from `buf` at the specified `offset` with specified endian format (`readDoubleBE()` returns big endian, `readDoubleLE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readdoublele_offset
 	**/
-	function readDoubleLE(offset:Int):Float;
+	function readDoubleLE(?offset:Int):Float;
 
 	/**
 		Reads a 32-bit float from `buf` at the specified `offset` with specified endian format (`readFloatBE()` returns big endian, `readFloatLE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readfloatbe_offset
 	**/
-	function readFloatBE(offset:Int):Float;
+	function readFloatBE(?offset:Int):Float;
 
 	/**
 		Reads a 32-bit float from `buf` at the specified `offset` with specified endian format (`readFloatBE()` returns big endian, `readFloatLE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readfloatle_offset
 	**/
-	function readFloatLE(offset:Int):Float;
+	function readFloatLE(?offset:Int):Float;
 
 	/**
 		Reads a signed 8-bit integer from `buf` at the specified `offset`.
 
 		https://nodejs.org/api/buffer.html#buffer_buf_readint8_offset
 	**/
-	function readInt8(offset:Int):Int;
+	function readInt8(?offset:Int):Int;
 
 	/**
 		Reads a signed 16-bit integer from `buf` at the specified `offset` with the specified endian format (`readInt16BE()` returns big endian, `readInt16LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readint16be_offset
 	**/
-	function readInt16BE(offset:Int):Int;
+	function readInt16BE(?offset:Int):Int;
 
 	/**
 		Reads a signed 16-bit integer from `buf` at the specified `offset` with the specified endian format (`readInt16BE()` returns big endian, `readInt16LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readint16le_offset
 	**/
-	function readInt16LE(offset:Int):Int;
+	function readInt16LE(?offset:Int):Int;
 
 	/**
 		Reads a signed 32-bit integer from buf at the specified offset with the specified endian format (readInt32BE() returns big endian, readInt32LE() returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readint32be_offset
 	**/
-	function readInt32BE(offset:Int):Int;
+	function readInt32BE(?offset:Int):Int;
 
 	/**
 		Reads a signed 32-bit integer from buf at the specified offset with the specified endian format (readInt32BE() returns big endian, readInt32LE() returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readint32be_offset
 	**/
-	function readInt32LE(offset:Int):Int;
+	function readInt32LE(?offset:Int):Int;
 
 	/**
 		Reads an unsigned 8-bit integer from `buf` at the specified `offset`.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint8_offset
 	**/
-	function readUInt8(offset:Int):Int;
+	function readUInt8(?offset:Int):Int;
 
 	/**
 		Reads an unsigned 16-bit integer from `buf` at the specified `offset` with specified endian format (`readUInt16BE()` returns big endian, `readUInt16LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint16be_offset
 	**/
-	function readUInt16BE(offset:Int):Int;
+	function readUInt16BE(?offset:Int):Int;
 
 	/**
 		Reads an unsigned 16-bit integer from `buf` at the specified `offset` with specified endian format (`readUInt16BE()` returns big endian, `readUInt16LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint16le_offset
 	**/
-	function readUInt16LE(offset:Int):Int;
+	function readUInt16LE(?offset:Int):Int;
 
 	/**
 		Reads an unsigned 32-bit integer from `buf` at the specified `offset` with specified endian format (`readUInt32BE()` returns big endian, `readUInt32LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint32be_offset
 	**/
-	function readUInt32BE(offset:Int):Int;
+	function readUInt32BE(?offset:Int):Int;
 
 	/**
 		Reads an unsigned 32-bit integer from `buf` at the specified `offset` with specified endian format (`readUInt32BE()` returns big endian, `readUInt32LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint32be_offset
 	**/
-	function readUInt32LE(offset:Int):Int;
+	function readUInt32LE(?offset:Int):Int;
 
 	/**
 		Returns a new `Buffer` that references the same memory as the original, but offset and cropped by the `start` and `end` indices.
