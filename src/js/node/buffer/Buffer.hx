@@ -245,10 +245,8 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_copy_target_targetstart_sourcestart_sourceend
 	**/
-	@:overload(function(targer:Buffer):Void {})
-	@:overload(function(targer:Buffer, targetStart:Int):Void {})
-	@:overload(function(targer:Buffer, targetStart:Int, sourceStart:Int):Void {})
-	function copy(target:Buffer, targetStart:Int, sourceStart:Int, sourceEnd:Int):Void;
+	@:overload(function(targer:EitherType<Buffer, Uint8Array>):Void {})
+	function copy(target:EitherType<Buffer, Uint8Array>, ?targetStart:Int, ?sourceStart:Int, ?sourceEnd:Int):Void;
 
 	/**
 		Creates and returns an iterator of `[index, byte]` pairs from the contents of `buf`.
