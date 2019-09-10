@@ -200,7 +200,9 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback
 	**/
-	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Bool {})
+	@:overload(function(chunk:Buffer, ?callback:Null<Error>->Void):Bool {})
+	@:overload(function(chunk:Uint8Array, ?callback:Null<Error>->Void):Bool {})
+	@:overload(function(chunk:Any, ?callback:Null<Error>->Void):Bool {})
 	function write(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Bool;
 
 	/**
