@@ -104,7 +104,9 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_bytelength_string_encoding
 	**/
 	#if (haxe_ver >= 3.3)
-	static function byteLength(string:EitherType<String, EitherType<Buffer, ArrayBuffer>>, ?encoding:String):Int;
+	@:overload(function(string:String, ?encoding:String):Int {})
+	@:overload(function(string:ArrayBuffer):Int {})
+	static function byteLength(string:Buffer):Int;
 	#end
 
 	#if (haxe_ver >= 3.3)
