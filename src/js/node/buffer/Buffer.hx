@@ -27,7 +27,6 @@ import js.lib.Map.MapEntry;
 import js.lib.DataView;
 import js.lib.ArrayBuffer;
 import js.lib.Uint8Array;
-import js.lib.Object;
 #else
 import js.html.DataView;
 import js.html.ArrayBuffer;
