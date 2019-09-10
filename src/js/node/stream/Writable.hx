@@ -131,9 +131,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 		@see https://nodejs.org/api/stream.html#stream_writable_end_chunk_encoding_callback
 	**/
 	@:overload(function(?callback:Void->Void):Void {})
-	@:overload(function(chunk:Buffer, ?callback:Null<Error>->Void):Void {})
-	@:overload(function(chunk:Uint8Array, ?callback:Null<Error>->Void):Void {})
-	@:overload(function(chunk:Any, ?callback:Null<Error>->Void):Void {})
+	@:overload(function(chunk:Dynamic, ?callback:Null<Error>->Void):Void {})
 	function end(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Void;
 
 	/**
@@ -200,9 +198,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback
 	**/
-	@:overload(function(chunk:Buffer, ?callback:Null<Error>->Void):Bool {})
-	@:overload(function(chunk:Uint8Array, ?callback:Null<Error>->Void):Bool {})
-	@:overload(function(chunk:Any, ?callback:Null<Error>->Void):Bool {})
+	@:overload(function(chunk:Dynamic, ?callback:Null<Error>->Void):Bool {})
 	function write(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Bool;
 
 	/**
@@ -215,7 +211,8 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback_1
 	**/
-	private function _write(chunk:EitherType<Buffer, EitherType<String, Any>>, ?encoding:String, ?callback:Null<Error>->Void):Void;
+	@:overload(function(chunk:Dynamic, ?callback:Null<Error->Void>):Void {})
+	private function _write(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Void;
 
 	/**
 		This function MUST NOT be called by application code directly. It should be implemented by child classes, and called by the internal `Writable` class methods only.
@@ -243,11 +240,10 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 		It is false for any other write streams.
 	**/
 	var isTTY(default, null):Bool;
-}
-
-/**
+} /**
 	@see https://nodejs.org/api/stream.html#stream_constructor_new_stream_writable_options
 **/
+
 typedef WritableNewOptions = {
 	/**
 		`highWaterMark` <number> Buffer level when stream.write() starts returning `false`. Default: `16384` (16kb), or 16 for `objectMode` streams.
@@ -308,10 +304,10 @@ typedef WritableNewOptions = {
 **/
 @:remove
 extern interface IWritable extends IStream {
-	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Bool {})
+	@:overload(function(chunk:Dynamic, ?callback:Null<Error>->Void):Bool {})
 	function write(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Bool;
 	@:overload(function(?callback:Void->Void):Void {})
-	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Void {})
+	@:overload(function(chunk:Dynamic, ?callback:Null<Error>->Void):Void {})
 	function end(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Void;
 	function cork():Void;
 	function uncork():Void;

@@ -276,7 +276,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 	private function _read(size:Int):Void;
 	private function _destroy(err:Error, callback:Null<Error>->Void):Void;
-	private function push(chunk:Null<EitherType<Buffer, EitherType<Uint8Array, EitherType<String, Any>>>>, ?encoding:String):Bool;
+	private function push(chunk:Null<Dynamic>, ?encoding:String):Bool;
 }
 
 /**
@@ -329,7 +329,7 @@ typedef ReadableNewOptions = {
 **/
 @:remove
 extern interface IReadable extends IStream {
-	function read(?size:Int):Null<EitherType<String, EitherType<Buffer, Any>>>;
+	function read(?size:Int):Null<Dynamic>;
 	function setEncoding(encoding:String):IReadable;
 	function resume():IReadable;
 	function pause():IReadable;
