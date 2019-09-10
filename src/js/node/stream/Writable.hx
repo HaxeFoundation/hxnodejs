@@ -134,7 +134,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 	@:overload(function(chunk:Buffer, ?callback:Null<Error>->Void):Void {})
 	@:overload(function(chunk:Uint8Array, ?callback:Null<Error>->Void):Void {})
 	@:overload(function(chunk:Any, ?callback:Null<Error>->Void):Void {})
-	function end(chunk:String, encoding:String, ?callback:Null<Error>->Void):Void;
+	function end(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Void;
 
 	/**
 		The `writable.setDefaultEncoding()` method sets the default `encoding` for a Writable stream.
@@ -215,7 +215,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback_1
 	**/
-	private function _write(chunk:EitherType<Buffer, EitherType<String, Any>>, encoding:String, callback:Null<Error>->Void):Void;
+	private function _write(chunk:EitherType<Buffer, EitherType<String, Any>>, ?encoding:String, ?callback:Null<Error>->Void):Void;
 
 	/**
 		This function MUST NOT be called by application code directly. It should be implemented by child classes, and called by the internal `Writable` class methods only.
@@ -312,7 +312,7 @@ extern interface IWritable extends IStream {
 	function write(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Bool;
 	@:overload(function(?callback:Void->Void):Void {})
 	@:overload(function(chunk:EitherType<Buffer, EitherType<Uint8Array, Any>>, ?callback:Null<Error>->Void):Void {})
-	function end(chunk:String, encoding:String, ?callback:Null<Error>->Void):Void;
+	function end(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Void;
 	function cork():Void;
 	function uncork():Void;
 	function setDefaultEncoding(encoding:String):IWritable;
