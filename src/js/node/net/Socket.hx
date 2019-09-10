@@ -249,8 +249,10 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 	/**
 		A boolean value that indicates if the connection is destroyed or not.
 		Once a connection is destroyed no further data can be transferred using it.
+
+		define in Stream/Readable.hx
 	**/
-	var destroyed(default, null):Bool;
+	// var destroyed(default, null):Bool;
 
 	/**
 		Ensures that no more I/O activity happens on this socket.
