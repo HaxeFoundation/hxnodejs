@@ -22,6 +22,7 @@
 
 package js.node.buffer;
 
+import haxe.io.Bytes;
 #if haxe4
 import js.lib.Map.MapEntry;
 import js.lib.DataView;
@@ -253,7 +254,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_entries
 	**/
-	function entries():MapEntry<Int, Byte>;
+	function entries():MapEntry<Int, Bytes>;
 
 	/**
 		Returns `true` if both `buf` and `otherBuffer` have exactly the same bytes, `false` otherwise.
@@ -267,20 +268,16 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_fill_value_offset_end_encoding
 	**/
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>):Buffer {})
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, offset:Int):Buffer {})
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, offset:Int, end:Int):Buffer {})
-	function fill(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, offset:Int, end:Int, encoding:String):Buffer;
+	@:overlord(function(value:EitherType<Buffer, EitherType<Uint8Array, Int>>, ?offset:Int, end:Int):Buffer {})
+	function fill(value:String, ?offset:Int, ?end:Int, ?encoding:String):Buffer;
 
 	/**
 		Equivalent to buf.indexOf() !== -1.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_includes_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>):Bool {})
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int):Bool {})
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, encoding:String):Bool {})
-	function includes(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int, encoding:String):Bool;
+	@:overlord(function(value:EitherType<Buffer, EitherType<Uint8Array, Int>>, ?byteOffset:Int):Bool {})
+	function includes(value:String, ?byteOffset:Int, ?encoding:String):Bool;
 
 	/**
 		If `value` is:
@@ -291,10 +288,8 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_indexof_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>):Bool {})
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int):Bool {})
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, encoding:String):Bool {})
-	function indexOf(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int, encoding:String):Bool;
+	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, ?byteOffset:Int):Bool {})
+	function indexOf(value:String, ?byteOffset:Int, ?encoding:String):Bool;
 
 	/**
 		Creates and returns an iterator of `buf` keys (indices).
@@ -308,10 +303,8 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_lastindexof_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>):Bool {})
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int):Bool {})
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, encoding:String):Bool {})
-	function lastIndexOf(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, byteOffset:Int, encoding:String):Bool;
+	@:overlord(function(value:EitherType<Buffer, EitherType<Uint8Array, Int>>, ?byteOffset:Int):Bool {})
+	function lastIndexOf(value:String, ?byteOffset:Int, ?encoding:String):Bool;
 
 	/**
 		Returns the amount of memory allocated for buf in bytes. This does not necessarily reflect the amount of "usable" data within buf.
@@ -524,7 +517,7 @@ extern class Buffer extends Uint8Array {
 	@:overload(function(string:String, offset:Int, ?encoding:String):Int {})
 	function write(string:String, ?encoding:String):Int;
 
-	// these functions need Bigint Implementation.
+	// these functions need BigInt Implementation.
 	/**
 		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeBigInt64BE()` writes big endian, `writeBigInt64LE()` writes little endian).
 
@@ -715,7 +708,7 @@ extern class Buffer extends Uint8Array {
 		Create `haxe.io.Bytes` object that uses the same underlying data storage as `this` buffer.
 		Any modifications done using the returned object will be reflected in the `this` buffer.
 	**/
-	inline function hxToBytes():haxe.io.Bytes {
+	inline function hxToBytes():Bytes {
 		return Helper.bytesOfBuffer(this);
 	}
 
@@ -723,7 +716,7 @@ extern class Buffer extends Uint8Array {
 		Create `Buffer` object from `haxe.io.Bytes` using the same underlying data storage.
 		Any modifications done using the returned object will be reflected in given `haxe.io.Bytes` object.
 	**/
-	static inline function hxFromBytes(b:haxe.io.Bytes):Buffer {
+	static inline function hxFromBytes(b:Bytes):Buffer {
 		var data = @:privateAccess b.b;
 		return Buffer.from(data.buffer, data.byteOffset, b.length);
 	}
