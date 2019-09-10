@@ -291,7 +291,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_indexof_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:EitherType<String, EitherType<Buffer, EitherType<Uint8Array, Int>>>, ?byteOffset:Int):Bool {})
+	@:overlord(function(value:EitherType<Buffer, EitherType<Uint8Array, Int>>, ?byteOffset:Int):Bool {})
 	function indexOf(value:String, ?byteOffset:Int, ?encoding:String):Bool;
 
 	/**
@@ -657,6 +657,58 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeuint32le_value_offset
 	**/
 	function writeUInt32LE(value:Int, ?offset:Int):Void;
+
+	/**
+		* <integer> Default: `50`
+		Returns the maximum number of bytes that will be returned when `buf.inspect()` is called. This can be overridden by user modules. See util.inspect() for more details on `buf.inspect()` behavior.
+
+		This is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buffer_inspect_max_bytes
+	**/
+	static var INSPECT_MAX_BYTES(get, set):Int;
+
+	static inline function get_INSPECT_MAX_BYTES():Int {
+		return BufferModule.INSPECT_MAX_BYTES;
+	}
+	static inline function set_INSPECT_MAX_BYTES(bytes:Int):Int {
+		return BufferModule.INSPECT_MAX_BYTES = bytes;
+	}
+
+	/**
+		* <integer> The largest size allowed for a single `Buffer` instance.
+		An alias for buffer.constants.MAX_LENGTH.
+
+		This is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buffer_kmaxlength
+	**/
+	static var kMaxLength(get, never):Int;
+
+	static inline function get_kMaxLength():Int {
+		return BufferModule.kMaxLength;
+	}
+
+	/**
+		Re-encodes the given `Buffer` or `Uint8Array` instance from one character encoding to another. Returns a new `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buffer_transcode_source_fromenc_toenc
+	**/
+	static inline function transcode(source:EitherType<Buffer, Uint8Array>, fromEnc:String, toEnc:String):Buffer {
+		return BufferModule.transcode(source, fromEnc, toEnc);
+	};
+
+	/**
+		`buffer.constants` is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buffer_constants
+	**/
+	public static var constants(default, never):BufferConstants;
+	static inline function get_constants():BufferConstants
+	{
+		return BufferModule.constants;
+	}
+
 	/**
 		Create `haxe.io.Bytes` object that uses the same underlying data storage as `this` buffer.
 		Any modifications done using the returned object will be reflected in the `this` buffer.
@@ -690,12 +742,8 @@ private class Helper {
 	}
 }
 
-
 @:jsRequire("buffer")
-private extern class BufferModule
-{
-	static function
-	
+extern class BufferModule {
 	/**
 		* <integer> Default: `50`
 		Returns the maximum number of bytes that will be returned when `buf.inspect()` is called. This can be overridden by user modules. See util.inspect() for more details on `buf.inspect()` behavior.
@@ -714,29 +762,21 @@ private extern class BufferModule
 
 		@see https://nodejs.org/api/buffer.html#buffer_buffer_kmaxlength
 	**/
-	public static var kMaxLength(default:never):Int;
-	public static var kMaxLength(get, never):Int;
-
+	public static var kMaxLength(default, never):Int;
 
 	/**
 		Re-encodes the given `Buffer` or `Uint8Array` instance from one character encoding to another. Returns a new `Buffer` instance.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buffer_transcode_source_fromenc_toenc
 	**/
-	public static function transcode(source:haxe.extern.EitherType<Buffer, Uint8Array>, fromEnc:String, toEnc:String):Buffer;
+	public static function transcode(source:EitherType<Buffer, Uint8Array>, fromEnc:String, toEnc:String):Buffer;
 
 	/**
 		`buffer.constants` is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buffer_constants
 	**/
-	public static var constants(get, never):BufferConstants;
-
-	private inline static function get_constants():BufferConstants {
-		return {MAX_LENGTH,MAX_STRING_LENGTH};
-	}
-
-
+	public static var constants(default, never):BufferConstants;
 }
 
 /**
