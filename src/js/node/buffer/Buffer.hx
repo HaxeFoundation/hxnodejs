@@ -23,6 +23,7 @@
 package js.node.buffer;
 
 #if haxe4
+import js.lib.Map.MapEntry;
 import js.lib.DataView;
 import js.lib.ArrayBuffer;
 import js.lib.Uint8Array;
@@ -253,7 +254,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_entries
 	**/
-	function entries():Iterator<Int>;
+	function entries():MapEntry<Int, Byte>;
 
 	/**
 		Returns `true` if both `buf` and `otherBuffer` have exactly the same bytes, `false` otherwise.
