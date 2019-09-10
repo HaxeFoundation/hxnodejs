@@ -238,10 +238,7 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_buf_compare_target_targetstart_targetend_sourcestart_sourceend
 	**/
 	@:overload(function(target:EitherType<Buffer, Uint8Array>):Int {})
-	@:overload(function(target:EitherType<Buffer, Uint8Array>, targetStart:Int):Int {})
-	@:overload(function(target:EitherType<Buffer, Uint8Array>, targetStart:Int, targetEnd:Int):Int {})
-	@:overload(function(target:EitherType<Buffer, Uint8Array>, targetStart:Int, targetEnd:Int, sourceStart:Int):Int {})
-	function compare(target:EitherType<Buffer, Uint8Array>, targetStart:Int, targetEnd:Int, sourceStart:Int, sourceEnd:Int):Int;
+	function compare(target:EitherType<Buffer, Uint8Array>, ?targetStart:Int, ?targetEnd:Int, ?sourceStart:Int, ?sourceEnd:Int):Int;
 
 	/**
 		Copies data from a region of `buf` to a region in `target` even if the `target` memory region overlaps with `buf`.
