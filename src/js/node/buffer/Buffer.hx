@@ -23,10 +23,12 @@
 package js.node.buffer;
 
 #if haxe4
+import js.lib.DataView;
 import js.lib.ArrayBuffer;
 import js.lib.Uint8Array;
 import js.lib.Object;
 #else
+import js.html.DataView;
 import js.html.ArrayBuffer;
 import js.html.Uint8Array;
 #end
@@ -105,6 +107,9 @@ extern class Buffer extends Uint8Array {
 	**/
 	#if (haxe_ver >= 3.3)
 	@:overload(function(string:String, ?encoding:String):Int {})
+	@:overload(function(string:Array<Int>):Int {})
+	@:overload(function(string:Array<Float>):Int {})
+	@:overload(function(string:DataView):Int {})
 	@:overload(function(string:ArrayBuffer):Int {})
 	static function byteLength(string:Buffer):Int;
 	#end
@@ -128,6 +133,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_concat_list_totallength
 	**/
+	@:overload(function(list:Array<Uint8Array>, ?totallength:Int):Buffer {})
 	static function concat(list:Array<Buffer>, ?totalLength:Int):Buffer;
 
 	/**
@@ -157,8 +163,7 @@ extern class Buffer extends Uint8Array {
 	@:overload(function(array:Array<Int>):Buffer {})
 	@:overload(function(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer {})
 	@:overload(function(buffer:Buffer):Buffer {})
-	@:overload(function(object:Object, ?offsetOrEncoding:EitherType<Int, String>):Buffer {})
-	@:overload(function(object:Object, offsetOrEncoding:EitherType<Int, String>, ?length:Int):Buffer {})
+	@:overload(function(object:Dynamic, ?offsetOrEncoding:EitherType<Int, String>, ?length:Int):Buffer {})
 	static function from(string:String, ?encoding:String):Buffer;
 
 	/**
@@ -201,6 +206,24 @@ extern class Buffer extends Uint8Array {
 	}
 
 	/**
+		When setting `byteOffset` in `Buffer.from(ArrayBuffer, byteOffset, length)`
+		or sometimes when allocating a buffer smaller than `Buffer.poolSize` the
+		buffer doesn't start from a zero offset on the underlying `ArrayBuffer`.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_buffer
+	**/
+	static var buffer(default, null):Buffer;
+
+	/**
+		When setting `byteOffset` in `Buffer.from(ArrayBuffer, byteOffset, length)`
+		or sometimes when allocating a buffer smaller than `Buffer.poolSize` the
+		buffer doesn't start from a zero offset on the underlying `ArrayBuffer`.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_byteoffset
+	**/
+	static var byteOffset(default, null):Int;
+
+	/**
 		<ArrayBuffer> The underlying `ArrayBuffer` object based on which this Buffer object is created.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_buffer
@@ -214,11 +237,11 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_compare_target_targetstart_targetend_sourcestart_sourceend
 	**/
-	@:overload(function(target:Buffer):Int {})
-	@:overload(function(target:Buffer, targetStart:Int):Int {})
-	@:overload(function(target:Buffer, targetStart:Int, targetEnd:Int):Int {})
-	@:overload(function(target:Buffer, targetStart:Int, targetEnd:Int, sourceStart:Int):Int {})
-	function compare(target:Buffer, targetStart:Int, targetEnd:Int, sourceStart:Int, sourceEnd:Int):Int;
+	@:overload(function(target:EitherType<Buffer, Uint8Array>):Int {})
+	@:overload(function(target:EitherType<Buffer, Uint8Array>, targetStart:Int):Int {})
+	@:overload(function(target:EitherType<Buffer, Uint8Array>, targetStart:Int, targetEnd:Int):Int {})
+	@:overload(function(target:EitherType<Buffer, Uint8Array>, targetStart:Int, targetEnd:Int, sourceStart:Int):Int {})
+	function compare(target:EitherType<Buffer, Uint8Array>, targetStart:Int, targetEnd:Int, sourceStart:Int, sourceEnd:Int):Int;
 
 	/**
 		Copies data from a region of `buf` to a region in `target` even if the `target` memory region overlaps with `buf`.
