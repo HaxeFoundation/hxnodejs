@@ -24,6 +24,7 @@ package js.node.buffer;
 
 import haxe.io.Bytes;
 #if haxe4
+import js.lib.ArrayBufferView;
 import js.lib.Map.MapEntry;
 import js.lib.DataView;
 import js.lib.ArrayBuffer;
@@ -111,7 +112,7 @@ extern class Buffer extends Uint8Array {
 	@:overload(function(string:String, ?encoding:String):Int {})
 	@:overload(function(string:Array<Int>):Int {})
 	@:overload(function(string:Array<Float>):Int {})
-	//	@:overload(function(string:TypedArray):Int {})
+	@:overload(function(string:ArrayBufferView):Int {})
 	@:overload(function(string:DataView):Int {})
 	@:overload(function(string:ArrayBuffer):Int {})
 	static function byteLength(string:Buffer):Int;
@@ -704,8 +705,8 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_buffer_constants
 	**/
 	public static var constants(default, never):BufferConstants;
-	static inline function get_constants():BufferConstants
-	{
+
+	static inline function get_constants():BufferConstants {
 		return BufferModule.constants;
 	}
 
