@@ -211,8 +211,8 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_buf_index
 	**/
 	@:arrayAccess
-	public inline function get(key:Int):Buffer {
-		return this.get(key);
+	public inline function get(index:Int):Buffer {
+		return this.buffer[index];
 	}
 
 	/**
@@ -222,7 +222,8 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_buffer
 	**/
-	static var buffer(default, null):Buffer;
+	//	define on Uint8Array
+	// var buffer:ArrayBuffer;
 
 	/**
 		When setting `byteOffset` in `Buffer.from(ArrayBuffer, byteOffset, length)`
@@ -237,10 +238,7 @@ extern class Buffer extends Uint8Array {
 		<ArrayBuffer> The underlying `ArrayBuffer` object based on which this Buffer object is created.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_buffer
-		define on Uint8Array
 	**/
-	// var buffer:ArrayBuffer;
-
 	/**
 		Compares `buf` with `target` and returns a number indicating whether `buf` comes before, after,
 		or is the same as `target` in sort order. Comparison is based on the actual sequence of bytes in each `Buffer`.
@@ -263,7 +261,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_entries
 	**/
-	function entries():MapEntry<Int, Bytes>;
+	function entries():js.lib.Iterator<MapEntry<Int, Int>>;
 
 	/**
 		Returns `true` if both `buf` and `otherBuffer` have exactly the same bytes, `false` otherwise.
