@@ -747,39 +747,10 @@ private class Helper {
 
 @:jsRequire("buffer")
 private extern class BufferModule {
-	/**
-		* <integer> Default: `50`
-		Returns the maximum number of bytes that will be returned when `buf.inspect()` is called. This can be overridden by user modules. See util.inspect() for more details on `buf.inspect()` behavior.
-
-		This is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
-
-		@see https://nodejs.org/api/buffer.html#buffer_buffer_inspect_max_bytes
-	**/
-	public static var INSPECT_MAX_BYTES:Int;
-
-	/**
-		* <integer> The largest size allowed for a single `Buffer` instance.
-		An alias for buffer.constants.MAX_LENGTH.
-
-		This is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
-
-		@see https://nodejs.org/api/buffer.html#buffer_buffer_kmaxlength
-	**/
-	public static var kMaxLength(default, never):Int;
-
-	/**
-		Re-encodes the given `Buffer` or `Uint8Array` instance from one character encoding to another. Returns a new `Buffer` instance.
-
-		@see https://nodejs.org/api/buffer.html#buffer_buffer_transcode_source_fromenc_toenc
-	**/
-	public static function transcode(source:EitherType<Buffer, Uint8Array>, fromEnc:String, toEnc:String):Buffer;
-
-	/**
-		`buffer.constants` is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
-
-		@see https://nodejs.org/api/buffer.html#buffer_buffer_constants
-	**/
-	public static var constants(default, never):BufferConstants;
+	static var INSPECT_MAX_BYTES:Int;
+	static var kMaxLength(default, never):Int;
+	static function transcode(source:EitherType<Buffer, Uint8Array>, fromEnc:String, toEnc:String):Buffer;
+	static var constants(default, never):BufferConstants;
 }
 
 /**
