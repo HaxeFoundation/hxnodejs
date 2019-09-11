@@ -22,6 +22,7 @@
 
 package js.node.buffer;
 
+import haxe.io.UInt8Array;
 import haxe.io.Bytes;
 #if haxe4
 import js.lib.ArrayBufferView;
@@ -72,7 +73,7 @@ extern class Buffer extends Uint8Array {
 	@:deprecated
 	@:overload(function(array:Array<Int>):Void {})
 	@:overload(function(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Void {})
-	@:overload(function(buffer:Buffer):Void {})
+	@:overload(function(buffer:UInt8Array):Void {})
 	@:overload(function(size:Int):Void {})
 	function new(string:String, ?encoding:String):Void;
 
@@ -82,7 +83,6 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_alloc_size_fill_encoding
 	**/
 	@:overload(function(size:Int, fill:String, ?encoding:String):Buffer {})
-	@:overload(function(size:Int, fill:Buffer):Buffer {})
 	@:overload(function(size:Int, fill:Uint8Array):Buffer {})
 	@:overload(function(size:Int, fill:Int):Buffer {})
 	static function alloc(size:Int):Buffer;
@@ -133,8 +133,7 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_compare_buf1_buf2
 	**/
 	@:native("compare")
-	@:overload(function(buf1:Uint8Array, buf2:Uint8Array):Int {})
-	static function compareBuffers(buf1:Buffer, buf2:Buffer):Int;
+	static function compareBuffers(buf1:Uint8Array, buf2:Uint8Array):Int;
 
 	/**
 		Returns a new `Buffer` which is the result of concatenating all the `Buffer` instances in the `list` together.
@@ -172,7 +171,7 @@ extern class Buffer extends Uint8Array {
 	// it need extern SharedArrayBuffer for node
 	// @:overload(function(arrayBuffer:SharedArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer {})
 	@:overload(function(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer {})
-	@:overload(function(buffer:EitherType<Buffer, Uint8Array>):Buffer {})
+	@:overload(function(buffer:Uint8Array):Buffer {})
 	@:overload(function(object:{}, ?offsetOrEncoding:EitherType<Int, String>, ?length:Int):Buffer {})
 	static function from(string:String, ?encoding:String):Buffer;
 
@@ -245,16 +244,16 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_compare_target_targetstart_targetend_sourcestart_sourceend
 	**/
-	@:overload(function(target:EitherType<Buffer, Uint8Array>):Int {})
-	function compare(target:EitherType<Buffer, Uint8Array>, ?targetStart:Int, ?targetEnd:Int, ?sourceStart:Int, ?sourceEnd:Int):Int;
+	@:overload(function(target:Uint8Array):Int {})
+	function compare(target:Uint8Array, ?targetStart:Int, ?targetEnd:Int, ?sourceStart:Int, ?sourceEnd:Int):Int;
 
 	/**
 		Copies data from a region of `buf` to a region in `target` even if the `target` memory region overlaps with `buf`.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_copy_target_targetstart_sourcestart_sourceend
 	**/
-	@:overload(function(targer:EitherType<Buffer, Uint8Array>):Void {})
-	function copy(target:EitherType<Buffer, Uint8Array>, ?targetStart:Int, ?sourceStart:Int, ?sourceEnd:Int):Void;
+	@:overload(function(targer:Uint8Array):Void {})
+	function copy(target:Uint8Array, ?targetStart:Int, ?sourceStart:Int, ?sourceEnd:Int):Void;
 
 	/**
 		Creates and returns an iterator of `[index, byte]` pairs from the contents of `buf`.
@@ -268,14 +267,14 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_equals_otherbuffer
 	**/
-	function equals(otherBuffer:EitherType<Buffer, Uint8Array>):Bool;
+	function equals(otherBuffer:Uint8Array):Bool;
 
 	/**
 		Fills `buf` with the specified `value`. If the `offset` and `end` are not given, the entire `buf` will be filled:
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_fill_value_offset_end_encoding
 	**/
-	@:overlord(function(value:EitherType<Buffer, EitherType<Uint8Array, Int>>, ?offset:Int, end:Int):Buffer {})
+	@:overlord(function(value:EitherType<Uint8Array, Int>, ?offset:Int, end:Int):Buffer {})
 	function fill(value:String, ?offset:Int, ?end:Int, ?encoding:String):Buffer;
 
 	/**
@@ -283,7 +282,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_includes_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:EitherType<Buffer, EitherType<Uint8Array, Int>>, ?byteOffset:Int):Bool {})
+	@:overlord(function(value:EitherType<Uint8Array, Int>, ?byteOffset:Int):Bool {})
 	function includes(value:String, ?byteOffset:Int, ?encoding:String):Bool;
 
 	/**
@@ -295,7 +294,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_indexof_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:EitherType<Buffer, EitherType<Uint8Array, Int>>, ?byteOffset:Int):Bool {})
+	@:overlord(function(value:EitherType<Uint8Array, Int>, ?byteOffset:Int):Bool {})
 	function indexOf(value:String, ?byteOffset:Int, ?encoding:String):Bool;
 
 	/**
@@ -310,7 +309,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_lastindexof_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:EitherType<Buffer, EitherType<Uint8Array, Int>>, ?byteOffset:Int):Bool {})
+	@:overlord(function(value:EitherType<Uint8Array, Int>, ?byteOffset:Int):Bool {})
 	function lastIndexOf(value:String, ?byteOffset:Int, ?encoding:String):Bool;
 
 	/**
@@ -698,7 +697,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buffer_transcode_source_fromenc_toenc
 	**/
-	static inline function transcode(source:EitherType<Buffer, Uint8Array>, fromEnc:String, toEnc:String):Buffer {
+	static inline function transcode(source:Uint8Array, fromEnc:String, toEnc:String):Buffer {
 		return BufferModule.transcode(source, fromEnc, toEnc);
 	};
 
