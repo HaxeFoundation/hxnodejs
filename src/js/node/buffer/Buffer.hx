@@ -140,8 +140,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_concat_list_totallength
 	**/
-	@:overload(function(list:Array<Uint8Array>, ?totallength:Int):Buffer {})
-	static function concat(list:Array<Buffer>, ?totalLength:Int):Buffer;
+	static function concat<T:Uint8Array>(list:Array<T>, ?totalLength:Int):Buffer;
 
 	/**
 		Allocates a new `Buffer` using an `array` of octets.
@@ -252,7 +251,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_copy_target_targetstart_sourcestart_sourceend
 	**/
-	@:overload(function(targer:Uint8Array):Void {})
+	@:overload(function(target:Uint8Array):Void {})
 	function copy(target:Uint8Array, ?targetStart:Int, ?sourceStart:Int, ?sourceEnd:Int):Void;
 
 	/**
