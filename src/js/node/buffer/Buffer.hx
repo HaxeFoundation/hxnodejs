@@ -749,7 +749,7 @@ private class Helper {
 private extern class BufferModule {
 	static var INSPECT_MAX_BYTES:Int;
 	static var kMaxLength(default, never):Int;
-	static function transcode(source:EitherType<Buffer, Uint8Array>, fromEnc:String, toEnc:String):Buffer;
+	static function transcode(source:Uint8Array, fromEnc:String, toEnc:String):Buffer;
 	static var constants(default, never):BufferConstants;
 }
 
