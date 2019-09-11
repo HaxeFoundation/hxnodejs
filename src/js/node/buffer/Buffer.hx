@@ -116,10 +116,7 @@ extern class Buffer extends Uint8Array {
 	// it need extern SharedArrayBuffer for Node
 	// @:overload(function(string:SharedArrayBuffer):Int {})
 	@:overload(function(string:String, ?encoding:String):Int {})
-	@:overload(function(string:Array<Int>):Int {})
-	@:overload(function(string:Array<Float>):Int {})
 	@:overload(function(string:ArrayBufferView):Int {})
-	@:overload(function(string:DataView):Int {})
 	@:overload(function(string:ArrayBuffer):Int {})
 	static function byteLength(string:Buffer):Int;
 	#end
