@@ -44,7 +44,7 @@ import haxe.extern.EitherType;
 	@see https://nodejs.org/api/buffer.html#buffer_class_buffer
 **/
 @:jsRequire("buffer", "Buffer")
-extern class Buffer extends Uint8Array {
+extern class Buffer extends Uint8Array implements ArrayAccess<Int> {
 	/**
 		Allocates a new `Buffer` using an `array` of octets.
 
