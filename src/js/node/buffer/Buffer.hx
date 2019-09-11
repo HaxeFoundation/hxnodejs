@@ -209,11 +209,11 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_index
 	**/
-	@:arrayAccess
-	public inline function get(index:Int):Buffer {
-		return this.buffer[index];
-	}
-
+	// it define in js.lib.Uint8Array
+	// @:arrayAccess
+	// public inline function set(index:Int):Buffer {
+	//	return
+	// }
 	/**
 		When setting `byteOffset` in `Buffer.from(ArrayBuffer, byteOffset, length)`
 		or sometimes when allocating a buffer smaller than `Buffer.poolSize` the
