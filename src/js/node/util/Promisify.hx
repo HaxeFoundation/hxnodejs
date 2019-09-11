@@ -33,20 +33,19 @@ import js.Promise;
 @:jsRequire("util", "promisify")
 extern class Promisify {
 	/**
-		Takes a function following the common error-first callback style, i.e. taking an `(err, value) => ...`
-		callback as the last argument, and returns a version that returns promises.
+		Takes a function following the common error-first callback style, i.e. taking an `(err, value) => ...` callback
+		as the last argument, and returns a version that returns promises.
 
-		If there is an `original[util.promisify.custom]` property present, promisify will return its value.
-
-		`promisify()` assumes that `original` is a function taking a callback as its final argument in all cases.
-		If `original` is not a function, `promisify()` will throw an error. If original is a function but its last
-		argument is not an error-first callback, it will still be passed an error-first callback as its last argument.
+		@see https://nodejs.org/api/util.html#util_util_promisify_original
 	**/
 	@:selfCall
 	static function promisify(original:Function):Rest<Dynamic>->Promise<Dynamic>;
 
 	/**
-		A `<symbol>` that can be used to declare custom promisified variants of functions.
+		The `Symbol` that can be used to declare custom promisified variants of functions, see Custom promisified
+		functions.
+
+		@see https://nodejs.org/api/util.html#util_util_promisify_custom
 	**/
 	#if haxe4
 	static final custom:js.lib.Symbol;
