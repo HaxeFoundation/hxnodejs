@@ -49,9 +49,10 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_array
 
-		This creates a view of the ArrayBuffer or SharedArrayBuffer without copying the underlying memory.
-		For example, when passed a reference to the `.buffer` property of a TypedArray instance,
-		the newly created `Buffer` will share the same allocated memory as the TypedArray.
+		This creates a view of the `ArrayBuffer` or `SharedArrayBuffer` without
+		copying the underlying memory. For example, when passed a reference to the
+		`.buffer` property of a `TypedArray` instance, the newly created `Buffer`
+		will share the same allocated memory as the `TypedArray`.
 
 		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_arraybuffer_byteoffset_length
 
@@ -87,24 +88,27 @@ extern class Buffer extends Uint8Array {
 	static function alloc(size:Int):Buffer;
 
 	/**
-		Allocates a new `Buffer` of `size` bytes. If `size` is larger than buffer.constants.MAX_LENGTH or smaller than 0,
-		ERR_INVALID_OPT_VALUE is thrown. A zero-length `Buffer` is created if `size` is 0.
+		Allocates a new `Buffer` of `size` bytes. If `size` is larger than
+		`buffer.constants.MAX_LENGTH` or smaller than 0, `ERR_INVALID_OPT_VALUE`
+		is thrown. A zero-length `Buffer` is created if `size` is 0.
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_allocunsafe_size
 	**/
 	static function allocUnsafe(size:Int):Buffer;
 
 	/**
-		Allocates a new `Buffer` of `size` bytes. If `size` is larger than buffer.constants.MAX_LENGTH or smaller than 0,
-		ERR_INVALID_OPT_VALUE is thrown. A zero-length `Buffer` is created if `size` is 0.
+		Allocates a new `Buffer` of `size` bytes. If `size` is larger than
+		`buffer.constants.MAX_LENGTH` or smaller than 0, `ERR_INVALID_OPT_VALUE`
+		is thrown. A zero-length `Buffer` is created if `size` is 0.
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_allocunsafeslow_size
 	**/
 	static function allocUnsafeSlow(size:Int):Buffer;
 
 	/**
-		Returns the actual byte length of a string.
-		This is not the same as String.prototype.length since that returns the number of characters in a string.
+		Returns the actual byte length of a string. This is not the same as
+		`String.prototype.length` since that returns the number of characters in
+		a string.
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_bytelength_string_encoding
 	**/
