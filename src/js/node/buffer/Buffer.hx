@@ -44,7 +44,7 @@ import haxe.extern.EitherType;
 	@see https://nodejs.org/api/buffer.html#buffer_class_buffer
 **/
 @:jsRequire("buffer", "Buffer")
-extern class Buffer extends Uint8Array implements ArrayAccess<Int> {
+extern class Buffer extends Uint8Array {
 	/**
 		Allocates a new `Buffer` using an `array` of octets.
 
@@ -167,9 +167,9 @@ extern class Buffer extends Uint8Array implements ArrayAccess<Int> {
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_string_encoding
 	**/
-	@:overload(function(array:Array<Int>):Buffer {})
 	// it need extern SharedArrayBuffer for node
 	// @:overload(function(arrayBuffer:SharedArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer {})
+	@:overload(function(array:Array<Int>):Buffer {})
 	@:overload(function(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer {})
 	@:overload(function(buffer:Uint8Array):Buffer {})
 	@:overload(function(object:{}, ?offsetOrEncoding:EitherType<Int, String>, ?length:Int):Buffer {})
