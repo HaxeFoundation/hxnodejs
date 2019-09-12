@@ -141,26 +141,22 @@ extern class Buffer extends Uint8Array {
 	/**
 		Allocates a new `Buffer` using an `array` of octets.
 
-		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_array
-
 		This creates a view of the `ArrayBuffer` without copying the underlying
 		memory. For example, when passed a reference to the `.buffer` property of a
 		`TypedArray` instance, the newly created `Buffer` will share the same
 		allocated memory as the `TypedArray`.
 
-		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_arraybuffer_byteoffset_length
-
 		Copies the passed `buffer` data onto a new `Buffer` instance.
-
-		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_buffer
 
 		For objects whose `valueOf()` function returns a value not strictly equal to `object`,
 		returns `Buffer.from(object.valueOf(), offsetOrEncoding, length)`.
 
-		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_object_offsetorencoding_length
-
 		Creates a new `Buffer` containing `string`. The `encoding` parameter identifies the character encoding of `string`.
 
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_array
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_arraybuffer_byteoffset_length
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_buffer
+		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_object_offsetorencoding_length
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_string_encoding
 	**/
 	// it need extern SharedArrayBuffer for node
@@ -202,9 +198,7 @@ extern class Buffer extends Uint8Array {
 	**/
 	// ArrayAccess impleemnts js.lib.Uint8Array
 	/**
-		When setting `byteOffset` in `Buffer.from(ArrayBuffer, byteOffset, length)`
-		or sometimes when allocating a buffer smaller than `Buffer.poolSize` the
-		buffer doesn't start from a zero offset on the underlying `ArrayBuffer`.
+		<ArrayBuffer> The underlying `ArrayBuffer` object based on which this Buffer object is created.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_buffer
 	**/
@@ -220,11 +214,6 @@ extern class Buffer extends Uint8Array {
 	**/
 	static var byteOffset(default, null):Int;
 
-	/**
-		<ArrayBuffer> The underlying `ArrayBuffer` object based on which this Buffer object is created.
-
-		@see https://nodejs.org/api/buffer.html#buffer_buf_buffer
-	**/
 	/**
 		Compares `buf` with `target` and returns a number indicating whether `buf` comes before, after,
 		or is the same as `target` in sort order. Comparison is based on the actual sequence of bytes in each `Buffer`.
@@ -265,7 +254,7 @@ extern class Buffer extends Uint8Array {
 	function fill(value:String, ?offset:Int, ?end:Int, ?encoding:String):Buffer;
 
 	/**
-		Equivalent to buf.indexOf() !== -1.
+		Equivalent to `buf.indexOf() !== -1`.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_includes_value_byteoffset_encoding
 	**/
@@ -289,10 +278,11 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_keys
 	**/
-	function keys():Iterator<Int>;
+	function keys():js.lib.Iterator<Int>;
 
 	/**
-		Identical to buf.indexOf(), except the last occurrence of `value` is found rather than the first occurrence.
+		Identical to `buf.indexOf()`, except the last occurrence of `value` is found
+		rather than the first occurrence.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_lastindexof_value_byteoffset_encoding
 	**/
@@ -300,7 +290,8 @@ extern class Buffer extends Uint8Array {
 	function lastIndexOf(value:String, ?byteOffset:Int, ?encoding:String):Bool;
 
 	/**
-		Returns the amount of memory allocated for buf in bytes. This does not necessarily reflect the amount of "usable" data within buf.
+		Returns the amount of memory allocated for `buf` in bytes. This
+		does not necessarily reflect the amount of "usable" data within `buf`.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_length
 		define on Uint8Array
@@ -455,28 +446,34 @@ extern class Buffer extends Uint8Array {
 	function slice(start:Int, end:Int):Buffer;
 
 	/**
-		Interprets `buf` as an array of unsigned 16-bit integers and swaps the byte order in-place. Throws ERR_INVALID_BUFFER_SIZE if buf.length is not a multiple of 2.
+		Interprets `buf` as an array of unsigned 16-bit integers and swaps the
+		byte order in-place. Throws `ERR_INVALID_BUFFER_SIZE` if `buf.length`
+		is not a multiple of 2.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_swap16
 	**/
 	function swap16():Buffer;
 
 	/**
-		Interprets `buf` as an array of unsigned 32-bit integers and swaps the byte order in-place. Throws ERR_INVALID_BUFFER_SIZE if buf.length is not a multiple of 4.
+		Interprets `buf` as an array of unsigned 32-bit integers and swaps the
+		byte order in-place. Throws `ERR_INVALID_BUFFER_SIZE` if `buf.length`
+		is not a multiple of 4.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_swap32
 	**/
 	function swap32():Buffer;
 
 	/**
-		Interprets `buf` as an array of 64-bit numbers and swaps byte order in-place. Throws ERR_INVALID_BUFFER_SIZE if buf.length is not a multiple of 8.
+		Interprets `buf` as an array of 64-bit numbers and swaps byte order in-place.
+		Throws `ERR_INVALID_BUFFER_SIZE` if `buf.length` is not a multiple of 8.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_swap64
 	**/
 	function swap64():Buffer;
 
 	/**
-		Returns a JSON representation of `buf`. JSON.stringify() implicitly calls this function when stringifying a `Buffer` instance.
+		Returns a JSON representation of `buf`. `JSON.stringify()` implicitly calls
+		this function when stringifying a `Buffer` instance.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_tojson
 	**/
