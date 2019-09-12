@@ -208,7 +208,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 		@see https://nodejs.org/api/stream.html#stream_readable_readablelength
 	**/
-	var readahleLength(default, null):Int;
+	var readableLength(default, null):Int;
 
 	/**
 		Getter for the property `objectMode` of a given `Readable` stream.
