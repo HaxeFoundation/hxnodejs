@@ -743,6 +743,19 @@ private extern class BufferModule {
 	@see https://nodejs.org/api/buffer.html#buffer_buffer_constants
 **/
 typedef BufferConstants = {
+	/**
+		On 32-bit architectures, this value is `(2^30)-1` (~1GB).
+		On 64-bit architectures, this value is `(2^31)-1` (~2GB).
+
+		@see https://nodejs.org/api/buffer.html#buffer_buffer_constants_max_length
+	**/
 	var MAX_LENGTH:Int;
+
+	/**
+		Represents the largest `length` that a `string` primitive can have, counted
+		in UTF-16 code units.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buffer_constants_max_string_length
+	**/
 	var MAX_STRING_LENGTH:Int;
 }
