@@ -283,7 +283,7 @@ extern interface IEventEmitter {
 
 		@see https://nodejs.org/api/events.html#events_emitter_off_eventname_listener
 	**/
-	function off<T:Function>(event:Event<T>, listener:T):TSelf;
+	function off<T:Function>(event:Event<T>, listener:T):IEventEmitter;
 
 	/**
 		Adds the `listener` function to the end of the listeners array for the
@@ -357,5 +357,5 @@ extern interface IEventEmitter {
 
 		@see https://nodejs.org/api/events.html#events_emitter_rawlisteners_eventname
 	**/
-	function rawListeners<T:Function>(eventName:Event<T>):Void
+	function rawListeners<T:Function>(eventName:Event<T>):Void;
 }
