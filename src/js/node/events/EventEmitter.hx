@@ -22,6 +22,7 @@
 
 package js.node.events;
 
+import js.lib.Promise;
 import haxe.Constraints.Function;
 
 /**
@@ -78,6 +79,8 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	function getMaxListeners():Int;
 	static function listenerCount<T:Function>(emitter:IEventEmitter, event:Event<T>):Int;
 	function listeners<T:Function>(event:Event<T>):Array<T>;
+
+	function off<T:Function>(event:Event<T>, listener:T):TSelf;
 	function on<T:Function>(event:Event<T>, listener:T):TSelf;
 
 	function once<T:Function>(event:Event<T>, listener:T):TSelf;
@@ -89,6 +92,17 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	function removeListener<T:Function>(event:Event<T>, listener:T):TSelf;
 
 	function setMaxListeners(n:Int):Void;
+	function rawListeners<T:Function>(eventName:Event<T>):Void;
+	static inline function eventsOnce<T>(emitter:IEventEmitter,name:String):Promise<T>
+	{
+		return EventsModules.once(emitter,name);
+	}
+}
+
+@js:Require("events")
+private extern class EventsModules
+{
+	static function once<T>(emitter:IEventEmitter,name:String):Promise<T>;
 }
 
 /**
