@@ -28,6 +28,9 @@ import js.lib.Error;
 import js.Error;
 #end
 
+/**
+	@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_new_assert_assertionerror_options
+  **/
 typedef AssertionErrorOptions = {
 	@:optional var actual:Dynamic;
 	@:optional var expected:Dynamic;
@@ -38,11 +41,18 @@ typedef AssertionErrorOptions = {
 	@:optional var stackStartFunction:Dynamic;
 }
 
+/**
+ 	Indicates the failure of an assertion. All errors thrown by the `Assert` module will be instances of the `AssertionError` class.
+
+	@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_class_assert_assertionerror
+  **/
 @:jsRequire("assert", "AssertionError")
 extern class AssertionError extends Error {
 	var actual:Dynamic;
 	var expected:Dynamic;
 	@:native("operator") var operator_:String;
 	var generatedMessage:Bool;
+	var code:String;
+
 	function new(options:AssertionErrorOptions);
 }
