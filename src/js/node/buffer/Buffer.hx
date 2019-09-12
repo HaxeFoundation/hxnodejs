@@ -27,12 +27,10 @@ import haxe.io.Bytes;
 #if haxe4
 import js.lib.ArrayBufferView;
 import js.lib.Map.MapEntry;
-import js.lib.DataView;
 import js.lib.ArrayBuffer;
 import js.lib.Uint8Array;
 import js.lib.Object;
 #else
-import js.html.DataView;
 import js.html.ArrayBuffer;
 import js.html.Uint8Array;
 #end
@@ -48,26 +46,22 @@ extern class Buffer extends Uint8Array {
 	/**
 		Allocates a new `Buffer` using an `array` of octets.
 
-		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_array
-
 		This creates a view of the `ArrayBuffer` or `SharedArrayBuffer` without
 		copying the underlying memory. For example, when passed a reference to the
 		`.buffer` property of a `TypedArray` instance, the newly created `Buffer`
 		will share the same allocated memory as the `TypedArray`.
 
-		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_arraybuffer_byteoffset_length
-
 		Copies the passed `buffer` data onto a new `Buffer` instance.
-
-		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_buffer
 
 		Allocates a new `Buffer` of `size` bytes. If `size` is larger than buffer.constants.MAX_LENGTH or smaller than 0,
 		ERR_INVALID_OPT_VALUE is thrown. A zero-length `Buffer` is created if `size` is 0.
 
-		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_size
-
 		Creates a new `Buffer` containing `string`. The `encoding` parameter identifies the character encoding of `string`.
 
+		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_array
+		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_arraybuffer_byteoffset_length
+		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_buffer
+		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_size
 		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_string_encoding
 	**/
 	@:deprecated
@@ -128,7 +122,9 @@ extern class Buffer extends Uint8Array {
 		return untyped Buffer['byteLength'](string, encoding);
 
 	/**
-		Compares `buf1` to `buf2` typically for the purpose of sorting arrays of `Buffer` instances. This is equivalent to calling buf1.compare(buf2).
+		Compares `buf1` to `buf2` typically for the purpose of sorting arrays of
+		`Buffer` instances. This is equivalent to calling
+		`buf1.compare(buf2)`.
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_compare_buf1_buf2
 	**/
@@ -147,9 +143,10 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_array
 
-		This creates a view of the ArrayBuffer without copying the underlying memory.
-		For example, when passed a reference to the `.buffer` property of a TypedArray instance,
-		the newly created `Buffer` will share the same allocated memory as the TypedArray.
+		This creates a view of the `ArrayBuffer` without copying the underlying
+		memory. For example, when passed a reference to the `.buffer` property of a
+		`TypedArray` instance, the newly created `Buffer` will share the same
+		allocated memory as the `TypedArray`.
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_arraybuffer_byteoffset_length
 
@@ -196,11 +193,6 @@ extern class Buffer extends Uint8Array {
 	static var poolSize:Int;
 
 	/**
-		The index operator [index] can be used to get and set the octet at position index in buf. The values refer to individual bytes, so the legal value range is between 0x00 and 0xFF (hex) or 0 and 255 (decimal).
-
-
-	**/
-	/**
 		buf[index]
 
 		The index operator `[index]` can be used to get and set the octet at position `index` in `buf`.
@@ -208,11 +200,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_index
 	**/
-	// it define in js.lib.Uint8Array
-	// @:arrayAccess
-	// public inline function set(index:Int):Buffer {
-	//	return
-	// }
+	// ArrayAccess impleemnts js.lib.Uint8Array
 	/**
 		When setting `byteOffset` in `Buffer.from(ArrayBuffer, byteOffset, length)`
 		or sometimes when allocating a buffer smaller than `Buffer.poolSize` the
