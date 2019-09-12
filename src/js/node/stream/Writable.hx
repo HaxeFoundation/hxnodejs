@@ -142,21 +142,23 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 	function setDefaultEncoding(encoding:String):Writable<TSelf>;
 
 	/**
-		The `writable.uncork()` method flushes all data buffered since stream.cork() was called.
+		Is `true` after `writable.destroy()` has been called.
 
-		@see https://nodejs.org/api/stream.html#stream_writable_uncork
+		@see https://nodejs.org/api/stream.html#stream_writable_destroyed
 	**/
 	function uncork():Void;
 
 	/**
-		Is `true` if it is safe to call writable.write().
+		Is `true` if it is safe to call `writable.write()`.
 
 		@see https://nodejs.org/api/stream.html#stream_writable_writable
 	**/
 	var writable(default, null):Bool;
 
 	/**
-		Is `true` after writable.end() has been called. This property does not indicate whether the data has been flushed, for this use writable.writableFinished instead.
+		Is `true` after `writable.end()` has been called. This property
+		does not indicate whether the data has been flushed, for this use
+		`writable.writableFinished` instead.
 
 		@seehttps://nodejs.org/api/stream.html#stream_writable_writableended
 	**/
