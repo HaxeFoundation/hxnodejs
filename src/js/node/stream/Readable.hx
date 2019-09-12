@@ -247,7 +247,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 		@see https://nodejs.org/api/stream.html#stream_readable_unshift_chunk_encoding
 	**/
-	@:overload(function(Null<EitherType<Uint8Array,Any>>):Void{{})
+	@:overload(function(chunk:Null<EitherType<Uint8Array, Any>>):Void {})
 	function unshift(chunk:String, ?encoding:String):Void;
 
 	/**
