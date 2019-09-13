@@ -99,9 +99,7 @@ typedef TextDecoderOptions = {
 }
 
 /**
-	Options object used by `textDecoder.decode()`.
-
-	@see https://nodejs.org/api/util.html#util_textdecoder_decode_input_options
+	Options object used by `TextDecoder.decode`.
 **/
 typedef TextDecodeOptions = {
 	/**
