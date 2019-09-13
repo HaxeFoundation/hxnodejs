@@ -30,8 +30,6 @@ import js.node.readline.*;
 
 /**
 	Options object used by `Readline.createInterface`.
-
-	@see https://nodejs.org/api/readline.html#readline_readline_createinterface_options
 **/
 typedef ReadlineOptions = {
 	/**
@@ -110,8 +108,6 @@ typedef ReadlineCompleterCallback = #if (haxe_ver >= 4) (line : String) -> Array
 
 /**
 	Enumeration of possible directions for `Readline.clearLine`.
-
-	@see https://nodejs.org/api/readline.html#readline_readline_clearline_stream_dir_callback
 **/
 @:enum abstract ClearLineDirection(Int) from Int to Int {
 	/**
@@ -131,7 +127,7 @@ typedef ReadlineCompleterCallback = #if (haxe_ver >= 4) (line : String) -> Array
 }
 
 /**
-	Provides an interface for reading data from a `Readable` stream (such as `process.stdin`) one line at a time.
+	Provides an interface for reading data from a `Readable` stream (such as `Process.stdin`) one line at a time.
 
 	@see https://nodejs.org/api/readline.html#readline_readline
 **/
@@ -160,7 +156,7 @@ extern class Readline {
 	static function createInterface(options:ReadlineOptions):Interface;
 
 	/**
-		Moves cursor to the specified position in a given `TTY` `stream`.
+		Moves cursor to the specified position in a given `Tty` `stream`.
 
 		@see https://nodejs.org/api/readline.html#readline_readline_cursorto_stream_x_y_callback
 	**/
@@ -174,7 +170,7 @@ extern class Readline {
 	static function emitKeypressEvents(stream:IReadable, ?iface:Interface):Void;
 
 	/**
-		Moves the cursor relative to its current position in a given `TTY` `stream`.
+		Moves the cursor relative to its current position in a given `Tty` `stream`.
 
 		@see https://nodejs.org/api/readline.html#readline_readline_movecursor_stream_dx_dy_callback
 	**/

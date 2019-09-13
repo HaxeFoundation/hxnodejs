@@ -86,13 +86,13 @@ typedef InterfaceWriteKey = {
 }
 
 /**
-	Instances of the `readline.Interface` class are constructed using the `readline.createInterface()` method.
+	Instances of the `Interface` class are constructed using the `Readline.createInterface` method.
 
 	@see https://nodejs.org/api/readline.html#readline_class_interface
 **/
 extern class Interface extends EventEmitter<Interface> {
 	/**
-		Closes the `readline.Interface` instance and relinquishes control over the input and output streams.
+		Closes the `Interface` instance and relinquishes control over the input and output streams.
 
 		@see https://nodejs.org/api/readline.html#readline_rl_close
 	**/
@@ -106,8 +106,8 @@ extern class Interface extends EventEmitter<Interface> {
 	function pause():Void;
 
 	/**
-		Writes the `readline.Interface` instances configured `prompt` to a new line in `output` in order to provide a
-		user with a new location at which to provide input.
+		Writes the `Interface` instances configured `prompt` to a new line in `output` in order to provide a user with a
+		new location at which to provide input.
 
 		@see https://nodejs.org/api/readline.html#readline_rl_prompt_preservecursor
 	**/
@@ -129,7 +129,7 @@ extern class Interface extends EventEmitter<Interface> {
 	function resume():Void;
 
 	/**
-		Sets the prompt that will be written to `output` whenever `rl.prompt()` is called.
+		Sets the prompt that will be written to `output` whenever `prompt` is called.
 
 		@see https://nodejs.org/api/readline.html#readline_rl_setprompt_prompt
 	**/
