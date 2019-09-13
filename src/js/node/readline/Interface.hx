@@ -22,7 +22,6 @@
 
 package js.node.readline;
 
-import haxe.extern.EitherType;
 import js.node.events.EventEmitter;
 
 /**
@@ -30,63 +29,50 @@ import js.node.events.EventEmitter;
 **/
 @:enum abstract InterfaceEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
-		Emitted whenever the input stream receives a \n, usually received when the user hits enter, or return.
-		This is a good hook to listen for user input.
-	**/
-	var Line:InterfaceEvent<String->Void> = "line";
-
-	/**
-		Emitted whenever the input stream is paused.
-		Also emitted whenever the input stream is not paused and receives the SIGCONT event. (See events SIGTSTP and SIGCONT)
-	**/
-	var Pause:InterfaceEvent<Void->Void> = "pause";
-
-	/**
-		Emitted whenever the input stream is resumed.
-	**/
-	var Resume:InterfaceEvent<Void->Void> = "resume";
-
-	/**
-		Emitted when close() is called.
-
-		Also emitted when the input stream receives its "end" event.
-		The `Interface` instance should be considered "finished" once this is emitted.
-		For example, when the input stream receives ^D, respectively known as EOT.
-
-		This event is also called if there is no SIGINT event listener present when the input stream receives a ^C,
-		respectively known as SIGINT.
+		@see https://nodejs.org/api/readline.html#readline_event_close
 	**/
 	var Close:InterfaceEvent<Void->Void> = "close";
 
 	/**
-		Emitted whenever the input stream receives a ^C, respectively known as SIGINT.
-		If there is no SIGINT event listener present when the input stream receives a SIGINT, pause will be triggered.
+		Emitted whenever the `input` stream receives an end-of-line input (`\n`, `\r`, or `\r\n`).
+
+		@see https://nodejs.org/api/readline.html#readline_event_line
+	**/
+	var Line:InterfaceEvent<String->Void> = "line";
+
+	/**
+		@see https://nodejs.org/api/readline.html#readline_event_pause
+	**/
+	var Pause:InterfaceEvent<Void->Void> = "pause";
+
+	/**
+		Emitted whenever the `input` stream is resumed.
+
+		@see https://nodejs.org/api/readline.html#readline_event_resume
+	**/
+	var Resume:InterfaceEvent<Void->Void> = "resume";
+
+	/**
+		Emitted when a Node.js process previously moved into the background using `<ctrl>-Z` (i.e. `SIGTSTP`) is then
+		brought back to the foreground using `fg(1p)`.
+
+		@see https://nodejs.org/api/readline.html#readline_event_sigcont
+	**/
+	var SIGCONT:InterfaceEvent<Void->Void> = "SIGCONT";
+
+	/**
+		Emitted whenever the `input` stream receives a `<ctrl>-C` input, known typically as `SIGINT`.
+
+		@see https://nodejs.org/api/readline.html#readline_event_sigint
 	**/
 	var SIGINT:InterfaceEvent<Void->Void> = "SIGINT";
 
 	/**
-		This does not work on Windows.
+		Emitted when the `input` stream receives a `<ctrl>-Z` input, typically known as `SIGTSTP`.
 
-		Emitted whenever the input stream receives a ^Z, respectively known as SIGTSTP.
-		If there is no SIGTSTP event listener present when the input stream receives a SIGTSTP,
-		the program will be sent to the background.
-
-		When the program is resumed with fg, the pause and SIGCONT events will be emitted.
-		You can use either to resume the stream.
-
-		The pause and SIGCONT events will not be triggered if the stream was paused
-		before the program was sent to the background.
+		@see https://nodejs.org/api/readline.html#readline_event_sigtstp
 	**/
 	var SIGTSTP:InterfaceEvent<Void->Void> = "SIGTSTP";
-
-	/**
-		This does not work on Windows.
-
-		Emitted whenever the input stream is sent to the background with ^Z, respectively known as SIGTSTP,
-		and then continued with fg(1). This event only emits if the stream was not paused before sending
-		the program to the background.
-	**/
-	var SIGCONT:InterfaceEvent<Void->Void> = "SIGCONT";
 }
 
 /**
