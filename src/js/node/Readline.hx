@@ -22,6 +22,7 @@
 
 package js.node;
 
+import js.lib.Function;
 import haxe.extern.EitherType;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
@@ -94,41 +95,52 @@ typedef ReadlineCompleterCallback = #if (haxe_ver >= 4) (line : String) -> Array
 }
 
 /**
-	Readline allows reading of a stream (such as process.stdin) on a line-by-line basis.
+	Provides an interface for reading data from a `Readable` stream (such as `process.stdin`) one line at a time.
 
-	Note that once you've invoked this module, your node program will not terminate until you've closed the interface.
+	@see https://nodejs.org/api/readline.html#readline_readline
 **/
 @:jsRequire("readline")
 extern class Readline {
 	/**
-		Creates a readline Interface instance.
-		`createInterface` is commonly used with process.stdin and process.stdout in order to accept user input.
-		Once you have a readline instance, you most commonly listen for the "line" event.
+		Clears current line of given `TTY` stream in a specified direction identified by `dir`.
 
-		If terminal is `true` for this instance then the output stream will get the best compatibility if it defines
-		an `columns` property, and fires a "resize" event on the output if/when the columns ever change
-		(process.stdout does this automatically when it is a TTY).
+		@see https://nodejs.org/api/readline.html#readline_readline_clearline_stream_dir_callback
+	**/
+	static function clearLine(stream:IWritable, dir:ClearLineDirection, ?callback:Function):Bool;
+
+	/**
+		Clears the given `TTY` stream from the current position of the cursor down.
+
+		@see https://nodejs.org/api/readline.html#readline_readline_clearscreendown_stream_callback
+	**/
+	static function clearScreenDown(stream:IWritable, ?callback:Function):Bool;
+
+	/**
+		Creates a new `readline.Interface` instance.
+
+		@see https://nodejs.org/api/readline.html#readline_readline_createinterface_options
 	**/
 	@:overload(function(input:IReadable, ?output:IWritable, ?completer:ReadlineCompleterCallback, ?terminal:Bool):Interface {})
 	static function createInterface(options:ReadlineOptions):Interface;
 
 	/**
-		Move cursor to the specified position in a given TTY stream.
+		Moves cursor to the specified position in a given `TTY` `stream`.
+
+		@see https://nodejs.org/api/readline.html#readline_readline_cursorto_stream_x_y_callback
 	**/
-	static function cursorTo(stream:IWritable, x:Int, y:Int):Void;
+	static function cursorTo(stream:IWritable, x:Int, ?y:Int, ?callback:Function):Bool;
 
 	/**
-		Move cursor relative to it's current position in a given TTY stream.
+		Causes the given `Readable` stream to begin emitting `'keypress'` events corresponding to received input.
+
+		@see https://nodejs.org/api/readline.html#readline_readline_emitkeypressevents_stream_interface
 	**/
-	static function moveCursor(stream:IWritable, dx:Int, dy:Int):Void;
+	static function emitKeypressEvents(stream:IReadable, ?iface:Interface):Void;
 
 	/**
-		Clears current line of given TTY stream in a specified direction.
-	**/
-	static function clearLine(stream:IWritable, dir:ClearLineDirection):Void;
+		Moves the cursor relative to its current position in a given `TTY` `stream`.
 
-	/**
-		Clears the screen from the current position of the cursor down.
+		@see https://nodejs.org/api/readline.html#readline_readline_movecursor_stream_dx_dy_callback
 	**/
-	static function clearScreenDown(stream:IWritable):Void;
+	static function moveCursor(stream:IWritable, dx:Int, dy:Int, ?callback:Function):Bool;
 }
