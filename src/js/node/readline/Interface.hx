@@ -95,63 +95,64 @@ import js.node.events.EventEmitter;
 typedef InterfaceWriteKey = {
 	var name:String;
 	@:optional var ctrl:Bool;
-	@:optional var shift:Bool;
 	@:optional var meta:Bool;
+	@:optional var shift:Bool;
 }
 
 /**
-	The class that represents a readline interface with an input and output stream.
+	Instances of the `readline.Interface` class are constructed using the `readline.createInterface()` method.
+
+	@see https://nodejs.org/api/readline.html#readline_class_interface
 **/
 extern class Interface extends EventEmitter<Interface> {
 	/**
-		Sets the prompt, for example when you run node on the command line, you see > , which is node's prompt.
-	**/
-	function setPrompt(prompt:String):Void;
+		Closes the `readline.Interface` instance and relinquishes control over the input and output streams.
 
-	/**
-		Readies readline for input from the user, putting the current `setPrompt` options on a new line,
-		giving the user a new spot to write.
-
-		Set `preserveCursor` to true to prevent the cursor placement being reset to 0.
-
-		This will also resume the input stream used with `createInterface` if it has been paused.
-
-		If `output` is set to null when calling `Readline.createInterface`, the prompt is not written.
-	**/
-	function prompt(?preserveCursor:Bool):Void;
-
-	/**
-		Prepends the prompt with `query` and invokes `callback` with the user's response.
-		Displays the query to the user, and then invokes `callback` with the user's response after it has been typed.
-
-		This will also resume the input stream used with `createInterface` if it has been paused.
-	**/
-	function question(query:String, callback:String->Void):Void;
-
-	/**
-		Pauses the readline input stream, allowing it to be resumed later if needed.
-
-		Note that this doesn't immediately pause the stream of events.
-		Several events may be emitted after calling `pause`, including `line`.
-	**/
-	function pause():Void;
-
-	/**
-		Resumes the readline input stream.
-	**/
-	function resume():Void;
-
-	/**
-		Closes the `Interface` instance, relinquishing control on the input and output streams.
-		The `close` event will also be emitted.
+		@see https://nodejs.org/api/readline.html#readline_rl_close
 	**/
 	function close():Void;
 
 	/**
-		Writes `data` to output stream.
-		`key` is an object literal to represent a key sequence; available if the terminal is a TTY.
+		Pauses the `input` stream, allowing it to be resumed later if necessary.
 
-		This will also resume the input stream if it has been paused.
+		@see https://nodejs.org/api/readline.html#readline_rl_pause
 	**/
-	function write(data:EitherType<Buffer, String>, ?key:InterfaceWriteKey):Void;
+	function pause():Void;
+
+	/**
+		Writes the `readline.Interface` instances configured `prompt` to a new line in `output` in order to provide a
+		user with a new location at which to provide input.
+
+		@see https://nodejs.org/api/readline.html#readline_rl_prompt_preservecursor
+	**/
+	function prompt(?preserveCursor:Bool):Void;
+
+	/**
+		Displays the `query` by writing it to the `output`, waits for user `input` to be provided on input, then invokes
+		the `callback` function passing the provided input as the first argument.
+
+		@see https://nodejs.org/api/readline.html#readline_rl_question_query_callback
+	**/
+	function question(query:String, callback:String->Void):Void;
+
+	/**
+		Resumes the `input` stream if it has been paused.
+
+		@see https://nodejs.org/api/readline.html#readline_rl_resume
+	**/
+	function resume():Void;
+
+	/**
+		Sets the prompt that will be written to `output` whenever `rl.prompt()` is called.
+
+		@see https://nodejs.org/api/readline.html#readline_rl_setprompt_prompt
+	**/
+	function setPrompt(prompt:String):Void;
+
+	/**
+		Write either `data` or a key sequence identified by `key` to the `output`.
+
+		@see https://nodejs.org/api/readline.html#readline_rl_write_data_key
+	**/
+	function write(data:Null<String>, ?key:InterfaceWriteKey):Void;
 }
