@@ -28,68 +28,104 @@ import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
 import js.node.readline.*;
 
+/**
+	Options object used by `Readline.createInterface`.
+
+	@see https://nodejs.org/api/readline.html#readline_readline_createinterface_options
+**/
 typedef ReadlineOptions = {
 	/**
-		the readable stream to listen to
+		The `Readable` stream to listen to.
 	**/
 	var input:IReadable;
 
 	/**
-		the writable stream to write readline data to
+		The `Writable` stream to write readline data to.
 	**/
 	@:optional var output:IWritable;
 
 	/**
-		an optional function that is used for Tab autocompletion.
+		An optional function used for Tab autocompletion.
 
-		The `completer` function is given the current line entered by the user,
-		and is supposed to return an Array with 2 entries:
-			* An Array with matching entries for the completion.
-			* The substring that was used for the matching.
-		Which ends up looking something like: [[substr1, substr2, ...], originalsubstring].
+		@see https://nodejs.org/api/readline.html#readline_use_of_the_completer_function
 	**/
 	@:optional var completer:ReadlineCompleterCallback;
 
 	/**
-		pass true if the input and output streams should be treated like a TTY,
-		and have ANSI/VT100 escape codes written to it.
+		`true` if the `input` and `output` streams should be treated like a TTY, and have ANSI/VT100 escape codes
+		written to it.
 
-		Defaults to checking isTTY on the output stream upon instantiation.
+		Default: checking `isTTY` on the `output` stream upon instantiation.
 	**/
 	@:optional var terminal:Bool;
 
 	/**
-		maximum number of history lines retained.
-		Defaults to 30.
+		Maximum number of history lines retained.
+		To disable the history set this value to `0`.
+		This option makes sense only if `terminal` is set to `true` by the user or by an internal `output` check,
+		otherwise the history caching mechanism is not initialized at all.
+
+		Default: `30`.
 	**/
 	@:optional var historySize:Int;
 
 	/**
-		the prompt string to use.
-		Default: '> '
+		The prompt string to use.
+
+		Default: `'> '`.
 	**/
 	@:optional var prompt:String;
+
+	/**
+		If the delay between `\r` and `\n` exceeds `crlfDelay` milliseconds, both `\r` and `\n` will be treated as
+		separate end-of-line input.
+		`crlfDelay` will be coerced to a number no less than `100`.
+		It can be set to `Infinity`, in which case `\r` followed by `\n` will always be considered a single newline
+		(which may be reasonable for reading files with `\r\n` line delimiter).
+
+		Default: `100`.
+	**/
+	@:optional var crlfDelay:Int;
+
+	/**
+		If `true`, when a new input line added to the history list duplicates an older one, this removes the older line
+		from the list.
+
+		Default: `false`.
+	**/
+	@:optional var removeHistoryDuplicates:Bool;
+
+	/**
+		The duration `readline` will wait for a character (when reading an ambiguous key sequence in milliseconds one
+		that can both form a complete key sequence using the input read so far and can take additional input to complete
+		a longer key sequence).
+
+		Default: `500`.
+	**/
+	@:optional var escapeCodeTimeout:Int;
 }
 
 typedef ReadlineCompleterCallback = #if (haxe_ver >= 4) (line : String) -> Array<EitherType<Array<String>, String>>; #else String->
 	Array<EitherType<Array<String>, String>>; #end
 
 /**
-	Enumeration of possible directions for `Readline.clearLine`
+	Enumeration of possible directions for `Readline.clearLine`.
+
+	@see https://nodejs.org/api/readline.html#readline_readline_clearline_stream_dir_callback
 **/
 @:enum abstract ClearLineDirection(Int) from Int to Int {
 	/**
-		to the left from cursor
+		to the left from cursor.
 	**/
 	var Left = -1;
 
 	/**
-		to the right from cursor
+		to the right from cursor.
 	**/
 	var Right = 1;
 
 	/**
-		the entire line
+		the entire line.
 	**/
 	var EntireLine = 0;
 }
