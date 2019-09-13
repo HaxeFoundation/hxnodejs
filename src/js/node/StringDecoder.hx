@@ -54,7 +54,7 @@ extern class StringDecoder {
 	/**
 		Returns a decoded string, ensuring that any incomplete multibyte characters at the end of the `Buffer` or
 		`ArrayBufferView` are omitted from the returned string and stored in an internal buffer for the next call to
-		`stringDecoder.write()` or `stringDecoder.end()`.
+		`StringDecoder.write` or `StringDecoder.end`.
 
 		@see https://nodejs.org/api/string_decoder.html#string_decoder_stringdecoder_write_buffer
 	**/
