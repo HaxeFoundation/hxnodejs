@@ -22,19 +22,19 @@
 
 package js.node.buffer;
 
+import haxe.extern.EitherType;
 import haxe.io.UInt8Array;
 import haxe.io.Bytes;
 #if haxe4
+import js.lib.Object;
 import js.lib.ArrayBufferView;
-import js.lib.Map.MapEntry;
 import js.lib.ArrayBuffer;
 import js.lib.Uint8Array;
-import js.lib.Object;
 #else
+import js.html.ArrayBufferView;
 import js.html.ArrayBuffer;
 import js.html.Uint8Array;
 #end
-import haxe.extern.EitherType;
 
 /**
 	The `Buffer` class is a global type for dealing with binary data directly. It can be constructed in a variety of ways.
@@ -198,7 +198,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_entries
 	**/
-	function entries():js.lib.Iterator<MapEntry<Int, Int>>;
+	function entries():js.node.Iterator<js.node.KeyValue<Int, Int>>;
 
 	/**
 		Returns `true` if both `buf` and `otherBuffer` have exactly the same bytes, `false` otherwise.
@@ -243,7 +243,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_keys
 	**/
-	function keys():js.lib.Iterator<Int>;
+	function keys():js.node.Iterator<Int>;
 
 	/**
 		Identical to `buf.indexOf()`, except the last occurrence of `value` is found
@@ -414,7 +414,11 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_subarray_start_end
 	**/
+	#if haxe4
 	function subarray(?start:Int, ?end:Int):Buffer;
+	#else
+	override function subarray(start:Int, ?end:Int):Buffer;
+	#end
 
 	/**
 		Returns a new `Buffer` that references the same memory as the original,
@@ -473,7 +477,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_values
 	**/
-	function values():js.lib.Iterator<Int>;
+	function values():js.node.Iterator<Int>;
 
 	/**
 		Writes `string` to `buf` at `offset` according to the character encoding in `encoding`.
