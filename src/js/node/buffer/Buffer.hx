@@ -44,19 +44,7 @@ import haxe.extern.EitherType;
 @:jsRequire("buffer", "Buffer")
 extern class Buffer extends Uint8Array {
 	/**
-		Allocates a new `Buffer` using an `array` of octets.
-
-		This creates a view of the `ArrayBuffer` or `SharedArrayBuffer` without
-		copying the underlying memory. For example, when passed a reference to the
-		`.buffer` property of a `TypedArray` instance, the newly created `Buffer`
-		will share the same allocated memory as the `TypedArray`.
-
-		Copies the passed `buffer` data onto a new `Buffer` instance.
-
-		Allocates a new `Buffer` of `size` bytes. If `size` is larger than buffer.constants.MAX_LENGTH or smaller than 0,
-		ERR_INVALID_OPT_VALUE is thrown. A zero-length `Buffer` is created if `size` is 0.
-
-		Creates a new `Buffer` containing `string`. The `encoding` parameter identifies the character encoding of `string`.
+		Allocates a new buffer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_array
 		@see https://nodejs.org/api/buffer.html#buffer_new_buffer_arraybuffer_byteoffset_length
@@ -123,8 +111,7 @@ extern class Buffer extends Uint8Array {
 
 	/**
 		Compares `buf1` to `buf2` typically for the purpose of sorting arrays of
-		`Buffer` instances. This is equivalent to calling
-		`buf1.compare(buf2)`.
+		`Buffer` instances. This is equivalent to calling `buf1.compare(buf2)`.
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_compare_buf1_buf2
 	**/
@@ -139,19 +126,7 @@ extern class Buffer extends Uint8Array {
 	static function concat<T:Uint8Array>(list:Array<T>, ?totalLength:Int):Buffer;
 
 	/**
-		Allocates a new `Buffer` using an `array` of octets.
-
-		This creates a view of the `ArrayBuffer` without copying the underlying
-		memory. For example, when passed a reference to the `.buffer` property of a
-		`TypedArray` instance, the newly created `Buffer` will share the same
-		allocated memory as the `TypedArray`.
-
-		Copies the passed `buffer` data onto a new `Buffer` instance.
-
-		For objects whose `valueOf()` function returns a value not strictly equal to `object`,
-		returns `Buffer.from(object.valueOf(), offsetOrEncoding, length)`.
-
-		Creates a new `Buffer` containing `string`. The `encoding` parameter identifies the character encoding of `string`.
+		Allocates a new `Buffer`.
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_array
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_from_arraybuffer_byteoffset_length
@@ -164,7 +139,8 @@ extern class Buffer extends Uint8Array {
 	@:overload(function(array:Array<Int>):Buffer {})
 	@:overload(function(arrayBuffer:ArrayBuffer, ?byteOffset:Int, ?length:Int):Buffer {})
 	@:overload(function(buffer:Uint8Array):Buffer {})
-	@:overload(function(object:{}, ?offsetOrEncoding:EitherType<Int, String>, ?length:Int):Buffer {})
+	@:overload(function(object:{}, ?offset:Int, ?length:Int):Buffer {})
+	@:overload(function(object:{}, ?encoding:String, ?length:Int):Buffer {})
 	static function from(string:String, ?encoding:String):Buffer;
 
 	/**
@@ -188,21 +164,7 @@ extern class Buffer extends Uint8Array {
 	**/
 	static var poolSize:Int;
 
-	/**
-		buf[index]
-
-		The index operator `[index]` can be used to get and set the octet at position `index` in `buf`.
-		The values refer to individual bytes, so the legal value range is between `0x00` and `0xFF` (hex) or `0` and `255` (decimal).
-
-		@see https://nodejs.org/api/buffer.html#buffer_buf_index
-	**/
-	// ArrayAccess impleemnts js.lib.Uint8Array
-	/**
-		<ArrayBuffer> The underlying `ArrayBuffer` object based on which this Buffer object is created.
-
-		@see https://nodejs.org/api/buffer.html#buffer_buf_buffer
-	**/
-	//	define on Uint8Array
+	// buf[index]
 	// var buffer:ArrayBuffer;
 
 	/**
@@ -250,7 +212,8 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_fill_value_offset_end_encoding
 	**/
-	@:overlord(function(value:EitherType<Uint8Array, Int>, ?offset:Int, end:Int):Buffer {})
+	@:overlord(function(value:Uint8Array, ?offset:Int, ?end:Int):Buffer {})
+	@:overlord(function(value:Int, ?offset:Int, ?end:Int):Buffer {})
 	function fill(value:String, ?offset:Int, ?end:Int, ?encoding:String):Buffer;
 
 	/**
@@ -258,19 +221,21 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_includes_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:EitherType<Uint8Array, Int>, ?byteOffset:Int):Bool {})
+	@:overlord(function(value:Uint8Array, ?byteOffset:Int):Bool {})
+	@:overlord(function(value:Int, ?byteOffset:Int):Bool {})
 	function includes(value:String, ?byteOffset:Int, ?encoding:String):Bool;
 
 	/**
 		If `value` is:
 
-		* a string, `value` is interpreted according to the character encoding in `encoding`.
-		* a `Buffer` or Uint8Array, `value` will be used in its entirety. To compare a partial `Buffer`, use buf.slice().
-		* a number, `value` will be interpreted as an unsigned 8-bit integer value between `0` and `255`.
+		- a string, `value` is interpreted according to the character encoding in `encoding`.
+		- a `Buffer` or Uint8Array, `value` will be used in its entirety. To compare a partial `Buffer`, use buf.slice().
+		- a number, `value` will be interpreted as an unsigned 8-bit integer value between `0` and `255`.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_indexof_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:EitherType<Uint8Array, Int>, ?byteOffset:Int):Bool {})
+	@:overlord(function(value:Uint8Array, ?byteOffset:Int):Bool {})
+	@:overlord(function(value:Int, ?byteOffset:Int):Bool {})
 	function indexOf(value:String, ?byteOffset:Int, ?encoding:String):Bool;
 
 	/**
@@ -286,72 +251,64 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_lastindexof_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:EitherType<Uint8Array, Int>, ?byteOffset:Int):Bool {})
+	@:overlord(function(value:Uint8Array, ?byteOffset:Int):Bool {})
+	@:overlord(function(value:Int, ?byteOffset:Int):Bool {})
 	function lastIndexOf(value:String, ?byteOffset:Int, ?encoding:String):Bool;
 
-	/**
-		Returns the amount of memory allocated for `buf` in bytes. This
-		does not necessarily reflect the amount of "usable" data within `buf`.
-
-		@see https://nodejs.org/api/buffer.html#buffer_buf_length
-		define on Uint8Array
-	**/
 	// var length(default, null):Int;
-	/**
-		these functions need BigInt implementation.
-	**/
-	/**
-		Reads a signed 64-bit integer from `buf` at the specified `offset` with the specified endian format
-		(`readBigInt64BE()` returns big endian, `readBigInt64LE()` returns little endian).
-
-		@see https://nodejs.org/api/buffer.html#buffer_buf_readbigint64be_offset
-	**/
+	// these functions need BigInt implementation.
+	// /**
+	// 	Reads a signed 64-bit integer from `buf` at the specified `offset` with the specified endian format
+	// 	(`readBigInt64BE()` returns big endian, `readBigInt64LE()` returns little endian).
+	// 	@see https://nodejs.org/api/buffer.html#buffer_buf_readbigint64be_offset
+	// **/
 	// function readBigInt64BE(?offset:Int):BigInt;
-	/**
-		Reads a signed 64-bit integer from `buf` at the specified `offset` with the specified endian format
-		(`readBigInt64BE()` returns big endian, `readBigInt64LE()` returns little endian).
-
-		@see https://nodejs.org/api/buffer.html#buffer_buf_readbigint64le_offset
-	**/
-	//	function readBigInt64LE(?offset:Int):BigInt;
-	/**
-		Reads an unsigned 64-bit integer from `buf` at the specified `offset` with specified endian format
-		(`readBigUInt64BE()` returns big endian, `readBigUInt64LE()` returns little endian).
-
-		@see https://nodejs.org/api/buffer.html#buffer_buf_readbiguint64be_offset
-	**/
+	// /**
+	// 	Reads a signed 64-bit integer from `buf` at the specified `offset` with the specified endian format
+	// 	(`readBigInt64BE()` returns big endian, `readBigInt64LE()` returns little endian).
+	// 	@see https://nodejs.org/api/buffer.html#buffer_buf_readbigint64le_offset
+	// **/
+	// function readBigInt64LE(?offset:Int):BigInt;
+	// /**
+	// 	Reads an unsigned 64-bit integer from `buf` at the specified `offset` with specified endian format
+	// 	(`readBigUInt64BE()` returns big endian, `readBigUInt64LE()` returns little endian).
+	// 	@see https://nodejs.org/api/buffer.html#buffer_buf_readbiguint64be_offset
+	// **/
 	// function readBigUInt64BE(?offset:Int):BigInt;
-	/**
-		Reads an unsigned 64-bit integer from `buf` at the specified `offset` with specified endian format
-		(`readBigUInt64BE()` returns big endian, `readBigUInt64LE()` returns little endian).
-
-		@see https://nodejs.org/api/buffer.html#buffer_buf_readbiguint64le_offset
-	**/
+	// /**
+	// 	Reads an unsigned 64-bit integer from `buf` at the specified `offset` with specified endian format
+	// 	(`readBigUInt64BE()` returns big endian, `readBigUInt64LE()` returns little endian).
+	// 	@see https://nodejs.org/api/buffer.html#buffer_buf_readbiguint64le_offset
+	// **/
 	// function readBigUInt64LE(?offset:Int):BigInt;
 
 	/**
-		Reads a 64-bit double from `buf` at the specified `offset` with specified endian format (`readDoubleBE()` returns big endian, `readDoubleLE()` returns little endian).
+		Reads a 64-bit double from `buf` at the specified `offset` with specified endian format
+		(`readDoubleBE()` returns big endian, `readDoubleLE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readdoublebe_offset
 	**/
 	function readDoubleBE(?offset:Int):Float;
 
 	/**
-		Reads a 64-bit double from `buf` at the specified `offset` with specified endian format (`readDoubleBE()` returns big endian, `readDoubleLE()` returns little endian).
+		Reads a 64-bit double from `buf` at the specified `offset` with specified endian format
+		(`readDoubleBE()` returns big endian, `readDoubleLE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readdoublele_offset
 	**/
 	function readDoubleLE(?offset:Int):Float;
 
 	/**
-		Reads a 32-bit float from `buf` at the specified `offset` with specified endian format (`readFloatBE()` returns big endian, `readFloatLE()` returns little endian).
+		Reads a 32-bit float from `buf` at the specified `offset` with specified endian format
+		(`readFloatBE()` returns big endian, `readFloatLE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readfloatbe_offset
 	**/
 	function readFloatBE(?offset:Int):Float;
 
 	/**
-		Reads a 32-bit float from `buf` at the specified `offset` with specified endian format (`readFloatBE()` returns big endian, `readFloatLE()` returns little endian).
+		Reads a 32-bit float from `buf` at the specified `offset` with specified endian format
+		(`readFloatBE()` returns big endian, `readFloatLE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readfloatle_offset
 	**/
@@ -365,32 +322,52 @@ extern class Buffer extends Uint8Array {
 	function readInt8(?offset:Int):Int;
 
 	/**
-		Reads a signed 16-bit integer from `buf` at the specified `offset` with the specified endian format (`readInt16BE()` returns big endian, `readInt16LE()` returns little endian).
+		Reads a signed 16-bit integer from `buf` at the specified `offset` with the specified endian format
+		(`readInt16BE()` returns big endian, `readInt16LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readint16be_offset
 	**/
 	function readInt16BE(?offset:Int):Int;
 
 	/**
-		Reads a signed 16-bit integer from `buf` at the specified `offset` with the specified endian format (`readInt16BE()` returns big endian, `readInt16LE()` returns little endian).
+		Reads a signed 16-bit integer from `buf` at the specified `offset` with the specified endian format
+		(`readInt16BE()` returns big endian, `readInt16LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readint16le_offset
 	**/
 	function readInt16LE(?offset:Int):Int;
 
 	/**
-		Reads a signed 32-bit integer from buf at the specified offset with the specified endian format (readInt32BE() returns big endian, readInt32LE() returns little endian).
+		Reads a signed 32-bit integer from buf at the specified offset with the specified endian format
+		(`readInt32BE()` returns big endian, `readInt32LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readint32be_offset
 	**/
 	function readInt32BE(?offset:Int):Int;
 
 	/**
-		Reads a signed 32-bit integer from buf at the specified offset with the specified endian format (readInt32BE() returns big endian, readInt32LE() returns little endian).
+		Reads a signed 32-bit integer from buf at the specified offset with the specified endian format
+		(`readInt32BE()` returns big endian, `readInt32LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readint32be_offset
 	**/
 	function readInt32LE(?offset:Int):Int;
+
+	/**
+		Reads `byteLength` number of bytes from `buf` at the specified `offset` and interprets the result
+		as a two's complement signed value. Supports up to 48 bits of accuracy.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readintbe_offset_bytelength
+	**/
+	function readIntBE(?offset:Int, ?byteLength:Int):Int;
+
+	/**
+		Reads `byteLength` number of bytes from `buf` at the specified `offset` and interprets the result
+		as a two's complement signed value. Supports up to 48 bits of accuracy.
+
+		@see https://nodejs.org/api/buffer.html#buffer_buf_readintle_offset_bytelength
+	**/
+	function readIntLE(?offset:Int, ?byteLength:Int):Int;
 
 	/**
 		Reads an unsigned 8-bit integer from `buf` at the specified `offset`.
@@ -400,50 +377,52 @@ extern class Buffer extends Uint8Array {
 	function readUInt8(?offset:Int):Int;
 
 	/**
-		Reads an unsigned 16-bit integer from `buf` at the specified `offset` with specified endian format (`readUInt16BE()` returns big endian, `readUInt16LE()` returns little endian).
+		Reads an unsigned 16-bit integer from `buf` at the specified `offset` with specified endian format
+		`readUInt16BE()` returns big endian, `readUInt16LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint16be_offset
 	**/
 	function readUInt16BE(?offset:Int):Int;
 
 	/**
-		Reads an unsigned 16-bit integer from `buf` at the specified `offset` with specified endian format (`readUInt16BE()` returns big endian, `readUInt16LE()` returns little endian).
+		Reads an unsigned 16-bit integer from `buf` at the specified `offset` with specified endian format
+		(`readUInt16BE()` returns big endian, `readUInt16LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint16le_offset
 	**/
 	function readUInt16LE(?offset:Int):Int;
 
 	/**
-		Reads an unsigned 32-bit integer from `buf` at the specified `offset` with specified endian format (`readUInt32BE()` returns big endian, `readUInt32LE()` returns little endian).
+		Reads an unsigned 32-bit integer from `buf` at the specified `offset` with specified endian format
+		(`readUInt32BE()` returns big endian, `readUInt32LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint32be_offset
 	**/
 	function readUInt32BE(?offset:Int):Int;
 
 	/**
-		Reads an unsigned 32-bit integer from `buf` at the specified `offset` with specified endian format (`readUInt32BE()` returns big endian, `readUInt32LE()` returns little endian).
+		Reads an unsigned 32-bit integer from `buf` at the specified `offset` with specified endian format
+		(`readUInt32BE()` returns big endian, `readUInt32LE()` returns little endian).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readuint32be_offset
 	**/
 	function readUInt32LE(?offset:Int):Int;
 
 	/**
-		Returns a new `Buffer` that references the same memory as the original, but offset and cropped by the `start` and `end` indices.
+		Returns a new `Buffer` that references the same memory as the original,
+		but offset and cropped by the `start` and `end` indices.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_subarray_start_end
 	**/
-	@:overload(function():Buffer {})
-	@:overload(function(start:Int):Buffer {})
-	function subarray(start:Int, end:Int):Buffer;
+	function subarray(?start:Int, ?end:Int):Buffer;
 
 	/**
-		Returns a new `Buffer` that references the same memory as the original, but offset and cropped by the `start` and `end` indices.
+		Returns a new `Buffer` that references the same memory as the original,
+		but offset and cropped by the `start` and `end` indices.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_slice_start_end
 	**/
-	@:overload(function():Buffer {})
-	@:overload(function(start:Int):Buffer {})
-	function slice(start:Int, end:Int):Buffer;
+	function slice(?start:Int, ?end:Int):Buffer;
 
 	/**
 		Interprets `buf` as an array of unsigned 16-bit integers and swaps the
@@ -480,49 +459,47 @@ extern class Buffer extends Uint8Array {
 	function toJSON():Dynamic;
 
 	/**
-		Decodes `buf` to a string according to the specified character encoding in `encoding`. `start` and `end` may be passed to decode only a subset of `buf`.
+		Decodes `buf` to a string according to the specified character encoding in `encoding`.
+		`start` and `end` may be passed to decode only a subset of `buf`.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_tostring_encoding_start_end
 	**/
-	@:overload(function(encoding:String):String {})
-	@:overload(function(encoding:String, start:Int):String {})
-	@:overload(function(encoding:String, start:Int, end:Int):String {})
+	@:overload(function(?encoding:String, ?start:Int, ?end:Int):String {})
 	function toString():String;
 
 	/**
-		Creates and returns an iterator for `buf` values (bytes). This function is called automatically when a `Buffer` is used in a `for..of` statement.
+		Creates and returns an iterator for `buf` values (bytes). This function is called automatically
+		when a `Buffer` is used in a `for..of` statement.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_values
 	**/
-	function values():Iterator<Int>;
+	function values():js.lib.Iterator<Int>;
 
 	/**
-		Writes `string` to `buf` at `offset` according to the character encoding in `encoding`. The `length` parameter is the number of bytes to write.
+		Writes `string` to `buf` at `offset` according to the character encoding in `encoding`.
+		The `length` parameter is the number of bytes to write.
 		If `buf` did not contain enough space to fit the entire `string`, only part of string will be written.
 		However, partially encoded characters will not be written.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_write_string_offset_length_encoding
 	**/
-	@:overload(function(string:String, offset:Int, length:Int, ?encoding:String):Int {})
-	@:overload(function(string:String, offset:Int, ?encoding:String):Int {})
-	function write(string:String, ?encoding:String):Int;
+	function write(string:String, ?offset:Int, ?length:Int, ?encoding:String):Int;
 
 	// these functions need BigInt Implementation.
-	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeBigInt64BE()` writes big endian, `writeBigInt64LE()` writes little endian).
-
-		@see https://nodejs.org/api/buffer.html#buffer_buf_writebigint64be_value_offset
-	**/
+	// /**
+	// 	Writes `value` to `buf` at the specified `offset` with specified endian format (`writeBigInt64BE()` writes big endian, `writeBigInt64LE()` writes little endian).
+	// 	@see https://nodejs.org/api/buffer.html#buffer_buf_writebigint64be_value_offset
+	// **/
 	// function writeBigInt64BE(value:Int, ?offset:Int):BigInt;
-	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeBigInt64BE()` writes big endian, `writeBigInt64LE()` writes little endian).
-
-		@see https://nodejs.org/api/buffer.html#buffer_buf_writebigint64le_value_offset
-	**/
+	// /**
+	// 	Writes `value` to `buf` at the specified `offset` with specified endian format (`writeBigInt64BE()` writes big endian, `writeBigInt64LE()` writes little endian).
+	// 	@see https://nodejs.org/api/buffer.html#buffer_buf_writebigint64le_value_offset
+	// **/
 	// function writeBigInt64LE(value:Int, ?offset:Int):BigInt;
 
 	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeDoubleBE()` writes big endian, `writeDoubleLE()` writes little endian).
+		Writes `value` to `buf` at the specified `offset` with specified endian format
+		(`writeDoubleBE()` writes big endian, `writeDoubleLE()` writes little endian).
 		`value` should be a valid 64-bit double. Behavior is undefined when `value` is anything other than a 64-bit double.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writedoublebe_value_offset
@@ -530,7 +507,8 @@ extern class Buffer extends Uint8Array {
 	function writeDoubleBE(value:Float, ?offset:Int):Void;
 
 	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeDoubleBE()` writes big endian, `writeDoubleLE()` writes little endian).
+		Writes `value` to `buf` at the specified `offset` with specified endian format
+		(`writeDoubleBE()` writes big endian, `writeDoubleLE()` writes little endian).
 		`value` should be a valid 64-bit double. Behavior is undefined when `value` is anything other than a 64-bit double.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writedoublele_value_offset
@@ -538,7 +516,8 @@ extern class Buffer extends Uint8Array {
 	function writeDoubleLE(value:Float, ?offset:Int):Void;
 
 	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeFloatBE()` writes big endian, `writeFloatLE()` writes little endian).
+		Writes `value` to `buf` at the specified `offset` with specified endian format
+		(`writeFloatBE()` writes big endian, `writeFloatLE()` writes little endian).
 		`value` should be a valid 32-bit float. Behavior is undefined when `value` is anything other than a 32-bit float.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writefloatbe_value_offset
@@ -546,7 +525,8 @@ extern class Buffer extends Uint8Array {
 	function writeFloatBE(value:Float, ?offset:Int):Void;
 
 	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeFloatBE()` writes big endian, `writeFloatLE()` writes little endian).
+		Writes `value` to `buf` at the specified `offset` with specified endian format
+		(`writeFloatBE()` writes big endian, `writeFloatLE()` writes little endian).
 		`value` should be a valid 32-bit float. Behavior is undefined when `value` is anything other than a 32-bit float.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writefloatle_value_offset
@@ -554,100 +534,123 @@ extern class Buffer extends Uint8Array {
 	function writeFloatLE(value:Float, ?offset:Int):Void;
 
 	/**
-		Writes `value` to `buf` at the specified `offset`. `value` should be a valid signed 8-bit integer. Behavior is undefined when `value` is anything other than a signed 8-bit integer.
+		Writes `value` to `buf` at the specified `offset`. `value` should be a valid signed 8-bit integer.
+		Behavior is undefined when `value` is anything other than a signed 8-bit integer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeint8_value_offset
 	**/
 	function writeInt8(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeInt16BE()` writes big endian, `writeInt16LE()` writes little endian).
-		`value` should be a valid signed 16-bit integer. Behavior is undefined when value is anything other than a signed 16-bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format
+		(`writeInt16BE()` writes big endian, `writeInt16LE()` writes little endian).
+		`value` should be a valid signed 16-bit integer.
+		Behavior is undefined when value is anything other than a signed 16-bit integer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeint16be_value_offset
 	**/
 	function writeInt16BE(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeInt16BE()` writes big endian, `writeInt16LE()` writes little endian).
-		`value` should be a valid signed 16-bit integer. Behavior is undefined when value is anything other than a signed 16-bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format
+		(`writeInt16BE()` writes big endian, `writeInt16LE()` writes little endian).
+		`value` should be a valid signed 16-bit integer.
+		Behavior is undefined when value is anything other than a signed 16-bit integer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeint16le_value_offset
 	**/
 	function writeInt16LE(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeInt32BE()` writes big endian, `writeInt32LE()` writes little endian).
-		`value` should be a valid signed 32-bit integer. Behavior is undefined when `value` is anything other than a signed 32-bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format
+		(`writeInt32BE()` writes big endian, `writeInt32LE()` writes little endian).
+		`value` should be a valid signed 32-bit integer.
+		Behavior is undefined when `value` is anything other than a signed 32-bit integer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeint32be_value_offset
 	**/
 	function writeInt32BE(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeInt32BE()` writes big endian, `writeInt32LE()` writes little endian).
-		`value` should be a valid signed 32-bit integer. Behavior is undefined when `value` is anything other than a signed 32-bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format
+		(`writeInt32BE()` writes big endian, `writeInt32LE()` writes little endian).
+		`value` should be a valid signed 32-bit integer.
+		Behavior is undefined when `value` is anything other than a signed 32-bit integer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeint32le_value_offset
 	**/
 	function writeInt32LE(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `byteLength` bytes of `value` to `buf` at the specified `offset`. Supports up to 48 bits of accuracy. Behavior is undefined when `value` is anything other than a signed integer.
+		Writes `byteLength` bytes of `value` to `buf` at the specified `offset`.
+		Supports up to 48 bits of accuracy. Behavior is undefined when `value` is anything other than a signed integer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeintbe_value_offset_bytelength
 	**/
 	function writeIntBE(value:Int, offset:Int, byteLength:Int):Int;
 
 	/**
-		Writes `byteLength` bytes of `value` to `buf` at the specified `offset`. Supports up to 48 bits of accuracy. Behavior is undefined when `value` is anything other than a signed integer.
+		Writes `byteLength` bytes of `value` to `buf` at the specified `offset`.
+		Supports up to 48 bits of accuracy. Behavior is undefined when `value` is anything other than a signed integer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeintle_value_offset_bytelength
 	**/
 	function writeIntLE(value:Int, offset:Int, byteLength:Int):Int;
 
 	/**
-		Writes `value` to `buf` at the specified `offset`. `value` should be a valid unsigned 8-bit integer. Behavior is undefined when `value` is anything other than an unsigned 8-bit integer.
+		Writes `value` to `buf` at the specified `offset`. `value` should be a valid unsigned 8-bit integer.
+		Behavior is undefined when `value` is anything other than an unsigned 8-bit integer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeuint8_value_offset
 	**/
 	function writeUInt8(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeUInt16BE()` writes big endian, `writeUInt16LE()` writes little endian).
-		`value` should be a valid unsigned 16-bit integer. Behavior is undefined when `value` is anything other than an unsigned 16-bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format
+		(`writeUInt16BE()` writes big endian, `writeUInt16LE()` writes little endian).
+		`value` should be a valid unsigned 16-bit integer.
+		Behavior is undefined when `value` is anything other than an unsigned 16-bit integer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeuint16be_value_offset
 	**/
 	function writeUInt16BE(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeUInt16BE()` writes big endian, `writeUInt16LE()` writes little endian).
-		`value` should be a valid unsigned 16-bit integer. Behavior is undefined when `value` is anything other than an unsigned 16-bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format
+		(`writeUInt16BE()` writes big endian, `writeUInt16LE()` writes little endian).
+		`value` should be a valid unsigned 16-bit integer.
+		Behavior is undefined when `value` is anything other than an unsigned 16-bit integer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeuint16le_value_offset
 	**/
 	function writeUInt16LE(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeUInt32BE()` writes big endian, `writeUInt32LE()` writes little endian).
-		`value` should be a valid unsigned 32-bit integer. Behavior is undefined when `value` is anything other than an unsigned 32-bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format
+		(`writeUInt32BE()` writes big endian, `writeUInt32LE()` writes little endian).
+		`value` should be a valid unsigned 32-bit integer.
+		Behavior is undefined when `value` is anything other than an unsigned 32-bit integer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeuint32be_value_offset
 	**/
 	function writeUInt32BE(value:Int, ?offset:Int):Void;
 
 	/**
-		Writes `value` to `buf` at the specified `offset` with specified endian format (`writeUInt32BE()` writes big endian, `writeUInt32LE()` writes little endian).
-		`value` should be a valid unsigned 32-bit integer. Behavior is undefined when `value` is anything other than an unsigned 32-bit integer.
+		Writes `value` to `buf` at the specified `offset` with specified endian format
+		(`writeUInt32BE()` writes big endian, `writeUInt32LE()` writes little endian).
+		`value` should be a valid unsigned 32-bit integer.
+		Behavior is undefined when `value` is anything other than an unsigned 32-bit integer.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writeuint32le_value_offset
 	**/
 	function writeUInt32LE(value:Int, ?offset:Int):Void;
 
 	/**
-		* <integer> Default: `50`
-		Returns the maximum number of bytes that will be returned when `buf.inspect()` is called. This can be overridden by user modules. See util.inspect() for more details on `buf.inspect()` behavior.
+		Default: `50`
+
+		Returns the maximum number of bytes that will be returned when `buf.inspect()` is called.
+		This can be overridden by user modules.
+		See `util.inspect()` for more details on `buf.inspect()` behavior.
 
 		This is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
 
@@ -655,16 +658,15 @@ extern class Buffer extends Uint8Array {
 	**/
 	static var INSPECT_MAX_BYTES(get, set):Int;
 
-	static inline function get_INSPECT_MAX_BYTES():Int {
+	private static inline function get_INSPECT_MAX_BYTES():Int {
 		return BufferModule.INSPECT_MAX_BYTES;
 	}
-	static inline function set_INSPECT_MAX_BYTES(bytes:Int):Int {
+	private static inline function set_INSPECT_MAX_BYTES(bytes:Int):Int {
 		return BufferModule.INSPECT_MAX_BYTES = bytes;
 	}
 
 	/**
-		* <integer> The largest size allowed for a single `Buffer` instance.
-		An alias for buffer.constants.MAX_LENGTH.
+		An alias for `buffer.constants.MAX_LENGTH`.
 
 		This is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
 
@@ -672,12 +674,13 @@ extern class Buffer extends Uint8Array {
 	**/
 	static var kMaxLength(get, never):Int;
 
-	static inline function get_kMaxLength():Int {
+	private static inline function get_kMaxLength():Int {
 		return BufferModule.kMaxLength;
 	}
 
 	/**
-		Re-encodes the given `Buffer` or `Uint8Array` instance from one character encoding to another. Returns a new `Buffer` instance.
+		Re-encodes the given `Buffer` or `Uint8Array` instance from one character encoding to another.
+		Returns a new `Buffer` instance.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buffer_transcode_source_fromenc_toenc
 	**/
@@ -686,13 +689,14 @@ extern class Buffer extends Uint8Array {
 	};
 
 	/**
-		`buffer.constants` is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
+		`buffer.constants` is a property on the `buffer` module returned by `require('buffer')`,
+		not on the `Buffer` global or a `Buffer` instance.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buffer_constants
 	**/
-	public static var constants(default, never):BufferConstants;
+	static var constants(default, never):BufferConstants;
 
-	static inline function get_constants():BufferConstants {
+	private static inline function get_constants():BufferConstants {
 		return BufferModule.constants;
 	}
 
@@ -737,19 +741,14 @@ private extern class BufferModule {
 	static var constants(default, never):BufferConstants;
 }
 
-/**
-	`buffer.constants` is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
-
-	@see https://nodejs.org/api/buffer.html#buffer_buffer_constants
-**/
 typedef BufferConstants = {
 	/**
-		On 32-bit architectures, this value is `(2^30)-1` (~1GB).
-		On 64-bit architectures, this value is `(2^31)-1` (~2GB).
+		On 32-bit architectures, this value is `(2^30)-1` (`~1GB`).
+		On 64-bit architectures, this value is `(2^31)-1` (`~2GB`).
 
 		@see https://nodejs.org/api/buffer.html#buffer_buffer_constants_max_length
 	**/
-	var MAX_LENGTH:Int;
+	var MAX_LENGTH(default, never):Int;
 
 	/**
 		Represents the largest `length` that a `string` primitive can have, counted
@@ -757,5 +756,5 @@ typedef BufferConstants = {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buffer_constants_max_string_length
 	**/
-	var MAX_STRING_LENGTH:Int;
+	var MAX_STRING_LENGTH(default, never):Int;
 }
