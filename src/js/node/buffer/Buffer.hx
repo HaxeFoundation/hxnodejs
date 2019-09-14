@@ -359,7 +359,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readintbe_offset_bytelength
 	**/
-	function readIntBE(?offset:Int, ?byteLength:Int):Int;
+	function readIntBE(offset:Int, byteLength:Int):Int;
 
 	/**
 		Reads `byteLength` number of bytes from `buf` at the specified `offset` and interprets the result
@@ -367,7 +367,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_readintle_offset_bytelength
 	**/
-	function readIntLE(?offset:Int, ?byteLength:Int):Int;
+	function readIntLE(offset:Int, byteLength:Int):Int;
 
 	/**
 		Reads an unsigned 8-bit integer from `buf` at the specified `offset`.
