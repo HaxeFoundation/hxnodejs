@@ -22,7 +22,6 @@
 
 package js.node.buffer;
 
-import haxe.extern.EitherType;
 import haxe.io.UInt8Array;
 import haxe.io.Bytes;
 #if haxe4
