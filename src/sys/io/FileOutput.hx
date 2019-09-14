@@ -18,7 +18,7 @@ class FileOutput extends haxe.io.Output {
 	}
 
 	override public function writeByte(b:Int):Void {
-		var buf = new Buffer(1);
+		var buf = Buffer.alloc(1);
 		buf[0] = b;
 		Fs.writeSync(fd, buf, 0, 1, pos);
 		pos++;
