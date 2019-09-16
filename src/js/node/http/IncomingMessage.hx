@@ -65,11 +65,13 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 	**/
 	var complete(default, null):Bool;
 
+	#if haxe4
 	/**
 		Calls `destroy()` on the socket that received the `IncomingMessage`.
 		If `error` is provided, an `'error'` event is emitted and `error` is passed as an argument to any listeners on the event.
 	**/
 	function destroy(?error:Error):Void;
+	#end
 
 	/**
 		The request/response headers object.

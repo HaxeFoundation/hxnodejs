@@ -30,31 +30,34 @@ import js.Error;
 #end
 
 /**
-	A Transform stream is a Duplex stream where the output is computed in some way from the input. Examples include zlib streams or crypto streams that compress, encrypt, or decrypt data.
+	A `Transform` stream is a `Duplex` stream where the output is computed in some way from the input.
+	Examples include `zlib` streams or `crypto` streams that compress, encrypt, or decrypt data.
 
 	@see https://nodejs.org/api/stream.html#stream_implementing_a_transform_stream
 **/
 @:jsRequire("stream", "Transform")
-extern class Transform<TSelf:Transform<TSelf>> extends Duplex<TSelf> {
-	// --------- API for stream implementors - see node.js API documentation ---------
-	private function new(?options:Duplex.DuplexNewOptions);
+extern class Transform<TSelf:Transform<TSelf>> extends Duplex<TSelf> implements ITransform {
+	function new(?options:Duplex.DuplexNewOptions);
 
 	/**
-		This function MUST NOT be called by application code directly.
+		This function **MUST NOT** be called by application code directly.
 		It should be implemented by child classes, and called by the internal `Readable` class methods only.
 
 		@see https://nodejs.org/api/stream.html#stream_transform_flush_callback
 	**/
-	private function _flush(callback:Null<Error>->Void):Void;
+	private function _flush(callback:?Error->Void):Void;
 
 	/**
-		This function MUST NOT be called by application code directly.
+		This function **MUST NOT** be called by application code directly.
 		It should be implemented by child classes, and called by the internal `Readable` class methods only.
 
 		@see https://nodejs.org/api/stream.html#stream_transform_transform_chunk_encoding_callback
 	**/
-	private function _transform(chunk:EitherType<Buffer, EitherType<String, Any>>, encoding:String,
-		callback:(Null<Error>, EitherType<String, Buffer>) -> Void):Void;
+	#if haxe4
+	private function _transform(chunk:Dynamic, encoding:String, callback:(?error:Error, ?data:Dynamic) -> Void):Void;
+	#else
+	private function _transform(chunk:Dynamic, encoding:String, callback:?Error->?Dynamic->Void):Void;
+	#end
 }
 
 /**
@@ -62,7 +65,21 @@ extern class Transform<TSelf:Transform<TSelf>> extends Duplex<TSelf> {
 **/
 typedef TransformNewoptions = {
 	> Duplex.DuplexNewOptions,
-	@:optional var transform:(chunk:EitherType<Buffer, EitherType<String, Any>>, encoding:String,
-		callback:(Null<Error>, EitherType<String, Buffer>) -> Void) -> Void;
+
+	/**
+		Implementation for the `stream._transform()` method.
+	**/
+	#if haxe4
+	@:optional var transform:(chunk:Dynamic, encoding:String, callback:(?error:Error, ?data:Dynamic) -> Void) -> Void;
+	#else
+	@:optional var transform:Dynamic->String->(?Error->?Dynamic->Void)->Void;
+	#end
+
+	/**
+		Implementation for the `stream._flush()` method.
+	**/
 	@:optional var flush:Null<Error>->Void;
 }
+
+@:remove
+extern interface ITransform extends Duplex.IDuplex {}

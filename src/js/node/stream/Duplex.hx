@@ -23,87 +23,437 @@
 package js.node.stream;
 
 import haxe.extern.EitherType;
-import js.node.Buffer;
+import js.node.events.EventEmitter.Event;
+import js.node.stream.Readable.IReadable;
+import js.node.stream.Writable.IWritable;
 #if haxe4
-import js.lib.Uint8Array;
 import js.lib.Error;
 #else
-import js.html.Uint8Array;
 import js.Error;
 #end
 
 /**
-	Duplex streams are streams that implement both the Readable and Writable interfaces.
+	Writable streams are an abstraction for a destination to which data is written.
+
+	@see https://nodejs.org/api/stream.html#stream_writable_streams
+**/
+@:enum abstract DuplexEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
+	// Writable stream events -------------------------------------------------
+	// var Close:DuplexEvent<Void->Void> = "close";
+
+	/**
+		If a call to stream.write(chunk) returns `false`, the `'drain'` event will be emitted
+		when it is appropriate to resume writing data to the stream.
+
+		@see https://nodejs.org/api/stream.html#stream_event_drain
+	**/
+	var Drain:DuplexEvent<Void->Void> = "drain";
+
+	// var Error:DuplexEvent<Error->Void> = "error";
+
+	/**
+		The `'finish'` event is emitted after the stream.end() method has been called,
+		and all data has been flushed to the underlying system.
+
+		@see https://nodejs.org/api/stream.html#stream_event_finish
+	**/
+	var Finish:DuplexEvent<Void->Void> = "finish";
+
+	/**
+		The `'pipe'` event is emitted when the stream.pipe() method is called on a readable stream,
+		adding this writable to its set of destinations.
+
+		@see https://nodejs.org/api/stream.html#stream_event_pipe
+	**/
+	var Pipe:DuplexEvent<IReadable->Void> = "pipe";
+
+	/**
+		The `'unpipe'` event is emitted when the stream.unpipe() method is called on a Readable stream,
+		removing this Writable from its set of destinations.
+
+		@see https://nodejs.org/api/stream.html#stream_event_unpipe
+	**/
+	var Unpipe:DuplexEvent<IReadable->Void> = "unpipe";
+
+	// Readable stream events -------------------------------------------------
+	// var Close:DuplexEvent<Void->Void> = "close";
+
+	/**
+		The `'data'` event is emitted whenever the stream is relinquishing ownership of
+		a chunk of data to a consumer. This may occur whenever the stream is switched
+		in flowing mode by calling `readable.pipe()`, `readable.resume()`, or by
+		attaching a listener callback to the `'data'` event. The `'data'` event will
+		also be emitted whenever the `readable.read()` method is called and a chunk of
+		data is available to be returned.
+
+		@see https://nodejs.org/api/stream.html#stream_event_data
+	**/
+	var Data:DuplexEvent<Dynamic->Void> = "data";
+
+	/**
+		The `'end'` event is emitted when there is no more data to be consumed from
+		the stream.
+
+		@see https://nodejs.org/api/stream.html#stream_event_end
+	**/
+	var End:DuplexEvent<Void->Void> = "end";
+
+	// var Error:DuplexEvent<Error->Void> = "error";
+
+	/**
+		The `'pause'` event is emitted when `stream.pause()` is called
+		and `readableFlowing` is not `false`.
+
+		@see https://nodejs.org/api/stream.html#stream_event_pause
+	**/
+	var Pause:DuplexEvent<Void->Void> = "pause";
+
+	/**
+		The `'readable'` event is emitted when there is data available to be read from
+		the stream. In some cases, attaching a listener for the `'readable'` event will
+		cause some amount of data to be read into an internal buffer.
+
+		@see https://nodejs.org/api/stream.html#stream_event_readable
+	**/
+	var Readable:DuplexEvent<Void->Void> = "readable";
+
+	/**
+		The `'resume'` event is emitted when `stream.resume()` is
+		called and `readableFlowing` is not `true`.
+
+		@see https://nodejs.org/api/stream.html#stream_event_resume
+	**/
+	var Resume:DuplexEvent<Void->Void> = "resume";
+
+	// Overlapped events ------------------------------------------------------
+
+	/**
+		The `'close'` event is emitted when the stream and any of its underlying
+		resources (a file descriptor, for example) have been closed.
+		The event indicates that no more events will be emitted, and no further computation will occur.
+
+		@see https://nodejs.org/api/stream.html#stream_event_close_1
+		@see https://nodejs.org/api/stream.html#stream_event_close_1
+	**/
+	var Close:DuplexEvent<Void->Void> = "close";
+
+	/**
+		@see https://nodejs.org/api/stream.html#stream_event_error
+		@see https://nodejs.org/api/stream.html#stream_event_error_1
+	**/
+	var Error:DuplexEvent<Error->Void> = "error";
+}
+
+/**
+	Duplex streams are streams that implement both the `Readable` and `Writable` interfaces.
 
 	@see https://nodejs.org/api/stream.html#stream_class_stream_duplex
 **/
 @:jsRequire("stream", "Duplex")
-extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDuplex {
-	// --------- Writable interface implementation ---------
+extern class Duplex<TSelf:Duplex<TSelf>> extends Stream<TSelf> implements IDuplex {
+	// --------- Writable interface implementation ----------------------------
 
 	/**
 		The `writable.cork()` method forces all written data to be buffered in memory.
-		The buffered data will be flushed when either the `stream.uncork()` or
-		`stream.end()` methods are called.
+		The buffered data will be flushed when either the `stream.uncork()` or `stream.end()` methods are called.
 
 		@see https://nodejs.org/api/stream.html#stream_writable_cork
 	**/
 	function cork():Void;
 
+	// function destroy(?error:Error):Duplex<TSelf>;
+	// var destroyed(default, null):Bool;
+
 	/**
-		Calling the `writable.end()` method signals that no more data will be written
-		to the `Writable`. The optional `chunk` and `encoding` arguments allow one
-		final additional chunk of data to be written immediately before closing the
-		stream. If provided, the optional `callback` function is attached as a listener
-		for the `'finish'` event.
+		Calling the `writable.end()` method signals that no more data will be written to the Writable.
+		The optional `chunk` and `encoding` arguments allow one final additional chunk of data to be written immediately before closing the stream.
+		If provided, the optional `callback` function is attached as a listener for the 'finish' event.
 
 		@see https://nodejs.org/api/stream.html#stream_writable_end_chunk_encoding_callback
 	**/
-	@:overload(function(?callback:Void->Void):Void {})
-	@:overload(function(chunk:Dynamic, ?callback:Null<Error>->Void):Void {})
-	function end(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Void;
+	@:overload(function(?callback:EitherType<Void->Void, Null<Error>->Void>):Void {})
+	function end(chunk:Dynamic, ?encoding:String, ?callback:EitherType<Void->Void, Null<Error>->Void>):Void;
 
 	/**
-		The `writable.uncork()` method flushes all data buffered since
-		`stream.cork()` was called.
+		The `writable.setDefaultEncoding()` method sets the default `encoding` for a Writable stream.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_setdefaultencoding_encoding
+	**/
+	function setDefaultEncoding(encoding:String):Duplex<TSelf>;
+
+	/**
+		The `writable.uncork()` method flushes all data buffered since `stream.cork()` was called.
 
 		@see https://nodejs.org/api/stream.html#stream_writable_uncork
 	**/
 	function uncork():Void;
 
 	/**
-		The `writable.write()` method writes some data to the stream, and calls the
-		supplied `callback` once the data has been fully handled. If an error
-		occurs, the `callback` may or may not be called with the error as its
-		first argument. To reliably detect write errors, add a listener for the
-		`'error'` event.
+		Is `true` if it is safe to call `writable.write()`.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_writable
+	**/
+	var writable(default, null):Bool;
+
+	/**
+		Is `true` after `writable.end()` has been called. This property
+		does not indicate whether the data has been flushed, for this use
+		`writable.writableFinished` instead.
+
+		@seehttps://nodejs.org/api/stream.html#stream_writable_writableended
+	**/
+	var writableEnded(default, null):Bool;
+
+	/**
+		Is set to `true` immediately before the 'finish' event is emitted.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_writablefinished
+	**/
+	var writableFinished(default, null):Bool;
+
+	/**
+		Return the value of `highWaterMark` passed when constructing this `Writable`.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_writablehighwatermark
+	**/
+	var writablehighWaterMark(default, null):Int;
+
+	/**
+		This property contains the number of bytes (or objects) in the queue ready to be written.
+		The value provides introspection data regarding the status of the `highWaterMark`.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_writablelength
+	**/
+	var writableLength(default, null):Int;
+
+	/**
+		Getter for the property `objectMode` of a given `Writable` stream.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_writableobjectmode
+	**/
+	var writableObjectMode(default, null):Bool;
+
+	/**
+		The `writable.write()` method writes some data to the stream, and calls the supplied `callback` once the data has been fully handled.
+		If an error occurs, the `callback` may or may not be called with the error as its first argument.
+		To reliably detect write errors, add a listener for the `'error'` event.
 
 		@see https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback
 	**/
-	@:overload(function(chunk:Dynamic, ?callback:Null<Error>->Void):Bool {})
-	function write(chunk:String, ?encoding:String, ?callback:Null<Error>->Void):Bool;
+	function write(chunk:Dynamic, ?encoding:String, ?callback:EitherType<Void->Void, Null<Error>->Void>):Bool;
+
+	// --------- API for implementing a Writable Stream -----------------------
+	// function new(?options:DuplexNewOptions);
 
 	/**
-		The `writable.setDefaultEncoding()` method sets the default `encoding` for a
-		`Writable` stream.
+		All `Writable` stream implementations must provide a `writable._write()` method to send data to the underlying resource.
 
-		@see https://nodejs.org/api/stream.html#stream_writable_setdefaultencoding_encoding
+		@see https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback_1
 	**/
-	function setDefaultEncoding(encoding:String):TSelf;
+	private function _write(chunk:Dynamic, encoding:String, callback:?Error->Void):Void;
 
 	/**
-		@see https://nodejs.org/api/stream.html#stream_implementing_a_duplex_stream
-	**/
-	// --------- API for stream implementors - see node.js API documentation ---------
-	private function new(?options:DuplexNewOptions);
+		This function MUST NOT be called by application code directly.
+		It should be implemented by child classes, and called by the internal `Writable` class methods only.
 
-	@:overload(function(chunk:Dynamic, ?callback:Error->Void):Void {})
-	private function _write(chunk:String, ?encoding:String, ?callback:Error->Void):Void;
+		@see https://nodejs.org/api/stream.html#stream_writable_writev_chunks_callback
+	**/
+	private function _writev(chunks:Array<Writable.Chunk>, callback:?Error->Void):Void;
+
+	// private function _destroy(err:Null<Error>, callback:Null<Error>->Void):Void;
+
+	/**
+		The `_final()` method must not be called directly.
+		t may be implemented by child classes, and if so, will be called by the internal `Writable` class methods only.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_final_callback
+	**/
+	private function _final(callback:?Error->Void):Void;
+
+	// --------- Readable interface implementation ----------------------------
+	// function destroy(?error:Error):Duplex<TSelf>;
+	// var destroyed(default, null):Bool;
+
+	/**
+		The `readable.isPaused()` method returns the current operating state of the `Readable`.
+		This is used primarily by the mechanism that underlies the `readable.pipe()` method.
+		In most typical cases, there will be no reason to use this method directly.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_ispaused
+	**/
+	function isPaused():Bool;
+
+	/**
+		The `readable.pause()` method will cause a stream in flowing mode to stop emitting `'data'` events,
+		switching out of flowing mode. Any data that becomes available will remain in the internal buffer.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_pause
+	**/
+	function pause():Duplex<TSelf>;
+
+	/**
+		The `readable.pipe()` method attaches a `Writable` stream to the `readable`,
+		causing it to switch automatically into flowing mode and push all of its data to the attached `Writable`.
+		The flow of data will be automatically managed so that the destination `Writable` stream
+		is not overwhelmed by a faster `Readable` stream.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_pipe_destination_options
+	**/
+	function pipe<T:IWritable>(destination:T, ?options:{?end:Bool}):T;
+
+	/**
+		The `readable.read()` method pulls some data out of the internal buffer and returns it.
+		If no data available to be read, `null` is returned. By default,
+		the data will be returned as a `Buffer` object unless an encoding has been specified using
+		the `readable.setEncoding()` method or the stream is operating in object mode.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_read_size
+	**/
+	function read(?size:Int):Null<Dynamic>;
+
+	/**
+		Is `true` if it is safe to call `readable.read()`.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_readable
+	**/
+	var readable(default, null):Bool;
+
+	/**
+		Getter for the property `encoding` of a given `Readable` stream.
+		The `encoding` property can be set using the `readable.setEncoding()` method.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_readableencoding
+	**/
+	var readableEncoding(default, null):Null<String>;
+
+	/**
+		Becomes `true` when `'end'` event is emitted.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_readableended
+	**/
+	var readableEnded(default, null):Bool;
+
+	/**
+		Returns the value of `highWaterMark` passed when constructing this `Readable`.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_readablehighwatermark
+	**/
+	var readableHighWaterMark(default, null):Int;
+
+	/**
+		This property contains the number of bytes (or objects) in the queue ready to be read.
+		The value provides introspection data regarding the status of the `highWaterMark`.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_readablelength
+	**/
+	var readableLength(default, null):Int;
+
+	/**
+		Getter for the property `objectMode` of a given `Readable` stream.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_readableobjectmode
+	**/
+	var readableObjectMode(default, null):Bool;
+
+	/**
+		The `readable.resume()` method causes an explicitly paused `Readable` stream to resume emitting `'data'` events,
+		switching the stream into flowing mode.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_resume
+	**/
+	function resume():Duplex<TSelf>;
+
+	/**
+		The `readable.setEncoding()` method sets the character encoding for data read from the `Readable` stream.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_setencoding_encoding
+	**/
+	function setEncoding(encoding:String):Duplex<TSelf>;
+
+	/**
+		The `readable.unpipe()` method detaches a `Writable` stream previously attached using the `stream.pipe()` method.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_unpipe_destination
+	**/
+	function unpipe(?destination:IWritable):Duplex<TSelf>;
+
+	/**
+		Passing `chunk` as `null` signals the end of the stream (EOF), after which no more data can be written.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_unshift_chunk_encoding
+	**/
+	function unshift(chunk:Null<Dynamic>, ?encoding:String):Void;
+
+	/**
+		Prior to Node.js 0.10, streams did not implement the entire `stream` module API as it is currently defined.
+		(See Compatibility for more information.)
+
+		@see https://nodejs.org/api/stream.html#stream_readable_wrap_stream
+	**/
+	function wrap(stream:Dynamic):IReadable;
+
+	// --------- API for implementing a Readable Stream -----------------------
+	// function new(?options:ReadableNewOptions);
+
+	/**
+		This function **MUST NOT** be called by application code directly.
+		It should be implemented by child classes, and called by the internal `Readable` class methods only.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_read_size_1
+	**/
 	private function _read(size:Int):Void;
 
+	// private function _destroy(err:Null<Error>, callback:?Error->Void):Void;
+
 	/**
-		Terminal write streams (i.e. process.stdout) have this property set to true.
-		It is false for any other write streams.
+		The `readable.push()` method is intended be called only by `Readable` implementers,
+		and only from within the `readable._read()` method.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_push_chunk_encoding
+	**/
+	private function push(chunk:Null<Dynamic>, ?encoding:String):Bool;
+
+	// --------- Overlapped interface -----------------------------------------
+
+	/**
+		Destroy the stream. Optionally emit an `'error'` event, and emit a `'close'` event unless `emitClose` is set in `false`.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_destroy_error
+		@see https://nodejs.org/api/stream.html#stream_readable_destroy_error
+	**/
+	function destroy(?error:Error):Duplex<TSelf>;
+
+	/**
+		Is `true` after `destroy()` has been called.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_destroyed
+		@see https://nodejs.org/api/stream.html#stream_readable_destroyed
+	**/
+	var destroyed(default, null):Bool;
+
+	/**
+		@see https://nodejs.org/api/stream.html#stream_constructor_new_stream_writable_options
+		@see https://nodejs.org/api/stream.html#stream_new_stream_readable_options
+	**/
+	function new(?options:DuplexNewOptions);
+
+	/**
+		The `_destroy()` method is called by `destroy()`.
+		It can be overridden by child classes but it **must not** be called directly.
+
+		@see https://nodejs.org/api/stream.html#stream_writable_destroy_err_callback
+		@see https://nodejs.org/api/stream.html#stream_readable_destroy_err_callback
+	**/
+	private function _destroy(err:Null<Error>, callback:?Error->Void):Void;
+
+	// TTY module API  --------------------------------------------------------
+
+	/**
+		Terminal streams  have this property set to true.
+		It is false for any other streams.
+
+		@see https://nodejs.org/api/tty.html#tty_readstream_istty
+		@see https://nodejs.org/api/tty.html#tty_writestream_istty
 	**/
 	var isTTY(default, null):Bool;
 }

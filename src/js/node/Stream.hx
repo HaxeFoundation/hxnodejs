@@ -22,7 +22,15 @@
 
 package js.node;
 
+import haxe.extern.Rest;
 import js.node.events.EventEmitter;
+#if haxe4
+import js.lib.Error;
+import js.lib.Promise;
+#else
+import js.Error;
+import js.Promise;
+#end
 
 /**
 	Base class for all streams.
@@ -30,6 +38,15 @@ import js.node.events.EventEmitter;
 @:jsRequire("stream") // the module itself is also a class
 extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements IStream {
 	private function new();
+
+	/**
+		A module method to pipe between streams forwarding errors and properly cleaning up
+		and provide a callback when the pipeline is complete.
+
+		@see https://nodejs.org/api/stream.html#stream_stream_pipeline_streams_callback
+	**/
+	// TODO Support callback argument
+	static function pipeline(streams:Rest<IStream>):Promise<Void>;
 }
 
 /**

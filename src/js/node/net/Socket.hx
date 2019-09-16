@@ -254,6 +254,7 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 	**/
 	// var destroyed(default, null):Bool;
 
+	#if haxe4
 	/**
 		Ensures that no more I/O activity happens on this socket.
 		Only necessary in case of errors (parse error or so).
@@ -262,6 +263,7 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 		any listeners for that event will receive exception as an argument.
 	**/
 	function destroy(?exception:Error):Void;
+	#end
 
 	/**
 		Sets the socket to timeout after `timeout` milliseconds of inactivity on the socket.

@@ -22,17 +22,14 @@
 
 package js.node.stream;
 
-import haxe.extern.EitherType;
-import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
+import js.node.Iterator;
 import js.node.Stream;
 import js.node.stream.Writable.IWritable;
 #if haxe4
 import js.lib.Error;
-import js.lib.Uint8Array;
 #else
 import js.Error;
-import js.html.Uint8Array;
 #end
 
 /**
@@ -43,8 +40,8 @@ import js.html.Uint8Array;
 @:enum abstract ReadableEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		The `'close'` event is emitted when the stream and any of its underlying
-		resources (a file descriptor, for example) have been closed. The event indicates
-		that no more events will be emitted, and no further computation will occur.
+		resources (a file descriptor, for example) have been closed.
+		The event indicates that no more events will be emitted, and no further computation will occur.
 
 		@see https://nodejs.org/api/stream.html#stream_event_close_1
 	**/
@@ -60,7 +57,7 @@ import js.html.Uint8Array;
 
 		@see https://nodejs.org/api/stream.html#stream_event_data
 	**/
-	var Data:ReadableEvent<EitherType<Buffer, String>->Void> = "data";
+	var Data:ReadableEvent<Dynamic->Void> = "data";
 
 	/**
 		The `'end'` event is emitted when there is no more data to be consumed from
@@ -112,12 +109,9 @@ import js.html.Uint8Array;
 @:jsRequire("stream", "Readable")
 extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IReadable {
 	/**
-		Destroy the stream. Optionally emit an `'error'` event, and emit a `'close'`
-		event unless `emitClose` is set in `false`. After this call, the readable
-		stream will release any internal resources and subsequent calls to `push()`
-		will be ignored.
-		Implementors should not override this method, but instead implement
-		`readable._destroy()`.
+		Destroy the stream. Optionally emit an `'error'` event, and emit a `'close'` event unless `emitClose` is set in `false`.
+		After this call, the readable stream will release any internal resources and subsequent calls to `push()` will be ignored.
+		Implementors should not override this method, but instead implement `readable._destroy()`.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_destroy_error
 	**/
@@ -131,19 +125,17 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	var destroyed(default, null):Bool;
 
 	/**
-		The `readable.isPaused()` method returns the current operating state of the
-		`Readable`. This is used primarily by the mechanism that underlies the
-		`readable.pipe()` method. In most typical cases, there will be no reason to
-		use this method directly.
+		The `readable.isPaused()` method returns the current operating state of the `Readable`.
+		This is used primarily by the mechanism that underlies the `readable.pipe()` method.
+		In most typical cases, there will be no reason to use this method directly.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_ispaused
 	**/
 	function isPaused():Bool;
 
 	/**
-		The `readable.pause()` method will cause a stream in flowing mode to stop
-		emitting `'data'` events, switching out of flowing mode. Any data that
-		becomes available will remain in the internal buffer.
+		The `readable.pause()` method will cause a stream in flowing mode to stop emitting `'data'` events,
+		switching out of flowing mode. Any data that becomes available will remain in the internal buffer.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_pause
 	**/
@@ -151,25 +143,23 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 	/**
 		The `readable.pipe()` method attaches a `Writable` stream to the `readable`,
-		causing it to switch automatically into flowing mode and push all of its data
-		to the attached `Writable`. The flow of data will be automatically managed
-		so that the destination `Writable` stream is not overwhelmed by a faster
-		`Readable` stream.
+		causing it to switch automatically into flowing mode and push all of its data to the attached `Writable`.
+		The flow of data will be automatically managed so that the destination `Writable` stream
+		is not overwhelmed by a faster `Readable` stream.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_pipe_destination_options
 	**/
 	function pipe<T:IWritable>(destination:T, ?options:{?end:Bool}):T;
 
 	/**
-		The `readable.read()` method pulls some data out of the internal buffer and
-		returns it. If no data available to be read, `null` is returned. By default,
-		the data will be returned as a `Buffer` object unless an encoding has been
-		specified using the `readable.setEncoding()` method or the stream is operating
-		in object mode.
+		The `readable.read()` method pulls some data out of the internal buffer and returns it.
+		If no data available to be read, `null` is returned. By default,
+		the data will be returned as a `Buffer` object unless an encoding has been specified using
+		the `readable.setEncoding()` method or the stream is operating in object mode.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_read_size
 	**/
-	function read(?size:Int):Null<EitherType<String, EitherType<Buffer, Any>>>;
+	function read(?size:Int):Null<Dynamic>;
 
 	/**
 		Is `true` if it is safe to call `readable.read()`.
@@ -179,8 +169,8 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	var readable(default, null):Bool;
 
 	/**
-		Getter for the property `encoding` of a given `Readable` stream. The `encoding`
-		property can be set using the `readable.setEncoding()` method.
+		Getter for the property `encoding` of a given `Readable` stream.
+		The `encoding` property can be set using the `readable.setEncoding()` method.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_readableencoding
 	**/
@@ -194,17 +184,15 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	var readableEnded(default, null):Bool;
 
 	/**
-		Returns the value of `highWaterMark` passed when constructing this
-		`Readable`.
+		Returns the value of `highWaterMark` passed when constructing this `Readable`.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_readablehighwatermark
 	**/
 	var readableHighWaterMark(default, null):Int;
 
 	/**
-		This property contains the number of bytes (or objects) in the queue
-		ready to be read. The value provides introspection data regarding
-		the status of the `highWaterMark`.
+		This property contains the number of bytes (or objects) in the queue ready to be read.
+		The value provides introspection data regarding the status of the `highWaterMark`.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_readablelength
 	**/
@@ -218,66 +206,86 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	var readableObjectMode(default, null):Bool;
 
 	/**
-		The `readable.resume()` method causes an explicitly paused `Readable` stream to
-		resume emitting `'data'` events, switching the stream into flowing mode.
+		The `readable.resume()` method causes an explicitly paused `Readable` stream to resume emitting `'data'` events,
+		switching the stream into flowing mode.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_resume
 	**/
 	function resume():Readable<TSelf>;
 
 	/**
-		The `readable.setEncoding()` method sets the character encoding for
-		data read from the `Readable` stream.
+		The `readable.setEncoding()` method sets the character encoding for data read from the `Readable` stream.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_setencoding_encoding
 	**/
 	function setEncoding(encoding:String):Readable<TSelf>;
 
 	/**
-		The `readable.unpipe()` method detaches a `Writable` stream previously attached
-		using the `stream.pipe()` method.
+		The `readable.unpipe()` method detaches a `Writable` stream previously attached using the `stream.pipe()` method.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_unpipe_destination
 	**/
 	function unpipe(?destination:IWritable):Readable<TSelf>;
 
 	/**
-		Passing `chunk` as `null` signals the end of the stream (EOF), after which no
-		more data can be written.
+		Passing `chunk` as `null` signals the end of the stream (EOF), after which no more data can be written.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_unshift_chunk_encoding
 	**/
-	@:overload(function(chunk:Null<EitherType<Uint8Array, Any>>):Void {})
-	function unshift(chunk:String, ?encoding:String):Void;
+	function unshift(chunk:Null<Dynamic>, ?encoding:String):Void;
 
 	/**
-		Prior to Node.js 0.10, streams did not implement the entire `stream` module API
-		as it is currently defined. (See Compatibility for more information.)
+		Prior to Node.js 0.10, streams did not implement the entire `stream` module API as it is currently defined.
+		(See Compatibility for more information.)
 
 		@see https://nodejs.org/api/stream.html#stream_readable_wrap_stream
 	**/
 	function wrap(stream:Dynamic):IReadable;
 
+	// --------- API for implementing a Readable Stream -----------------------
+
 	/**
-		it need AsyncIterator
-
-		If the loop terminates with a `break` or a `throw`, the stream will be
-		destroyed. In other terms, iterating over a stream will consume the stream
-		fully. The stream will be read in chunks of size equal to the `highWaterMark`
-		option. In the code example above, data will be in a single chunk if the file
-		has less then 64kb of data because no `highWaterMark` option is provided to
-		`fs.createReadStream()`.
-
-		@see https://nodejs.org/api/stream.html#stream_readable_symbol_asynciterator
+		@see https://nodejs.org/api/stream.html#stream_new_stream_readable_options
 	**/
-	// function readable():Dynamic;
-	// --------- API for stream implementors - see node.js API documentation ---------
-	// TODO: add state objects here and in other streams
-	private function new(?options:ReadableNewOptions);
+	function new(?options:ReadableNewOptions);
 
+	/**
+		This function **MUST NOT** be called by application code directly.
+		It should be implemented by child classes, and called by the internal `Readable` class methods only.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_read_size_1
+	**/
 	private function _read(size:Int):Void;
-	private function _destroy(err:Error, callback:Null<Error>->Void):Void;
+
+	/**
+		The `_destroy()` method is called by `readable.destroy()`.
+		It can be overridden by child classes but it **must not** be called directly.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_destroy_err_callback
+	**/
+	private function _destroy(err:Null<Error>, callback:?Error->Void):Void;
+
+	/**
+		The `readable.push()` method is intended be called only by `Readable` implementers,
+		and only from within the `readable._read()` method.
+
+		@see https://nodejs.org/api/stream.html#stream_readable_push_chunk_encoding
+	**/
 	private function push(chunk:Null<Dynamic>, ?encoding:String):Bool;
+
+	// --------- TTY module API  ----------------------------------------------
+
+	/**
+		Terminal read streams (i.e. process.stdin) have this property set to true.
+		It is false for any other read streams.
+
+		@see https://nodejs.org/api/tty.html#tty_readstream_istty
+	**/
+	var isTTY(default, null):Bool;
+
+	// --------- static API  --------------------------------------------------
+	// TODO @:overload(function<T>(iterable:AsyncIterator<T>, ?options:ReadableNewOptions):IReadable {})
+	static function from<T>(iterable:Iterator<T>, ?options:ReadableNewOptions):IReadable;
 }
 
 /**
@@ -292,33 +300,45 @@ typedef ReadableNewOptions = {
 	@:optional var highWaterMark:Int;
 
 	/**
-		If specified, then buffers will be decoded to strings using the specified encoding. Default: `null`.
+		If specified, then buffers will be decoded to strings using the specified encoding.
+		Default: `null`.
 	**/
 	@:optional var encoding:String;
 
 	/**
 		Whether this stream should behave as a stream of objects.
-		Meaning that stream.read(n) returns a single value instead of a `Buffer` of size `n`. Default: `false`.
+		Meaning that `stream.read(n)` returns a single value instead of a `Buffer` of size `n`.
+		Default: `false`.
 	**/
 	@:optional var objectMode:Bool;
 
 	/**
-		Whether or not the stream should emit `'close'` after it has been destroyed. Default: `true`.
+		Whether or not the stream should emit `'close'` after it has been destroyed.
+		Default: `true`.
 	**/
 	@:optional var emitClose:Bool;
 
 	/**
-		Implementation for the stream._read() method.
+		Implementation for the `stream._read()` method.
 	**/
+	#if haxe4
+	@:optional var read:(size:Int) -> Void;
+	#else
 	@:optional var read:Int->Void;
+	#end
 
 	/**
-		Implementation for the stream._destroy() method.
+		Implementation for the `stream._destroy()` method.
 	**/
-	@:optional var destroy:Null<Error>->(Null<Error>->Void)->Void;
+	#if haxe4
+	@:optional var destroy:(err:Null<Error>, callback:?Error->Void) -> Void;
+	#else
+	@:optional var destroy:Null<Error>->(?Error->Void)->Void;
+	#end
 
 	/**
-		Whether this stream should automatically call `.destroy()` on itself after ending. Default: `false`.
+		Whether this stream should automatically call `.destroy()` on itself after ending.
+		Default: `false`.
 	**/
 	@:optional var autoDestroy:Bool;
 }
@@ -330,12 +350,37 @@ typedef ReadableNewOptions = {
 **/
 @:remove
 extern interface IReadable extends IStream {
-	function read(?size:Int):Null<Dynamic>;
-	function setEncoding(encoding:String):IReadable;
-	function resume():IReadable;
+	function destroy(?error:Error):IReadable;
+
+	var destroyed(default, null):Bool;
+
+	function isPaused():Bool;
+
 	function pause():IReadable;
+
 	function pipe<T:IWritable>(destination:T, ?options:{?end:Bool}):T;
+
+	function read(?size:Int):Null<Dynamic>;
+
+	var readable(default, null):Bool;
+
+	var readableEncoding(default, null):Null<String>;
+
+	var readableEnded(default, null):Bool;
+
+	var readableHighWaterMark(default, null):Int;
+
+	var readableLength(default, null):Int;
+
+	var readableObjectMode(default, null):Bool;
+
+	function resume():IReadable;
+
+	function setEncoding(encoding:String):IReadable;
+
 	function unpipe(?destination:IWritable):IReadable;
-	function unshift(chunk:Null<EitherType<Uint8Array, EitherType<String, Any>>>, ?encoding:String):Void;
+
+	function unshift(chunk:Null<Dynamic>, ?encoding:String):Void;
+
 	function wrap(stream:Dynamic):IReadable;
 }
