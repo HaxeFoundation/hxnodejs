@@ -22,7 +22,6 @@
 
 package js.node.stream;
 
-import haxe.extern.EitherType;
 #if haxe4
 import js.lib.Error;
 #else

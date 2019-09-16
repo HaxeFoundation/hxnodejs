@@ -23,7 +23,6 @@
 package js.node.stream;
 
 import haxe.extern.EitherType;
-import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
 import js.node.Stream;
 import js.node.stream.Readable.IReadable;
