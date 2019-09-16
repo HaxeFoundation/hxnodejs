@@ -25,10 +25,8 @@ package js.node;
 import haxe.extern.Rest;
 import js.node.events.EventEmitter;
 #if haxe4
-import js.lib.Error;
 import js.lib.Promise;
 #else
-import js.Error;
 import js.Promise;
 #end
 
