@@ -337,4 +337,4 @@ typedef DuplexNewOptions = {
 }
 
 @:remove
-extern interface IDuplex extends Readable.IReadable extends Writable.IWritable {}
+extern interface IDuplex extends IReadable extends IWritable {}
