@@ -124,7 +124,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_destroy_error
 	**/
-	function destroy(?error:Error):Writable<TSelf>;
+	function destroy(?error:Error):TSelf;
 
 	/**
 		Is `true` after `writable.destroy()` has been called.
@@ -148,7 +148,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_setdefaultencoding_encoding
 	**/
-	function setDefaultEncoding(encoding:String):Writable<TSelf>;
+	function setDefaultEncoding(encoding:String):TSelf;
 
 	/**
 		The `writable.uncork()` method flushes all data buffered since `stream.cork()` was called.
@@ -169,7 +169,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 		does not indicate whether the data has been flushed, for this use
 		`writable.writableFinished` instead.
 
-		@seehttps://nodejs.org/api/stream.html#stream_writable_writableended
+		@see https://nodejs.org/api/stream.html#stream_writable_writableended
 	**/
 	var writableEnded(default, null):Bool;
 

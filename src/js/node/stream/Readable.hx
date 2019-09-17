@@ -115,7 +115,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 		@see https://nodejs.org/api/stream.html#stream_readable_destroy_error
 	**/
-	function destroy(?error:Error):Readable<TSelf>;
+	function destroy(?error:Error):TSelf;
 
 	/**
 		Is `true` after `readable.destroy()` has been called.
@@ -139,7 +139,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 		@see https://nodejs.org/api/stream.html#stream_readable_pause
 	**/
-	function pause():Readable<TSelf>;
+	function pause():TSelf;
 
 	/**
 		The `readable.pipe()` method attaches a `Writable` stream to the `readable`,
@@ -211,21 +211,21 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 		@see https://nodejs.org/api/stream.html#stream_readable_resume
 	**/
-	function resume():Readable<TSelf>;
+	function resume():TSelf;
 
 	/**
 		The `readable.setEncoding()` method sets the character encoding for data read from the `Readable` stream.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_setencoding_encoding
 	**/
-	function setEncoding(encoding:String):Readable<TSelf>;
+	function setEncoding(encoding:String):TSelf;
 
 	/**
 		The `readable.unpipe()` method detaches a `Writable` stream previously attached using the `stream.pipe()` method.
 
 		@see https://nodejs.org/api/stream.html#stream_readable_unpipe_destination
 	**/
-	function unpipe(?destination:IWritable):Readable<TSelf>;
+	function unpipe(?destination:IWritable):TSelf;
 
 	/**
 		Passing `chunk` as `null` signals the end of the stream (EOF), after which no more data can be written.
