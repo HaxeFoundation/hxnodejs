@@ -22,28 +22,91 @@
 
 package js.node.repl;
 
+import haxe.extern.EitherType;
 import js.node.events.EventEmitter;
+#if haxe4
+import js.lib.Error;
+import js.lib.Function;
+#else
+import js.Error;
+#end
 
 /**
 	Enumeration of events emitted by `REPLServer` objects.
 **/
 @:enum abstract REPLServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
-		Emitted when the user exits the REPL in any of the defined ways.
-		Namely, typing .exit at the repl, pressing Ctrl+C twice to signal SIGINT,
-		or pressing Ctrl+D to signal "end" on the input stream.
+		Emitted when the REPL is exited either by receiving the `.exit` command as input, the user pressing `<ctrl>-C`
+		twice to signal `SIGINT`, or by pressing `<ctrl>-D` to signal `'end'` on the input stream.
+
+		@see https://nodejs.org/api/repl.html#repl_event_exit
 	**/
 	var Exit:REPLServerEvent<Void->Void> = "exit";
+
+	/**
+		Emitted when the REPL's context is reset.
+
+		@see https://nodejs.org/api/repl.html#repl_event_reset
+	**/
+	var Reset:REPLServerEvent<Dynamic<Dynamic>->Void> = "reset";
 }
 
 /**
-	An object representing REPL instance created by `Repl.start`.
+	Instances of `REPLServer` are created using the `Repl.start` method.
+
+	@see https://nodejs.org/api/repl.html#repl_class_replserver
 **/
 @:jsRequire("repl", "REPLServer")
 extern class REPLServer extends EventEmitter<REPLServer> {
 	/**
-		You can expose a variable to the REPL explicitly by assigning it
-		to the `context` object associated with each REPLServer.
+		It is possible to expose a variable to the REPL explicitly by assigning it to the `context` object associated
+		with each `REPLServer`.
+
+		@see https://nodejs.org/api/repl.html#repl_global_and_local_scope
 	**/
 	var context(default, null):Dynamic<Dynamic>;
+
+	/**
+		The `REPLServer.defineCommand` method is used to add new `.`-prefixed commands to the REPL instance.
+
+		@see https://nodejs.org/api/repl.html#repl_replserver_definecommand_keyword_cmd
+	**/
+	function defineCommand(keyword:String, cmd:EitherType<REPLServerOptions, Function>):Void;
+
+	/**
+		Readies the REPL instance for input from the user, printing the configured `prompt` to a new line in the
+		`output` and resuming the `input` to accept new input.
+
+		@see https://nodejs.org/api/repl.html#repl_replserver_displayprompt_preservecursor
+	**/
+	function displayPrompt(?preserveCursor:Bool):Void;
+
+	/**
+		Clears any command that has been buffered but not yet executed.
+
+		@see https://nodejs.org/api/repl.html#repl_replserver_clearbufferedcommand
+	**/
+	function clearBufferedCommand():Void;
+
+	/**
+		Initializes a history log file for the REPL instance.
+
+		@see https://nodejs.org/api/repl.html#repl_replserver_setuphistory_historypath_callback
+	**/
+	function setupHistory(historyPath:String, callback:Error->REPLServer->Void):Void;
+}
+
+/**
+	Options object used by `REPLServer.defineCommand`.
+**/
+typedef REPLServerOptions = {
+	/**
+		Help text to be displayed when `.help` is entered.
+	**/
+	@:optional var help:String;
+
+	/**
+		The function to execute.
+	**/
+	var action:?String->Void;
 }
