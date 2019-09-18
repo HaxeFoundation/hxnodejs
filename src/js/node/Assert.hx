@@ -40,24 +40,30 @@ import js.Promise;
 extern class Assert {
 	/**
 		An alias of `ok`.
+
+		@see https://nodejs.org/api/assert.html#assert_assert_value_message
 	**/
 	@:selfCall
 	static function assert(value:Dynamic, ?message:String):Void;
 
 	/**
+		An alias of `assert.deepStrictEqual()`.
+
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_deepequal_actual_expected_message
 	**/
 	static function deepEqual<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
-		Tests for deep equality between the actual and expected parameters.
+		Tests for deep equality between the `actual` and `expected` parameters.
+		"Deep" equality means that the enumerable "own" properties of child objects
 
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_deepstrictequal_actual_expected_message
 	**/
 	static function deepStrictEqual<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
-  		Awaits the asyncFn promise or, if asyncFn is a function, immediately calls the function and awaits the returned promise to complete. It will then check that the promise is not rejected.
+		Awaits the `asyncFn` promise or, if `asyncFn` is a function, immediately calls the function and awaits the returned promise to complete.
+		It will then check that the promise is not rejected.
 
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_doesnotreject_asyncfn_error_message
 	**/
@@ -67,7 +73,7 @@ extern class Assert {
 	/**
 		Asserts that the function `fn` does not throw an error.
 
- 		Using assert.doesNotThrow() is actually not useful because there is no benefit in catching an error and then rethrowing it. Instead, consider adding a comment next to the specific code path that should not throw and keep error messages as expressive as possible.
+		 		Using assert.doesNotThrow() is actually not useful because there is no benefit in catching an error and then rethrowing it. Instead, consider adding a comment next to the specific code path that should not throw and keep error messages as expressive as possible.
 
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_doesnotthrow_fn_error_message
 	**/
@@ -76,11 +82,14 @@ extern class Assert {
 
 	/**
 		An alias of `strictEqual`.
+
+		@see https://nodejs.org/api/assert.html#assert_assert_doesnotthrow_fn_error_message
 	**/
 	static function equal<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
 		Throws an `AssertionError` with the provided error message or a default error message.
+		If the `message` parameter is an instance of an `Error` then it will be thrown instead of the `AssertionError`.
 
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_fail_message
 	**/
@@ -96,8 +105,9 @@ extern class Assert {
 	static function fail_<T>(actual:T, expected:T, message:String, operator_:String):Void;
 
 	/**
-		Throws `value` if `value` is truthy.
-		Useful when testing the first argument, error in callbacks.
+		Throws `value` if `value` is not `undefined` or `null`.
+		This is useful when testing the `error` argument in callbacks.
+		The stack trace contains all frames from the error passed to `ifError()` including the potential new frames for `ifError()` itself.
 
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_iferror_value
 	**/
@@ -105,6 +115,8 @@ extern class Assert {
 
 	/**
 		An alias of `notDeepStrictEqual`
+
+		@see https://nodejs.org/api/assert.html#assert_assert_notdeepequal_actual_expected_message
 	**/
 	static function notDeepEqual<T>(actual:T, expected:T, ?message:String):Void;
 
@@ -116,14 +128,14 @@ extern class Assert {
 	static function notDeepStrictEqual<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
-		An alias of `notStrictEqual`
+		An alias of `notStrictEqual`.
 
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_notequal_actual_expected_message
 	**/
 	static function notEqual<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
-		Tests strict inequality between the `actual` and `expected` parameters
+		Tests strict inequality between the `actual` and `expected` parameters as determined by the SameValue Comparison.
 
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_notstrictequal_actual_expected_message
 	**/
@@ -131,21 +143,23 @@ extern class Assert {
 
 	/**
 		Tests if `value` is truthy.
+		It is equivalent to `assert.equal(!!value, true, message)`.
 
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_ok_value_message
 	**/
 	static function ok(value:Dynamic, ?message:String):Void;
 
 	/**
- 		Awaits the `asyncFn` promise or, if `asyncFn` is a function, immediately calls the function and awaits the returned promise to complete. It will then check that the promise is rejected.
+		Awaits the `asyncFn` promise or, if `asyncFn` is a function, immediately calls the function and awaits the returned promise to complete. It will then check that the promise is rejected.
 
- 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_rejects_asyncfn_error_message
+		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_rejects_asyncfn_error_message
 	**/
 	@:overload(function(asyncFn:RejectsAsyncFn, ?message:String):Void {})
 	static function rejects(asyncFn:RejectsAsyncFn, error:ThrowsExpectedError, ?message:String):Void;
 
 	/**
-		Tests strict equality between the `actual` and `expected` parameters
+		Tests strict equality between the `actual` and `expected` parameter as
+		determined by the SameValue Comparison.
 
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_strictequal_actual_expected_message
 	**/
@@ -164,4 +178,5 @@ extern class Assert {
 	a class, RegExp or function.
 **/
 private typedef ThrowsExpectedError = EitherType<Class<Dynamic>, EitherType<RegExp, Dynamic->Bool>>;
+
 private typedef RejectsAsyncFn = EitherType<Void->Promise<Dynamic>, Promise<Dynamic>>;
