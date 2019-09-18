@@ -32,15 +32,15 @@ import js.Error;
 #end
 
 /**
-	Provides a Read-Eval-Print-Loop (REPL) implementation that is available both as a standalone program or includible
-	in other applications.
+	The `repl` module provides a Read-Eval-Print-Loop (REPL) implementation that is available both as a standalone
+	program or includible in other applications.
 
 	@see https://nodejs.org/api/repl.html#repl_repl
 **/
 @:jsRequire("repl")
 extern class Repl {
 	/**
-		Creates and starts a `REPLServer` instance.
+		The `repl.start()` method creates and starts a `repl.REPLServer` instance.
 
 		@see https://nodejs.org/api/repl.html#repl_repl_start_options
 	**/
@@ -81,14 +81,14 @@ typedef ReplOptions = {
 	/**
 		The `Readable` stream from which REPL input will be read.
 
-		Default: `Process.stdin`.
+		Default: `process.stdin`.
 	**/
 	@:optional var input:IReadable;
 
 	/**
 		The `Writable` stream to which REPL output will be written.
 
-		Default: `Process.stdout`.
+		Default: `process.stdout`.
 	**/
 	@:optional var output:IWritable;
 
@@ -134,7 +134,7 @@ typedef ReplOptions = {
 	/**
 		The function to invoke to format the output of each command before writing to `output`.
 
-		Default: `Util.inspect`.
+		Default: `util.inspect()`.
 	**/
 	@:optional var writer:Dynamic->Void;
 
@@ -146,7 +146,7 @@ typedef ReplOptions = {
 	/**
 		A flag that specifies whether the default evaluator executes all JavaScript commands in strict mode or default
 		(sloppy) mode.
-		Acceptable values are `Repl.REPL_MODE_SLOPPY` or `Repl.REPL_MODE_STRICT`.
+		Acceptable values are `repl.REPL_MODE_SLOPPY` or `repl.REPL_MODE_STRICT`.
 	**/
 	@:optional var replMode:#if haxe4 js.lib.Symbol; #else Dynamic; #end
 

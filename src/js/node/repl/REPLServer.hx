@@ -32,7 +32,7 @@ import js.Error;
 #end
 
 /**
-	Enumeration of events emitted by `REPLServer` objects.
+	Enumeration of events emitted by the `REPLServer` objects.
 **/
 @:enum abstract REPLServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
@@ -52,7 +52,8 @@ import js.Error;
 }
 
 /**
-	Instances of `REPLServer` are created using the `Repl.start` method.
+	Instances of `repl.REPLServer` are created using the `repl.start()` method and should not be created directly using
+	the JavaScript `new` keyword.
 
 	@see https://nodejs.org/api/repl.html#repl_class_replserver
 **/
@@ -67,22 +68,22 @@ extern class REPLServer extends EventEmitter<REPLServer> {
 	var context(default, null):Dynamic<Dynamic>;
 
 	/**
-		The `REPLServer.defineCommand` method is used to add new `.`-prefixed commands to the REPL instance.
+		The `replServer.defineCommand()` method is used to add new `.`-prefixed commands to the REPL instance.
 
 		@see https://nodejs.org/api/repl.html#repl_replserver_definecommand_keyword_cmd
 	**/
 	function defineCommand(keyword:String, cmd:EitherType<REPLServerOptions, Function>):Void;
 
 	/**
-		Readies the REPL instance for input from the user, printing the configured `prompt` to a new line in the
-		`output` and resuming the `input` to accept new input.
+		The `replServer.displayPrompt()` method readies the REPL instance for input from the user, printing the
+		configured `prompt` to a new line in the `output` and resuming the `input` to accept new input.
 
 		@see https://nodejs.org/api/repl.html#repl_replserver_displayprompt_preservecursor
 	**/
 	function displayPrompt(?preserveCursor:Bool):Void;
 
 	/**
-		Clears any command that has been buffered but not yet executed.
+		The `replServer.clearBufferedCommand()` method clears any command that has been buffered but not yet executed.
 
 		@see https://nodejs.org/api/repl.html#repl_replserver_clearbufferedcommand
 	**/
