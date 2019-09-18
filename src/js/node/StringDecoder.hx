@@ -30,8 +30,8 @@ import js.html.ArrayBufferView;
 #end
 
 /**
-	API for decoding `Buffer` objects into strings in a manner that preserves encoded multi-byte UTF-8 and UTF-16
-	characters.
+	The `string_decoder` module provides an API for decoding `Buffer` objects into strings in a manner that preserves
+	encoded multi-byte UTF-8 and UTF-16 characters.
 
 	@see https://nodejs.org/api/string_decoder.html#string_decoder_string_decoder
 **/
@@ -52,9 +52,9 @@ extern class StringDecoder {
 	function end(?buffer:EitherType<Buffer, ArrayBufferView>):String;
 
 	/**
-		Returns a decoded string, ensuring that any incomplete multibyte characters at the end of the `Buffer` or
-		`ArrayBufferView` are omitted from the returned string and stored in an internal buffer for the next call to
-		`StringDecoder.write` or `StringDecoder.end`.
+		Returns a decoded string, ensuring that any incomplete multibyte characters at the end of the `Buffer`, or
+		`TypedArray`, or `DataViewor` are omitted from the returned string and stored in an internal buffer for the next
+		call to `stringDecoder.write()` or `stringDecoder.end()`.
 
 		@see https://nodejs.org/api/string_decoder.html#string_decoder_stringdecoder_write_buffer
 	**/
