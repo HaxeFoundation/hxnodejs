@@ -29,46 +29,52 @@ import js.node.events.EventEmitter;
 **/
 @:enum abstract InterfaceEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
+		The `'close'` event is emitted when one of the following occur:
+
 		@see https://nodejs.org/api/readline.html#readline_event_close
 	**/
 	var Close:InterfaceEvent<Void->Void> = "close";
 
 	/**
-		Emitted whenever the `input` stream receives an end-of-line input (`\n`, `\r`, or `\r\n`).
+		The `'line'` event is emitted whenever the `input` stream receives an end-of-line input (`\n`, `\r`, or `\r\n`).
 
 		@see https://nodejs.org/api/readline.html#readline_event_line
 	**/
 	var Line:InterfaceEvent<String->Void> = "line";
 
 	/**
+		The `'pause'` event is emitted when one of the following occur:
+
 		@see https://nodejs.org/api/readline.html#readline_event_pause
 	**/
 	var Pause:InterfaceEvent<Void->Void> = "pause";
 
 	/**
-		Emitted whenever the `input` stream is resumed.
+		The `'resume'` event is emitted whenever the `input` stream is resumed.
 
 		@see https://nodejs.org/api/readline.html#readline_event_resume
 	**/
 	var Resume:InterfaceEvent<Void->Void> = "resume";
 
 	/**
-		Emitted when a Node.js process previously moved into the background using `<ctrl>-Z` (i.e. `SIGTSTP`) is then
-		brought back to the foreground using `fg(1p)`.
+		The `'SIGCONT'` event is emitted when a Node.js process previously moved into the background using `<ctrl>-Z`
+		(i.e. `SIGTSTP`) is then brought back to the foreground using `fg(1p)`.
 
 		@see https://nodejs.org/api/readline.html#readline_event_sigcont
 	**/
 	var SIGCONT:InterfaceEvent<Void->Void> = "SIGCONT";
 
 	/**
-		Emitted whenever the `input` stream receives a `<ctrl>-C` input, known typically as `SIGINT`.
+		The `'SIGINT'` event is emitted whenever the `input` stream receives a `<ctrl>-C` input, known typically as
+		`SIGINT`.
 
 		@see https://nodejs.org/api/readline.html#readline_event_sigint
 	**/
 	var SIGINT:InterfaceEvent<Void->Void> = "SIGINT";
 
 	/**
-		Emitted when the `input` stream receives a `<ctrl>-Z` input, typically known as `SIGTSTP`.
+		The `'SIGTSTP'` event is emitted when the `input` stream receives a `<ctrl>-Z` input, typically known as
+		`SIGTSTP`.
 
 		@see https://nodejs.org/api/readline.html#readline_event_sigtstp
 	**/
@@ -86,57 +92,58 @@ typedef InterfaceWriteKey = {
 }
 
 /**
-	Instances of the `Interface` class are constructed using the `Readline.createInterface` method.
+	Instances of the `readline.Interface` class are constructed using the `readline.createInterface()` method.
 
 	@see https://nodejs.org/api/readline.html#readline_class_interface
 **/
 extern class Interface extends EventEmitter<Interface> {
 	/**
-		Closes the `Interface` instance and relinquishes control over the input and output streams.
+		The `rl.close()` method closes the `readline.Interface` instance and relinquishes control over the `input` and
+		`output` streams.
 
 		@see https://nodejs.org/api/readline.html#readline_rl_close
 	**/
 	function close():Void;
 
 	/**
-		Pauses the `input` stream, allowing it to be resumed later if necessary.
+		The `rl.pause()` method pauses the `input` stream, allowing it to be resumed later if necessary.
 
 		@see https://nodejs.org/api/readline.html#readline_rl_pause
 	**/
 	function pause():Void;
 
 	/**
-		Writes the `Interface` instances configured `prompt` to a new line in `output` in order to provide a user with a
-		new location at which to provide input.
+		The `rl.prompt()` method writes the `readline.Interface` instances configured `prompt` to a new line in `output`
+		in order to provide a user with a new location at which to provide input.
 
 		@see https://nodejs.org/api/readline.html#readline_rl_prompt_preservecursor
 	**/
 	function prompt(?preserveCursor:Bool):Void;
 
 	/**
-		Displays the `query` by writing it to the `output`, waits for user `input` to be provided on input, then invokes
-		the `callback` function passing the provided input as the first argument.
+		The `rl.question()` method displays the `query` by writing it to the `output`, waits for user `input` to be
+		provided on input, then invokes the `callback` function passing the provided input as the first argument.
 
 		@see https://nodejs.org/api/readline.html#readline_rl_question_query_callback
 	**/
 	function question(query:String, callback:String->Void):Void;
 
 	/**
-		Resumes the `input` stream if it has been paused.
+		The `rl.resume()` method resumes the `input` stream if it has been paused.
 
 		@see https://nodejs.org/api/readline.html#readline_rl_resume
 	**/
 	function resume():Void;
 
 	/**
-		Sets the prompt that will be written to `output` whenever `prompt` is called.
+		The `rl.setPrompt()` method sets the prompt that will be written to `output` whenever `rl.prompt()` is called.
 
 		@see https://nodejs.org/api/readline.html#readline_rl_setprompt_prompt
 	**/
 	function setPrompt(prompt:String):Void;
 
 	/**
-		Write either `data` or a key sequence identified by `key` to the `output`.
+		The `rl.write()` method write either `data` or a key sequence identified by `key` to the `output`.
 
 		@see https://nodejs.org/api/readline.html#readline_rl_write_data_key
 	**/

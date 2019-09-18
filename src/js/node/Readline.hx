@@ -127,28 +127,31 @@ typedef ReadlineCompleterCallback = #if (haxe_ver >= 4) (line : String) -> Array
 }
 
 /**
-	Provides an interface for reading data from a `Readable` stream (such as `Process.stdin`) one line at a time.
+	The readline module provides an interface for reading data from a `Readable` stream (such as `process.stdin`) one
+	line at a time.
 
 	@see https://nodejs.org/api/readline.html#readline_readline
 **/
 @:jsRequire("readline")
 extern class Readline {
 	/**
-		Clears current line of given `TTY` stream in a specified direction identified by `dir`.
+		The `readline.clearLine()` method Clears current line of given `TTY` stream in a specified direction identified
+		by `dir`.
 
 		@see https://nodejs.org/api/readline.html#readline_readline_clearline_stream_dir_callback
 	**/
 	static function clearLine(stream:IWritable, dir:ClearLineDirection, ?callback:Function):Bool;
 
 	/**
-		Clears the given `TTY` stream from the current position of the cursor down.
+		The `readline.clearScreenDown()` method clears the given `TTY` stream from the current position of the cursor
+		down.
 
 		@see https://nodejs.org/api/readline.html#readline_readline_clearscreendown_stream_callback
 	**/
 	static function clearScreenDown(stream:IWritable, ?callback:Function):Bool;
 
 	/**
-		Creates a new `readline.Interface` instance.
+		The `readline.createInterface()` method creates a new `readline.Interface` instance.
 
 		@see https://nodejs.org/api/readline.html#readline_readline_createinterface_options
 	**/
@@ -156,21 +159,22 @@ extern class Readline {
 	static function createInterface(options:ReadlineOptions):Interface;
 
 	/**
-		Moves cursor to the specified position in a given `Tty` `stream`.
+		The `readline.cursorTo()` method moves cursor to the specified position in a given `TTY` `stream`.
 
 		@see https://nodejs.org/api/readline.html#readline_readline_cursorto_stream_x_y_callback
 	**/
 	static function cursorTo(stream:IWritable, x:Int, ?y:Int, ?callback:Function):Bool;
 
 	/**
-		Causes the given `Readable` stream to begin emitting `'keypress'` events corresponding to received input.
+		The `readline.emitKeypressEvents()` method causes the given `Readable` stream to begin emitting `'keypress'`
+		events corresponding to received input.
 
 		@see https://nodejs.org/api/readline.html#readline_readline_emitkeypressevents_stream_interface
 	**/
 	static function emitKeypressEvents(stream:IReadable, ?iface:Interface):Void;
 
 	/**
-		Moves the cursor relative to its current position in a given `Tty` `stream`.
+		The `readline.moveCursor()` method moves the cursor relative to its current position in a given `TTY` `stream`.
 
 		@see https://nodejs.org/api/readline.html#readline_readline_movecursor_stream_dx_dy_callback
 	**/
