@@ -46,6 +46,25 @@ extern class Repl {
 	**/
 	@:overload(function(prompt:String):REPLServer {})
 	static function start(options:ReplOptions):REPLServer;
+
+	/**
+		Evaluates expressions in sloppy mode.
+	**/
+	#if haxe4
+	static final REPL_MODE_SLOPPY:js.lib.Symbol;
+	#else
+	static var REPL_MODE_SLOPPY(default, never):Dynamic;
+	#end
+
+	/**
+		Evaluates expressions in strict mode.
+		This is equivalent to prefacing every repl statement with `'use strict'`.
+	**/
+	#if haxe4
+	static final REPL_MODE_STRICT:js.lib.Symbol;
+	#else
+	static var REPL_MODE_STRICT(default, never):Dynamic;
+	#end
 }
 
 /**
@@ -127,6 +146,7 @@ typedef ReplOptions = {
 	/**
 		A flag that specifies whether the default evaluator executes all JavaScript commands in strict mode or default
 		(sloppy) mode.
+		Acceptable values are `Repl.REPL_MODE_SLOPPY` or `Repl.REPL_MODE_STRICT`.
 	**/
 	@:optional var replMode:#if haxe4 js.lib.Symbol; #else Dynamic; #end
 
