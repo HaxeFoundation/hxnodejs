@@ -95,7 +95,7 @@ extern class Assert {
 
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_fail_message
 	**/
-	static function fail(?message:EitherType<String>):Void;
+	static function fail(?message:EitherType<String, Error>):Void;
 
 	/**
 		Throws an `AssertionError`. If `message` is falsy, the error message is set as the values of `actual` and `expected` separated by the provided `operator`.
