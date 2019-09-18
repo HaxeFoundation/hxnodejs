@@ -177,8 +177,13 @@ extern class Assert {
 }
 
 /**
-	a class, RegExp or function.
+	<RegExp> | <Function>
+	Class<Dynamic>, RegExp, Dynamic->Bool
 **/
 private typedef ThrowsExpectedError = EitherType<Class<Dynamic>, EitherType<RegExp, Dynamic->Bool>>;
 
+/**
+	<Function> | <Promise>
+	Void->Promiss<Dynamic>,Promiss<Dynamic>
+**/
 private typedef RejectsAsyncFn = EitherType<Void->Promise<Dynamic>, Promise<Dynamic>>;
