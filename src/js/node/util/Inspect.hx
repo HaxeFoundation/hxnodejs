@@ -28,7 +28,7 @@ import js.node.Util.InspectOptions;
 @:jsRequire("util", "inspect")
 extern class Inspect {
 	/**
-		Returns a string representation of `object` that is intended for debugging.
+		The `util.inspect()` method returns a string representation of `object` that is intended for debugging.
 
 		@see https://nodejs.org/api/util.html#util_util_inspect_object_options
 	**/
@@ -37,20 +37,21 @@ extern class Inspect {
 	static function inspect(object:Dynamic, ?options:InspectOptions):String;
 
 	/**
-		A map associating a style name to a color from `Inspect.colors`.
+		`util.inspect.styles` is a map associating a style name to a color from `util.inspect.colors` properties.
 
 		@see https://nodejs.org/api/util.html#util_customizing_util_inspect_colors
 	**/
 	static var styles:DynamicAccess<String>;
 
 	/**
-		The predefined color codes: white, grey, black, blue, cyan, green, magenta, red and yellow.
+		The predefined color codes are: `white`, `grey`, `black`, `blue`, `cyan`, `green`, `magenta`, `red` and
+		`yellow`.
 	**/
 	static var colors:DynamicAccess<Array<Int>>;
 
 	/**
-		In addition to being accessible through `Inspect.custom`, this symbol is registered globally and can be accessed
-		in any environment as `Symbol.for('nodejs.util.inspect.custom')`.
+		In addition to being accessible through `util.inspect.custom`, this symbol is registered globally and can be
+		accessed in any environment as `Symbol.for('nodejs.util.inspect.custom')`.
 
 		@see https://nodejs.org/api/util.html#util_util_inspect_custom
 	**/
@@ -61,7 +62,7 @@ extern class Inspect {
 	#end
 
 	/**
-		The `defaultOptions` value allows customization of the default options used by `Inspect`.
+		The `defaultOptions` value allows customization of the default options used by `util.inspect`.
 
 		@see https://nodejs.org/api/util.html#util_util_inspect_defaultoptions
 	**/

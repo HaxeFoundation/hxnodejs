@@ -42,8 +42,7 @@ extern class Promisify {
 	static function promisify(original:Function):Rest<Dynamic>->Promise<Dynamic>;
 
 	/**
-		The `Symbol` that can be used to declare custom promisified variants of functions, see Custom promisified
-		functions.
+		That can be used to declare custom promisified variants of functions, see Custom promisified functions.
 
 		@see https://nodejs.org/api/util.html#util_util_promisify_custom
 	**/

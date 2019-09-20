@@ -36,7 +36,7 @@ import js.Promise;
 #end
 
 /**
-	The `Util` module is primarily designed to support the needs of Node.js's internal APIs.
+	The `util` module is primarily designed to support the needs of Node.js' own internal APIs.
 
 	@see https://nodejs.org/api/util.html#util_util
 **/
@@ -44,14 +44,14 @@ import js.Promise;
 extern class Util {
 	/**
 		Takes an `async` function (or a function that returns a `Promise`) and returns a function following the
-		error-first callback style.
+		error-first callback style, i.e. taking an `(err, value) => ...` callback as the last argument.
 
 		@see https://nodejs.org/api/util.html#util_util_callbackify_original
 	**/
 	static function callbackify(original:Function, args:Rest<Dynamic>):Null<Error>->Null<Dynamic>->Void;
 
 	/**
-		The `Util.debuglog` method is used to create a function that conditionally writes debug messages to `stderr`
+		The `util.debuglog()` method is used to create a function that conditionally writes debug messages to `stderr`
 		based on the existence of the `NODE_DEBUG` environment variable.
 
 		@see https://nodejs.org/api/util.html#util_util_debuglog_section
@@ -59,15 +59,16 @@ extern class Util {
 	static function debuglog(section:String):Rest<Dynamic>->Void;
 
 	/**
-		Wraps `fn` (which may be a function or class) in such a way that it is marked asdeprecated.
+		The `util.deprecate()` method wraps `fn` (which may be a function or class) in such a way that it is marked
+		asdeprecated.
 
 		@see https://nodejs.org/api/util.html#util_util_deprecate_fn_msg_code
 	**/
 	static function deprecate<T:haxe.Constraints.Function>(fun:T, msg:String, ?code:String):T;
 
 	/**
-		Returns a formatted string using the first argument as a `printf`-like format string which can contain zero or
-		more format specifiers.
+		The `util.format()` method returns a formatted string using the first argument as a `printf`-like format string
+		which can contain zero or more format specifiers.
 
 		@see https://nodejs.org/api/util.html#util_util_format_format_args
 	**/
@@ -75,8 +76,8 @@ extern class Util {
 	static function format(format:String, args:Rest<Dynamic>):String;
 
 	/**
-		Iidentical to `Util.format`, except in that it takes an `inspectOptions` argument which specifies options that
-		are passed along to `Util.inspect`.
+		This function is identical to `util.format()`, except in that it takes an `inspectOptions` argument which
+		specifies options that are passed along to `util.inspect()`.
 
 		@see https://nodejs.org/api/util.html#util_util_formatwithoptions_inspectoptions_format_args
 	**/
@@ -99,7 +100,7 @@ extern class Util {
 	static function inherits(constructor:Class<Dynamic>, superConstructor:Class<Dynamic>):Void;
 
 	/**
-		Returns a string representation of `object` that is intended for debugging.
+		The `util.inspect()` method returns a string representation of `object` that is intended for debugging.
 
 		@see https://nodejs.org/api/util.html#util_util_inspect_object_options
 	**/

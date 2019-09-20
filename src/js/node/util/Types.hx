@@ -23,7 +23,7 @@
 package js.node.util;
 
 /**
-	Provides a number of type checks for different kinds of built-in objects.
+	`util.types` provides a number of type checks for different kinds of built-in objects.
 
 	@see https://nodejs.org/api/util.html#util_util_types
 **/
