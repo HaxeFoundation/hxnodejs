@@ -24,7 +24,7 @@ package js.node.https;
 
 /**
 	An Agent object for HTTPS similar to `http.Agent`.
-	See [https.request](https://nodejs.org/dist/latest-v12.x/docs/api/https.html#https_https_request_options_callback) for more information.
+	See [https.request](https://nodejs.org/api/http.html#http_http_request_options_callback) for more information.
 **/
 @:jsRequire("https", "Agent")
 extern class Agent extends js.node.http.Agent {
