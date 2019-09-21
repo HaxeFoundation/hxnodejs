@@ -34,19 +34,21 @@ import js.Error;
 #end
 
 /**
-	This module is used for writing unit tests for your applications
+	The `assert module` provides a set of assertion functions for verifying invariants.
+	The module provides a recommended [strict mode](https://nodejs.org/api/assert.html#assert_strict_mode) and a more lenient legacy mode.
 
-	@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert
+	@see hhttps://nodejs.org/api/assert.html#assert_assert
 **/
 @:jsRequire("assert")
 extern class Assert {
 	/**
-		An alias of `ok`.
+		An alias of `ok()`.
 
 		@see https://nodejs.org/api/assert.html#assert_assert_value_message
 	**/
 	@:selfCall
-	static function assert(value:Dynamic, ?message:EitherType<String, Error>):Void;
+	@:overload(function(value:Dynamic, ?message:Error):Void {})
+	static function assert(value:Dynamic, ?message:String):Void;
 
 	/**
 		An alias of `assert.deepStrictEqual()`.
@@ -75,7 +77,10 @@ extern class Assert {
 	/**
 		Asserts that the function `fn` does not throw an error.
 
-		 		Using assert.doesNotThrow() is actually not useful because there is no benefit in catching an error and then rethrowing it. Instead, consider adding a comment next to the specific code path that should not throw and keep error messages as expressive as possible.
+		Using `assert.doesNotThrow()` is actually not useful because there is no benefit
+		in catching an error and then rethrowing it.
+		Instead, consider adding a comment next to the specific code path that should not throw
+		and keep error messages as expressive as possible.
 
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_doesnotthrow_fn_error_message
 	**/
