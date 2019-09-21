@@ -22,7 +22,6 @@
 
 package js.node;
 
-import js.lib.Function;
 import haxe.extern.EitherType;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
@@ -37,20 +36,20 @@ import js.node.readline.*;
 @:jsRequire("readline")
 extern class Readline {
 	/**
-		The `readline.clearLine()` method Clears current line of given `TTY` stream in a specified direction identified
-		by `dir`.
+		The `readline.clearLine()` method Clears current line of given `TTY` stream
+		in a specified direction identified by `dir`.
 
 		@see https://nodejs.org/api/readline.html#readline_readline_clearline_stream_dir_callback
 	**/
-	static function clearLine(stream:IWritable, dir:ClearLineDirection, ?callback:Function):Bool;
+	static function clearLine(stream:IWritable, dir:ClearLineDirection, ?callback:Void->Void):Bool;
 
 	/**
-		The `readline.clearScreenDown()` method clears the given `TTY` stream from the current position of the cursor
-		down.
+		The `readline.clearScreenDown()` method clears the given `TTY` stream
+		from the current position of the cursor down.
 
 		@see https://nodejs.org/api/readline.html#readline_readline_clearscreendown_stream_callback
 	**/
-	static function clearScreenDown(stream:IWritable, ?callback:Function):Bool;
+	static function clearScreenDown(stream:IWritable, ?callback:Void->Void):Bool;
 
 	/**
 		The `readline.createInterface()` method creates a new `readline.Interface` instance.
@@ -65,7 +64,7 @@ extern class Readline {
 
 		@see https://nodejs.org/api/readline.html#readline_readline_cursorto_stream_x_y_callback
 	**/
-	static function cursorTo(stream:IWritable, x:Int, ?y:Int, ?callback:Function):Bool;
+	static function cursorTo(stream:IWritable, x:Int, ?y:Int, ?callback:Void->Void):Bool;
 
 	/**
 		The `readline.emitKeypressEvents()` method causes the given `Readable` stream to begin emitting `'keypress'`
@@ -80,11 +79,13 @@ extern class Readline {
 
 		@see https://nodejs.org/api/readline.html#readline_readline_movecursor_stream_dx_dy_callback
 	**/
-	static function moveCursor(stream:IWritable, dx:Int, dy:Int, ?callback:Function):Bool;
+	static function moveCursor(stream:IWritable, dx:Int, dy:Int, ?callback:Void->Void):Bool;
 }
 
 /**
 	Options object used by `Readline.createInterface`.
+
+	@see https://nodejs.org/api/readline.html#readline_readline_createinterface_options
 **/
 typedef ReadlineOptions = {
 	/**
@@ -158,11 +159,16 @@ typedef ReadlineOptions = {
 	@:optional var escapeCodeTimeout:Int;
 }
 
-typedef ReadlineCompleterCallback = #if (haxe_ver >= 4) (line : String) -> Array<EitherType<Array<String>, String>>; #else String->
-	Array<EitherType<Array<String>, String>>; #end
+#if haxe4
+typedef ReadlineCompleterCallback = (line:String) -> Array<EitherType<Array<String>, String>>;
+#else
+typedef ReadlineCompleterCallback = String->Array<EitherType<Array<String>, String>>;
+#end
 
 /**
 	Enumeration of possible directions for `Readline.clearLine`.
+
+	@see https://nodejs.org/api/readline.html#readline_readline_clearline_stream_dir_callback
 **/
 @:enum abstract ClearLineDirection(Int) from Int to Int {
 	/**
