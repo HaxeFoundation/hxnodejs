@@ -22,28 +22,45 @@
 
 package js.node;
 
+#if haxe4
+import js.lib.ArrayBufferView;
+#else
+import js.html.ArrayBufferView;
+#end
+
 /**
-	API for decoding `Buffer` objects into strings in a manner that preserves encoded multi-byte UTF-8 and UTF-16 characters.
+	The `string_decoder` module provides an API for decoding `Buffer` objects into strings in a manner that preserves
+	encoded multi-byte UTF-8 and UTF-16 characters.
+
+	@see https://nodejs.org/api/string_decoder.html#string_decoder_string_decoder
 **/
 @:jsRequire("string_decoder", "StringDecoder")
 extern class StringDecoder {
 	/**
-		`encoding` defaults to `utf8`
+		Creates a new `StringDecoder` instance.
+
+		@see https://nodejs.org/api/string_decoder.html#string_decoder_new_stringdecoder_encoding
 	**/
 	function new(?encoding:String);
 
 	/**
-		Returns a decoded string, ensuring that any incomplete multibyte characters at the end of the `Buffer` are
-		omitted from the returned string and stored in an internal buffer for the next call to `write` or `end`.
+		Returns any remaining input stored in the internal buffer as a string.
+		Bytes representing incomplete UTF-8 and UTF-16 characters will be replaced
+		with substitution characters appropriate for the character encoding.
+
+		@see https://nodejs.org/api/string_decoder.html#string_decoder_stringdecoder_end_buffer
 	**/
-	function write(buffer:Buffer):String;
+	@:overload(function(buffer:Buffer):String {})
+	@:overload(function(buffer:ArrayBufferView):String {})
+	function end():String;
 
 	/**
-		Returns any remaining input stored in the internal buffer as a string.
-		Bytes representing incomplete UTF-8 and UTF-16 characters will be replaced with
-		substitution characters appropriate for the character encoding.
+		Returns a decoded string, ensuring that any incomplete multibyte characters at the end of the `Buffer`, or
+		`TypedArray`, or `DataViewor` are omitted from the returned string and stored in an internal buffer for the next
+		call to `stringDecoder.write()` or `stringDecoder.end()`.
 
-		If the `buffer` argument is provided, one final call to `write` is performed before returning the remaining input.
+		@see https://nodejs.org/api/string_decoder.html#string_decoder_stringdecoder_write_buffer
 	**/
-	function end(?buffer:Buffer):String;
+	@:overload(function(buffer:ArrayBufferView):String {})
+	function write(buffer:Buffer):String;
 }
