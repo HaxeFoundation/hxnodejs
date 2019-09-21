@@ -22,11 +22,13 @@
 
 package js.node;
 
+import haxe.DynamicAccess;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
 import js.node.repl.REPLServer;
 #if haxe4
 import js.lib.Error;
+import js.lib.Symbol;
 #else
 import js.Error;
 #end
@@ -49,9 +51,11 @@ extern class Repl {
 
 	/**
 		Evaluates expressions in sloppy mode.
+
+		@see https://nodejs.org/api/repl.html#repl_repl_start_options
 	**/
 	#if haxe4
-	static final REPL_MODE_SLOPPY:js.lib.Symbol;
+	static final REPL_MODE_SLOPPY:Symbol;
 	#else
 	static var REPL_MODE_SLOPPY(default, never):Dynamic;
 	#end
@@ -59,9 +63,11 @@ extern class Repl {
 	/**
 		Evaluates expressions in strict mode.
 		This is equivalent to prefacing every repl statement with `'use strict'`.
+
+		@see https://nodejs.org/api/repl.html#repl_repl_start_options
 	**/
 	#if haxe4
-	static final REPL_MODE_STRICT:js.lib.Symbol;
+	static final REPL_MODE_STRICT:Symbol;
 	#else
 	static var REPL_MODE_STRICT(default, never):Dynamic;
 	#end
@@ -69,6 +75,8 @@ extern class Repl {
 
 /**
 	Options object used by `Repl.start`.
+
+	@see https://nodejs.org/api/repl.html#repl_repl_start_options
 **/
 typedef ReplOptions = {
 	/**
@@ -104,7 +112,11 @@ typedef ReplOptions = {
 
 		Default: an async wrapper for the JavaScript `eval()` function.
 	**/
-	@:optional var eval:String->Dynamic<Dynamic>->String->(Error->Dynamic->Void)->Void;
+	#if haxe4
+	@:optional var eval:(code:String, context:DynamicAccess<Dynamic>, file:String, cb:(error:Null<Error>, ?result:Dynamic) -> Void) -> Void;
+	#else
+	@:optional var eval:String->DynamicAccess<Dynamic>->String->(Null<Error>->?Dynamic->Void)->Void;
+	#end
 
 	/**
 		If `true`, specifies that the default `writer` function should include ANSI color styling to REPL output.
@@ -148,7 +160,11 @@ typedef ReplOptions = {
 		(sloppy) mode.
 		Acceptable values are `repl.REPL_MODE_SLOPPY` or `repl.REPL_MODE_STRICT`.
 	**/
-	@:optional var replMode:#if haxe4 js.lib.Symbol; #else Dynamic; #end
+	#if haxe4
+	@:optional var replMode:Symbol;
+	#else
+	@:optional var replMode:Dynamic;
+	#end
 
 	/**
 		Stop evaluating the current piece of code when `SIGINT` is received, i.e. `Ctrl+C` is pressed.

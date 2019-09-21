@@ -22,6 +22,7 @@
 
 package js.node.repl;
 
+import haxe.DynamicAccess;
 import haxe.extern.EitherType;
 import js.node.events.EventEmitter;
 #if haxe4
@@ -36,19 +37,27 @@ import js.Error;
 **/
 @:enum abstract REPLServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
-		Emitted when the REPL is exited either by receiving the `.exit` command as input, the user pressing `<ctrl>-C`
-		twice to signal `SIGINT`, or by pressing `<ctrl>-D` to signal `'end'` on the input stream.
+		The `'exit'` event is emitted when the REPL is exited either by receiving the `.exit` command as input,
+		the user pressing `<ctrl>-C` twice to signal `SIGINT`, or by pressing `<ctrl>-D` to signal 'end' on the input stream.
+		The listener callback is invoked without any arguments.
 
 		@see https://nodejs.org/api/repl.html#repl_event_exit
 	**/
 	var Exit:REPLServerEvent<Void->Void> = "exit";
 
 	/**
-		Emitted when the REPL's context is reset.
+		The `'reset'` event is emitted when the REPL's context is reset.
+		This occurs whenever the `.clear` command is received as input unless the REPL is using the default evaluator
+		and the `repl.REPLServer` instance was created with the `useGlobal` option set to `true`.
+		The listener callback will be called with a reference to the `context` object as the only argument.
 
 		@see https://nodejs.org/api/repl.html#repl_event_reset
 	**/
-	var Reset:REPLServerEvent<Dynamic<Dynamic>->Void> = "reset";
+	#if haxe4
+	var Reset:REPLServerEvent<(context:DynamicAccess<Dynamic>) -> Void> = "reset";
+	#else
+	var Reset:REPLServerEvent<DynamicAccess<Dynamic>->Void> = "reset";
+	#end
 }
 
 /**
@@ -65,14 +74,19 @@ extern class REPLServer extends EventEmitter<REPLServer> {
 
 		@see https://nodejs.org/api/repl.html#repl_global_and_local_scope
 	**/
-	var context(default, null):Dynamic<Dynamic>;
+	var context(default, null):DynamicAccess<Dynamic>;
 
 	/**
 		The `replServer.defineCommand()` method is used to add new `.`-prefixed commands to the REPL instance.
 
 		@see https://nodejs.org/api/repl.html#repl_replserver_definecommand_keyword_cmd
 	**/
-	function defineCommand(keyword:String, cmd:EitherType<REPLServerOptions, Function>):Void;
+	#if haxe4
+	@:overload(function(keyword:String, cmd:(rest:String) -> Void):Void {})
+	#else
+	@:overload(function(keyword:String, cmd:String->Void):Void {})
+	#end
+	function defineCommand(keyword:String, cmd:REPLServerOptions):Void;
 
 	/**
 		The `replServer.displayPrompt()` method readies the REPL instance for input from the user, printing the
@@ -94,11 +108,17 @@ extern class REPLServer extends EventEmitter<REPLServer> {
 
 		@see https://nodejs.org/api/repl.html#repl_replserver_setuphistory_historypath_callback
 	**/
-	function setupHistory(historyPath:String, callback:Error->REPLServer->Void):Void;
+	#if haxe4
+	function setupHistory(historyPath:String, callback:(err:Null<Error>, repl:Null<REPLServer>) -> Void):Void;
+	#else
+	function setupHistory(historyPath:String, callback:Null<Error>->Null<REPLServer>->Void):Void;
+	#end
 }
 
 /**
 	Options object used by `REPLServer.defineCommand`.
+
+	@see https://nodejs.org/api/repl.html#repl_class_replserver
 **/
 typedef REPLServerOptions = {
 	/**
@@ -109,5 +129,9 @@ typedef REPLServerOptions = {
 	/**
 		The function to execute.
 	**/
-	var action:?String->Void;
+	#if haxe4
+	var action:(rest:String) -> Void;
+	#else
+	var action:String->Void;
+	#end
 }
