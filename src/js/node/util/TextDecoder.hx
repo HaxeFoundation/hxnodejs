@@ -22,6 +22,7 @@
 
 package js.node.util;
 
+import haxe.extern.EitherType;
 #if haxe4
 import js.lib.ArrayBuffer;
 import js.lib.ArrayBufferView;
@@ -31,68 +32,80 @@ import js.html.ArrayBufferView;
 #end
 
 /**
-	An implementation of the WHATWG Encoding Standard TextDecoder API.
+	An implementation of the WHATWG Encoding Standard `TextDecoder` API.
+
+	@see https://nodejs.org/api/util.html#util_class_util_textdecoder
 **/
 @:jsRequire("util", "TextDecoder")
 extern class TextDecoder {
 	/**
 		Creates an new `TextDecoder` instance.
 
-		The `encoding` may specify one of the supported encodings or an alias.
+		@see https://nodejs.org/api/util.html#util_new_textdecoder_encoding_options
 	**/
 	function new(?encoding:String, ?options:TextDecoderOptions);
 
 	/**
 		Decodes the `input` and returns a string.
-		If `options.stream` is `true`, any incomplete byte sequences occurring at the end of the `input`
-		are buffered internally and emitted after the next call to `decode()`.
 
-		If `fatal` is `true`, decoding errors that occur will result in a `TypeError` being thrown.
+		@see https://nodejs.org/api/util.html#util_textdecoder_decode_input_options
 	**/
-	@:overload(function(?input:ArrayBufferView, ?options:TextDecodeOptions):String {})
-	function decode(?input:ArrayBuffer, ?options:TextDecodeOptions):String;
+	function decode(?input:EitherType<ArrayBuffer, ArrayBufferView>, ?options:TextDecodeOptions):String;
 
 	/**
 		The encoding supported by the `TextDecoder` instance.
+
+		@see https://nodejs.org/api/util.html#util_textdecoder_encoding
 	**/
 	var encoding(default, null):String;
 
 	/**
 		The value will be `true` if decoding errors result in a `TypeError` being thrown.
+
+		@see https://nodejs.org/api/util.html#util_textdecoder_fatal
 	**/
 	var fatal(default, null):Bool;
 
 	/**
 		The value will be `true` if the decoding result will include the byte order mark.
+
+		@see https://nodejs.org/api/util.html#util_textdecoder_ignorebom
 	**/
 	var ignoreBOM(default, null):Bool;
 }
 
+/**
+	Options object used by `new TextDecoder()`.
+
+	@see https://nodejs.org/api/util.html#util_new_textdecoder_encoding_options
+**/
 typedef TextDecoderOptions = {
 	/**
-		`true` if decoding failures are fatal. This option is only supported when ICU is enabled (see Internationalization).
+		`true` if decoding failures are fatal.
+		This option is only supported when ICU is enabled (see Internationalization).
 
 		Default: `false`.
 	**/
 	@:optional var fatal:Bool;
 
 	/**
-		When `true`, the TextDecoder will include the byte order mark in the decoded result.
-
+		When `true`, the `TextDecoder` will include the byte order mark in the decoded result.
 		When `false`, the byte order mark will be removed from the output.
-
-		This option is only used when encoding is 'utf-8', 'utf-16be' or 'utf-16le'.
+		This option is only used when `encoding` is `'utf-8'`, `'utf-16be'` or `'utf-16le'`.
 
 		Default: `false`.
 	**/
 	@:optional var ignoreBOM:Bool;
 }
 
+/**
+	Options object used by `TextDecoder.decode`.
+**/
 typedef TextDecodeOptions = {
 	/**
-		true if additional chunks of data are expected.
+		`true` if additional chunks of data are expected.
 
-		Default: false.
+		Default: `false`.
 	**/
 	@:optional var stream:Bool;
 }

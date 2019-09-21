@@ -30,7 +30,8 @@ import js.html.Uint8Array;
 
 /**
 	An implementation of the WHATWG Encoding Standard `TextEncoder` API.
-	All instances of `TextEncoder` only support UTF-8 encoding.
+
+	@see https://nodejs.org/api/util.html#util_class_util_textencoder
 **/
 @:jsRequire("util", "TextEncoder")
 extern class TextEncoder {
@@ -38,11 +39,15 @@ extern class TextEncoder {
 
 	/**
 		UTF-8 encodes the `input` string and returns a `Uint8Array` containing the encoded bytes.
+
+		@see https://nodejs.org/api/util.html#util_textencoder_encode_input
 	**/
 	function encode(?input:String):Uint8Array;
 
 	/**
-		The encoding supported by the `TextEncoder` instance. Always set to 'utf-8'.
+		The encoding supported by the `TextEncoder` instance.
+
+		@see https://nodejs.org/api/util.html#util_textencoder_encoding
 	**/
 	var encoding(default, null):String;
 }
