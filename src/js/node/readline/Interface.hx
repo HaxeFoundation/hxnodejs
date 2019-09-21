@@ -22,6 +22,7 @@
 
 package js.node.readline;
 
+import js.node.Buffer;
 import js.node.events.EventEmitter;
 
 /**
@@ -82,16 +83,6 @@ import js.node.events.EventEmitter;
 }
 
 /**
-	Key sequence passed as the `key` argument to `Interface.write`.
-**/
-typedef InterfaceWriteKey = {
-	var name:String;
-	@:optional var ctrl:Bool;
-	@:optional var meta:Bool;
-	@:optional var shift:Bool;
-}
-
-/**
 	Instances of the `readline.Interface` class are constructed using the `readline.createInterface()` method.
 
 	@see https://nodejs.org/api/readline.html#readline_class_interface
@@ -147,5 +138,33 @@ extern class Interface extends EventEmitter<Interface> {
 
 		@see https://nodejs.org/api/readline.html#readline_rl_write_data_key
 	**/
-	function write(data:Null<String>, ?key:InterfaceWriteKey):Void;
+	@:overload(function(data:Buffer, ?key:InterfaceWriteKey):Void {})
+	function write(data:String, ?key:InterfaceWriteKey):Void;
+}
+
+/**
+	Key sequence passed as the `key` argument to `Interface.write`.
+
+	@see https://nodejs.org/api/readline.html#readline_rl_write_data_key
+**/
+typedef InterfaceWriteKey = {
+	/**
+		`true` to indicate the <ctrl> key.
+	**/
+	@:optional var ctrl:Bool;
+
+	/**
+		`true` to indicate the <Meta> key.
+	 */
+	@:optional var meta:Bool;
+
+	/**
+		`true` to indicate the <Shift> key.
+	**/
+	@:optional var shift:Bool;
+
+	/**
+		The name of the a key.
+	**/
+	var name:String;
 }
