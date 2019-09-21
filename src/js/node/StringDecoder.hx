@@ -22,7 +22,6 @@
 
 package js.node;
 
-import haxe.extern.EitherType;
 #if haxe4
 import js.lib.ArrayBufferView;
 #else
@@ -46,10 +45,14 @@ extern class StringDecoder {
 
 	/**
 		Returns any remaining input stored in the internal buffer as a string.
+		Bytes representing incomplete UTF-8 and UTF-16 characters will be replaced
+		with substitution characters appropriate for the character encoding.
 
 		@see https://nodejs.org/api/string_decoder.html#string_decoder_stringdecoder_end_buffer
 	**/
-	function end(?buffer:EitherType<Buffer, ArrayBufferView>):String;
+	@:overload(function(buffer:Buffer):String {})
+	@:overload(function(buffer:ArrayBufferView):String {})
+	function end():String;
 
 	/**
 		Returns a decoded string, ensuring that any incomplete multibyte characters at the end of the `Buffer`, or
@@ -58,5 +61,6 @@ extern class StringDecoder {
 
 		@see https://nodejs.org/api/string_decoder.html#string_decoder_stringdecoder_write_buffer
 	**/
-	function write(buffer:EitherType<Buffer, ArrayBufferView>):String;
+	@:overload(function(buffer:ArrayBufferView):String {})
+	function write(buffer:Buffer):String;
 }
