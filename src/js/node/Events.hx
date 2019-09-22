@@ -32,7 +32,7 @@ import js.Promise;
 
 /**
 	Much of the Node.js core API is built around an idiomatic asynchronous event-driven architecture
-	in which certain kinds of objects (called "emitters") emit named events that cause Function objects
+	in which certain kinds of objects (called "emitters") emit named events that cause `Function` objects
 	("listeners") to be called.
 
 	@see https://nodejs.org/api/events.html#events_events

@@ -58,16 +58,6 @@ import haxe.extern.EitherType;
 }
 
 /**
-	Abstract type for events. Its type parameter is a signature
-	of a listener for a concrete event.
-**/
-#if haxe4
-abstract Event<T:Function>(Dynamic) from String to String from Symbol to Symbol {}
-#else
-abstract Event<T:Function>(Dynamic) from String to String {}
-#end
-
-/**
 	The `EventEmitter` class is defined and exposed by the `events` module:
 
 	@see https://nodejs.org/api/events.html#events_class_eventemitter
@@ -262,3 +252,13 @@ extern interface IEventEmitter {
 
 	function rawListeners<T:Function>(eventName:Event<T>):Array<T>;
 }
+
+/**
+	Abstract type for events. Its type parameter is a signature
+	of a listener for a concrete event.
+**/
+#if haxe4
+abstract Event<T:Function>(Dynamic) from String to String from Symbol to Symbol {}
+#else
+abstract Event<T:Function>(Dynamic) from String to String {}
+#end
