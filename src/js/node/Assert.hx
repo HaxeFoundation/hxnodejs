@@ -53,26 +53,30 @@ extern class Assert {
 	/**
 		An alias of `assert.deepStrictEqual()`.
 
-		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_deepequal_actual_expected_message
+		@see https://nodejs.org/api/assert.html#assert_assert_deepequal_actual_expected_message
 	**/
-	static function deepEqual<T>(actual:T, expected:T, ?message:EitherType<String, Error>):Void;
+	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
+	static function deepEqual<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
 		Tests for deep equality between the `actual` and `expected` parameters.
 		"Deep" equality means that the enumerable "own" properties of child objects
 
-		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_deepstrictequal_actual_expected_message
+		@see https://nodejs.org/api/assert.html#assert_assert_deepstrictequal_actual_expected_message
 	**/
-	static function deepStrictEqual<T>(actual:T, expected:T, ?message:EitherType<String, Error>):Void;
+	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
+	static function deepStrictEqual<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
 		Awaits the `asyncFn` promise or, if `asyncFn` is a function, immediately calls the function and awaits the returned promise to complete.
 		It will then check that the promise is not rejected.
 
-		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_doesnotreject_asyncfn_error_message
+		@see https://nodejs.org/api/assert.html#assert_assert_doesnotreject_asyncfn_error_message
 	**/
-	@:overload(function(asyncFn:RejectsAsyncFn, ?message:String):Void {})
-	static function doesNotReject(asyncFn:RejectsAsyncFn, error:ThrowsExpectedError, ?message:EitherType<String, Error>):Void;
+	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
+	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void {})
+	@:overload(function(asyncFn:Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
+	static function doesNotReject(asyncFn:Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void;
 
 	/**
 		Asserts that the function `fn` does not throw an error.
@@ -84,32 +88,37 @@ extern class Assert {
 
 		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_doesnotthrow_fn_error_message
 	**/
-	@:overload(function(fn:EitherType<Void->Void, Void->Dynamic>, ?message:String):Void {})
-	static function doesNotThrow(fn:EitherType<Void->Void, Void->Dynamic>, error:ThrowsExpectedError, ?message:String):Void;
+	@:overload(function(fn:Void->Void, ?error:RegExp, ?message:String):Void {})
+	@:overload(function(fn:Void->Void, ?error:Dynamic->Bool, ?message:String):Void {})
+	@:overload(function(fn:Void->Dynamic, ?error:RegExp, ?message:String):Void {})
+	static function doesNotThrow(fn:Void->Dynamic, ?error:Dynamic->Bool, ?message:String):Void;
 
 	/**
 		An alias of `strictEqual`.
 
 		@see https://nodejs.org/api/assert.html#assert_assert_doesnotthrow_fn_error_message
 	**/
-	static function equal<T>(actual:T, expected:T, ?message:EitherType<String, Error>):Void;
+	@:overload(function<T>(actual:T, expected: T, ?message:String):Void {})
+	static function equal<T>(actual:T, expected:T, ?message:Error):Void;
 
 	/**
 		Throws an `AssertionError` with the provided error message or a default error message.
 		If the `message` parameter is an instance of an `Error` then it will be thrown instead of the `AssertionError`.
 
-		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_fail_message
+		@see https://nodejs.org/api/assert.html#assert_assert_fail_message
 	**/
-	static function fail(?message:EitherType<String, Error>):Void;
+	@:overload(function(?message:String):Void {})
+	static function fail(?message:Error):Void;
 
 	/**
 		Throws an `AssertionError`. If `message` is falsy, the error message is set as the values of `actual` and `expected` separated by the provided `operator`.
 		Otherwise, the error message is the value of `message`.
 
-		@see https://nodejs.org/dist/latest-v12.x/docs/api/assert.html#assert_assert_fail_actual_expected_message_operator_stackstartfn
+		@see https://nodejs.org/api/assert.html#assert_assert_fail_actual_expected_message_operator_stackstartfn
 	**/
 	@:deprecated @:native("fail")
-	static function fail_<T>(actual:T, expected:T, message:EitherType<String, Error>, operator_:String):Void;
+	@:overload(function<T>(actual:T, expected:T, ?message:String, ?operator_:String, ?stackStartFn:Function):Void {})
+	static function fail_<T>(actual:T, expected:T, ?message:Error, ?operator_:String, ?stackStartFn:Function):Void;
 
 	/**
 		Throws `value` if `value` is not `undefined` or `null`.
