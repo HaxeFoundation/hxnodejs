@@ -36,7 +36,7 @@ import js.Error;
 **/
 @:jsRequire("stream", "Transform")
 extern class Transform<TSelf:Transform<TSelf>> extends Duplex<TSelf> implements ITransform {
-	function new(?options:Duplex.DuplexNewOptions);
+	function new(?options:TransformNewoptions);
 
 	/**
 		This function **MUST NOT** be called by application code directly.

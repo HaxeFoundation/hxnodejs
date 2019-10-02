@@ -132,7 +132,7 @@ import js.Error;
 		resources (a file descriptor, for example) have been closed.
 		The event indicates that no more events will be emitted, and no further computation will occur.
 
-		@see https://nodejs.org/api/stream.html#stream_event_close_1
+		@see https://nodejs.org/api/stream.html#stream_event_close
 		@see https://nodejs.org/api/stream.html#stream_event_close_1
 	**/
 	var Close:DuplexEvent<Void->Void> = "close";

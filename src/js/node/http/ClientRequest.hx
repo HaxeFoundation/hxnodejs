@@ -206,6 +206,9 @@ extern class ClientRequest extends Writable<ClientRequest> {
 		The `socket` may also be accessed via `request.connection`.
 	 */
 	var socket(default, null):Socket;
+
+	// var writableEnded(default, null):Bool;
+	// var writableFinished(default, null):Bool;
 }
 
 typedef InformationEventData = {
