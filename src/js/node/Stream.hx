@@ -23,10 +23,14 @@
 package js.node;
 
 import haxe.extern.Rest;
+import js.node.stream.Writable.IWritable;
 import js.node.events.EventEmitter;
+import js.node.stream.Readable.IReadable;
 #if haxe4
+import js.lib.Error;
 import js.lib.Promise;
 #else
+import js.Error;
 import js.Promise;
 #end
 
@@ -43,8 +47,21 @@ extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements 
 
 		@see https://nodejs.org/api/stream.html#stream_stream_pipeline_streams_callback
 	**/
-	// TODO Support callback argument
-	static function pipeline(streams:Rest<IStream>):Promise<Void>;
+	@:overload(function(readable:IReadable, callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable,
+		callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
+		callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
+		writable6:IWritable, callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
+		writable6:IWritable, writable7:IWritable, callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
+		writable6:IWritable, writable7:IWritable, writable8:IWritable, callback:Null<Error>->Void):Void {})
+	static function pipeline(readable:IReadable, streams:Rest<IWritable>):Promise<Void>;
 }
 
 /**
