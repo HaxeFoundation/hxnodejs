@@ -203,4 +203,7 @@ extern class ServerResponse extends Writable<ServerResponse> {
 		Sends a HTTP/1.1 102 Processing message to the client, indicating that the request body should be sent.
 	**/
 	function writeProcessing():Void;
+
+	// var writableEnded(default, null):Bool;
+	// var writableFinished(default, null):Bool;
 }
