@@ -204,6 +204,7 @@ extern class ServerResponse extends Writable<ServerResponse> {
 	**/
 	function writeProcessing():Void;
 
+	// This field is defined in super class.
 	// var writableEnded(default, null):Bool;
 	// var writableFinished(default, null):Bool;
 }
