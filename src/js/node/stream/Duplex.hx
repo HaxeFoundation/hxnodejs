@@ -161,7 +161,9 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 	**/
 	function cork():Void;
 
-	// function destroy(?error:Error):TSelf;
+	override function destroy(?error:Error):TSelf;
+
+	// This field is defined in super class.
 	// var destroyed(default, null):Bool;
 
 	/**
