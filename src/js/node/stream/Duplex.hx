@@ -261,7 +261,8 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 	**/
 	private function _writev(chunks:Array<Writable.Chunk>, callback:?Error->Void):Void;
 
-	// private function _destroy(err:Null<Error>, callback:Null<Error>->Void):Void;
+	// This field is defined in super class.
+	// private function _destroy(err:Null<Error>, ?callback:Null<Error>->Void):Void;
 
 	/**
 		The `_final()` method must not be called directly.
@@ -300,6 +301,7 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 	**/
 	private override function _destroy(err:Null<Error>, callback:?Error->Void):Void;
 
+	// This field is defined in super class.
 	// var isTTY(default, null):Bool;
 }
 
