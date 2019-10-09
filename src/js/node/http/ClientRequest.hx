@@ -207,16 +207,9 @@ extern class ClientRequest extends Writable<ClientRequest> {
 	 */
 	var socket(default, null):Socket;
 
-	/**
-		Is `true` after `request.end()` has been called.
-		This property does not indicate whether the data has been flushed, for this use `request.writableFinished` instead.
-	**/
-	var writableEnded(default, null):Bool;
-
-	/**
-		Is `true` if all data has been flushed to the underlying system, immediately before the `'finish'` event is emitted.
-	**/
-	var writableFinished(default, null):Bool;
+	// This field is defined in super class.
+	// var writableEnded(default, null):Bool;
+	// var writableFinished(default, null):Bool;
 }
 
 typedef InformationEventData = {

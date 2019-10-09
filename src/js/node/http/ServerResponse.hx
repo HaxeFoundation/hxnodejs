@@ -169,17 +169,6 @@ extern class ServerResponse extends Writable<ServerResponse> {
 	var statusMessage:String;
 
 	/**
-		Is `true` after `end()` has been called. This property does not indicate whether the data has been flushed,
-		for this use `writableFinished` instead.
-	**/
-	var writableEnded(default, null):Bool;
-
-	/**
-		Is `true` if all data has been flushed to the underlying system, immediately before the `'finish'` event is emitted.
-	**/
-	var writableFinished(default, null):Bool;
-
-	/**
 		Sends a HTTP/1.1 100 Continue message to the client, indicating that the request body should be sent.
 		See the `'checkContinue'` event on `Server`.
 	 */
@@ -214,4 +203,8 @@ extern class ServerResponse extends Writable<ServerResponse> {
 		Sends a HTTP/1.1 102 Processing message to the client, indicating that the request body should be sent.
 	**/
 	function writeProcessing():Void;
+
+	// This field is defined in super class.
+	// var writableEnded(default, null):Bool;
+	// var writableFinished(default, null):Bool;
 }

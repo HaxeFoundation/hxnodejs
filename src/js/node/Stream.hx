@@ -22,7 +22,17 @@
 
 package js.node;
 
+import haxe.extern.Rest;
+import js.node.stream.Writable.IWritable;
 import js.node.events.EventEmitter;
+import js.node.stream.Readable.IReadable;
+#if haxe4
+import js.lib.Error;
+import js.lib.Promise;
+#else
+import js.Error;
+import js.Promise;
+#end
 
 /**
 	Base class for all streams.
@@ -30,6 +40,28 @@ import js.node.events.EventEmitter;
 @:jsRequire("stream") // the module itself is also a class
 extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements IStream {
 	private function new();
+
+	/**
+		A module method to pipe between streams forwarding errors and properly cleaning up
+		and provide a callback when the pipeline is complete.
+
+		@see https://nodejs.org/api/stream.html#stream_stream_pipeline_streams_callback
+	**/
+	@:overload(function(readable:IReadable, callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable,
+		callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
+		callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
+		writable6:IWritable, callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
+		writable6:IWritable, writable7:IWritable, callback:Null<Error>->Void):Void {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
+		writable6:IWritable, writable7:IWritable, writable8:IWritable, callback:Null<Error>->Void):Void {})
+	static function pipeline(readable:IReadable, streams:Rest<IWritable>):Promise<Void>;
 }
 
 /**

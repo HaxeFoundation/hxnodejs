@@ -13,7 +13,7 @@ class SimpleProtocol extends Transform<SimpleProtocol> {
 	var _rawHeader = [];
 	var header:Buffer;
 
-	override function _transform(chunk:Buffer, encoding, callback) {
+	override function _transform(chunk:Dynamic, encoding, callback) {
 		if (!this._inBody) {
 			// check if the chunk has a \n\n
 			var split = -1;
