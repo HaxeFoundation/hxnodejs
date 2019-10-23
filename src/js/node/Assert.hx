@@ -37,7 +37,7 @@ import js.Error;
 	The `assert module` provides a set of assertion functions for verifying invariants.
 	The module provides a recommended [strict mode](https://nodejs.org/api/assert.html#assert_strict_mode) and a more lenient legacy mode.
 
-	@see hhttps://nodejs.org/api/assert.html#assert_assert
+	@see https://nodejs.org/api/assert.html#assert_assert
 **/
 @:jsRequire("assert")
 extern class Assert {
@@ -55,12 +55,14 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_deepequal_actual_expected_message
 	**/
+	@:deprecated
 	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
 	static function deepEqual<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
 		Tests for deep equality between the `actual` and `expected` parameters.
 		"Deep" equality means that the enumerable "own" properties of child objects
+		are recursively evaluated also by the following rules.
 
 		@see https://nodejs.org/api/assert.html#assert_assert_deepstrictequal_actual_expected_message
 	**/
@@ -73,8 +75,10 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_doesnotreject_asyncfn_error_message
 	**/
+	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Class<Dynamic>, ?message:String):Void {})
 	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
 	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void {})
+	@:overload(function(asyncFn:Promise<Dynamic>, ?error:Class<Dynamic>, ?message:String):Void {})
 	@:overload(function(asyncFn:Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
 	static function doesNotReject(asyncFn:Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void;
 
@@ -88,8 +92,10 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_doesnotthrow_fn_error_message
 	**/
+	@:overload(function(fn:Void->Void, ?error:Class<Dynamic>, ?message:String):Void {})
 	@:overload(function(fn:Void->Void, ?error:RegExp, ?message:String):Void {})
 	@:overload(function(fn:Void->Void, ?error:Dynamic->Bool, ?message:String):Void {})
+	@:overload(function(fn:Void->Dynamic, ?error:Class<Dynamic>, ?message:String):Void {})
 	@:overload(function(fn:Void->Dynamic, ?error:RegExp, ?message:String):Void {})
 	static function doesNotThrow(fn:Void->Dynamic, ?error:Dynamic->Bool, ?message:String):Void;
 
@@ -98,6 +104,7 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_doesnotthrow_fn_error_message
 	**/
+	@:deprecated
 	@:overload(function<T>(actual:T, expected: T, ?message:String):Void {})
 	static function equal<T>(actual:T, expected:T, ?message:Error):Void;
 
@@ -117,8 +124,8 @@ extern class Assert {
 		@see https://nodejs.org/api/assert.html#assert_assert_fail_actual_expected_message_operator_stackstartfn
 	**/
 	@:deprecated @:native("fail")
-	@:overload(function<T>(actual:T, expected:T, ?message:String, ?operator_:String, ?stackStartFn:Function):Void {})
-	static function fail_<T>(actual:T, expected:T, ?message:Error, ?operator_:String, ?stackStartFn:Function):Void;
+	@:overload(function<T>(actual:T, expected:T, ?message:String, ?operator_:String, ?stackStartFn:haxe.Constraints.Function):Void {})
+	static function fail_<T>(actual:T, expected:T, ?message:Error, ?operator_:String, ?stackStartFn:haxe.Constraints.Function):Void;
 
 	/**
 		Throws `value` if `value` is not `undefined` or `null`.
@@ -134,6 +141,7 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_notdeepequal_actual_expected_message
 	**/
+	@:deprecated
 	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
 	static function notDeepEqual<T>(actual:T, expected:T, ?message:String):Void;
 
@@ -150,6 +158,7 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_notequal_actual_expected_message
 	**/
+	@:deprecated
 	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
 	static function notEqual<T>(actual:T, expected:T, ?message:String):Void;
 
@@ -167,7 +176,7 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_ok_value_message
 	**/
-	@:overload(function<T>(value:T, ?message:Error):Void {})
+	@:overload(function(value:Dynamic, ?message:Error):Void {})
 	static function ok(value:Dynamic, ?message:String):Void;
 
 	/**
@@ -175,10 +184,12 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_rejects_asyncfn_error_message
 	**/
+	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Class<Dynamic>, ?message:String):Void {})
 	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
 	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void {})
 	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Dynamic, ?message:String):Void {})
 	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Error, ?message:String):Void {})
+	@:overload(function(asyncFn:Promise<Dynamic>, ?error:Class<Dynamic>, ?message:String):Void {})
 	@:overload(function(asyncFn:Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
 	@:overload(function(asyncFn:Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void {})
 	@:overload(function(asyncFn:Promise<Dynamic>, ?error:Dynamic, ?message:String):Void {})
@@ -198,8 +209,9 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_throws_fn_error_message
 	**/
-	@:overload(function(fn:EitherType<Void->Void, Void->Dynamic>, ?error:RegExp, ?message:String):Void {})
-	@:overload(function(fn:EitherType<Void->Void, Void->Dynamic>, ?error:Dynamic->Bool, ?message:String):Void {})
-	@:overload(function(fn:EitherType<Void->Void, Void->Dynamic>, ?error:Dynamic, ?message:String):Void {})
-	static function throws(fn:EitherType<Void->Void, Void->Dynamic>, ?error:Error, ?message:String):Void;
+	@:overload(function(fn:Void->Void, ?error:RegExp, ?message:String):Void {})
+	@:overload(function(fn:Void->Void, ?error:Dynamic->Bool, ?message:String):Void {})
+	@:overload(function(fn:Void->Void, ?error:Dynamic, ?message:String):Void {})
+	static function throws(fn:Void->Void, ?error:Error, ?message:String):Void;
 }
+
