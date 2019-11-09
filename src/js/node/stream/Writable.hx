@@ -386,6 +386,8 @@ extern interface IWritable extends IStream {
 	var writableObjectMode(default, null):Bool;
 
 	function write(chunk:Dynamic, ?encoding:String, ?callback:EitherType<Void->Void, Null<Error>->Void>):Bool;
+
+	var isTTY(default, null):Bool;
 }
 
 typedef Chunk = {
