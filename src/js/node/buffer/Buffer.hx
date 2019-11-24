@@ -211,8 +211,8 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_fill_value_offset_end_encoding
 	**/
-	@:overlord(function(value:Uint8Array, ?offset:Int, ?end:Int):Buffer {})
-	@:overlord(function(value:Int, ?offset:Int, ?end:Int):Buffer {})
+	@:overload(function(value:Uint8Array, ?offset:Int, ?end:Int):Buffer {})
+	@:overload(function(value:Int, ?offset:Int, ?end:Int):Buffer {})
 	function fill(value:String, ?offset:Int, ?end:Int, ?encoding:String):Buffer;
 
 	/**
@@ -220,8 +220,8 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_includes_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:Uint8Array, ?byteOffset:Int):Bool {})
-	@:overlord(function(value:Int, ?byteOffset:Int):Bool {})
+	@:overload(function(value:Uint8Array, ?byteOffset:Int):Bool {})
+	@:overload(function(value:Int, ?byteOffset:Int):Bool {})
 	function includes(value:String, ?byteOffset:Int, ?encoding:String):Bool;
 
 	/**
@@ -233,9 +233,9 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_indexof_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:Uint8Array, ?byteOffset:Int):Bool {})
-	@:overlord(function(value:Int, ?byteOffset:Int):Bool {})
-	function indexOf(value:String, ?byteOffset:Int, ?encoding:String):Bool;
+	@:overload(function(value:Uint8Array, ?byteOffset:Int):Int {})
+	@:overload(function(value:Int, ?byteOffset:Int):Int {})
+	function indexOf(value:String, ?byteOffset:Int, ?encoding:String):Int;
 
 	/**
 		Creates and returns an iterator of `buf` keys (indices).
@@ -250,9 +250,9 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_lastindexof_value_byteoffset_encoding
 	**/
-	@:overlord(function(value:Uint8Array, ?byteOffset:Int):Bool {})
-	@:overlord(function(value:Int, ?byteOffset:Int):Bool {})
-	function lastIndexOf(value:String, ?byteOffset:Int, ?encoding:String):Bool;
+	@:overload(function(value:Uint8Array, ?byteOffset:Int):Int {})
+	@:overload(function(value:Int, ?byteOffset:Int):Int {})
+	function lastIndexOf(value:String, ?byteOffset:Int, ?encoding:String):Int;
 
 	// var length(default, null):Int;
 	// these functions need BigInt implementation.

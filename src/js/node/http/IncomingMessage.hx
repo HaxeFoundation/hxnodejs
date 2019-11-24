@@ -69,7 +69,7 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 		Calls `destroy()` on the socket that received the `IncomingMessage`.
 		If `error` is provided, an `'error'` event is emitted and `error` is passed as an argument to any listeners on the event.
 	**/
-	function destroy(?error:Error):Void;
+	override function destroy(?error:Error):IncomingMessage;
 
 	/**
 		The request/response headers object.
