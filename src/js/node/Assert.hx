@@ -77,12 +77,12 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_doesnotreject_asyncfn_error_message
 	**/
-	@:overload(function<T>(asyncFn:Void->Promise<T>, ?error:Class<Dynamic>, ?message:String):Void {})
-	@:overload(function<T>(asyncFn:Void->Promise<T>, ?error:RegExp, ?message:String):Void {})
-	@:overload(function<T>(asyncFn:Void->Promise<T>, ?error:Dynamic->Bool, ?message:String):Void {})
-	@:overload(function<T>(asyncFn:Promise<T>, ?error:Class<Dynamic>, ?message:String):Void {})
-	@:overload(function<T>(asyncFn:Promise<T>, ?error:RegExp, ?message:String):Void {})
-	static function doesNotReject<T>(asyncFn:Promise<T>, ?error:Dynamic->Bool, ?message:String):Void;
+	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Class<Dynamic>, ?message:String):Void {})
+	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
+	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void {})
+	@:overload(function(asyncFn:Promise<Dynamic>, ?error:Class<Dynamic>, ?message:String):Void {})
+	@:overload(function(asyncFn:Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
+	static function doesNotReject(asyncFn:Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void;
 
 	/**
 		Asserts that the function `fn` does not throw an error.
