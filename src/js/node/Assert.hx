@@ -22,7 +22,6 @@
 
 package js.node;
 
-import haxe.extern.EitherType;
 #if haxe4
 import js.lib.RegExp;
 import js.lib.Promise;
@@ -41,6 +40,8 @@ import js.Error;
 **/
 @:jsRequire("assert")
 extern class Assert {
+	static var strict(default, never):StrictAssert;
+
 	/**
 		An alias of `Assert.ok()`.
 
@@ -70,17 +71,18 @@ extern class Assert {
 	static function deepStrictEqual<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
-		Awaits the `asyncFn` promise or, if `asyncFn` is a function, immediately calls the function and awaits the returned promise to complete.
+		Awaits the `asyncFn` promise or, if `asyncFn` is a function,
+		immediately calls the function and awaits the returned promise to complete.
 		It will then check that the promise is not rejected.
 
 		@see https://nodejs.org/api/assert.html#assert_assert_doesnotreject_asyncfn_error_message
 	**/
-	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Class<Dynamic>, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Dynamic>, ?error:Class<Dynamic>, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
-	static function doesNotReject(asyncFn:Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void;
+	@:overload(function<T>(asyncFn:Void->Promise<T>, ?error:Class<Dynamic>, ?message:String):Void {})
+	@:overload(function<T>(asyncFn:Void->Promise<T>, ?error:RegExp, ?message:String):Void {})
+	@:overload(function<T>(asyncFn:Void->Promise<T>, ?error:Dynamic->Bool, ?message:String):Void {})
+	@:overload(function<T>(asyncFn:Promise<T>, ?error:Class<Dynamic>, ?message:String):Void {})
+	@:overload(function<T>(asyncFn:Promise<T>, ?error:RegExp, ?message:String):Void {})
+	static function doesNotReject<T>(asyncFn:Promise<T>, ?error:Dynamic->Bool, ?message:String):Void;
 
 	/**
 		Asserts that the function `fn` does not throw an error.
@@ -94,18 +96,14 @@ extern class Assert {
 	**/
 	@:overload(function(fn:Void->Void, ?error:Class<Dynamic>, ?message:String):Void {})
 	@:overload(function(fn:Void->Void, ?error:RegExp, ?message:String):Void {})
-	@:overload(function(fn:Void->Void, ?error:Dynamic->Bool, ?message:String):Void {})
-	@:overload(function(fn:Void->Dynamic, ?error:Class<Dynamic>, ?message:String):Void {})
-	@:overload(function(fn:Void->Dynamic, ?error:RegExp, ?message:String):Void {})
-	static function doesNotThrow(fn:Void->Dynamic, ?error:Dynamic->Bool, ?message:String):Void;
+	static function doesNotThrow(fn:Void->Void, ?error:Dynamic->Bool, ?message:String):Void;
 
 	/**
 		An alias of `strictEqual`.
 
 		@see https://nodejs.org/api/assert.html#assert_assert_doesnotthrow_fn_error_message
 	**/
-	@:deprecated
-	@:overload(function<T>(actual:T, expected: T, ?message:String):Void {})
+	@:overload(function<T>(actual:T, expected:T, ?message:String):Void {})
 	static function equal<T>(actual:T, expected:T, ?message:Error):Void;
 
 	/**
@@ -118,12 +116,14 @@ extern class Assert {
 	static function fail(?message:Error):Void;
 
 	/**
-		Throws an `AssertionError`. If `message` is falsy, the error message is set as the values of `actual` and `expected` separated by the provided `operator`.
+		Throws an `AssertionError`. If `message` is falsy, the error message is set as the values
+		of `actual` and `expected` separated by the provided `operator`.
 		Otherwise, the error message is the value of `message`.
 
 		@see https://nodejs.org/api/assert.html#assert_assert_fail_actual_expected_message_operator_stackstartfn
 	**/
-	@:deprecated @:native("fail")
+	@:deprecated
+	@:native("fail")
 	@:overload(function<T>(actual:T, expected:T, ?message:String, ?operator_:String, ?stackStartFn:haxe.Constraints.Function):Void {})
 	static function fail_<T>(actual:T, expected:T, ?message:Error, ?operator_:String, ?stackStartFn:haxe.Constraints.Function):Void;
 
@@ -180,7 +180,9 @@ extern class Assert {
 	static function ok(value:Dynamic, ?message:String):Void;
 
 	/**
-		Awaits the `asyncFn` promise or, if `asyncFn` is a function, immediately calls the function and awaits the returned promise to complete. It will then check that the promise is rejected.
+		Awaits the `asyncFn` promise or, if `asyncFn` is a function,
+		immediately calls the function and awaits the returned promise to complete.
+		It will then check that the promise is rejected.
 
 		@see https://nodejs.org/api/assert.html#assert_assert_rejects_asyncfn_error_message
 	**/
@@ -215,3 +217,4 @@ extern class Assert {
 	static function throws(fn:Void->Void, ?error:Error, ?message:String):Void;
 }
 
+extern class StrictAssert {}

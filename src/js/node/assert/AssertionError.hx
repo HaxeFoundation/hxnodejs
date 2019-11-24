@@ -29,10 +29,10 @@ import js.Error;
 #end
 
 /**
- 	Indicates the failure of an assertion. All errors thrown by the `Assert` module will be instances of the `AssertionError` class.
+	Indicates the failure of an assertion. All errors thrown by the `Assert` module will be instances of the `AssertionError` class.
 
 	@see https://nodejs.org/api/assert.html#assert_class_assert_assertionerror
-  **/
+**/
 @:jsRequire("assert", "AssertionError")
 extern class AssertionError extends Error {
 	/**
@@ -97,4 +97,3 @@ typedef AssertionErrorOptions = {
 	**/
 	@:optional var stackStartFunction:Dynamic;
 }
-
