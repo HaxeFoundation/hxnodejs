@@ -217,4 +217,24 @@ extern class Assert {
 	static function throws(fn:Void->Void, ?error:Error, ?message:String):Void;
 }
 
-extern class StrictAssert {}
+/**
+	In strict mode, assert functions use the comparison in the corresponding strict functions.
+	For example, `Assert.deepEqual()` will behave like `Assert.deepStrictEqual()`.
+
+	@see https://nodejs.org/api/assert.html#assert_strict_mode
+**/
+extern class StrictAssert {
+	@:overload(function<T>(actual:T, expected:T, ?message:String):Void {})
+	static function equal<T>(actual:T, expected:T, ?message:Error):Void;
+
+	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
+	static function deepEqual<T>(actual:T, expected:T, ?message:String):Void;
+
+	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
+	static function notEqual<T>(actual:T, expected:T, ?message:String):Void;
+
+	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
+	static function notDeepEqual<T>(actual:T, expected:T, ?message:String):Void;
+
+	static var strict(default, never):StrictAssert;
+}
