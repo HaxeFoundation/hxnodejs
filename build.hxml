@@ -1,5 +1,6 @@
 -js dummy
 --macro ImportAll.run("src")
+--macro Macro.init()
 --no-output
 
 --next
