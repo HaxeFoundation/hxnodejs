@@ -40,7 +40,13 @@ import js.Error;
 **/
 @:jsRequire("assert")
 extern class Assert {
-	static var strict(default, never):StrictAssert;
+	/**
+		In strict mode, assert functions use the comparison in the corresponding strict functions.
+		For example, `Assert.deepEqual()` will behave like `Assert.deepStrictEqual()`.
+
+		@see https://nodejs.org/api/assert.html#assert_strict_mode
+	**/
+	static var strict(default, never):Assert;
 
 	/**
 		An alias of `Assert.ok()`.
@@ -101,7 +107,7 @@ extern class Assert {
 	/**
 		An alias of `strictEqual`.
 
-		@see https://nodejs.org/api/assert.html#assert_assert_doesnotthrow_fn_error_message
+		@see https://nodejs.org/api/assert.html#assert_assert_equal_actual_expected_message
 	**/
 	@:overload(function<T>(actual:T, expected:T, ?message:String):Void {})
 	static function equal<T>(actual:T, expected:T, ?message:Error):Void;
@@ -215,26 +221,4 @@ extern class Assert {
 	@:overload(function(fn:Void->Void, ?error:Dynamic->Bool, ?message:String):Void {})
 	@:overload(function(fn:Void->Void, ?error:Dynamic, ?message:String):Void {})
 	static function throws(fn:Void->Void, ?error:Error, ?message:String):Void;
-}
-
-/**
-	In strict mode, assert functions use the comparison in the corresponding strict functions.
-	For example, `Assert.deepEqual()` will behave like `Assert.deepStrictEqual()`.
-
-	@see https://nodejs.org/api/assert.html#assert_strict_mode
-**/
-extern class StrictAssert {
-	@:overload(function<T>(actual:T, expected:T, ?message:String):Void {})
-	static function equal<T>(actual:T, expected:T, ?message:Error):Void;
-
-	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
-	static function deepEqual<T>(actual:T, expected:T, ?message:String):Void;
-
-	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
-	static function notEqual<T>(actual:T, expected:T, ?message:String):Void;
-
-	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
-	static function notDeepEqual<T>(actual:T, expected:T, ?message:String):Void;
-
-	static var strict(default, never):StrictAssert;
 }
