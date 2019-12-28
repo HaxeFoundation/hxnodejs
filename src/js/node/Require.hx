@@ -27,20 +27,22 @@ import haxe.DynamicAccess;
 @:native("require")
 extern class Require {
 	/**
-		Fetches a library and returns the reference to it.
+		Used to import modules, `JSON`, and local files.
+		Modules can be imported from `node_modules`.
+		Local modules and JSON files can be imported using a relative path (e.g. `./`, .`/foo`, `./bar/baz`, `../foo`)
+		that will be resolved against the directory named by `__dirname` (if defined) or the current working directory.
+
+		@see https://nodejs.org/api/modules.html#modules_module_id
 	**/
 	@:selfCall
-	static function require(module:String):Dynamic;
-
-	/**
-		Use the internal `require` machinery to look up the location of a module,
-		but rather than loading the module, just return the resolved filename.
-	**/
-	static function resolve(module:String):String;
+	static function require(id:String):Dynamic;
 
 	/**
 		Modules are cached in this object when they are required.
-		By deleting a key value from this object, the next require will reload the module.
+		By deleting a key value from this object, the next `require` will reload the module.
+		This does not apply to native addons, for which reloading will result in an error.
+
+		@see https://nodejs.org/api/modules.html#modules_require_cache
 	**/
 	static var cache(default, null):DynamicAccess<Module>;
 
@@ -58,8 +60,49 @@ extern class Require {
 	static var extensions(default, null):DynamicAccess<Dynamic>;
 
 	/**
-		When a file is run directly from Node, `Require.main` is set to its module.
-		That means that you can determine whether a file has been run directly by testing `Require.main == module`.
+		The `Module` object representing the entry script loaded when the Node.js process launched.
+		See ["Accessing the main module"](https://nodejs.org/api/modules.html#modules_accessing_the_main_module).
+
+		@see https://nodejs.org/api/modules.html#modules_require_main
 	**/
 	static var main(default, null):Module;
+
+	/**
+		Use the internal `require()` machinery to look up the location of a module,
+		but rather than loading the module, just return the resolved filename.
+
+		@see https://nodejs.org/api/modules.html#modules_require_resolve_request_options
+	**/
+	static function resolve(module:String, ?options:RequireResolveOptions):String;
+}
+
+@:native("require.resolve")
+extern class RequireResolve {
+	/**
+		Use the internal `require()` machinery to look up the location of a module,
+		but rather than loading the module, just return the resolved filename.
+
+		@see https://nodejs.org/api/modules.html#modules_require_resolve_request_options
+	**/
+	@:selfCall
+	static function resolve(module:String, ?options:RequireResolveOptions):String;
+
+	/**
+		Returns an array containing the paths searched during resolution of `request` or `null`
+		if the `request` string references a core module, for example `http` or `fs`.
+
+		@see https://nodejs.org/api/modules.html#modules_require_resolve_paths_request
+	**/
+	static function paths(request:String):Null<Array<String>>;
+}
+
+typedef RequireResolveOptions = {
+	/**
+		Paths to resolve module location from.
+		If present, these paths are used instead of the default resolution paths,
+		with the exception of `GLOBAL_FOLDERS` like $HOME/.node_modules, which are always included.
+		Each of these paths is used as a starting point for the module resolution algorithm,
+		meaning that the node_modules hierarchy is checked from this location.
+	**/
+	@:optional var paths:Array<String>;
 }
