@@ -6,6 +6,7 @@ import haxe.macro.Context;
 @:noCompletion
 class SuppressDeprecated {
 	public static function run() {
+		#if haxe4
 		Context.onAfterTyping(function(_) {
 			Context.filterMessages(x -> switch x {
 				case Warning(msg, pos) if (~/js\/node\/Url\.hx$/.match(Context.getPosInfos(pos).file)):
@@ -16,6 +17,7 @@ class SuppressDeprecated {
 					true;
 			});
 		});
+		#end
 	}
 }
 #end
