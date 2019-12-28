@@ -31,6 +31,7 @@ import js.node.url.URL;
 
 	@see https://nodejs.org/api/modules.html#modules_the_module_object
 **/
+@:jsRequire("module")
 extern class Module {
 	/**
 		The module objects required for the first time by this one.
@@ -92,31 +93,21 @@ extern class Module {
 
 		@see https://nodejs.org/api/modules.html#modules_module_require_id
 	**/
-	function require(id:String):Dynamic<Dynamic>;
-}
+	function require(id:String):Dynamic;
 
-/**
-	Provides general utility methods when interacting with instances of `Module` — the `module` variable often seen in
-	file modules.
-	Accessed via `require('module')`.
-
-	@see https://nodejs.org/api/modules.html#modules_the_module_object_1
-**/
-@:jsRequire("module")
-extern class ModuleUtils {
 	/**
 		A list of the names of all modules provided by Node.js.
 		Can be used to verify if a module is maintained by a third party or not.
 
 		@see https://nodejs.org/api/modules.html#modules_module_builtinmodules
 	**/
-	static var builtinModules:Array<String>;
+	static var builtinModules(default, null):Array<String>;
 
 	/**
 		@see https://nodejs.org/api/modules.html#modules_module_createrequire_filename
 	**/
-	@:overload(function(filename:URL):String->Dynamic<Dynamic> {})
-	static function createRequire(filename:String):String->Dynamic<Dynamic>;
+	@:overload(function(filename:URL):String->Dynamic {})
+	static function createRequire(filename:String):String->Dynamic;
 
 	/**
 		The `module.syncBuiltinESMExports()` method updates all the live bindings for builtin ES Modules to match the
