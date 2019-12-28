@@ -48,7 +48,7 @@ extern class Module {
 
 		@see https://nodejs.org/api/modules.html#modules_module_exports
 	**/
-	var exports:Dynamic<Dynamic>;
+	var exports:Dynamic;
 
 	/**
 		The fully resolved filename of the module.
