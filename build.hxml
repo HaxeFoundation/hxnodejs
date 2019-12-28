@@ -1,6 +1,6 @@
 -js dummy
 --macro ImportAll.run("src")
---macro Macro.init()
+--macro SuppressDeprecatedWarning.run()
 --no-output
 
 --next

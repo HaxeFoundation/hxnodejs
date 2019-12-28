@@ -15,7 +15,8 @@ class ImportAll {
 				if (acc.length > 0 && acc[acc.length - 1].charCodeAt(0) == "_".code) // skip hidden packages
 					return;
 				for (file in FileSystem.readDirectory(path))
-					loop(acc.concat([file]));
+					if (!~/^_/.match(file))
+						loop(acc.concat([file]));
 			} else if (Path.extension(path) == "hx") {
 				var moduleName = Path.withoutExtension(acc[acc.length - 1]);
 				var modulePath = acc.slice(0, acc.length - 1);
