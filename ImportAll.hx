@@ -5,7 +5,6 @@ import sys.FileSystem;
 
 class ImportAll {
 	static function run(cp:String):Void {
-		Compiler.addClassPath(cp);
 		Compiler.allowPackage("sys");
 		Compiler.define("nodejs");
 
