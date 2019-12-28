@@ -28,21 +28,72 @@ import js.lib.Error;
 import js.Error;
 #end
 
-typedef AssertionErrorOptions = {
-	@:optional var actual:Dynamic;
-	@:optional var expected:Dynamic;
-	#if (haxe_ver < 4)
-	@:optional var operator:String;
-	#end
-	@:optional var message:String;
-	@:optional var stackStartFunction:Dynamic;
-}
+/**
+	Indicates the failure of an assertion. All errors thrown by the `Assert` module will be instances of the `AssertionError` class.
 
+	@see https://nodejs.org/api/assert.html#assert_class_assert_assertionerror
+**/
 @:jsRequire("assert", "AssertionError")
 extern class AssertionError extends Error {
-	var actual:Dynamic;
-	var expected:Dynamic;
-	@:native("operator") var operator_:String;
-	var generatedMessage:Bool;
+	/**
+		A subclass of Error that indicates the failure of an assertion.
+	**/
 	function new(options:AssertionErrorOptions);
+
+	/**
+		Set to the `actual` argument for methods such as `Assert.strictEqual()`.
+	**/
+	var actual:Dynamic;
+
+	/**
+		Set to the `expected` value for methods such as `Assert.strictEqual()`.
+	**/
+	var expected:Dynamic;
+
+	/**
+		Indicates if the message was auto-generated (`true`) or not.
+	**/
+	var generatedMessage:Bool;
+
+	/**
+		Value is always `ERR_ASSERTION` to show that the error is an assertion error.
+	**/
+	var code:String;
+
+	/**
+		Set to the passed in operator value.
+	**/
+	@:native("operator") var operator_:String;
+}
+
+/**
+	An options type for `new` of `AssertionError`.
+**/
+typedef AssertionErrorOptions = {
+	/**
+		If provided, the error message is set to this value.
+	**/
+	@:optional var message:String;
+
+	/**
+		The `actual` property on the error instance.
+	**/
+	@:optional var actual:Dynamic;
+
+	/**
+		The `expected` property on the error instance.
+	**/
+	@:optional var expected:Dynamic;
+
+	#if (haxe_ver < 4)
+	/**
+		The `operator` property on the error instance.
+	**/
+	@:optional var operator:String;
+	#end
+
+	/**
+		If provided, the generated stack trace omits frames before this function.
+	**/
+	@:optional var stackStartFunction:Dynamic;
 }
