@@ -44,7 +44,7 @@ extern class Transform<TSelf:Transform<TSelf>> extends Duplex<TSelf> implements 
 
 		@see https://nodejs.org/api/stream.html#stream_transform_flush_callback
 	**/
-	private function _flush(callback:?Error->Void):Void;
+	private function _flush(callback:Null<Error>->Void):Void;
 
 	/**
 		This function **MUST NOT** be called by application code directly.
@@ -53,9 +53,9 @@ extern class Transform<TSelf:Transform<TSelf>> extends Duplex<TSelf> implements 
 		@see https://nodejs.org/api/stream.html#stream_transform_transform_chunk_encoding_callback
 	**/
 	#if haxe4
-	private function _transform(chunk:Dynamic, encoding:String, callback:(?error:Error, ?data:Dynamic) -> Void):Void;
+	private function _transform(chunk:Dynamic, encoding:String, callback:(error:Null<Error>, data:Dynamic) -> Void):Void;
 	#else
-	private function _transform(chunk:Dynamic, encoding:String, callback:?Error->?Dynamic->Void):Void;
+	private function _transform(chunk:Dynamic, encoding:String, callback:Null<Error>->Dynamic->Void):Void;
 	#end
 }
 
@@ -69,9 +69,9 @@ typedef TransformNewoptions = {
 		Implementation for the `stream._transform()` method.
 	**/
 	#if haxe4
-	@:optional var transform:(chunk:Dynamic, encoding:String, callback:(?error:Error, ?data:Dynamic) -> Void) -> Void;
+	@:optional var transform:(chunk:Dynamic, encoding:String, callback:(error:Null<Error>, data:Dynamic) -> Void) -> Void;
 	#else
-	@:optional var transform:Dynamic->String->(?Error->?Dynamic->Void)->Void;
+	@:optional var transform:Dynamic->String->(Null<Error>->Dynamic->Void)->Void;
 	#end
 
 	/**

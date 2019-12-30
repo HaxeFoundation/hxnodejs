@@ -223,7 +223,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_write_chunk_encoding_callback_1
 	**/
-	private function _write(chunk:Dynamic, encoding:String, callback:?Error->Void):Void;
+	private function _write(chunk:Dynamic, encoding:String, callback:Null<Error>->Void):Void;
 
 	/**
 		This function **MUST NOT** be called by application code directly.
@@ -231,7 +231,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_writev_chunks_callback
 	**/
-	private function _writev(chunks:Array<Chunk>, callback:?Error->Void):Void;
+	private function _writev(chunks:Array<Chunk>, callback:Null<Error>->Void):Void;
 
 	/**
 		The `_destroy()` method is called by `writable.destroy()`.
@@ -239,7 +239,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_destroy_err_callback
 	**/
-	private function _destroy(err:Null<Error>, callback:?Error->Void):Void;
+	private function _destroy(err:Null<Error>, callback:Null<Error>->Void):Void;
 
 	/**
 		The `_final()` method **must not** be called directly.
@@ -247,7 +247,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_final_callback
 	**/
-	private function _final(callback:?Error->Void):Void;
+	private function _final(callback:Null<Error>->Void):Void;
 
 	// --------- TTY module API  ----------------------------------------------
 
@@ -299,27 +299,27 @@ typedef WritableNewOptions = {
 		`write` <Function> Implementation for the stream._write() method.
 	**/
 	#if haxe4
-	@:optional var write:(chunk:Dynamic, encoding:String, callback:?Error->Void) -> Void;
+	@:optional var write:(chunk:Dynamic, encoding:String, callback:Null<Error>->Void) -> Void;
 	#else
-	@:optional var write:Dynamic->String->?Error->Void->Void;
+	@:optional var write:Dynamic->String->Null<Error>->Void->Void;
 	#end
 
 	/**
 		`writev` <Function> Implementation for the stream._writev() method.
 	**/
 	#if haxe4
-	@:optional var writev:(chunks:Array<Chunk>, callback:?Error->Void) -> Void;
+	@:optional var writev:(chunks:Array<Chunk>, callback:Null<Error>->Void) -> Void;
 	#else
-	@:optional var writev:Array<Chunk>->(?Error->Void)->Void;
+	@:optional var writev:Array<Chunk>->(Null<Error>->Void)->Void;
 	#end
 
 	/**
 		`destroy` <Function> Implementation for the stream._destroy() method.
 	**/
 	#if haxe4
-	@:optional var destroy:(error:Null<Error>, callback:?Error->Void) -> Void;
+	@:optional var destroy:(error:Null<Error>, callback:Null<Error>->Void) -> Void;
 	#else
-	@:optional var destroy:Null<Error>->(?Error->Void)->Void;
+	@:optional var destroy:Null<Error>->(Null<Error>->Void)->Void;
 	#end
 
 	/**

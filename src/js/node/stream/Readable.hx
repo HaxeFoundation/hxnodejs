@@ -263,7 +263,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 		@see https://nodejs.org/api/stream.html#stream_readable_destroy_err_callback
 	**/
-	private function _destroy(err:Null<Error>, callback:?Error->Void):Void;
+	private function _destroy(err:Null<Error>, callback:Null<Error>->Void):Void;
 
 	/**
 		The `readable.push()` method is intended be called only by `Readable` implementers,
@@ -331,9 +331,9 @@ typedef ReadableNewOptions = {
 		Implementation for the `stream._destroy()` method.
 	**/
 	#if haxe4
-	@:optional var destroy:(err:Null<Error>, callback:?Error->Void) -> Void;
+	@:optional var destroy:(err:Null<Error>, callback:Null<Error>->Void) -> Void;
 	#else
-	@:optional var destroy:Null<Error>->(?Error->Void)->Void;
+	@:optional var destroy:Null<Error>->(Null<Error>->Void)->Void;
 	#end
 
 	/**
