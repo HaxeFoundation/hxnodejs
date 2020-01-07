@@ -122,7 +122,7 @@ extern class Server extends EventEmitter<Server> {
 		The optional callback will be called once the 'close' event occurs. Unlike that event,
 		it will be called with an Error as its only argument if the server was not open when it was closed.
 	**/
-	@:overload(function(callback:js.lib.Error->Void):Void {})
+	@:overload(function(callback:Error->Void):Void {})
 	function close(?callback:Void->Void):Void;
 
 	/**
