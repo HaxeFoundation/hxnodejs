@@ -119,8 +119,10 @@ extern class Server extends EventEmitter<Server> {
 		This function is asynchronous, the server is finally closed when all connections are ended
 		and the server emits a 'close' event.
 
-		Optionally, you can pass a `callback` to listen for the 'close' event.
+		The optional callback will be called once the 'close' event occurs. Unlike that event,
+		it will be called with an Error as its only argument if the server was not open when it was closed.
 	**/
+	@:overload(function(callback:Error->Void):Void {})
 	function close(?callback:Void->Void):Void;
 
 	/**
