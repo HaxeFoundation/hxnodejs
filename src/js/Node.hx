@@ -29,6 +29,9 @@ import js.node.Process;
 import js.node.Timers.Immediate;
 import js.node.Timers.Timeout;
 import js.node.console.Console;
+#if haxe4
+import js.Syntax.code;
+#end
 
 /**
 	Node.js globals
@@ -40,16 +43,26 @@ extern class Node {
 	**/
 	static var __dirname(get, never):String;
 
-	private static inline function get___dirname():String
+	private static inline function get___dirname():String {
+		#if haxe4
+		return code("__dirname");
+		#else
 		return untyped __js__("__dirname");
+		#end
+	}
 
 	/**
 		This variable may appear to be global but is not. See [__filename](https://nodejs.org/api/modules.html#modules_filename).
 	**/
 	static var __filename(get, never):String;
 
-	private static inline function get___filename():String
+	private static inline function get___filename():String {
+		#if haxe4
+		return code("__filename");
+		#else
 		return untyped __js__("__filename");
+		#end
+	}
 
 	/**
 		`clearImmediate` is described in the [timers](https://nodejs.org/api/timers.html) section.
@@ -71,8 +84,13 @@ extern class Node {
 	**/
 	static var console(get, never):Console;
 
-	private static inline function get_console():Console
+	private static inline function get_console():Console {
+		#if haxe4
+		return code("console");
+		#else
 		return untyped __js__("console");
+		#end
+	}
 
 	/**
 		This variable may appear to be global but is not. See [exports](https://nodejs.org/api/modules.html#modules_exports).
@@ -80,7 +98,11 @@ extern class Node {
 	static var exports(get, never):Dynamic<Dynamic>;
 
 	private static inline function get_exports():Dynamic<Dynamic> {
+		#if haxe4
+		return code("exports");
+		#else
 		return untyped __js__("exports");
+		#end
 	}
 
 	/**
@@ -97,7 +119,11 @@ extern class Node {
 	static var module(get, never):Module;
 
 	private static inline function get_module():Module {
+		#if haxe4
+		return code("module");
+		#else
 		return untyped __js__("module");
+		#end
 	}
 
 	/**
@@ -106,7 +132,11 @@ extern class Node {
 	static var process(get, never):Process;
 
 	private static inline function get_process():Process {
+		#if haxe4
+		return code("process");
+		#else
 		return untyped __js__("process");
+		#end
 	}
 
 	/**
@@ -123,7 +153,11 @@ extern class Node {
 		This variable may appear to be global but is not. See [require()](https://nodejs.org/api/modules.html#modules_require_id).
 	**/
 	static inline function require(module:String):Dynamic {
+		#if haxe4
+		return code("require({0})", module);
+		#else
 		return untyped __js__("require({0})", module);
+		#end
 	}
 
 	/**
