@@ -23,12 +23,12 @@
 package js.node.stream;
 
 import haxe.extern.EitherType;
-import js.node.events.EventEmitter.Event;
 import js.node.Stream;
+import js.node.events.EventEmitter.Event;
 import js.node.stream.Readable.IReadable;
 #if haxe4
-import js.lib.Object;
 import js.lib.Error;
+import js.lib.Object;
 import js.lib.Uint8Array;
 #else
 import js.Error;

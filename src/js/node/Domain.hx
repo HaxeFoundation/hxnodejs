@@ -22,8 +22,6 @@
 
 package js.node;
 
-import haxe.Constraints.Function;
-import js.node.events.EventEmitter.IEventEmitter;
 import js.node.domain.Domain as DomainObject;
 
 /**

@@ -23,9 +23,9 @@
 package js.node;
 
 import haxe.extern.EitherType;
+import js.node.readline.*;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
-import js.node.readline.*;
 
 /**
 	The readline module provides an interface for reading data from a `Readable` stream (such as `process.stdin`) one

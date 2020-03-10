@@ -23,8 +23,8 @@
 package js.node.domain;
 
 import haxe.Constraints.Function;
-import js.node.events.EventEmitter;
 import js.node.Timers.Timeout;
+import js.node.events.EventEmitter;
 
 /**
 	Enumeration of events emitted by `Domain` objects.

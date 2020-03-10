@@ -22,8 +22,8 @@
 
 package js.node.child_process;
 
-import js.node.events.EventEmitter;
 import js.node.Stream;
+import js.node.events.EventEmitter;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
 #if haxe4

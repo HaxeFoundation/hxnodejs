@@ -22,7 +22,6 @@
 
 package js.node;
 
-import js.node.Buffer;
 import js.node.dgram.Socket;
 
 /**

@@ -24,8 +24,8 @@ package js.node.http;
 
 import haxe.DynamicAccess;
 import js.node.events.EventEmitter.Event;
-import js.node.stream.Writable;
 import js.node.net.Socket;
+import js.node.stream.Writable;
 
 /**
 	Enumeration of events emitted by the `ServerResponse` objects in addition to its parent class events.

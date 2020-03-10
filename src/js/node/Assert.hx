@@ -23,13 +23,13 @@
 package js.node;
 
 #if haxe4
-import js.lib.RegExp;
-import js.lib.Promise;
 import js.lib.Error;
+import js.lib.Promise;
+import js.lib.RegExp;
 #else
-import js.RegExp;
-import js.Promise;
 import js.Error;
+import js.Promise;
+import js.RegExp;
 #end
 
 /**

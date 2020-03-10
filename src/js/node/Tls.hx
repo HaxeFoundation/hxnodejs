@@ -24,10 +24,10 @@ package js.node;
 
 import haxe.extern.EitherType;
 import js.node.Buffer;
-import js.node.tls.TLSSocket;
-import js.node.tls.SecurePair;
 import js.node.tls.SecureContext;
+import js.node.tls.SecurePair;
 import js.node.tls.Server;
+import js.node.tls.TLSSocket;
 #if haxe4
 import js.lib.Error;
 #else

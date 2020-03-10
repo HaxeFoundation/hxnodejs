@@ -25,8 +25,8 @@ package js.node.events;
 import haxe.Constraints.Function;
 import haxe.extern.Rest;
 #if haxe4
-import js.lib.Symbol;
 import haxe.extern.EitherType;
+import js.lib.Symbol;
 #end
 
 /**

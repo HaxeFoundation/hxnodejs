@@ -23,15 +23,15 @@
 package js.node;
 
 import haxe.extern.EitherType;
+import js.node.Buffer;
+import js.node.crypto.*;
+import js.node.crypto.DiffieHellman.IDiffieHellman;
+import js.node.tls.SecureContext;
 #if haxe4
 import js.lib.Error;
 #else
 import js.Error;
 #end
-import js.node.Buffer;
-import js.node.crypto.*;
-import js.node.crypto.DiffieHellman.IDiffieHellman;
-import js.node.tls.SecureContext;
 
 /**
 	Enumerations of crypto algorighms to be used.

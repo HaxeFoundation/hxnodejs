@@ -22,8 +22,8 @@
 
 package js.node;
 
-import js.node.http.IncomingMessage;
 import js.node.http.ClientRequest;
+import js.node.http.IncomingMessage;
 import js.node.http.ServerResponse;
 import js.node.https.*;
 import js.node.url.URL;

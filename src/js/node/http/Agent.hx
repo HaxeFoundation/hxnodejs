@@ -23,7 +23,6 @@
 package js.node.http;
 
 import haxe.DynamicAccess;
-import haxe.extern.EitherType;
 import js.node.net.Socket;
 #if haxe4
 import js.lib.Error;

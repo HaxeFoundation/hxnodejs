@@ -23,11 +23,9 @@
 package js.node.repl;
 
 import haxe.DynamicAccess;
-import haxe.extern.EitherType;
 import js.node.events.EventEmitter;
 #if haxe4
 import js.lib.Error;
-import js.lib.Function;
 #else
 import js.Error;
 #end

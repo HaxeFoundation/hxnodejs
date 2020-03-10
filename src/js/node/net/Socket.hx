@@ -23,13 +23,13 @@
 package js.node.net;
 
 import haxe.extern.EitherType;
+import js.node.Dns;
+import js.node.events.EventEmitter.Event;
 #if haxe4
 import js.lib.Error;
 #else
 import js.Error;
 #end
-import js.node.Dns;
-import js.node.events.EventEmitter.Event;
 
 /**
 	Enumeration of events for `Socket` objects.

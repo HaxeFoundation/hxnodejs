@@ -23,8 +23,8 @@
 package js.node;
 
 import haxe.Constraints.Function;
-import haxe.extern.Rest;
 import haxe.extern.EitherType;
+import haxe.extern.Rest;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
 #if haxe4

@@ -24,11 +24,11 @@ package js;
 
 import haxe.Constraints.Function;
 import haxe.extern.Rest;
-import js.node.console.Console;
 import js.node.Module;
 import js.node.Process;
 import js.node.Timers.Immediate;
 import js.node.Timers.Timeout;
+import js.node.console.Console;
 
 /**
 	Node.js globals

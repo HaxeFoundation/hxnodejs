@@ -22,9 +22,9 @@
 
 package js.node.console;
 
-import js.node.stream.Writable;
-import haxe.extern.Rest;
 import haxe.extern.EitherType;
+import haxe.extern.Rest;
+import js.node.stream.Writable;
 
 /**
 	The `Console` class can be used to create a simple logger with configurable output streams

@@ -23,9 +23,9 @@
 package js.node.tls;
 
 import js.node.Buffer;
-import js.node.tls.TLSSocket;
-import js.node.tls.SecureContext.SecureContextOptions;
 import js.node.events.EventEmitter.Event;
+import js.node.tls.SecureContext.SecureContextOptions;
+import js.node.tls.TLSSocket;
 #if haxe4
 import js.lib.Error;
 #else

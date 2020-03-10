@@ -22,8 +22,8 @@
 
 package js.node;
 
-import haxe.extern.EitherType;
 import haxe.DynamicAccess;
+import haxe.extern.EitherType;
 
 /**
 	The `querystring` module provides utilities for parsing and formatting URL query strings.

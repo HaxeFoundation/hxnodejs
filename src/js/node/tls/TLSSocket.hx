@@ -24,9 +24,9 @@ package js.node.tls;
 
 import haxe.Constraints.Function;
 import js.node.Buffer;
-import js.node.events.EventEmitter.Event;
-import js.node.Tls.TlsServerOptionsBase;
 import js.node.Tls.TlsClientOptionsBase;
+import js.node.Tls.TlsServerOptionsBase;
+import js.node.events.EventEmitter.Event;
 #if haxe4
 import js.lib.Error;
 #else

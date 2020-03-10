@@ -22,8 +22,8 @@
 
 package js.node.util;
 
-import haxe.extern.Rest;
 import haxe.Constraints.Function;
+import haxe.extern.Rest;
 #if haxe4
 import js.lib.Promise;
 #else

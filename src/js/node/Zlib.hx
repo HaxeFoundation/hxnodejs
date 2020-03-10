@@ -23,13 +23,13 @@
 package js.node;
 
 import haxe.extern.EitherType;
+import js.node.Buffer;
+import js.node.zlib.*;
 #if haxe4
 import js.lib.Error;
 #else
 import js.Error;
 #end
-import js.node.Buffer;
-import js.node.zlib.*;
 
 typedef ZlibOptions = {
 	/**

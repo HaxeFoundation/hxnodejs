@@ -22,9 +22,9 @@
 
 package js.node.stream;
 
-import js.node.events.EventEmitter.Event;
 import js.node.Iterator;
 import js.node.Stream;
+import js.node.events.EventEmitter.Event;
 import js.node.stream.Writable.IWritable;
 #if haxe4
 import js.lib.Error;

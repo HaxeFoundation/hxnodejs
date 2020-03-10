@@ -22,8 +22,8 @@
 
 package js.node.fs;
 
-import js.node.events.EventEmitter.Event;
 import js.node.Fs.FsPath;
+import js.node.events.EventEmitter.Event;
 
 @:enum abstract WriteStreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**

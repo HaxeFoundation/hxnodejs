@@ -23,9 +23,9 @@
 package js.node;
 
 import haxe.DynamicAccess;
+import js.node.repl.REPLServer;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
-import js.node.repl.REPLServer;
 #if haxe4
 import js.lib.Error;
 import js.lib.Symbol;

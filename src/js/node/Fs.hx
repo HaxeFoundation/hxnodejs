@@ -24,16 +24,16 @@ package js.node;
 
 import haxe.DynamicAccess;
 import haxe.extern.EitherType;
+import js.node.Buffer;
+import js.node.fs.FSWatcher;
+import js.node.fs.ReadStream;
+import js.node.fs.Stats;
+import js.node.fs.WriteStream;
 #if haxe4
 import js.lib.Error;
 #else
 import js.Error;
 #end
-import js.node.Buffer;
-import js.node.fs.Stats;
-import js.node.fs.FSWatcher;
-import js.node.fs.ReadStream;
-import js.node.fs.WriteStream;
 
 /**
 	Most FS functions now support passing `String` and `Buffer`.

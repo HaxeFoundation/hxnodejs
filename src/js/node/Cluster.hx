@@ -23,9 +23,8 @@
 package js.node;
 
 import haxe.DynamicAccess;
-import js.node.events.EventEmitter;
-import js.node.events.EventEmitter.Event;
 import js.node.cluster.Worker;
+import js.node.events.EventEmitter;
 
 @:enum abstract ClusterEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**

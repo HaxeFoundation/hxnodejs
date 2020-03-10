@@ -22,10 +22,9 @@
 
 package js.node.cluster;
 
-import js.node.child_process.ChildProcess;
 import js.node.Cluster.ListeningEventAddress;
+import js.node.child_process.ChildProcess;
 import js.node.events.EventEmitter;
-import js.node.events.EventEmitter.Event;
 #if haxe4
 import js.lib.Error;
 #else

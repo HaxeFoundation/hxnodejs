@@ -23,8 +23,8 @@
 package js.node;
 
 import haxe.extern.EitherType;
-import js.node.net.Socket;
 import js.node.net.Server;
+import js.node.net.Socket;
 
 typedef NetCreateServerOptions = {
 	> SocketOptionsBase,

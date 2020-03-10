@@ -23,9 +23,9 @@
 package js.node;
 
 import haxe.extern.Rest;
-import js.node.stream.Writable.IWritable;
 import js.node.events.EventEmitter;
 import js.node.stream.Readable.IReadable;
+import js.node.stream.Writable.IWritable;
 #if haxe4
 import js.lib.Error;
 import js.lib.Promise;

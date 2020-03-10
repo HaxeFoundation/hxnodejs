@@ -23,13 +23,13 @@
 package js.node.net;
 
 import haxe.extern.EitherType;
+import js.node.events.EventEmitter;
+import js.node.net.Socket.SocketAdress;
 #if haxe4
 import js.lib.Error;
 #else
 import js.Error;
 #end
-import js.node.events.EventEmitter;
-import js.node.net.Socket.SocketAdress;
 
 /**
 	Enumeration of events emitted by the `Server` objects

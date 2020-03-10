@@ -25,10 +25,10 @@ package js.node;
 import haxe.DynamicAccess;
 import haxe.extern.EitherType;
 import haxe.extern.Rest;
+import js.node.child_process.ChildProcess.ChildProcessSendOptions;
 import js.node.events.EventEmitter;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
-import js.node.child_process.ChildProcess.ChildProcessSendOptions;
 #if haxe4
 import js.lib.Error;
 #else

@@ -24,8 +24,8 @@ package js.node.http;
 
 import haxe.DynamicAccess;
 import js.node.events.EventEmitter.Event;
-import js.node.stream.Readable;
 import js.node.net.Socket;
+import js.node.stream.Readable;
 #if haxe4
 import js.lib.Error;
 #else

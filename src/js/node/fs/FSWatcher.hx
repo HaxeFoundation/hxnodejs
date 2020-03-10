@@ -22,8 +22,8 @@
 
 package js.node.fs;
 
-import js.node.events.EventEmitter;
 import js.node.Fs.FsPath;
+import js.node.events.EventEmitter;
 #if haxe4
 import js.lib.Error;
 #else

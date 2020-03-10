@@ -22,8 +22,8 @@
 
 package js.node;
 
-import js.node.events.EventEmitter;
 import haxe.Constraints.Function;
+import js.node.events.EventEmitter;
 #if haxe4
 import js.lib.Promise;
 #else
