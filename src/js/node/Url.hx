@@ -56,9 +56,8 @@ extern class Url {
 		These are not, however, customizable in any way.
 		The `url.format(URL[, options])` method allows for basic customization of the output.
 
-		`format(urlObject:UrlObject)` and `format(urlObject:String)` are deprecated.
+		`format(urlObject:String)` are deprecated.
 	**/
-	@:overload(function(urlObject:UrlObject):String {})
 	@:overload(function(urlObject:String):String {})
 	static function format(url:URL, ?options:UrlFormatOptions):String;
 
@@ -67,20 +66,6 @@ extern class Url {
 		and that the URL control characters are correctly encoded when converting into a File URL.
 	**/
 	static function pathToFileURL(path:String):URL;
-
-	/**
-		Takes a URL string, parses it, and returns a URL object.
-
-		If `parseQueryString` is true, the `query` property will always be set to an object returned by the `Querystring.parse` method.
-		If false, the `query` property on the returned URL object will be an unparsed, undecoded string.
-		Defaults to false.
-
-		If `slashesDenoteHost` is true, the first token after the literal string `//` and preceding the next `/` will be interpreted as the host.
-		For instance, given `//foo/bar`, the result would be `{host: 'foo', pathname: '/bar'}` rather than `{pathname: '//foo/bar'}`.
-		Defaults to false.
-	**/
-	@:deprecated
-	static function parse(urlString:String, ?parseQueryString:Bool, ?slashesDenoteHost:Bool):UrlObject;
 
 	/**
 		Resolves a target URL relative to a base URL in a manner similar to that of a Web browser resolving an anchor tag HREF.
