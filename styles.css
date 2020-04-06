@@ -62,12 +62,18 @@
     color: #fff;
 }
 
+.nav>li>a.selected,
+.nav>li>a:hover {
+    background-color: #00000010;
+}
+
 .nav-list li i.fa {
     height: 16px;
     width: 16px;
     color: rgb(200, 200, 200);
     font-weight: normal;
     font-size: 16px;
+    padding-right: 5px;
 }
 
 .viewsource {
@@ -201,31 +207,16 @@ h3 span.label,
     background: #5959AC;
 }
 
-/* hide meta that has doesn't belong in the API (implementation details) */
-.label-meta-impl,
-.label-meta-value,
-.label-meta-has_untyped,
-.label-meta-hlNative,
-.label-meta-access,
-.label-meta-allow,
-.label-meta-keep,
-.label-meta-keepInit,
-.label-meta-keepSub,
-.label-meta-dox,
-.label-meta-noCompletion,
-.label-meta-directlyUsed,
-.label-meta-build,
-.label-meta-autoBuild,
-.label-meta-genericBuild,
-.label-meta-analyzer,
-.label-meta-enum,
-.label-meta-extern {
+/* only show some specific whitelisted metadata */
+
+.label-meta {
     display: none;
 }
 
-.label-meta.label-meta-from,
-.label-meta.label-meta-to {
-    background: #a93685;
+.label-meta-op,
+.label-meta-to,
+.label-meta-from {
+    display: inline;
 }
 
 .alert.alert-deprecated {
@@ -347,6 +338,11 @@ h6 {
     padding: 9px 0;
 }
 
+#explorer {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
 #searchForm {
     padding: 0 9px;
     margin-bottom: 10px;
@@ -373,10 +369,6 @@ table.params th {
 
 .doc-main {
     margin-bottom: 40px;
-}
-
-.doc-main p {
-    font-style: italic;
 }
 
 .section {
@@ -406,7 +398,6 @@ table.params th {
     /* font-weight: normal; */
     /* font-size: small; */
     margin-top: 20px;
-    font-style: italic;
 }
 
 .inline-content * {

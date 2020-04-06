@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"><!-- use theme color or fallback -->
+<!--use textcolor from settings, otherwise create a contrasting color to theme color-->
+<head><meta charset="utf-8"/><link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet"/><link href="../bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"/><link href="../bootstrap/css/bootstrap-select.min.css" rel="stylesheet"/><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,700italic,400italic" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,600,600italic,400" rel="stylesheet" type="text/css"/><link href="https://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet" type="text/css"/><script src="../jquery-1.9.1.min.js"></script><script src="../bootstrap/js/bootstrap.min.js"></script><script src="../bootstrap/js/bootstrap-select.min.js"></script><link href="../styles.css" rel="stylesheet"/><link href="../extra-styles.css" rel="stylesheet"/><link href="../haxe-nav.css" rel="stylesheet"/><script>var dox = {rootPath: "../",platforms: ["js"]};</script><script src="../nav.js"></script><script src="../index.js"></script><link rel="icon" href="../favicon.ico" type="image/x-icon"/><title>haxe.Exception - HXNODEJS - API documentation</title><meta name="description" content="Base class for exceptions."/></head><body><style>
+.navbar .brand {
+	display: inline-block;
+	float: none;
+	text-shadow: 0 0 0 transparent;
+</style><nav class="nav"><div class="navbar"><div class="navbar-inner" style="background:#EEEEEE; border-bottom:1px solid rgba(0,0,0,.09)"><div class="container"><a class="brand" href="../"><img alt="" src="http://take.ms/dlXH9"/></a><a class="brand" style="color:#555555" href="../">HXNODEJS - API documentation</a></div></div></div></nav><div class="container main-content"><div class="row-fluid"><div class="span3"><div class="well sidebar-nav"><form class="form-search" id="searchForm"><div class="input-prepend input-block-level"><span class="add-on"><i class="icon-search"></i></span><input id="search" type="text" placeholder="Filter (Ctrl+P)" autocomplete="off"/></div></form></div><div class="well sidebar-nav" id="explorer"><div id="nav"></div></div></div><div class="span9"><div class="page-header"><span class="viewsource"><a href="https://github.com/HaxeFoundation/hxnodejs/blob/master/src/haxe/Exception.hx" class="btn btn-medium"><i class="fa fa-eye"></i> View source</a></span><h1><small>class</small> Exception</h1><h4><small>package <a href="../haxe/index.html">haxe</a></small></h4><h4><small>extends <span class="type">NativeException</span></small></h4>    <h4><small><span class="muted">extended by </span><a class="type" title="An exception containing arbitrary value." href="../haxe/ValueException.html">ValueException</a></small></h4><span class="label label-meta label-meta-keep" title="@:keep metadata">@:keep</span><span class="label label-meta label-meta-directlyUsed" title="@:directlyUsed metadata">@:directlyUsed</span><span class="label label-meta label-meta-coreApi" title="@:coreApi metadata">@:coreApi</span></div><div class="body"><div class="doc doc-main"><p>Base class for exceptions.</p>
+<p>If this class (or derivatives) is used to catch an exception, then
+<code><a href="../haxe/CallStack.html#exceptionStack">haxe.CallStack.exceptionStack</a>()</code> will not return a stack for the exception
+caught. Use <code><a href="../haxe/Exception.html#stack">haxe.Exception.stack</a></code> property instead:</p>
+<pre><code class="prettyprint haxe">try {
+	throwSomething();
+} catch(e:Exception) {
+	trace(e.stack);
+}</code></pre>
+<p>Custom exceptions should extend this class:</p>
+<pre><code class="prettyprint haxe">class MyException extends haxe.Exception {}
+//...
+throw new MyException('terrible exception');</code></pre>
+<p><code><a href="../haxe/Exception.html#Exception">haxe.Exception</a></code> is also a wildcard type to catch any exception:</p>
+<pre><code class="prettyprint haxe">try {
+	throw 'Catch me!';
+} catch(e:haxe.Exception) {
+	trace(e.message); // Output: Catch me!
+}</code></pre>
+<p>To rethrow an exception just throw it again.
+Haxe will try to rethrow an original native exception whenever possible.</p>
+<pre><code class="prettyprint haxe">try {
+	var a:Array&lt;Int&gt; = null;
+	a.push(1); // generates target-specific null-pointer exception
+} catch(e:haxe.Exception) {
+	throw e; // rethrows native exception instead of haxe.Exception
+}</code></pre></div><h3 class="section">Constructor</h3><div class="fields"><div class="field "><a name="new"></a><h3 class="anchor"><code><span class="label label-meta label-meta-has_untyped" title="@:has_untyped metadata">@:has_untyped</span><a href="#new"><span class="identifier">new</span></a>(<span style="white-space:nowrap">message:<a class="type" title="The basic String class." href="../String.html">String</a>,</span> <span style="white-space:nowrap">?previous:<a class="type" title="Base class for exceptions." href="../haxe/Exception.html">Exception</a>,</span> <span style="white-space:nowrap">?native:<a class="type" title="Any is a type that is compatible with any other in both ways." href="../Any.html">Any</a></span>)</code></h3><div class="doc"><p>Create a new Exception instance.</p>
+<p>The <code>previous</code> argument could be used for exception chaining.</p>
+<p>The <code>native</code> argument is for internal usage only.
+There is no need to provide <code>native</code> argument manually and no need to keep it
+upon extending <code><a href="../haxe/Exception.html#Exception">haxe.Exception</a></code> unless you know what you're doing.</p></div></div></div><h3 class="section">Variables</h3><div class="fields"><div class="field "><a name="native"></a><h3 class="anchor"><code><span class="label">read only</span><a href="../haxe/Exception.html#native"><span class="identifier">native</span></a>:<a class="type" title="Any is a type that is compatible with any other in both ways." href="../Any.html">Any</a></code></h3><div class="doc"><p>Native exception, which caused this exception.</p></div></div></div>  </div></div></div></div><footer class="section site-footer" style="background:#EEEEEE"><div class="container"><div class="copyright"><p style="color:#555555">&copy; 2020 &nbsp;</p></div></div></footer><script src="..//highlighter.js"></script><link href="../highlighter.css" rel="stylesheet"/></body></html>

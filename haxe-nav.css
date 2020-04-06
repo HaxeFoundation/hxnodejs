@@ -24,11 +24,6 @@ nav .navbar .nav {
 
 }
 
-.sidebar-nav {
-    max-height: 70vh;
-    overflow-y: auto;
-}
-
 nav .dropdown-menu {
     background: #2c2722;
     font-size: 14px;
@@ -95,11 +90,6 @@ nav .dropdown-submenu:focus>a {
 
 nav .navbar .nav>li>.dropdown-menu:after {
     border-bottom-color: #2c2722;
-}
-
-.nav>li>a.selected,
-.nav>li>a:hover {
-    background-color: #00000010;
 }
 
 /** MEDIA Q **/

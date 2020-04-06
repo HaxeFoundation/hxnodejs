@@ -10,9 +10,9 @@ function toggleInherited(el) {
 	var toggle = $(el).closest(".toggle");
 	toggle.toggleClass("toggle-on");
 	if (toggle.hasClass("toggle-on")) {
-		$("i", toggle).removeClass("fa-arrow-circle-right").addClass("fa-arrow-circle-down");
+		$("i", toggle).removeClass("fa-folder").addClass("fa-folder-open");
 	} else {
-		$("i", toggle).addClass("fa-arrow-circle-right").removeClass("fa-arrow-circle-down");
+		$("i", toggle).addClass("fa-folder").removeClass("fa-folder-open");
 	}
 	return false;
 }
@@ -22,9 +22,9 @@ function toggleCollapsed(el) {
 	toggle.toggleClass("expanded");
 
 	if (toggle.hasClass("expanded")) {
-		$(toggle).find("i").first().removeClass("fa-arrow-circle-right").addClass("fa-arrow-circle-down");
+		$(toggle).find("i").first().removeClass("fa-folder").addClass("fa-folder-open");
 	} else {
-		$(toggle).find("i").first().addClass("fa-arrow-circle-right").removeClass("fa-arrow-circle-down");
+		$(toggle).find("i").first().addClass("fa-folder").removeClass("fa-folder-open");
 	}
 	updateTreeState();
 	return false;
@@ -85,7 +85,7 @@ $(document).ready(function () {
 	var treeState = readCookie("treeState");
 
 	$("#nav .expando").each(function (i, e) {
-		$("i", e).first().addClass("fa-arrow-circle-right").removeClass("fa-arrow-circle-down");
+		$("i", e).first().addClass("fa-folder").removeClass("fa-folder-open");
 	});
 
 	$(".treeLink").each(function () {
@@ -97,7 +97,7 @@ $(document).ready(function () {
 		$("#nav .expando").each(function (i, e) {
 			if (states[i]) {
 				$(e).addClass("expanded");
-				$("i", e).first().removeClass("fa-arrow-circle-right").addClass("fa-arrow-circle-down");
+				$("i", e).first().removeClass("fa-folder").addClass("fa-folder-open");
 			}
 		});
 	}
@@ -187,9 +187,9 @@ $(document).ready(function () {
 	$("a.expand-button").click(function (e) {
 		var container = $(this).parent().next();
 		container.toggle();
-		$("i", this).removeClass("fa-arrow-circle-down")
-			.removeClass("fa-arrow-circle-right")
-			.addClass(container.is(":visible") ? "fa-arrow-circle-down" : "fa-arrow-circle-right");
+		$("i", this).removeClass("fa-folder-open")
+			.removeClass("fa-folder")
+			.addClass(container.is(":visible") ? "fa-folder-open" : "fa-folder");
 		return false;
 	});
 
