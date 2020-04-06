@@ -4,7 +4,7 @@ import js.node.Buffer;
 import js.node.Zlib;
 
 class Uncompress {
-	final windowBits:Null<Int>;
+	var windowBits:Null<Int>;
 
 	public function new(?windowBits:Int) {
 		this.windowBits = windowBits;
