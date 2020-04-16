@@ -7,7 +7,7 @@ import sys.FileSystem;
 
 class Release {
 	static var outPath = "release.zip";
-	static var files = ["haxelib.json", "extraParams.hxml", "src", "LICENSE", "README.md"];
+	static var files = ["haxelib.json", "extraParams.hxml", "src", "LICENSE", "README.md", "hxnodejs.png"];
 
 	static function makeZip() {
 		var entries = new List<Entry>();
