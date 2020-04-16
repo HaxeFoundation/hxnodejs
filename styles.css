@@ -126,11 +126,6 @@ footer {
     padding-top: 4px;
 }
 
-/* .availability { margin-left:14px; color:#93a1a1; } */
-/* .doc { margin-left:14px; } */
-
-
-
 /* #nav li { list-style-type: none; } */
 #nav .expando>ul {
     display: none;
@@ -188,6 +183,10 @@ footer {
     font-size: 90%;
 }
 
+.section-availability {
+    color: #e48931;
+}
+
 h3 code {
     background: none;
     box-shadow: 0 0 15px rgb(240, 240, 240);
@@ -213,9 +212,16 @@ h3 span.label,
     display: none;
 }
 
+.label-meta-callable,
+.label-meta-commutative,
 .label-meta-op,
+.label-meta-arrayAccess,
+.label-meta-resolve,
 .label-meta-to,
-.label-meta-from {
+.label-meta-from,
+.label-meta-using,
+.label-meta-forward,
+.label-meta-forwardStatics {
     display: inline;
 }
 
