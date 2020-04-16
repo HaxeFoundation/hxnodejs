@@ -1,5 +1,7 @@
 -js dummy
+-cp src
 --macro ImportAll.run("src")
+--macro _internal.SuppressDeprecated.run()
 --no-output
 
 --next
