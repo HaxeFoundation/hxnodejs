@@ -2,7 +2,9 @@
 
 # Haxe Node.JS
 
-[![Build Status](https://travis-ci.org/HaxeFoundation/hxnodejs.svg?branch=master)](https://travis-ci.org/HaxeFoundation/hxnodejs)
+[![Build Status](https://badgen.net/travis/HaxeFoundation/hxnodejs?label=build)](https://travis-ci.org/HaxeFoundation/hxnodejs)
+[![Haxelib Version](https://badgen.net/haxelib/v/hxnodejs)](https://lib.haxe.org/p/hxnodejs)
+[![Haxelib License](https://badgen.net/haxelib/license/hxnodejs)](LICENSE)
 
 Extern type definitions for Node.JS. Haxe **3.4** or newer is required.
 
