@@ -5,7 +5,7 @@
 [![Build Status](https://badgen.net/travis/HaxeFoundation/hxnodejs?label=build)](https://travis-ci.org/HaxeFoundation/hxnodejs)
 [![Haxelib Version](https://badgen.net/haxelib/v/hxnodejs)](https://lib.haxe.org/p/hxnodejs)
 [![Haxelib Downloads](https://badgen.net/haxelib/d/hxnodejs?color=blue)](https://lib.haxe.org/p/hxnodejs)
-[![Haxelib License](https://badgen.net/haxelib/license/hxnodejs)](LICENSE)
+[![Haxelib License](https://badgen.net/haxelib/license/hxnodejs)](LICENSE.md)
 
 Extern type definitions for Node.JS. Haxe **3.4** or newer is required.
 
