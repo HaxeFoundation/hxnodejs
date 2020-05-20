@@ -5,6 +5,10 @@ import js.node.Fs;
 @:dce
 // @:coreApi
 class File {
+	public static inline function append(path:String, binary:Bool = true):FileOutput {
+		return new FileOutput(Fs.openSync(path, AppendCreate));
+	}
+
 	public static inline function write(path:String, binary:Bool = true):FileOutput {
 		return new FileOutput(Fs.openSync(path, WriteCreate));
 	}
