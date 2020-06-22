@@ -466,6 +466,32 @@ typedef FsConstants = {
 }
 
 /**
+	Options for `Fs.rmdir` and `Fs.rmdirSync`.
+**/
+typedef FsRmdirOptions = {
+	/**
+		If an `EBUSY`, `EMFILE`, `ENFILE`, `ENOTEMPTY`, or `EPERM` error is encountered,
+		Node.js will retry the operation with a linear backoff wait of `retryDelay` ms longer on each try.
+		This option represents the number of retries.
+		This option is ignored if the `recursive` option is not `true`.
+	**/
+	@:optional var maxRetries:Int;
+
+	/**
+		If `true`, perform a recursive directory removal.
+		In recursive mode, errors are not reported if `path` does not exist,
+		and operations are retried on failure.
+	**/
+	@:optional var recursive:Bool;
+
+	/**
+		The amount of time in milliseconds to wait between retries.
+		This option is ignored if the `recursive` option is not `true`.
+	**/
+	@:optional var retryDelay:Int;
+}
+
+/**
 	File I/O is provided by simple wrappers around standard POSIX functions.
 	All the methods have asynchronous and synchronous forms.
 
@@ -683,12 +709,13 @@ extern class Fs {
 	/**
 		Asynchronous rmdir(2).
 	**/
-	static function rmdir(path:FsPath, callback:Error->Void):Void;
+	@:overload(function(path:FsPath, callback:Error->Void):Void {})
+	static function rmdir(path:FsPath, options:FsRmdirOptions, callback:Error->Void):Void;
 
 	/**
 		Synchronous rmdir(2).
 	**/
-	static function rmdirSync(path:FsPath):Void;
+	static function rmdirSync(path:FsPath, ?options:FsRmdirOptions):Void;
 
 	/**
 		Asynchronous mkdir(2).
