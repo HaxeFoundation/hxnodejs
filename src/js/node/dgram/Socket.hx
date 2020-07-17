@@ -60,7 +60,19 @@ import js.Error;
 	var Error:SocketEvent<Error->Void> = "error";
 }
 
-typedef MessageListener = Buffer->SocketAdress->Void;
+/**
+	Remote address information for the `SocketEvent.Message` event.
+**/
+typedef MessageRemoteInfo = {
+	> SocketAdress,
+
+	/**
+		The message size.
+	**/
+	var size:Int;
+}
+
+typedef MessageListener = Buffer->MessageRemoteInfo->Void;
 
 /**
 	Enumeration of possible datagram socket types
