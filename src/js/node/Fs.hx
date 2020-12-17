@@ -96,6 +96,14 @@ typedef FsWriteFileOptions = {
 	}
 **/
 /**
+ * options for `Fs.mkdir` and `Fs.mkdirSync`
+ */
+typedef FsMakeDirOptions = {
+	@:optional var recursive:Bool;
+	@:optional var mode:FsMode;
+};
+
+/**
 	Options for `Fs.createReadStream`.
 **/
 typedef FsCreateReadStreamOptions = {
@@ -695,12 +703,12 @@ extern class Fs {
 		`mode` defaults to 0777.
 	**/
 	@:overload(function(path:FsPath, callback:Error->Void):Void {})
-	static function mkdir(path:FsPath, mode:FsMode, callback:Error->Void):Void;
+	static function mkdir(path:FsPath, options:FsMakeDirOptions, callback:Error->Void):Void;
 
 	/**
 		Synchronous mkdir(2).
 	**/
-	static function mkdirSync(path:FsPath, ?mode:FsMode):Void;
+	static function mkdirSync(path:FsPath, ?options:FsMakeDirOptions):Void;
 
 	/**
 		Creates a unique temporary directory.
