@@ -9,7 +9,7 @@ import js.node.Fs.FsRmOptions;
 import js.node.Fs.FsRmdirOptions;
 import js.node.Fs.SymlinkType;
 #if haxe4
-import Promise;
+import js.lib.Promise;
 #else
 import js.Promise;
 #end
@@ -18,7 +18,7 @@ import js.Promise;
 	/**
 		Asynchronously tests a user's permissions for the file specified by path.
 	**/
-	static function access(path:FsPath, ?mode:FsConstant):Promise<Void>;
+	static function access(path:FsPath, ?mode:FsConstants):Promise<Void>;
 
 	/**
 		Asynchronously copies `src` to `dest`. By default, `dest` is overwritten if it already exists.
@@ -112,10 +112,11 @@ import js.Promise;
 		REVIEW change depend of pull request #175
 		Asynchronous mkdir(2) - create a directory.
 	**/
-	@:overload(function(path:FsPath, ?options:ts.AnyOf3<String, Float, Dynamic>):Promise<Void> {})
-	@:overload(function(path:FsPath, ?options:ts.AnyOf3<String, Float, MakeDirectoryOptions>):Promise<Null<String>> {})
-	static function mkdir(path:FsPath, options:Dynamic):Promise<String>;
-
+	/*
+		@:overload(function(path:FsPath, ?options:ts.AnyOf3<String, Float, Dynamic>):Promise<Void> {})
+		@:overload(function(path:FsPath, ?options:ts.AnyOf3<String, Float, MakeDirectoryOptions>):Promise<Null<String>> {})
+		static function mkdir(path:FsPath, options:Dynamic):Promise<String>;
+	 */
 	/**
 		Asynchronous readdir(3) - read a directory.
 	**/
