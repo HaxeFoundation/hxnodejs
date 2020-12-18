@@ -14,7 +14,8 @@ import js.lib.Promise;
 import js.Promise;
 #end
 
-@:jsRequire("fs", "promises") @valueModuleOnly extern class Promises {
+@:jsRequire("fs", "promises")
+extern class Promises {
 	/**
 		Asynchronously tests a user's permissions for the file specified by path.
 	**/
