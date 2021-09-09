@@ -261,6 +261,21 @@ extern class Process extends EventEmitter<Process> {
 		What platform you're running on: 'darwin', 'freebsd', 'linux', 'sunos' or 'win32'
 	**/
 	var platform:String;
+	
+	/**
+		The PID of the parent process
+	**/
+	var ppid:Int;
+	
+	/**
+		The metadata of the current release
+	**/
+	var release:Release;
+	
+	/**
+		Used for diagnostic reports
+	**/
+	var report:Report;
 
 	/**
 		Returns an object describing the memory usage of the Node process measured in bytes.
@@ -348,4 +363,12 @@ typedef MemoryUsage = {
 	rss:Float,
 	heapTotal:Float,
 	heapUsed:Float
+}
+
+typedef Release = {
+	name:String,
+  lts:String,
+  sourceUrl:String,
+  headersUrl:String,
+  libUrl:String
 }
