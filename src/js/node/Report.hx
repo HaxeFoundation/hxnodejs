@@ -50,5 +50,5 @@ extern class Report {
 	/**
 		Writes a diagnostic report to a file.
 	**/
-	function writeReport(?filename:String, ?err:Err):Void;
+	function writeReport(?filename:String, ?err:Error):Void;
 }
