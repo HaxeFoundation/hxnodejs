@@ -27,8 +27,11 @@ class Sys {
 		return process.env[s];
 	}
 
-	public static inline function putEnv(s:String, v:String):Void {
-		process.env[s] = v;
+	public static inline function putEnv(s:String, v:Null<String>):Void {
+		if (v == null)
+			process.env.remove(s);
+		else
+			process.env[s] = v;
 	}
 
 	public static function environment():Map<String, String> {
