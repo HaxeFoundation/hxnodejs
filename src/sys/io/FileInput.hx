@@ -10,6 +10,12 @@ import js.node.Fs;
 class FileInput extends haxe.io.Input {
 	var fd:Int;
 	var pos:Int;
+	var _eof = false;
+
+	private inline function _reachedEof():Void {
+		_eof = true;
+		throw new Eof();
+	}
 
 	@:allow(sys.io.File)
 	function new(fd:Int) {
@@ -23,12 +29,11 @@ class FileInput extends haxe.io.Input {
 			Fs.readSync(fd, buf, 0, 1, pos);
 		} catch (e:Dynamic) {
 			if (e.code == "EOF")
-				throw new Eof();
-			else
-				throw Error.Custom(e);
+				_reachedEof();
+			throw Error.Custom(e);
 		}
 		if (bytesRead == 0)
-			throw new Eof();
+			_reachedEof();
 		pos++;
 		return buf[0];
 	}
@@ -39,12 +44,11 @@ class FileInput extends haxe.io.Input {
 			Fs.readSync(fd, buf, pos, len, this.pos);
 		} catch (e:Dynamic) {
 			if (e.code == "EOF")
-				throw new Eof();
-			else
-				throw Error.Custom(e);
+				_reachedEof();
+			throw Error.Custom(e);
 		}
 		if (bytesRead == 0)
-			throw new Eof();
+			_reachedEof();
 		this.pos += bytesRead;
 		return bytesRead;
 	}
@@ -54,6 +58,7 @@ class FileInput extends haxe.io.Input {
 	}
 
 	public function seek(p:Int, pos:FileSeek):Void {
+		_eof = false;
 		switch (pos) {
 			case SeekBegin:
 				this.pos = p;
@@ -69,6 +74,6 @@ class FileInput extends haxe.io.Input {
 	}
 
 	public function eof():Bool {
-		return pos >= Fs.fstatSync(fd).size;
+		return _eof;
 	}
 }
