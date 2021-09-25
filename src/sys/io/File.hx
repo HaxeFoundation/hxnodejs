@@ -33,6 +33,10 @@ class File {
 		Fs.writeFileSync(path, js.node.Buffer.hxFromBytes(bytes));
 	}
 
+	public static inline function update(path:String, binary:Bool = true):FileOutput {
+		return new FileOutput(Fs.openSync(path, ReadWrite));
+	}
+
 	static inline var copyBufLen = 64 * 1024;
 	static var copyBuf = js.node.Buffer.alloc(copyBufLen);
 
