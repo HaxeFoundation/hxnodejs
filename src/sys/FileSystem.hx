@@ -31,6 +31,8 @@ class FileSystem {
 	}
 
 	public static inline function absolutePath(relPath:String):String {
+		if (haxe.io.Path.isAbsolute(relPath))
+			return relPath;
 		return js.node.Path.resolve(relPath);
 	}
 
