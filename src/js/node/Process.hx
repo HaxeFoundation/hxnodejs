@@ -367,8 +367,8 @@ typedef MemoryUsage = {
 
 typedef Release = {
 	name:String,
-	sourceUrl:String,
-	headersUrl:String,
-	libUrl:?String,
-	lts:?String
+	?sourceUrl:String,
+	?headersUrl:String,
+	?libUrl:String,
+	?lts:String
 }
