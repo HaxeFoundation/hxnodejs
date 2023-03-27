@@ -261,17 +261,17 @@ extern class Process extends EventEmitter<Process> {
 		What platform you're running on: 'darwin', 'freebsd', 'linux', 'sunos' or 'win32'
 	**/
 	var platform:String;
-	
+
 	/**
 		The PID of the parent process
 	**/
 	var ppid:Int;
-	
+
 	/**
 		The metadata of the current release
 	**/
 	var release:Release;
-	
+
 	/**
 		Used for diagnostic reports
 	**/
@@ -367,8 +367,8 @@ typedef MemoryUsage = {
 
 typedef Release = {
 	name:String,
-  lts:String,
-  sourceUrl:String,
-  headersUrl:String,
-  libUrl:String
+	sourceUrl:String,
+	headersUrl:String,
+	libUrl:?String,
+	lts:?String
 }
