@@ -3,8 +3,8 @@
     "url": "https://github.com/HaxeFoundation/hxnodejs",
     "description": "Extern definitions for node.js",
     "license": "MIT",
-    "version": "12.1.0",
-    "releasenote": "Improve haxe.zip support, add File.append(), fix some deprecation warnings.",
+    "version": "12.2.0",
+    "releasenote": "Update some API, fix some deprecation warnings.",
     "classPath": "src",
     "contributors": ["nadako", "Simn", "Gama11", "HaxeFoundation"],
     "tags": ["js", "nodejs", "async", "net", "web", "extern"]
