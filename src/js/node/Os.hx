@@ -46,6 +46,13 @@ extern class Os {
 	static function arch():String;
 
 	/**
+		Returns an estimate of the default amount of parallelism a program should use. Always returns a value greater than zero.
+
+		@see https://nodejs.org/api/os.html#osavailableparallelism
+	**/
+	static function availableParallelism():Int;
+
+	/**
 		Returns an object containing commonly used operating system specific constants for error codes, process signals, and so on. The specific constants currently defined are described in OS Constants.
 
 		@see https://nodejs.org/api/os.html#os_os_constants
@@ -58,6 +65,13 @@ extern class Os {
 		@see https://nodejs.org/api/os.html#os_os_cpus
 	**/
 	static function cpus():Array<CPU>;
+
+	/**
+		The platform-specific file path of the null device.
+
+		@see https://nodejs.org/api/os.html#osdevnull
+	**/
+	static var devNull(default, null):String;
 
 	/**
 		The `os.endianness()` method returns a string identifying the endianness of the CPU for which the Node.js binary was compiled.
@@ -163,6 +177,13 @@ extern class Os {
 		@see https://nodejs.org/api/os.html#os_os_userinfo_options
 	**/
 	static function userInfo(?options:{encoding:String}):OsUserInfo;
+
+	/**
+		Returns a string identifying the kernel version.
+
+		@see https://nodejs.org/api/os.html#osversion
+	**/
+	static function version():String;
 }
 
 /**
