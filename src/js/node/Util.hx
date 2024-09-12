@@ -23,8 +23,11 @@
 package js.node;
 
 import haxe.Constraints.Function;
+import haxe.DynamicAccess;
 import haxe.extern.EitherType;
 import haxe.extern.Rest;
+import js.lib.Map;
+import js.node.Stream;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
 #if haxe4
@@ -90,6 +93,13 @@ extern class Util {
 		@see https://nodejs.org/api/util.html#util_util_getsystemerrorname_err
 	**/
 	static function getSystemErrorName(err:Int):String;
+
+	/**
+		Returns a map of all system error codes available from the Node.js API.
+
+		@see https://nodejs.org/api/util.html#utilgetsystemerrormap
+	**/
+	static function getSystemErrorMap():Map<Int, String>;
 
 	/**
 		Inherit the prototype methods from one `constructor` into another.
@@ -231,6 +241,13 @@ extern class Util {
 	static function log(args:Rest<Dynamic>):Void;
 
 	/**
+		Parses the raw contents of an `.env` file.
+
+		@see https://nodejs.org/api/util.html#utilparseenvcontent
+	**/
+	static function parseEnv(content:String):DynamicAccess<String>;
+
+	/**
 		Deprecated predecessor of console.log.
 	**/
 	@:deprecated("Use js.Node.console.log instead")
@@ -247,6 +264,28 @@ extern class Util {
 	**/
 	@:deprecated("Use `readableStream.pipe(writableStream)` instead")
 	static function pump(readableStream:IReadable, writableStream:IWritable, ?callback:Error->Void):Void;
+
+	/**
+		Removes any ANSI escape codes from the specified string.
+
+		@see https://nodejs.org/api/util.html#utilstripvtcontrolcharactersstr
+	**/
+	static function stripVTControlCharacters(str:String):String;
+
+	/**
+		Returns a formatted text considering the `format` passed for printing in a terminal.
+
+		@see https://nodejs.org/api/util.html#utilstyletextformat-text-options
+	**/
+	static function styleText(format:EitherType<String, Array<String>>, text:String, ?options:StyleTextOptions):String;
+
+	/**
+		Returns the `string` after replacing any surrogate code points (or equivalently, any unpaired surrogate code units)
+		with the Unicode "replacement character" U+FFFD.
+
+		@see https://nodejs.org/api/util.html#utiltousvstringstring
+	**/
+	static function toUSVString(string:String):String;
 }
 
 /**
@@ -349,4 +388,23 @@ typedef InspectOptions = {
 		Default: `false`.
 	**/
 	@:optional var getters:EitherType<Bool, String>;
+}
+
+/**
+	Options object used by `Util.styleText`.
+**/
+typedef StyleTextOptions = {
+	/**
+		A stream that will be validated if it can be colored.
+
+		Default: `process.stdout`.
+	**/
+	@:optional var stream:Stream<Stream>;
+
+	/**
+		Value indicating whether `stream` is checked to see if it can handle colors.
+
+		Default: `true`.
+	**/
+	@:optional var validateStream:Bool;
 }
