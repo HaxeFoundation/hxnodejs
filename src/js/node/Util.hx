@@ -399,7 +399,7 @@ typedef StyleTextOptions = {
 
 		Default: `process.stdout`.
 	**/
-	@:optional var stream:Stream<Stream>;
+	@:optional var stream:Stream<Dynamic>;
 
 	/**
 		Value indicating whether `stream` is checked to see if it can handle colors.
