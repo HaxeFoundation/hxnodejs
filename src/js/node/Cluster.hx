@@ -163,10 +163,18 @@ extern class Cluster extends EventEmitter<Cluster> {
 
 	/**
 		True if the process is a master.
-		This is determined by the process.env.NODE_UNIQUE_ID.
-		If process.env.NODE_UNIQUE_ID is undefined, then `isMaster` is true.
+		This is determined by the `process.env.NODE_UNIQUE_ID`.
+		If `process.env.NODE_UNIQUE_ID` is undefined, then `isMaster` is `true`.
 	**/
+	@:deprecated("Use `isPrimary` instead")
 	var isMaster(default, null):Bool;
+
+	/**
+		True if the process is a primary.
+		This is determined by the `process.env.NODE_UNIQUE_ID`.
+		If `process.env.NODE_UNIQUE_ID` is undefined, then `isPrimary` is `true`.
+	**/
+	var isPrimary(default, null):Bool;
 
 	/**
 		True if the process is not a master (it is the negation of `isMaster`).
@@ -187,7 +195,24 @@ extern class Cluster extends EventEmitter<Cluster> {
 			`fork` calls `setupMaster` internally to establish the defaults, so to have any effect,
 			`setupMaster` must be called before any calls to `fork`
 	**/
+	@:deprecated("Use `setupPrimary()` instead")
 	function setupMaster(?settings:{?exec:String, ?args:Array<String>, ?silent:Bool}):Void;
+
+	/**
+		`setupPrimary` is used to change the default `fork` behavior.
+
+		Once called, the `settings` will be present in `settings`.
+
+		Note that:
+			Only the first call to `setupPrimary` has any effect, subsequent calls are ignored
+
+			That because of the above, the only attribute of a worker that may be customized per-worker
+			is the `env` passed to `fork`
+
+			`fork` calls `setupPrimary` internally to establish the defaults, so to have any effect,
+			`setupPrimary` must be called before any calls to `fork`
+	**/
+	function setupPrimary(?settings:{?exec:String, ?args:Array<String>, ?silent:Bool}):Void;
 
 	/**
 		Spawn a new worker process.
