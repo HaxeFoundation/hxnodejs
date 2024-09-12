@@ -163,10 +163,18 @@ extern class Cluster extends EventEmitter<Cluster> {
 
 	/**
 		True if the process is a master.
-		This is determined by the process.env.NODE_UNIQUE_ID.
-		If process.env.NODE_UNIQUE_ID is undefined, then `isMaster` is true.
+		This is determined by the `process.env.NODE_UNIQUE_ID`.
+		If `process.env.NODE_UNIQUE_ID` is undefined, then `isMaster` is `true`.
 	**/
+	@:deprecated("Use `isPrimary` instead")
 	var isMaster(default, null):Bool;
+
+	/**
+		True if the process is a primary.
+		This is determined by the `process.env.NODE_UNIQUE_ID`.
+		If `process.env.NODE_UNIQUE_ID` is undefined, then `isPrimary` is `true`.
+	**/
+	var isPrimary(default, null):Bool;
 
 	/**
 		True if the process is not a master (it is the negation of `isMaster`).
@@ -187,7 +195,24 @@ extern class Cluster extends EventEmitter<Cluster> {
 			`fork` calls `setupMaster` internally to establish the defaults, so to have any effect,
 			`setupMaster` must be called before any calls to `fork`
 	**/
-	function setupMaster(?settings:{?exec:String, ?args:Array<String>, ?silent:Bool}):Void;
+	@:deprecated("Use `setupPrimary()` instead")
+	function setupMaster(?settings:ClusterSettings):Void;
+
+	/**
+		`setupPrimary` is used to change the default `fork` behavior.
+
+		Once called, the `settings` will be present in `settings`.
+
+		Note that:
+			Only the first call to `setupPrimary` has any effect, subsequent calls are ignored
+
+			That because of the above, the only attribute of a worker that may be customized per-worker
+			is the `env` passed to `fork`
+
+			`fork` calls `setupPrimary` internally to establish the defaults, so to have any effect,
+			`setupPrimary` must be called before any calls to `fork`
+	**/
+	function setupPrimary(?settings:ClusterSettings):Void;
 
 	/**
 		Spawn a new worker process.
@@ -231,26 +256,32 @@ extern class Cluster extends EventEmitter<Cluster> {
 
 typedef ClusterSettings = {
 	/**
-		list of string arguments passed to the node executable.
-		Default: process.execArgv
+		List of string arguments passed to the node executable.
+		Default: `process.execArgv`
 	**/
 	@:optional var execArgv(default, null):Array<String>;
 
 	/**
-		file path to worker file.
-		Default: process.argv[1]
+		File path to worker file.
+		Default: `process.argv[1]`
 	**/
 	@:optional var exec(default, null):String;
 
 	/**
-		string arguments passed to worker.
-		Default: process.argv.slice(2)
+		String arguments passed to worker.
+		Default: `process.argv.slice(2)`
 	**/
 	@:optional var args(default, null):Array<String>;
 
 	/**
-		whether or not to send output to parent's stdio.
-		Default: false
+		Current working directory of the worker process.
+		Default: `undefined` (inherits from parent process)
+	**/
+	@:optional var cwd(default, null):String;
+
+	/**
+		Whether or not to send output to parent's stdio.
+		Default: `false`
 	**/
 	@:optional var silent(default, null):Bool;
 
@@ -263,4 +294,10 @@ typedef ClusterSettings = {
 		Sets the group identity of the process.
 	**/
 	@:optional var gid(default, null):Int;
+
+	/**
+		Hide the forked processes console window that would normally be created on Windows systems.
+		Default: `false`
+	**/
+	@:optional var windowsHide(default, null):Bool;
 }
