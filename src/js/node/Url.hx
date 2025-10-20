@@ -131,7 +131,7 @@ typedef UrlFormatOptions = {
 	Parsed URL objects have some or all of the following fields, depending on whether or not they exist in the URL string.
 	Any parts that are not in the URL string will not be in the parsed object.
 **/
-@:deprecated
+@:noCompletion
 typedef UrlObject = {
 	/**
 		The full URL string that was parsed with both the `protocol` and `host` components converted to lower-case.
