@@ -6,7 +6,7 @@ import js.node.Fs;
 // @:coreApi
 class File {
 	public static inline function append(path:String, binary:Bool = true):FileOutput {
-		return new FileOutput(Fs.openSync(path, AppendCreate));
+		return new FileOutput(Fs.openSync(path, AppendCreate), true);
 	}
 
 	public static inline function write(path:String, binary:Bool = true):FileOutput {

@@ -10,23 +10,25 @@ import js.node.Fs;
 class FileOutput extends haxe.io.Output {
 	var fd:Int;
 	var pos:Int;
+	var isAppend:Bool;
 
 	@:allow(sys.io.File)
-	function new(fd:Int) {
+	function new(fd:Int, isAppend:Bool = false) {
 		this.fd = fd;
 		pos = 0;
+		this.isAppend = isAppend;
 	}
 
 	override public function writeByte(b:Int):Void {
 		var buf = Buffer.alloc(1);
 		buf[0] = b;
-		Fs.writeSync(fd, buf, 0, 1, pos);
+		Fs.writeSync(fd, buf, 0, 1, isAppend ? null : pos);
 		pos++;
 	}
 
 	override public function writeBytes(s:Bytes, pos:Int, len:Int):Int {
 		var buf = Buffer.hxFromBytes(s);
-		var wrote = Fs.writeSync(fd, buf, pos, len, this.pos);
+		var wrote = Fs.writeSync(fd, buf, pos, len, isAppend ? null : this.pos);
 		this.pos += wrote;
 		return wrote;
 	}
