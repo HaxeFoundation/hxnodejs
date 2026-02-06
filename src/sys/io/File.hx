@@ -34,6 +34,9 @@ class File {
 	}
 
 	public static inline function update(path:String, binary:Bool = true):FileOutput {
+		if (!FileSystem.exists(path)) {
+			write(path).close();
+		}
 		return new FileOutput(Fs.openSync(path, ReadWrite));
 	}
 
