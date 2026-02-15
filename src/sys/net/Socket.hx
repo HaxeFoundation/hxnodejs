@@ -1,4 +1,35 @@
 package sys.net;
+import haxe.io.Output;
+import js.Node;
+import haxe.io.Bytes;
+
+class SocketOutput extends Output {
+	
+		var socket:Socket;
+
+	public function new(socket:Socket) {
+		this.socket = socket;
+	}
+	
+	override function writeByte(c:Int):Void {
+		var b = new js.node.Buffer([c]);
+		socket._write(b);
+	}
+
+	/**
+		Write `len` bytes from `s` starting by position specified by `pos`.
+
+		Returns the actual length of written data that can differ from `len`.
+
+		See `writeFullBytes` that tries to write the exact amount of specified bytes.
+	**/
+	override function writeBytes(s:Bytes, pos:Int, len:Int):Int {
+		var b = js.node.Buffer.hxFromBytes(s);
+		socket._write(b);
+		return b.length;
+	}
+
+}
 
 class SocketInput extends haxe.io.Input {
 	var s:Socket;
@@ -50,9 +81,11 @@ class Socket {
 	var inputPos:Int = 0;
 
 	public var input:haxe.io.Input;
+	public var output:haxe.io.Output;
 
 	public function new() {
 		input = new SocketInput(this);
+		output = new SocketOutput(this);
 	}
 
 	public function connect(host:Host, port:Int) {
@@ -65,11 +98,23 @@ class Socket {
 		if (inputData.length == 0)
 			NodeSync.wait(function() return inputData.length > 0);
 	}
+	
+	public function _write(buf){
+		s.write(buf);
+	}
 
 	public function close() {
 		if (s != null) {
 			s.destroy();
 			s = null;
 		}
+	}
+	
+	public function shutdown(a,b){
+		close();
+	}
+	
+	public function setTimeout(ms){
+		
 	}
 }
