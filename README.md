@@ -7,7 +7,7 @@
 [![Haxelib Downloads](https://badgen.net/haxelib/d/hxnodejs?color=blue)](https://lib.haxe.org/p/hxnodejs)
 [![Haxelib License](https://badgen.net/haxelib/license/hxnodejs)](LICENSE.md)
 
-Extern type definitions for Node.JS. Haxe **3.4** or newer is required.
+Extern type definitions for Node.JS. Haxe **4.0** or newer is required.
 
 Haxe-generated API documentation is available at http://haxefoundation.github.io/hxnodejs/js/Node.html.
 
