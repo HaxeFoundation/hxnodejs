@@ -79,9 +79,13 @@ extern class Performance extends EventTarget {
 	function clearResourceTimings(?name:String):Void;
 
 	/**
-		This is an alias of `PerfHooks.eventLoopUtilization()`.
+		Returns an object that contains the cumulative duration of time the event loop has been
+		both idle and active as a high resolution milliseconds timer.
 
 		This property is an extension by Node.js. It is not available in Web browsers.
+
+		Prefer this over the module-level `PerfHooks.eventLoopUtilization` when targeting
+		Node.js 22 LTS as well as Node.js 24; the module-level alias was only added in v24.12.0.
 	**/
 	function eventLoopUtilization(?utilization1:EventLoopUtilization, ?utilization2:EventLoopUtilization):EventLoopUtilization;
 
@@ -152,9 +156,14 @@ extern class Performance extends EventTarget {
 	var timeOrigin(default, null):Float;
 
 	/**
-		This is an alias of `PerfHooks.timerify()`.
+		Wraps a function within a new function that measures the running time of the wrapped function.
+		A `PerformanceObserver` must be subscribed to the `'function'` event type in order for the
+		timing details to be accessed.
 
 		This property is an extension by Node.js. It is not available in Web browsers.
+
+		Prefer this over the module-level `PerfHooks.timerify` when targeting Node.js 22 LTS as well
+		as Node.js 24; the module-level alias was only added in v24.12.0.
 	**/
 	function timerify<T:Function>(fn:T, ?options:TimerifyOptions):T;
 

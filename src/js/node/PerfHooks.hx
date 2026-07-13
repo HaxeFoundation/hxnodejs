@@ -72,6 +72,10 @@ extern class PerfHooks {
 		Returns an object that contains the cumulative duration of time the event loop has been
 		both idle and active as a high resolution milliseconds timer.
 
+		Module-level alias of `performance.eventLoopUtilization()`.
+		Added in Node.js v24.12.0 (Active LTS). On earlier versions (including Node.js 22 LTS)
+		this is `undefined` at module level; use `PerfHooks.performance.eventLoopUtilization` instead.
+
 		@see https://nodejs.org/api/perf_hooks.html#perf_hookseventlooputilizationutilization1-utilization2
 	**/
 	static function eventLoopUtilization(?utilization1:EventLoopUtilization, ?utilization2:EventLoopUtilization):EventLoopUtilization;
@@ -82,6 +86,10 @@ extern class PerfHooks {
 		timing details to be accessed.
 
 		This property is an extension by Node.js. It is not available in Web browsers.
+
+		Module-level alias of `performance.timerify()`.
+		Added in Node.js v24.12.0 (Active LTS). On earlier versions (including Node.js 22 LTS)
+		this is `undefined` at module level; use `PerfHooks.performance.timerify` instead.
 
 		@see https://nodejs.org/api/perf_hooks.html#perf_hookstimerifyfn-options
 	**/
