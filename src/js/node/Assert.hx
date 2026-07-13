@@ -77,6 +77,22 @@ extern class Assert {
 	static function deepStrictEqual<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
+		Expects the `string` input not to match the regular expression.
+
+		@see https://nodejs.org/api/assert.html#assert_assert_doesnotmatch_string_regexp_message
+	**/
+	@:overload(function(string:String, regexp:RegExp, ?message:Error):Void {})
+	static function doesNotMatch(string:String, regexp:RegExp, ?message:String):Void;
+
+	/**
+		Expects the `string` input not to match the regular expression.
+
+		@see https://nodejs.org/api/assert.html#assert_assert_doesnotmatch_string_regexp_message
+	**/
+	@:overload(function(string:String, regexp:RegExp, ?message:Error):Void {})
+	static function doesNotMatch(string:String, regexp:RegExp, ?message:String):Void;
+
+	/**
 		Awaits the `asyncFn` promise or, if `asyncFn` is a function,
 		immediately calls the function and awaits the returned promise to complete.
 		It will then check that the promise is not rejected.
@@ -143,6 +159,14 @@ extern class Assert {
 	static function ifError(value:Dynamic):Void;
 
 	/**
+		Expects the `string` input to match the regular expression.
+
+		@see https://nodejs.org/api/assert.html#assert_assert_match_string_regexp_message
+	**/
+	@:overload(function(string:String, regexp:RegExp, ?message:Error):Void {})
+	static function match(string:String, regexp:RegExp, ?message:String):Void;
+
+	/**
 		An alias of `Assert.notDeepStrictEqual()`.
 
 		@see https://nodejs.org/api/assert.html#assert_assert_notdeepequal_actual_expected_message
@@ -184,6 +208,16 @@ extern class Assert {
 	**/
 	@:overload(function(value:Dynamic, ?message:Error):Void {})
 	static function ok(value:Dynamic, ?message:String):Void;
+
+	/**
+		Tests for partial deep equality between the `actual` and `expected` parameters.
+		"Partial" equality means that only properties that exist on the `expected`
+		parameter are compared.
+
+		@see https://nodejs.org/api/assert.html#assert_assert_partialdeepstrictequal_actual_expected_message
+	**/
+	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
+	static function partialDeepStrictEqual<T>(actual:T, expected:T, ?message:String):Void;
 
 	/**
 		Awaits the `asyncFn` promise or, if `asyncFn` is a function,
