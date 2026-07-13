@@ -22,6 +22,7 @@
 
 package js.node.buffer;
 
+import haxe.extern.EitherType;
 import haxe.io.Bytes;
 import haxe.io.UInt8Array;
 #if haxe4
@@ -692,6 +693,52 @@ extern class Buffer extends Uint8Array {
 	};
 
 	/**
+		Returns `true` if the given `input` contains only valid UTF-8-encoded data, `false` otherwise.
+
+		`input` may be a `TypedArray`/`ArrayBufferView` or an `ArrayBuffer`.
+		This is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#bufferisutf8input
+	**/
+	static inline function isUtf8(input:EitherType<ArrayBufferView, ArrayBuffer>):Bool {
+		return BufferModule.isUtf8(input);
+	}
+
+	/**
+		Returns `true` if the given `input` contains only valid ASCII-encoded data, `false` otherwise.
+
+		`input` may be a `TypedArray`/`ArrayBufferView` or an `ArrayBuffer`.
+		This is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#bufferisasciiinput
+	**/
+	static inline function isAscii(input:EitherType<ArrayBufferView, ArrayBuffer>):Bool {
+		return BufferModule.isAscii(input);
+	}
+
+	/**
+		Decodes a string of Base64-encoded data into bytes, and encodes those bytes into a string using Latin-1 (ISO-8859-1).
+
+		This is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#bufferatobdata
+	**/
+	static inline function atob(data:String):String {
+		return BufferModule.atob(data);
+	}
+
+	/**
+		Decodes a string into bytes using Latin-1 (ISO-8859), and encodes those bytes into a string using Base64.
+
+		This is a property on the `buffer` module returned by `require('buffer')`, not on the `Buffer` global or a `Buffer` instance.
+
+		@see https://nodejs.org/api/buffer.html#bufferbtoadata
+	**/
+	static inline function btoa(data:String):String {
+		return BufferModule.btoa(data);
+	}
+
+	/**
 		`buffer.constants` is a property on the `buffer` module returned by `require('buffer')`,
 		not on the `Buffer` global or a `Buffer` instance.
 
@@ -741,6 +788,10 @@ private extern class BufferModule {
 	static var INSPECT_MAX_BYTES:Int;
 	static var kMaxLength(default, never):Int;
 	static function transcode(source:Uint8Array, fromEnc:String, toEnc:String):Buffer;
+	static function isUtf8(input:EitherType<ArrayBufferView, ArrayBuffer>):Bool;
+	static function isAscii(input:EitherType<ArrayBufferView, ArrayBuffer>):Bool;
+	static function atob(data:String):String;
+	static function btoa(data:String):String;
 	static var constants(default, never):BufferConstants;
 }
 
