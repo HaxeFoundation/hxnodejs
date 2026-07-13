@@ -82,7 +82,7 @@ jobs:
       working-directory: haxe/tests
 
   deploy:
-    needs: build
+    needs: [build, test]
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
