@@ -28,9 +28,11 @@ import js.node.crypto.*;
 import js.node.crypto.DiffieHellman.IDiffieHellman;
 import js.node.tls.SecureContext;
 #if haxe4
+import js.lib.ArrayBuffer;
 import js.lib.ArrayBufferView;
 import js.lib.Error;
 #else
+import js.html.ArrayBuffer;
 import js.html.ArrayBufferView;
 import js.Error;
 #end
@@ -91,7 +93,10 @@ extern class Crypto {
 	/**
 		Property for checking and controlling whether a FIPS compliant crypto provider is currently in use.
 		Setting to true requires a FIPS build of Node.js.
+
+		Deprecated since Node.js v10.0.0. Use `getFips` / `setFips` instead.
 	**/
+	@:deprecated
 	static var fips:Bool;
 
 	/**
@@ -263,15 +268,19 @@ extern class Crypto {
 	/**
 		HKDF is a simple key derivation function defined in RFC 5869.
 		The given `ikm`, `salt` and `info` are used with the `digest` to derive a key of `keylen` bytes.
+
+		The successfully generated derived key is passed to the callback as an `ArrayBuffer`.
 	**/
 	static function hkdf(digest:String, ikm:EitherType<String, Buffer>, salt:EitherType<String, Buffer>, info:EitherType<String, Buffer>, keylen:Int,
-		callback:Error->Buffer->Void):Void;
+		callback:Error->ArrayBuffer->Void):Void;
 
 	/**
 		Provides a synchronous HKDF key derivation function as defined in RFC 5869.
+
+		Returns the derived key as an `ArrayBuffer`.
 	**/
 	static function hkdfSync(digest:String, ikm:EitherType<String, Buffer>, salt:EitherType<String, Buffer>, info:EitherType<String, Buffer>,
-		keylen:Int):Buffer;
+		keylen:Int):ArrayBuffer;
 
 	/**
 		Generates cryptographically strong pseudo-random data.
@@ -324,22 +333,30 @@ extern class Crypto {
 	static function randomUUID(?options:RandomUUIDOptions):String;
 
 	/**
-		Compares the underlying bytes that represent the given `Buffer` or `ArrayBufferView`
-		instances using a constant-time algorithm.
+		Generates a random RFC 9562 version 7 UUID.
+		The UUID contains a millisecond precision Unix timestamp in the most significant 48 bits,
+		followed by cryptographically secure random bits for the remaining fields.
+		Added in Node.js v24.16.0 (Active LTS).
+	**/
+	static function randomUUIDv7(?options:RandomUUIDOptions):String;
+
+	/**
+		Compares the underlying bytes that represent the given `ArrayBuffer`, `Buffer`,
+		or `ArrayBufferView` instances using a constant-time algorithm.
 		`a` and `b` must have the same byte length.
 	**/
-	static function timingSafeEqual(a:EitherType<Buffer, ArrayBufferView>, b:EitherType<Buffer, ArrayBufferView>):Bool;
+	static function timingSafeEqual(a:CryptoArrayBufferLike, b:CryptoArrayBufferLike):Bool;
 
 	/**
 		Checks the primality of the `candidate`.
 	**/
-	@:overload(function(candidate:EitherType<Buffer, ArrayBufferView>, options:CheckPrimeOptions, callback:Error->Bool->Void):Void {})
-	static function checkPrime(candidate:EitherType<Buffer, ArrayBufferView>, callback:Error->Bool->Void):Void;
+	@:overload(function(candidate:CryptoArrayBufferLike, options:CheckPrimeOptions, callback:Error->Bool->Void):Void {})
+	static function checkPrime(candidate:CryptoArrayBufferLike, callback:Error->Bool->Void):Void;
 
 	/**
 		Checks the primality of the `candidate` (synchronous version).
 	**/
-	static function checkPrimeSync(candidate:EitherType<Buffer, ArrayBufferView>, ?options:CheckPrimeOptions):Bool;
+	static function checkPrimeSync(candidate:CryptoArrayBufferLike, ?options:CheckPrimeOptions):Bool;
 
 	/**
 		Decrypts `buffer` with `private_key`.
@@ -412,21 +429,44 @@ typedef CryptoKeyOptions = {
 }
 
 /**
+	Binary input accepted by several crypto helpers (`ArrayBuffer`, `Buffer`, or `ArrayBufferView`).
+**/
+typedef CryptoArrayBufferLike = EitherType<ArrayBuffer, EitherType<Buffer, ArrayBufferView>>;
+
+/**
 	Options for `Crypto.scrypt` and `Crypto.scryptSync`.
 **/
 typedef ScryptOptions = {
 	/**
 		CPU/memory cost parameter. Must be a power of two greater than one. Default: `16384`.
+		Only one of `cost` or `N` may be specified.
+	**/
+	@:optional var cost:Int;
+
+	/**
+		Block size parameter. Default: `8`.
+		Only one of `blockSize` or `r` may be specified.
+	**/
+	@:optional var blockSize:Int;
+
+	/**
+		Parallelization parameter. Default: `1`.
+		Only one of `parallelization` or `p` may be specified.
+	**/
+	@:optional var parallelization:Int;
+
+	/**
+		Alias for `cost`. Only one of `cost` or `N` may be specified.
 	**/
 	@:optional var N:Int;
 
 	/**
-		Block size parameter. Default: `8`.
+		Alias for `blockSize`. Only one of `blockSize` or `r` may be specified.
 	**/
 	@:optional var r:Int;
 
 	/**
-		Parallelization parameter. Default: `1`.
+		Alias for `parallelization`. Only one of `parallelization` or `p` may be specified.
 	**/
 	@:optional var p:Int;
 
