@@ -27,10 +27,8 @@ import js.node.Stream;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
 #if haxe4
-import js.lib.Error;
 import js.lib.Promise;
 #else
-import js.Error;
 import js.Promise;
 #end
 
@@ -47,6 +45,8 @@ extern class StreamPromises {
 	/**
 		A module method to pipe between streams forwarding errors and properly cleaning up,
 		returning a Promise when the pipeline is complete.
+
+		Pass `options` (including `signal`) as the last argument when needed.
 	**/
 	@:overload(function(readable:IReadable, ?options:StreamFinishedOptions):Promise<Void> {})
 	@:overload(function(readable:IReadable, writable1:IWritable, ?options:StreamFinishedOptions):Promise<Void> {})
@@ -62,7 +62,7 @@ extern class StreamPromises {
 		writable6:IWritable, writable7:IWritable, ?options:StreamFinishedOptions):Promise<Void> {})
 	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
 		writable6:IWritable, writable7:IWritable, writable8:IWritable, ?options:StreamFinishedOptions):Promise<Void> {})
-	static function pipeline(readable:IReadable, streams:Rest<EitherType<IWritable, StreamFinishedOptions>>):Promise<Void>;
+	static function pipeline(readable:IReadable, streams:Rest<IWritable>):Promise<Void>;
 
 	/**
 		Returns a Promise that fulfills when the stream is no longer readable,
@@ -71,6 +71,3 @@ extern class StreamPromises {
 	@:overload(function(stream:IStream):Promise<Void> {})
 	static function finished(stream:IStream, options:StreamFinishedOptions):Promise<Void>;
 }
-
-// local alias so Rest overload typing can use EitherType without extra import noise
-private typedef EitherType<T1, T2> = haxe.extern.EitherType<T1, T2>;
