@@ -26,7 +26,7 @@ Highlighter.hasClass = function(el,className) {
 	return el.className.indexOf(className) != -1;
 };
 Highlighter.syntaxHighlight = function(html) {
-	var kwds = ["abstract","trace","break","case","cast","class","continue","default","do","dynamic","else","enum","extends","extern","for","function","if","implements","import","in","inline","interface","macro","new","override","package","private","public","return","static","switch","throw","try","typedef","untyped","using","var","while"];
+	var kwds = ["abstract","break","case","cast","catch","class","continue","default","do","dynamic","else","enum","extends","extern","false","final","for","function","if","implements","import","in","inline","interface","macro","new","operator","overload","override","package","private","public","return","static","switch","this","throw","true","try","typedef","untyped","using","var","while"];
 	var kwds1 = new EReg("\\b(" + kwds.join("|") + ")\\b","g");
 	var vals = ["null","true","false","this"];
 	var vals1 = new EReg("\\b(" + vals.join("|") + ")\\b","g");
