@@ -25,3 +25,30 @@ jobs:
         haxe doc.hxml
       name: Build
 
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v7
+
+    - uses: krdlab/setup-haxe@v2
+      with:
+        haxe-version: latest
+
+    - run: haxelib dev hxnodejs .
+      name: Set haxelib dev path
+
+    - run: |
+        haxe build.hxml
+        haxelib git dox https://github.com/HaxeFoundation/dox
+        haxe doc.hxml
+      name: Build docs
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: bin/api
