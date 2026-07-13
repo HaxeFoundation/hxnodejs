@@ -23,6 +23,11 @@
 package js.node.test;
 
 import haxe.extern.EitherType;
+#if haxe4
+import js.lib.Date as JsDate;
+#else
+import js.Date as JsDate;
+#end
 
 /**
 	Timer / Date APIs that can be mocked via `MockTimers.enable()`.
@@ -44,9 +49,11 @@ typedef MockTimersEnableOptions = {
 	@:optional var apis:Array<MockTimerApi>;
 
 	/**
-		Initial time (ms) or `Date` used as the value for `Date.now()`. Default: `0`.
+		Initial epoch as a Unix timestamp (ms) or a JS `Date`. Default: `0`.
+
+		Matches Node's `number | Date`.
 	**/
-	@:optional var now:EitherType<Float, Dynamic>;
+	@:optional var now:EitherType<Float, JsDate>;
 }
 
 /**
