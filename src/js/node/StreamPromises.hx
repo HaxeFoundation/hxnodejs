@@ -46,28 +46,27 @@ extern class StreamPromises {
 		A module method to pipe between streams forwarding errors and properly cleaning up,
 		returning a Promise when the pipeline is complete.
 
-		Pass `options` (including `signal`) as the last argument when needed.
+		Requires at least a source and a destination. Pass `options` (including `signal`)
+		as the last argument when needed.
 	**/
-	@:overload(function(readable:IReadable, ?options:StreamFinishedOptions):Promise<Void> {})
-	@:overload(function(readable:IReadable, writable1:IWritable, ?options:StreamFinishedOptions):Promise<Void> {})
-	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, ?options:StreamFinishedOptions):Promise<Void> {})
-	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, ?options:StreamFinishedOptions):Promise<Void> {})
+	@:overload(function(readable:IReadable, writable1:IWritable, ?options:StreamPipelineOptions):Promise<Void> {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, ?options:StreamPipelineOptions):Promise<Void> {})
+	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, ?options:StreamPipelineOptions):Promise<Void> {})
 	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable,
-		?options:StreamFinishedOptions):Promise<Void> {})
+		?options:StreamPipelineOptions):Promise<Void> {})
 	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
-		?options:StreamFinishedOptions):Promise<Void> {})
+		?options:StreamPipelineOptions):Promise<Void> {})
 	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
-		writable6:IWritable, ?options:StreamFinishedOptions):Promise<Void> {})
+		writable6:IWritable, ?options:StreamPipelineOptions):Promise<Void> {})
 	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
-		writable6:IWritable, writable7:IWritable, ?options:StreamFinishedOptions):Promise<Void> {})
+		writable6:IWritable, writable7:IWritable, ?options:StreamPipelineOptions):Promise<Void> {})
 	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
-		writable6:IWritable, writable7:IWritable, writable8:IWritable, ?options:StreamFinishedOptions):Promise<Void> {})
+		writable6:IWritable, writable7:IWritable, writable8:IWritable, ?options:StreamPipelineOptions):Promise<Void> {})
 	static function pipeline(readable:IReadable, streams:Rest<IWritable>):Promise<Void>;
 
 	/**
 		Returns a Promise that fulfills when the stream is no longer readable,
 		writable or has experienced an error or a premature close event.
 	**/
-	@:overload(function(stream:IStream):Promise<Void> {})
-	static function finished(stream:IStream, options:StreamFinishedOptions):Promise<Void>;
+	static function finished(stream:IStream, ?options:StreamFinishedOptions):Promise<Void>;
 }
