@@ -22,8 +22,6 @@
 
 package js.node.net;
 
-import haxe.extern.EitherType;
-
 /**
 	Represents a network endpoint as an IP address and port pair.
 
@@ -34,14 +32,26 @@ extern class SocketAddress {
 	/**
 		Creates a new `SocketAddress`.
 
+		`family` is either `'ipv4'` or `'ipv6'`. Default: `'ipv4'`.
+
 		@see https://nodejs.org/api/net.html#new-netsocketaddressoptions
 	**/
 	function new(?options:{
 		?address:String,
-		?family:EitherType<String, Int>,
+		?family:String,
 		?flowlabel:Int,
 		?port:Int
 	}):Void;
+
+	/**
+		Parses an IP address and optional port string into a `SocketAddress`.
+
+		`input` examples: `123.1.2.3:1234` or `[1::1]:1234`.
+		Returns `null`/`undefined` if parsing fails.
+
+		@see https://nodejs.org/api/net.html#socketaddressparseinput
+	**/
+	static function parse(input:String):Null<SocketAddress>;
 
 	/**
 		The network address as either an IPv4 or IPv6 string.

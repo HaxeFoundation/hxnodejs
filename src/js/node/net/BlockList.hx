@@ -33,6 +33,13 @@ extern class BlockList {
 	function new();
 
 	/**
+		Returns `true` if the `value` is a `net.BlockList`.
+
+		@see https://nodejs.org/api/net.html#blocklistisblocklistvalue
+	**/
+	static function isBlockList(value:Dynamic):Bool;
+
+	/**
 		Adds a rule to block the given IP address.
 
 		`type` is either `'ipv4'` or `'ipv6'`. Default: `'ipv4'`.
@@ -67,4 +74,22 @@ extern class BlockList {
 		The list of rules added to the blocklist.
 	**/
 	var rules(default, null):Array<String>;
+
+	/**
+		Loads rules from a JSON string or an array of rule strings (same format as `rules`).
+
+		Stability: 1 - Experimental.
+
+		@see https://nodejs.org/api/net.html#blocklistfromjsonvalue
+	**/
+	function fromJSON(value:EitherType<String, Array<String>>):Void;
+
+	/**
+		Returns the rules as a JSON-serializable array of strings (same format as `rules`).
+
+		Stability: 1 - Experimental.
+
+		@see https://nodejs.org/api/net.html#blocklisttojson
+	**/
+	function toJSON():Array<String>;
 }
