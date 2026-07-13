@@ -85,14 +85,6 @@ extern class Assert {
 	static function doesNotMatch(string:String, regexp:RegExp, ?message:String):Void;
 
 	/**
-		Expects the `string` input not to match the regular expression.
-
-		@see https://nodejs.org/api/assert.html#assert_assert_doesnotmatch_string_regexp_message
-	**/
-	@:overload(function(string:String, regexp:RegExp, ?message:Error):Void {})
-	static function doesNotMatch(string:String, regexp:RegExp, ?message:String):Void;
-
-	/**
 		Awaits the `asyncFn` promise or, if `asyncFn` is a function,
 		immediately calls the function and awaits the returned promise to complete.
 		It will then check that the promise is not rejected.
