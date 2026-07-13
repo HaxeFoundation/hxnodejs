@@ -45,6 +45,11 @@ jobs:
       with:
         haxe-version: ${{ matrix.haxe_ver }}
 
+    - uses: actions/setup-node@v4
+      if: matrix.runner == 'windows-latest'
+      with:
+        node-version: 24
+
     - run: haxelib dev hxnodejs .
       name: Set haxelib dev path
 
