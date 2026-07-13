@@ -31,7 +31,8 @@ import js.Promise;
 #end
 
 /**
-	Callable suite entry (`describe` / `suite`) with `.skip`, `.todo`, and `.only` shorthands.
+	Callable suite entry (`describe` / `suite`) with `.skip`, `.todo`, `.only`,
+	and `.expectFailure` shorthands.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/test.html#suitename-options-fn
 **/
@@ -68,4 +69,16 @@ extern class SuiteFunction {
 	@:overload(function(name:String, fn:SuiteCallback):Promise<Void> {})
 	@:overload(function(options:TestOptions, fn:SuiteCallback):Promise<Void> {})
 	function only(?name:String, ?options:TestOptions, ?fn:SuiteCallback):Promise<Void>;
+
+	/**
+		Shorthand for expecting a suite to fail (`expectFailure: true`).
+
+		Added in: v24.14.0
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#expecting-tests-to-fail
+	**/
+	@:overload(function(fn:SuiteCallback):Promise<Void> {})
+	@:overload(function(name:String, fn:SuiteCallback):Promise<Void> {})
+	@:overload(function(options:TestOptions, fn:SuiteCallback):Promise<Void> {})
+	function expectFailure(?name:String, ?options:TestOptions, ?fn:SuiteCallback):Promise<Void>;
 }

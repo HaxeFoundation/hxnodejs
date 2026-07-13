@@ -22,6 +22,7 @@
 
 package js.node.test;
 
+import haxe.extern.EitherType;
 import js.html.AbortSignal;
 import js.node.Test.HookCallback;
 import js.node.Test.HookOptions;
@@ -197,9 +198,12 @@ extern class TestContext {
 	/**
 		Poll `condition` until it succeeds or the timeout elapses.
 
+		`condition` may return a value or a `Promise` of that value; the returned
+		promise fulfills with the awaited successful result.
+
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextwaitforcondition-options
 	**/
-	function waitFor<T>(condition:Void->T, ?options:WaitForOptions):Promise<T>;
+	function waitFor<T>(condition:Void->EitherType<T, Promise<T>>, ?options:WaitForOptions):Promise<T>;
 
 	/**
 		`MockTracker` instance for this test.

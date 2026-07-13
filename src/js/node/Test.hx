@@ -47,6 +47,10 @@ import js.RegExp;
 
 	This module is only available under the `node:` scheme.
 
+	These externs target **Node.js 24+ Active LTS**. Dual-LTS APIs such as
+	`expectFailure`, `run({ randomize })`, and `TestContext.workerId` are typed
+	without version gates; older LTS releases may not provide them at runtime.
+
 	@see https://nodejs.org/docs/latest-v24.x/api/test.html
 **/
 @:jsRequire("node:test")
@@ -97,9 +101,21 @@ extern class Test {
 	static function only(?name:String, ?options:TestOptions, ?fn:TestCallback):Promise<Void>;
 
 	/**
+		Shorthand for expecting a test to fail: `test(name, { expectFailure: true }[, fn])`.
+
+		Added in: v24.14.0
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#expecting-tests-to-fail
+	**/
+	@:overload(function(fn:TestCallback):Promise<Void> {})
+	@:overload(function(name:String, fn:TestCallback):Promise<Void> {})
+	@:overload(function(options:TestOptions, fn:TestCallback):Promise<Void> {})
+	static function expectFailure(?name:String, ?options:TestOptions, ?fn:TestCallback):Promise<Void>;
+
+	/**
 		Alias for `suite()`. Suites group related tests.
 
-		Supports `.skip`, `.todo`, and `.only` shorthands.
+		Supports `.skip`, `.todo`, `.only`, and `.expectFailure` shorthands.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#describename-options-fn
 	**/
@@ -108,7 +124,7 @@ extern class Test {
 	/**
 		Creates a suite whose lifecycle is managed by the test runner.
 
-		Supports `.skip`, `.todo`, and `.only` shorthands.
+		Supports `.skip`, `.todo`, `.only`, and `.expectFailure` shorthands.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#suitename-options-fn
 	**/
