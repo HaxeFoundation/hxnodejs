@@ -34,22 +34,17 @@ import js.Promise;
 	The `dns/promises` API provides an alternative set of asynchronous DNS methods
 	that return `Promise` objects rather than using callbacks.
 
+	This binding covers the common promise-based lookup/resolve helpers.
+	It does not yet include `Resolver`, `resolveAny` / `resolveCaa` / `resolveNaptr` /
+	`resolveTlsa`, or `setDefaultResultOrder`.
+
+	`ADDRCONFIG` and `V4MAPPED` are not exported by `dns/promises` (they are `undefined`
+	there). For lookup `hints`, use `Dns.ADDRCONFIG` and `Dns.V4MAPPED`.
+
 	@see https://nodejs.org/api/dns.html#dns-promises-api
 **/
 @:jsRequire("dns/promises")
 extern class DnsPromises {
-	/**
-		A flag passed in the `hints` argument of `lookup`.
-		Same as `Dns.ADDRCONFIG`.
-	**/
-	static var ADDRCONFIG(default, null):Int;
-
-	/**
-		A flag passed in the `hints` argument of `lookup`.
-		Same as `Dns.V4MAPPED`.
-	**/
-	static var V4MAPPED(default, null):Int;
-
 	/**
 		Returns an array of IP address strings, formatted according to
 		[RFC 5952](https://tools.ietf.org/html/rfc5952), that are currently configured for DNS resolution.
