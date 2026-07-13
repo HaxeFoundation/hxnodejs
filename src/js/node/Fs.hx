@@ -25,9 +25,12 @@ package js.node;
 import haxe.DynamicAccess;
 import haxe.extern.EitherType;
 import js.node.Buffer;
+import js.node.fs.Dir;
+import js.node.fs.Dirent;
 import js.node.fs.FSWatcher;
 import js.node.fs.ReadStream;
 import js.node.fs.Stats;
+import js.node.fs.StatsFs;
 import js.node.fs.WriteStream;
 #if haxe4
 import js.lib.Error;
@@ -463,6 +466,26 @@ typedef FsConstants = {
 		File mode indicating executable by others.
 	**/
 	var S_IXOTH:Int;
+
+	/**
+		Constant for `Fs.copyFile`.
+		If present, the copy operation will fail with an error if the destination path already exists.
+	**/
+	var COPYFILE_EXCL:Int;
+
+	/**
+		Constant for `Fs.copyFile`.
+		If present, the copy operation will attempt to create a copy-on-write reflink.
+		If the underlying platform does not support copy-on-write, then a fallback copy mechanism is used.
+	**/
+	var COPYFILE_FICLONE:Int;
+
+	/**
+		Constant for `Fs.copyFile`.
+		If present, the copy operation will attempt to create a copy-on-write reflink.
+		If the underlying platform does not support copy-on-write, then the operation will fail with an error.
+	**/
+	var COPYFILE_FICLONE_FORCE:Int;
 }
 
 /**
@@ -490,6 +513,159 @@ typedef FsRmdirOptions = {
 	**/
 	@:optional var retryDelay:Int;
 }
+
+/**
+	Options for `Fs.rm` and `Fs.rmSync`.
+**/
+typedef FsRmOptions = {
+	/**
+		When `true`, exceptions will be ignored if `path` does not exist.
+		Default: `false`.
+	**/
+	@:optional var force:Bool;
+
+	/**
+		If an `EBUSY`, `EMFILE`, `ENFILE`, `ENOTEMPTY`, or `EPERM` error is encountered,
+		Node.js will retry the operation with a linear backoff wait of `retryDelay` ms longer on each try.
+		This option represents the number of retries.
+		This option is ignored if the `recursive` option is not `true`.
+		Default: `0`.
+	**/
+	@:optional var maxRetries:Int;
+
+	/**
+		If `true`, perform a recursive removal.
+		In recursive mode, operations are retried on failure.
+		Default: `false`.
+	**/
+	@:optional var recursive:Bool;
+
+	/**
+		The amount of time in milliseconds to wait between retries.
+		This option is ignored if the `recursive` option is not `true`.
+		Default: `100`.
+	**/
+	@:optional var retryDelay:Int;
+}
+
+/**
+	Options for `Fs.cp` and `Fs.cpSync`.
+**/
+typedef FsCpOptions = {
+	/**
+		Dereference symlinks.
+		Default: `false`.
+	**/
+	@:optional var dereference:Bool;
+
+	/**
+		When `force` is `false`, and the destination exists, throw an error.
+		Default: `false`.
+	**/
+	@:optional var errorOnExist:Bool;
+
+	/**
+		Function to filter copied files/directories.
+		Return `true` to copy the item, `false` to ignore it.
+		When ignoring a directory, all of its contents will be skipped as well.
+	**/
+	@:optional var filter:String->String->Bool;
+
+	/**
+		Overwrite existing file or directory.
+		The copy operation will ignore errors if you set this to `false` and the destination exists.
+		Use the `errorOnExist` option to change this behavior.
+		Default: `true`.
+	**/
+	@:optional var force:Bool;
+
+	/**
+		Modifiers for copy operation.
+		Default: `0`.
+		See `mode` flag of `Fs.copyFile`.
+	**/
+	@:optional var mode:Int;
+
+	/**
+		When `true`, timestamps from `src` will be preserved.
+		Default: `false`.
+	**/
+	@:optional var preserveTimestamps:Bool;
+
+	/**
+		Copy directories recursively.
+		Default: `false`.
+	**/
+	@:optional var recursive:Bool;
+
+	/**
+		When `true`, path resolution for symlinks will be skipped.
+		Default: `false`.
+	**/
+	@:optional var verbatimSymlinks:Bool;
+}
+
+/**
+	Options for `Fs.opendir` and `Fs.opendirSync`.
+**/
+typedef FsOpendirOptions = {
+	/**
+		Encoding for the path while opening the directory and subsequent read operations.
+		Default: `'utf8'`.
+	**/
+	@:optional var encoding:String;
+
+	/**
+		Number of directory entries that are buffered internally when reading from the directory.
+		Higher values lead to better performance but higher memory usage.
+		Default: `32`.
+	**/
+	@:optional var bufferSize:Int;
+
+	/**
+		When `true`, reads the directory recursively.
+		Default: `false`.
+	**/
+	@:optional var recursive:Bool;
+}
+
+/**
+	Options for `Fs.glob` and `Fs.globSync`.
+**/
+typedef FsGlobOptions = {
+	/**
+		Current working directory.
+		Default: `process.cwd()`.
+	**/
+	@:optional var cwd:String;
+
+	/**
+		Function to filter out files/directories, or a list of glob patterns to be excluded.
+		If a function is provided, return `true` to exclude the item, `false` to include it.
+	**/
+	@:optional var exclude:EitherType<String->Bool, Array<String>>;
+
+	/**
+		When `true`, symbolic links to directories are followed while expanding `**` patterns.
+		Default: `false`.
+	**/
+	@:optional var followSymlinks:Bool;
+
+	/**
+		`true` if the glob should return paths as `Dirent`s, `false` otherwise.
+		Default: `false`.
+	**/
+	@:optional var withFileTypes:Bool;
+}
+
+/**
+	A buffer descriptor for `Fs.readv` / `Fs.writev`.
+**/
+typedef FsVectorBuffer = EitherType<Buffer, {
+	var buffer:Buffer;
+	@:optional var offset:Int;
+	@:optional var length:Int;
+}>;
 
 /**
 	File I/O is provided by simple wrappers around standard POSIX functions.
@@ -520,6 +696,45 @@ extern class Fs {
 		Synchronous rename(2).
 	**/
 	static function renameSync(oldPath:FsPath, newPath:FsPath):Void;
+
+	/**
+		Asynchronously copies `src` to `dest`.
+		By default, `dest` is overwritten if it already exists.
+
+		No arguments other than a possible exception are given to the callback function.
+
+		`mode` is an optional integer that specifies the behavior of the copy operation.
+		It is possible to create a mask consisting of the bitwise OR of two or more values
+		(e.g. `Fs.constants.COPYFILE_EXCL | Fs.constants.COPYFILE_FICLONE`).
+	**/
+	@:overload(function(src:FsPath, dest:FsPath, callback:Error->Void):Void {})
+	static function copyFile(src:FsPath, dest:FsPath, mode:Int, callback:Error->Void):Void;
+
+	/**
+		Synchronously copies `src` to `dest`.
+		By default, `dest` is overwritten if it already exists.
+
+		`mode` is an optional integer that specifies the behavior of the copy operation.
+		See `copyFile` for details.
+	**/
+	@:overload(function(src:FsPath, dest:FsPath):Void {})
+	static function copyFileSync(src:FsPath, dest:FsPath, mode:Int):Void;
+
+	/**
+		Asynchronously copies the entire directory structure from `src` to `dest`,
+		including subdirectories and files.
+
+		When copying a directory to another directory, globs are not supported and
+		behavior is similar to `cp dir1/ dir2/`.
+	**/
+	@:overload(function(src:FsPath, dest:FsPath, callback:Error->Void):Void {})
+	static function cp(src:FsPath, dest:FsPath, options:FsCpOptions, callback:Error->Void):Void;
+
+	/**
+		Synchronously copies the entire directory structure from `src` to `dest`,
+		including subdirectories and files.
+	**/
+	static function cpSync(src:FsPath, dest:FsPath, ?options:FsCpOptions):Void;
 
 	/**
 		Asynchronous ftruncate(2).
@@ -639,6 +854,20 @@ extern class Fs {
 	static function fstatSync(fd:Int):Stats;
 
 	/**
+		Asynchronous statfs(2).
+		Returns information about the mounted file system which contains `path`.
+
+		The callback gets two arguments `(err, stats)` where `stats` is a `StatsFs` object.
+	**/
+	static function statfs(path:FsPath, callback:Error->StatsFs->Void):Void;
+
+	/**
+		Synchronous statfs(2).
+		Returns information about the mounted file system which contains `path`.
+	**/
+	static function statfsSync(path:FsPath):StatsFs;
+
+	/**
 		Asynchronous link(2).
 	**/
 	static function link(srcpath:FsPath, dstpath:FsPath, callback:Error->Void):Void;
@@ -707,6 +936,22 @@ extern class Fs {
 	static function unlinkSync(path:FsPath):Void;
 
 	/**
+		Asynchronously removes files and directories (modeled on the standard POSIX `rm` utility).
+
+		No arguments other than a possible exception are given to the completion callback.
+
+		To get a behavior similar to the `rm -rf` Unix command, use `Fs.rm` with options
+		`{ recursive: true, force: true }`.
+	**/
+	@:overload(function(path:FsPath, callback:Error->Void):Void {})
+	static function rm(path:FsPath, options:FsRmOptions, callback:Error->Void):Void;
+
+	/**
+		Synchronously removes files and directories (modeled on the standard POSIX `rm` utility).
+	**/
+	static function rmSync(path:FsPath, ?options:FsRmOptions):Void;
+
+	/**
 		Asynchronous rmdir(2).
 	**/
 	@:overload(function(path:FsPath, callback:Error->Void):Void {})
@@ -761,6 +1006,55 @@ extern class Fs {
 	static function readdirSync(path:FsPath):Array<String>;
 
 	/**
+		Asynchronously open a directory for iterative scanning.
+		See the POSIX opendir(3) documentation for more details.
+
+		Creates a `Dir`, which contains all further functions for reading from
+		and cleaning up the directory.
+
+		The `callback` gets two arguments `(err, dir)`.
+	**/
+	@:overload(function(path:FsPath, callback:Error->Dir->Void):Void {})
+	static function opendir(path:FsPath, options:FsOpendirOptions, callback:Error->Dir->Void):Void;
+
+	/**
+		Synchronously open a directory.
+		See `opendir` for more details.
+	**/
+	static function opendirSync(path:FsPath, ?options:FsOpendirOptions):Dir;
+
+	/**
+		Retrieves the files matching the specified pattern.
+
+		The `callback` gets two arguments `(err, matches)`.
+		When `options.withFileTypes` is `true`, `matches` is an array of `Dirent` objects;
+		otherwise it is an array of path strings.
+	**/
+	@:overload(function(pattern:EitherType<String, Array<String>>, callback:Error->Array<String>->Void):Void {})
+	@:overload(function(pattern:EitherType<String, Array<String>>, options:FsGlobOptions, callback:Error->Array<String>->Void):Void {})
+	static function glob(pattern:EitherType<String, Array<String>>, options:{
+		?cwd:String,
+		?exclude:EitherType<String->Bool, Array<String>>,
+		?followSymlinks:Bool,
+		withFileTypes:Bool
+	}, callback:Error->Array<Dirent>->Void):Void;
+
+	/**
+		Synchronously retrieves the files matching the specified pattern.
+
+		When `options.withFileTypes` is `true`, returns an array of `Dirent` objects;
+		otherwise returns an array of path strings.
+	**/
+	@:overload(function(pattern:EitherType<String, Array<String>>):Array<String> {})
+	@:overload(function(pattern:EitherType<String, Array<String>>, options:FsGlobOptions):Array<String> {})
+	static function globSync(pattern:EitherType<String, Array<String>>, options:{
+		?cwd:String,
+		?exclude:EitherType<String->Bool, Array<String>>,
+		?followSymlinks:Bool,
+		withFileTypes:Bool
+	}):Array<Dirent>;
+
+	/**
 		Asynchronous close(2).
 	**/
 	static function close(fd:Int, callback:Error->Void):Void;
@@ -810,6 +1104,20 @@ extern class Fs {
 	static function futimesSync(fd:Int, atime:Date, mtime:Date):Void;
 
 	/**
+		Change the file system timestamps of the symbolic link referenced by `path`.
+
+		Same as `utimes`, except that if the path refers to a symbolic link,
+		then the link is not dereferenced: instead, the timestamps of the symbolic link itself are changed.
+	**/
+	static function lutimes(path:FsPath, atime:Date, mtime:Date, callback:Error->Void):Void;
+
+	/**
+		Change the file system timestamps of the symbolic link referenced by `path`.
+		This is the synchronous version of `lutimes`.
+	**/
+	static function lutimesSync(path:FsPath, atime:Date, mtime:Date):Void;
+
+	/**
 		Asynchronous fsync(2).
 	**/
 	static function fsync(fd:Int, callback:Error->Void):Void;
@@ -818,6 +1126,22 @@ extern class Fs {
 		Synchronous fsync(2).
 	**/
 	static function fsyncSync(fd:Int):Void;
+
+	/**
+		Asynchronous fdatasync(2).
+
+		Forces all currently queued I/O operations associated with the file to the
+		operating system's synchronized I/O completion state.
+		Refer to the POSIX fdatasync(2) documentation for details.
+
+		No arguments other than a possible exception are given to the completion callback.
+	**/
+	static function fdatasync(fd:Int, callback:Error->Void):Void;
+
+	/**
+		Synchronous fdatasync(2).
+	**/
+	static function fdatasyncSync(fd:Int):Void;
 
 	/**
 		Documentation for the overloads with the `buffer` argument:
@@ -875,6 +1199,23 @@ extern class Fs {
 	static function writeSync(fd:Int, buffer:Buffer, offset:Int, length:Int, ?position:Int):Int;
 
 	/**
+		Write an array of buffers to the file specified by `fd` using writev().
+
+		`position` is the offset from the beginning of the file where this data should be written.
+		If `position` is not a number, the data will be written at the current position.
+
+		The callback will be given three arguments: `(err, bytesWritten, buffers)`.
+		`bytesWritten` is how many bytes were written from `buffers`.
+	**/
+	@:overload(function(fd:Int, buffers:Array<FsVectorBuffer>, callback:Error->Int->Array<FsVectorBuffer>->Void):Void {})
+	static function writev(fd:Int, buffers:Array<FsVectorBuffer>, position:Int, callback:Error->Int->Array<FsVectorBuffer>->Void):Void;
+
+	/**
+		Synchronous version of `writev`. Returns the number of bytes written.
+	**/
+	static function writevSync(fd:Int, buffers:Array<FsVectorBuffer>, ?position:Int):Int;
+
+	/**
 		Read data from the file specified by `fd`.
 
 		`buffer` is the buffer that the data will be written to.
@@ -894,6 +1235,23 @@ extern class Fs {
 		Synchronous version of `read`. Returns the number of bytes read.
 	**/
 	static function readSync(fd:Int, buffer:Buffer, offset:Int, length:Int, position:Null<Int>):Int;
+
+	/**
+		Read from a file specified by `fd` and write to an array of buffers using readv().
+
+		`position` is the offset from the beginning of the file from where data should be read.
+		If `position` is not a number, the data will be read from the current position.
+
+		The callback will be given three arguments: `(err, bytesRead, buffers)`.
+		`bytesRead` is how many bytes were read from the file.
+	**/
+	@:overload(function(fd:Int, buffers:Array<FsVectorBuffer>, callback:Error->Int->Array<FsVectorBuffer>->Void):Void {})
+	static function readv(fd:Int, buffers:Array<FsVectorBuffer>, position:Int, callback:Error->Int->Array<FsVectorBuffer>->Void):Void;
+
+	/**
+		Synchronous version of `readv`. Returns the number of bytes read.
+	**/
+	static function readvSync(fd:Int, buffers:Array<FsVectorBuffer>, ?position:Int):Int;
 
 	/**
 		Asynchronously reads the entire contents of a file.
