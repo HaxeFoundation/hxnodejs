@@ -24,6 +24,10 @@ class ImportAll {
 				Context.getType(typePath);
 			}
 		}
+		#if haxe5
+		Context.onAfterInitMacros(() -> loop([]));
+		#else
 		loop([]);
+		#end
 	}
 }
