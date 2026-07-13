@@ -64,6 +64,8 @@ enum abstract ClientHttp2StreamEvent<T:haxe.Constraints.Function>(Event<T>) to E
 
 /**
 	An `Http2Stream` for use on an HTTP/2 client.
+	The class is not exported directly by the `node:http2` module.
+
+	@see https://nodejs.org/api/http2.html#class-clienthttp2stream
 **/
-@:jsRequire("http2", "ClientHttp2Stream")
 extern class ClientHttp2Stream extends Http2Stream {}

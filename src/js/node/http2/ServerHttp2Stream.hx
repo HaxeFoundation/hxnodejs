@@ -34,8 +34,10 @@ import js.Error;
 
 /**
 	An `Http2Stream` for use on an HTTP/2 server.
+	The class is not exported directly by the `node:http2` module.
+
+	@see https://nodejs.org/api/http2.html#class-serverhttp2stream
 **/
-@:jsRequire("http2", "ServerHttp2Stream")
 extern class ServerHttp2Stream extends Http2Stream {
 	/**
 		`true` if headers were sent, `false` otherwise.

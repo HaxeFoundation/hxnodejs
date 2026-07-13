@@ -111,8 +111,10 @@ enum abstract Http2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 	The `Http2Session` class represents an active communications session between an HTTP/2 client and server.
 
 	Instances of this class are not intended to be constructed directly by user code.
+	The class is not exported directly by the `node:http2` module.
+
+	@see https://nodejs.org/api/http2.html#class-http2session
 **/
-@:jsRequire("http2", "Http2Session")
 extern class Http2Session extends EventEmitter<Http2Session> {
 	/**
 		Value will be `undefined` if the session is not yet connected to a socket,

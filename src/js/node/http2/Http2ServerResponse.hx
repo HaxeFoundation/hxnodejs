@@ -70,6 +70,11 @@ extern class Http2ServerResponse extends Writable<Http2ServerResponse> {
 	function appendHeader(name:String, value:String):Void;
 
 	/**
+		Flushes the response headers to the client.
+	**/
+	function flushHeaders():Void;
+
+	/**
 		See `response.socket`.
 	**/
 	@:deprecated("Use response.socket instead")
@@ -138,6 +143,13 @@ extern class Http2ServerResponse extends Writable<Http2ServerResponse> {
 	function setHeader(name:String, value:String):Void;
 
 	/**
+		Sets a single trailing header value.
+		Must be called before the trailers are flushed.
+	**/
+	@:overload(function(name:String, value:Array<String>):Void {})
+	function setTrailer(name:String, value:String):Void;
+
+	/**
 		Sets the `Http2Stream`'s timeout value to `msecs`.
 	**/
 	function setTimeout(msecs:Int, ?callback:Void->Void):Http2ServerResponse;
@@ -175,6 +187,7 @@ extern class Http2ServerResponse extends Writable<Http2ServerResponse> {
 
 	/**
 		Sends an arbitrary HTTP 1xx informational response.
+		Added in Node.js v24.18.0 (Active LTS); not available on Maintenance LTS 22.x.
 	**/
 	function writeInformation(statusCode:Int, ?headers:Http2Headers):Bool;
 

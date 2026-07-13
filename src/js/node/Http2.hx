@@ -153,7 +153,7 @@ typedef Http2SessionOptions = {
 
 	/**
 		Timeout in milliseconds when an `'unknownProtocol'` event is emitted.
-		Default: `100000`.
+		Default: `10000`.
 	**/
 	@:optional var unknownProtocolTimeout:Int;
 
@@ -221,15 +221,35 @@ typedef Http2ServerOptions = {
 	@:optional var streamResetBurst:Int;
 	@:optional var streamResetRate:Int;
 
+	/**
+		Deprecated. Use `http1Options.IncomingMessage` instead.
+		See DEP0202.
+	**/
 	@:deprecated("Use http1Options.IncomingMessage instead")
 	@:optional var Http1IncomingMessage:Class<Dynamic>;
 
+	/**
+		Deprecated. Use `http1Options.ServerResponse` instead.
+		See DEP0202.
+	**/
 	@:deprecated("Use http1Options.ServerResponse instead")
 	@:optional var Http1ServerResponse:Class<Dynamic>;
 
+	/**
+		Options for configuring the HTTP/1 fallback when `allowHTTP1` is `true`.
+		Added in Node.js v24.15.0 (Active LTS); not available on Maintenance LTS 22.x.
+	**/
 	@:optional var http1Options:Http2Http1Options;
+
 	@:optional var Http2ServerRequest:Class<Dynamic>;
 	@:optional var Http2ServerResponse:Class<Dynamic>;
+
+	/**
+		If `true`, strict validation is used for headers and trailers defined as
+		having only a single value.
+		Default: `true`.
+		Added in Node.js v24.15.0 (Active LTS); not available on Maintenance LTS 22.x.
+	**/
 	@:optional var strictSingleValueFields:Bool;
 }
 
@@ -277,7 +297,13 @@ typedef Http2ServerStreamResponseOptions = {
 typedef Http2PushStreamOptions = {
 	@:optional var exclusive:Bool;
 	@:optional var parent:Int;
+
+	/**
+		Priority signaling is deprecated (RFC 9113). Ignored with a runtime warning since Node.js v24.2.0.
+	**/
+	@:deprecated("Priority signaling is no longer supported in Node.js")
 	@:optional var weight:Int;
+
 	@:optional var silent:Bool;
 }
 

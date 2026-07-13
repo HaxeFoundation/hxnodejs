@@ -51,9 +51,11 @@ enum abstract Http2StreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T
 	var Ready:Http2StreamEvent<Void->Void> = "ready";
 
 	/**
-		Emitted when the `Http2Stream` instance is closed.
+		Emitted when the `Http2Stream` is destroyed (Duplex `'close'`).
+		No listener arguments; use `stream.rstCode` for the `RST_STREAM` error code.
+		(The legacy `'streamClosed'` event is no longer emitted on Node.js LTS.)
 	**/
-	var StreamClosed:Http2StreamEvent<Int->Void> = "streamClosed";
+	var Close:Http2StreamEvent<Void->Void> = "close";
 
 	/**
 		Emitted after the stream times out due to inactivity.
@@ -77,8 +79,10 @@ enum abstract Http2StreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T
 
 /**
 	A duplex `Http2Stream` class representing a bidirectional HTTP/2 stream.
+	The class is not exported directly by the `node:http2` module.
+
+	@see https://nodejs.org/api/http2.html#class-http2stream
 **/
-@:jsRequire("http2", "Http2Stream")
 extern class Http2Stream extends Duplex<Http2Stream> {
 	/**
 		`true` if the `Http2Stream` instance was aborted abnormally.

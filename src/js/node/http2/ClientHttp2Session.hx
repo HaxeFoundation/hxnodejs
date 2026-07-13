@@ -66,8 +66,10 @@ enum abstract ClientHttp2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to 
 
 /**
 	An `Http2Session` for use on an HTTP/2 client.
+	The class is not exported directly by the `node:http2` module.
+
+	@see https://nodejs.org/api/http2.html#class-clienthttp2session
 **/
-@:jsRequire("http2", "ClientHttp2Session")
 extern class ClientHttp2Session extends Http2Session {
 	/**
 		Creates and returns an `Http2Stream` instance that can be used to send an HTTP/2 request.
