@@ -118,10 +118,17 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	static function setMaxListeners(n:Int, emitters:Rest<IEventEmitter>):Void;
 
 	/**
+		Returns the currently set max amount of listeners for the given emitter.
+
+		@see https://nodejs.org/api/events.html#eventsgetmaxlistenersemitterortarget
+	**/
+	static function getMaxListeners(emitter:IEventEmitter):Int;
+
+	/**
 		A class method that returns the number of listeners for the given `eventName`
 		registered on the given `emitter`.
 
-		@see https://nodejs.org/api/events.html#eventsemitterlistenercountemitter-eventname
+		@see https://nodejs.org/api/events.html#eventslistenercountemitterortarget-eventname
 	**/
 	static function listenerCount(emitter:IEventEmitter, eventName:Event<Function>):Int;
 

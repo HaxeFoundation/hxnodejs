@@ -286,6 +286,13 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	// --------- static API  --------------------------------------------------
 	// TODO @:overload(function<T>(iterable:AsyncIterator<T>, ?options:ReadableNewOptions):IReadable {})
 	static function from<T>(iterable:Iterator<T>, ?options:ReadableNewOptions):IReadable;
+
+	/**
+		Returns whether the stream has been read from or cancelled.
+
+		@see https://nodejs.org/api/stream.html#streamreadableisdisturbedstream
+	**/
+	static function isDisturbed(stream:Dynamic):Bool;
 }
 
 /**
