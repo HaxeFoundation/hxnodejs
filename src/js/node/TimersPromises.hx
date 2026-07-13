@@ -22,7 +22,7 @@
 
 package js.node;
 
-import js.html.AbortSignal;
+import js.node.web.AbortSignal;
 #if haxe4
 import js.lib.Promise;
 #else
@@ -37,8 +37,7 @@ import js.Promise;
 @:jsRequire("timers/promises")
 extern class TimersPromises {
 	/**
-		Schedules execution of a one-time `callback` after `delay` milliseconds and returns a Promise.
-		The Promise is fulfilled with `value` after `delay` milliseconds.
+		Returns a Promise that is fulfilled with `value` after `delay` milliseconds.
 	**/
 	@:overload(function():Promise<Dynamic> {})
 	@:overload(function(delay:Int):Promise<Dynamic> {})
@@ -46,8 +45,8 @@ extern class TimersPromises {
 	static function setTimeout<T>(delay:Int, value:T, options:TimersPromisesOptions):Promise<T>;
 
 	/**
-		Schedules the "immediate" execution of `callback` after I/O events' callbacks and returns a Promise.
-		The Promise is fulfilled with `value`.
+		Returns a Promise that is fulfilled with `value` in the next iteration of the event loop
+		(after I/O events' callbacks).
 	**/
 	@:overload(function():Promise<Dynamic> {})
 	@:overload(function<T>(value:T):Promise<T> {})
