@@ -159,22 +159,6 @@ typedef StreamFinishedOptions = {
 **/
 typedef StreamPipelineOptions = {
 	/**
-		If present, the pipeline will be destroyed when the signal is aborted.
-	**/
-	@:optional var signal:AbortSignal;
-
-	/**
-		End the destination stream when the source stream ends.
-		Default: `true`.
-	**/
-	@:optional var end:Bool;
-}
-
-/**
-	Options for `Stream.pipeline` / `StreamPromises.pipeline`.
-**/
-typedef StreamPipelineOptions = {
-	/**
 		If specified, the pipeline will abort when the signal is aborted.
 	**/
 	@:optional var signal:AbortSignal;
