@@ -1,0 +1,27 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        haxe_ver: [3.4.7, 4.3.7, latest]
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - uses: krdlab/setup-haxe@v2
+      with:
+        haxe-version: ${{ matrix.haxe_ver }}
+
+    - run: haxelib dev hxnodejs .
+      name: Set haxelib dev path
+
+    - run: |
+        haxe build.hxml
+        haxelib git dox https://github.com/HaxeFoundation/dox
+        haxe doc.hxml
+      name: Build
+
