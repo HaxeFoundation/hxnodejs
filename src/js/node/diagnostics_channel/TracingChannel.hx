@@ -91,34 +91,33 @@ typedef TracingChannelSubscribers = {
 
 	@see https://nodejs.org/docs/latest-v24.x/api/diagnostics_channel.html#class-tracingchannel
 **/
-@:jsRequire("diagnostics_channel", "TracingChannel")
 extern class TracingChannel {
 	private function new();
 
 	/**
 		Channel for the `start` event (`tracing:${name}:start`).
 	**/
-	var start:Channel;
+	var start(default, never):Channel;
 
 	/**
 		Channel for the `end` event (`tracing:${name}:end`).
 	**/
-	var end:Channel;
+	var end(default, never):Channel;
 
 	/**
 		Channel for the `asyncStart` event (`tracing:${name}:asyncStart`).
 	**/
-	var asyncStart:Channel;
+	var asyncStart(default, never):Channel;
 
 	/**
 		Channel for the `asyncEnd` event (`tracing:${name}:asyncEnd`).
 	**/
-	var asyncEnd:Channel;
+	var asyncEnd(default, never):Channel;
 
 	/**
 		Channel for the `error` event (`tracing:${name}:error`).
 	**/
-	var error:Channel;
+	var error(default, never):Channel;
 
 	/**
 		This is a helper to check if any of the TracingChannel Channels have subscribers.
