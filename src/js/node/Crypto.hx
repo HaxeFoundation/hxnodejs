@@ -28,8 +28,12 @@ import js.node.crypto.*;
 import js.node.crypto.DiffieHellman.IDiffieHellman;
 import js.node.tls.SecureContext;
 #if haxe4
+import js.lib.ArrayBuffer;
+import js.lib.ArrayBufferView;
 import js.lib.Error;
 #else
+import js.html.ArrayBuffer;
+import js.html.ArrayBufferView;
 import js.Error;
 #end
 
@@ -89,13 +93,38 @@ extern class Crypto {
 	/**
 		Property for checking and controlling whether a FIPS compliant crypto provider is currently in use.
 		Setting to true requires a FIPS build of Node.js.
+
+		Deprecated since Node.js v10.0.0. Use `getFips` / `setFips` instead.
 	**/
+	@:deprecated
 	static var fips:Bool;
+
+	/**
+		Returns `1` if and only if a FIPS compliant crypto provider is currently in use, `0` otherwise.
+	**/
+	static function getFips():Int;
+
+	/**
+		Enables the FIPS compliant crypto provider in a FIPS-enabled Node.js build.
+		Throws an error if FIPS mode is not available.
+	**/
+	static function setFips(bool:Bool):Void;
 
 	/**
 		Returns an array with the names of the supported ciphers.
 	**/
 	static function getCiphers():Array<String>;
+
+	/**
+		Returns information about a given cipher.
+
+		Some ciphers accept variable length keys and initialization vectors.
+		By default, the method will return the default values for these ciphers.
+		To test if a given key length or IV length is acceptable for a given cipher,
+		use the `keyLength` and `ivLength` options.
+		If the given values are unacceptable, `null`/`undefined` will be returned.
+	**/
+	static function getCipherInfo(nameOrNid:EitherType<String, Int>, ?options:CipherInfoOptions):Null<CipherInfo>;
 
 	/**
 		Returns an array with the names of the supported hash algorithms.
@@ -223,6 +252,37 @@ extern class Crypto {
 	static function pbkdf2Sync(password:EitherType<String, Buffer>, salt:EitherType<String, Buffer>, iterations:Int, keylen:Int, ?digest:String):Buffer;
 
 	/**
+		Provides an asynchronous scrypt implementation.
+		Scrypt is a password-based key derivation function that is designed to be expensive
+		computationally and memory-wise in order to make brute-force attacks unrewarding.
+	**/
+	@:overload(function(password:EitherType<String, Buffer>, salt:EitherType<String, Buffer>, keylen:Int, options:ScryptOptions,
+		callback:Error->Buffer->Void):Void {})
+	static function scrypt(password:EitherType<String, Buffer>, salt:EitherType<String, Buffer>, keylen:Int, callback:Error->Buffer->Void):Void;
+
+	/**
+		Provides a synchronous scrypt implementation.
+	**/
+	static function scryptSync(password:EitherType<String, Buffer>, salt:EitherType<String, Buffer>, keylen:Int, ?options:ScryptOptions):Buffer;
+
+	/**
+		HKDF is a simple key derivation function defined in RFC 5869.
+		The given `ikm`, `salt` and `info` are used with the `digest` to derive a key of `keylen` bytes.
+
+		The successfully generated derived key is passed to the callback as an `ArrayBuffer`.
+	**/
+	static function hkdf(digest:String, ikm:EitherType<String, Buffer>, salt:EitherType<String, Buffer>, info:EitherType<String, Buffer>, keylen:Int,
+		callback:Error->ArrayBuffer->Void):Void;
+
+	/**
+		Provides a synchronous HKDF key derivation function as defined in RFC 5869.
+
+		Returns the derived key as an `ArrayBuffer`.
+	**/
+	static function hkdfSync(digest:String, ikm:EitherType<String, Buffer>, salt:EitherType<String, Buffer>, info:EitherType<String, Buffer>,
+		keylen:Int):ArrayBuffer;
+
+	/**
 		Generates cryptographically strong pseudo-random data.
 
 		If `callback` is specified, the function runs asynchronously, otherwise it will block and synchronously
@@ -234,6 +294,69 @@ extern class Crypto {
 	**/
 	@:overload(function(size:Int, callback:Error->Buffer->Void):Void {})
 	static function randomBytes(size:Int):Buffer;
+
+	/**
+		This function is similar to `randomBytes` but requires the first argument to be a `Buffer` or `TypedArray`
+		that will be filled. It also requires that a callback is passed in.
+
+		The supplied callback is invoked with two arguments: `err` and `buf`.
+		The `buf` argument is a reference to the `buffer` filled with random data.
+	**/
+	@:overload(function<T>(buffer:T, offset:Int, callback:Error->T->Void):Void {})
+	@:overload(function<T>(buffer:T, offset:Int, size:Int, callback:Error->T->Void):Void {})
+	static function randomFill<T>(buffer:T, callback:Error->T->Void):Void;
+
+	/**
+		Synchronous version of `randomFill`. Returns the filled buffer.
+	**/
+	@:overload(function<T>(buffer:T, offset:Int):T {})
+	@:overload(function<T>(buffer:T, offset:Int, size:Int):T {})
+	static function randomFillSync<T>(buffer:T):T;
+
+	/**
+		Return a random integer `n` such that `min <= n < max`.
+		This implementation avoids modulo bias.
+
+		The range (`max - min`) must be less than 2^48. `min` and `max` must be safe integers.
+
+		If the callback function is not provided, the random integer is generated synchronously.
+	**/
+	@:overload(function(max:Int, callback:Error->Int->Void):Void {})
+	@:overload(function(min:Int, max:Int):Int {})
+	@:overload(function(min:Int, max:Int, callback:Error->Int->Void):Void {})
+	static function randomInt(max:Int):Int;
+
+	/**
+		Generates a random RFC 4122 version 4 UUID.
+		The UUID is generated using a cryptographic pseudorandom number generator.
+	**/
+	static function randomUUID(?options:RandomUUIDOptions):String;
+
+	/**
+		Generates a random RFC 9562 version 7 UUID.
+		The UUID contains a millisecond precision Unix timestamp in the most significant 48 bits,
+		followed by cryptographically secure random bits for the remaining fields.
+		Added in Node.js v24.16.0 (Active LTS).
+	**/
+	static function randomUUIDv7(?options:RandomUUIDOptions):String;
+
+	/**
+		Compares the underlying bytes that represent the given `ArrayBuffer`, `Buffer`,
+		or `ArrayBufferView` instances using a constant-time algorithm.
+		`a` and `b` must have the same byte length.
+	**/
+	static function timingSafeEqual(a:CryptoArrayBufferLike, b:CryptoArrayBufferLike):Bool;
+
+	/**
+		Checks the primality of the `candidate`.
+	**/
+	@:overload(function(candidate:CryptoArrayBufferLike, options:CheckPrimeOptions, callback:Error->Bool->Void):Void {})
+	static function checkPrime(candidate:CryptoArrayBufferLike, callback:Error->Bool->Void):Void;
+
+	/**
+		Checks the primality of the `candidate` (synchronous version).
+	**/
+	static function checkPrimeSync(candidate:CryptoArrayBufferLike, ?options:CheckPrimeOptions):Bool;
 
 	/**
 		Decrypts `buffer` with `private_key`.
@@ -303,4 +426,130 @@ typedef CryptoKeyOptions = {
 		* `Constants.RSA_PKCS1_OAEP_PADDING`
 	**/
 	@:optional var padding:Int;
+}
+
+/**
+	Binary input accepted by several crypto helpers (`ArrayBuffer`, `Buffer`, or `ArrayBufferView`).
+**/
+typedef CryptoArrayBufferLike = EitherType<ArrayBuffer, EitherType<Buffer, ArrayBufferView>>;
+
+/**
+	Options for `Crypto.scrypt` and `Crypto.scryptSync`.
+**/
+typedef ScryptOptions = {
+	/**
+		CPU/memory cost parameter. Must be a power of two greater than one. Default: `16384`.
+		Only one of `cost` or `N` may be specified.
+	**/
+	@:optional var cost:Int;
+
+	/**
+		Block size parameter. Default: `8`.
+		Only one of `blockSize` or `r` may be specified.
+	**/
+	@:optional var blockSize:Int;
+
+	/**
+		Parallelization parameter. Default: `1`.
+		Only one of `parallelization` or `p` may be specified.
+	**/
+	@:optional var parallelization:Int;
+
+	/**
+		Alias for `cost`. Only one of `cost` or `N` may be specified.
+	**/
+	@:optional var N:Int;
+
+	/**
+		Alias for `blockSize`. Only one of `blockSize` or `r` may be specified.
+	**/
+	@:optional var r:Int;
+
+	/**
+		Alias for `parallelization`. Only one of `parallelization` or `p` may be specified.
+	**/
+	@:optional var p:Int;
+
+	/**
+		Memory upper bound. It is an error when (approximately) `128 * N * r > maxmem`.
+		Default: `32 * 1024 * 1024`.
+	**/
+	@:optional var maxmem:Int;
+}
+
+/**
+	Options for `Crypto.randomUUID`.
+**/
+typedef RandomUUIDOptions = {
+	/**
+		By default, to improve performance, Node.js generates and caches enough random data
+		to generate up to 128 random UUIDs. To generate a UUID without using the cache,
+		set `disableEntropyCache` to `true`. Default: `false`.
+	**/
+	@:optional var disableEntropyCache:Bool;
+}
+
+/**
+	Options for `Crypto.checkPrime` and `Crypto.checkPrimeSync`.
+**/
+typedef CheckPrimeOptions = {
+	/**
+		The number of Miller-Rabin probabilistic primality iterations to perform.
+		When the value is `0`, a number of checks is used that yields a false positive rate
+		of at most 2^-64 for random input. Default: `0`.
+	**/
+	@:optional var checks:Int;
+}
+
+/**
+	Options for `Crypto.getCipherInfo`.
+**/
+typedef CipherInfoOptions = {
+	/**
+		A test key length.
+	**/
+	@:optional var keyLength:Int;
+
+	/**
+		A test IV length.
+	**/
+	@:optional var ivLength:Int;
+}
+
+/**
+	Information about a cipher returned by `Crypto.getCipherInfo`.
+**/
+typedef CipherInfo = {
+	/**
+		The name of the cipher.
+	**/
+	var name:String;
+
+	/**
+		The nid of the cipher.
+	**/
+	var nid:Int;
+
+	/**
+		The block size of the cipher in bytes.
+		This property is omitted when `mode` is `'stream'`.
+	**/
+	@:optional var blockSize:Int;
+
+	/**
+		The expected or default initialization vector length in bytes.
+		This property is omitted if the cipher does not use an initialization vector.
+	**/
+	@:optional var ivLength:Int;
+
+	/**
+		The expected or default key length in bytes.
+	**/
+	@:optional var keyLength:Int;
+
+	/**
+		The cipher mode. One of `'cbc'`, `'ccm'`, `'cfb'`, `'ctr'`, `'ecb'`, `'gcm'`,
+		`'ocb'`, `'ofb'`, `'stream'`, `'wrap'`, `'xts'`.
+	**/
+	@:optional var mode:String;
 }
