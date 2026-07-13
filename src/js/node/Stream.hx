@@ -23,6 +23,7 @@
 package js.node;
 
 import haxe.extern.Rest;
+import js.html.AbortSignal;
 import js.node.events.EventEmitter;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
@@ -62,6 +63,95 @@ extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements 
 	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
 		writable6:IWritable, writable7:IWritable, writable8:IWritable, callback:Null<Error>->Void):Void {})
 	static function pipeline(readable:IReadable, streams:Rest<IWritable>):Promise<Void>;
+
+	/**
+		A module method to wait for a readable or writable stream to finish.
+
+		The callback form returns a cleanup function that removes registered listeners.
+
+		@see https://nodejs.org/api/stream.html#streamfinishedstream-options-callback
+	**/
+	@:overload(function(stream:IStream, callback:Null<Error>->Void):Void->Void {})
+	@:overload(function(stream:IStream, options:StreamFinishedOptions, callback:Null<Error>->Void):Void->Void {})
+	static function finished(stream:IStream, ?options:StreamFinishedOptions):Promise<Void>;
+
+	/**
+		Returns whether the stream is readable.
+
+		Returns `null` if `stream` is not a valid readable stream.
+
+		@see https://nodejs.org/api/stream.html#streamisreadablestream
+	**/
+	static function isReadable(stream:Dynamic):Null<Bool>;
+
+	/**
+		Returns whether the stream is writable.
+
+		Returns `null` if `stream` is not a valid writable stream.
+
+		@see https://nodejs.org/api/stream.html#streamiswritablestream
+	**/
+	static function isWritable(stream:Dynamic):Null<Bool>;
+
+	/**
+		Returns whether the stream has been destroyed.
+
+		Exported by the `stream` module (undocumented helper; available since Node 16+).
+	**/
+	static function isDestroyed(stream:Dynamic):Bool;
+
+	/**
+		Returns whether the stream has been read from or cancelled.
+
+		Also available as `Readable.isDisturbed`.
+
+		@see https://nodejs.org/api/stream.html#streamreadableisdisturbedstream
+	**/
+	static function isDisturbed(stream:Dynamic):Bool;
+
+	/**
+		Returns whether the stream has encountered an error.
+
+		@see https://nodejs.org/api/stream.html#streamiserroredstream
+	**/
+	static function isErrored(stream:Dynamic):Bool;
+}
+
+/**
+	Options for `Stream.finished`.
+**/
+typedef StreamFinishedOptions = {
+	/**
+		If set to `false`, then a call to `emit('error', err)` is not treated as finished.
+		Default: `true`.
+	**/
+	@:optional var error:Bool;
+
+	/**
+		When set to `false`, the callback / Promise will resolve when the stream ends
+		even though the stream might still be readable.
+		Default: `true`.
+	**/
+	@:optional var readable:Bool;
+
+	/**
+		When set to `false`, the callback / Promise will resolve when the stream ends
+		even though the stream might still be writable.
+		Default: `true`.
+	**/
+	@:optional var writable:Bool;
+
+	/**
+		Allows aborting the wait for the stream to finish. The underlying stream is not
+		aborted if the signal is aborted. The callback / Promise rejects with an `AbortError`.
+	**/
+	@:optional var signal:AbortSignal;
+
+	/**
+		If `true`, removes the listeners registered by this function before the Promise is fulfilled.
+		Only used by the Promise form of `finished`. Default: `false`.
+	**/
+	@:optional var cleanup:Bool;
 }
 
 /**
