@@ -213,8 +213,20 @@ extern class Tls {
 
 		Valid values for `type` are `'default'`, `'system'`, `'bundled'` and `'extra'`.
 		Default: `'default'`.
+
+		@see https://nodejs.org/api/tls.html#tlsgetcacertificatestype
 	**/
 	static function getCACertificates(?type:String):Array<String>;
+
+	/**
+		Sets the default CA certificates used by Node.js TLS clients.
+		If the provided certificates are parsed successfully, they become the default CA
+		certificate list returned by `getCACertificates()` and used by subsequent TLS
+		connections that don't specify their own CA certificates.
+
+		@see https://nodejs.org/api/tls.html#tlssetdefaultcacertificatescerts
+	**/
+	static function setDefaultCACertificates(certs:Array<EitherType<String, Buffer>>):Void;
 
 	/**
 		Returns an array with the names of the supported SSL ciphers.

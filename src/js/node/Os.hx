@@ -118,7 +118,7 @@ extern class Os {
 	static function loadavg():Array<Float>;
 
 	/**
-		Returns the machine type as a string, such as `arm`, `arm64`, `aarch64`, `mips`, `mips64`, `ppc64`, `ppc64le`, `s390`, `s390x`, `i386`, `i686`, `x86_64`.
+		Returns the machine type as a string, such as `arm`, `arm64`, `aarch64`, `mips`, `mips64`, `ppc64`, `ppc64le`, `s390x`, `i386`, `i686`, `x86_64`.
 
 		@see https://nodejs.org/api/os.html#osmachine
 	**/
