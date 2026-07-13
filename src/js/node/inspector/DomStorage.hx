@@ -25,6 +25,7 @@ package js.node.inspector;
 /**
 	Helpers that broadcast Chrome DevTools Protocol `DOMStorage` events to connected frontends.
 
+	Added in: v24.16.0 (Active LTS). Not available on Maintenance LTS 22.x.
 	Only available with the `--experimental-storage-inspection` flag enabled.
 
 	Haxe type is `DomStorage` (acronyms are not uppercased); the Node.js export name is `DOMStorage`.

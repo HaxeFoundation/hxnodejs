@@ -40,7 +40,8 @@ extern class Inspector {
 		If `wait` is `true`, will block until a client has connected to the inspect port
 		and flow control has been passed to the debugger client.
 
-		Returns a Disposable that calls `inspector.close()` (via `Symbol.dispose`).
+		Returns a Disposable (`{ [Symbol.dispose](): void }`) that calls `inspector.close()`.
+		Typed as `Dynamic` because hxnodejs does not yet model the Web IDL `Disposable` interface.
 	**/
 	static function open(?port:Int, ?host:String, ?wait:Bool):Dynamic;
 

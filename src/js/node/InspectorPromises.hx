@@ -39,7 +39,9 @@ import js.node.inspector.promises.Session;
 extern class InspectorPromises {
 	/**
 		Activate inspector on host and port.
-		Returns a Disposable that calls `close()`.
+
+		Returns a Disposable (`{ [Symbol.dispose](): void }`) that calls `close()`.
+		Typed as `Dynamic` because hxnodejs does not yet model the Web IDL `Disposable` interface.
 	**/
 	static function open(?port:Int, ?host:String, ?wait:Bool):Dynamic;
 

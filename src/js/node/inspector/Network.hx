@@ -73,18 +73,24 @@ extern class Network {
 	/**
 		Broadcasts the `Network.webSocketCreated` event to connected frontends.
 		This event indicates that a WebSocket connection has been initiated.
+
+		Added in: v24.7.0. Not available on Maintenance LTS 22.x.
 	**/
 	static function webSocketCreated(?params:NetworkWebSocketCreatedParams):Void;
 
 	/**
 		Broadcasts the `Network.webSocketHandshakeResponseReceived` event to connected frontends.
 		This event indicates that the WebSocket handshake response has been received.
+
+		Added in: v24.7.0. Not available on Maintenance LTS 22.x.
 	**/
 	static function webSocketHandshakeResponseReceived(?params:NetworkWebSocketHandshakeResponseReceivedParams):Void;
 
 	/**
 		Broadcasts the `Network.webSocketClosed` event to connected frontends.
 		This event indicates that a WebSocket connection has been closed.
+
+		Added in: v24.7.0. Not available on Maintenance LTS 22.x.
 	**/
 	static function webSocketClosed(?params:NetworkWebSocketClosedParams):Void;
 }

@@ -49,7 +49,7 @@ enum abstract SessionEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when an inspector notification is received with method `Debugger.resumed`.
 	**/
-	var DebuggerResumed:SessionEvent<Void->Void> = "Debugger.resumed";
+	var DebuggerResumed:SessionEvent<InspectorNotificationMessage->Void> = "Debugger.resumed";
 
 	/**
 		Emitted when an inspector notification is received with method `HeapProfiler.addHeapSnapshotChunk`.

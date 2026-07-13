@@ -34,6 +34,9 @@ import js.Promise;
 
 	Stability: 1 - Experimental.
 
+	Emits the same notification events as callback `inspector.Session`;
+	use `js.node.inspector.SessionEvent` with `on` / `once` / `off`.
+
 	@see https://nodejs.org/api/inspector.html#promises-api
 **/
 @:jsRequire("inspector/promises", "Session")
