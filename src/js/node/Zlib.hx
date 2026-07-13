@@ -22,6 +22,7 @@
 
 package js.node;
 
+import haxe.DynamicAccess;
 import haxe.extern.EitherType;
 import js.node.Buffer;
 import js.node.zlib.*;
@@ -66,8 +67,46 @@ typedef ZlibOptions = {
 }
 
 /**
-	This provides bindings to Gzip/Gunzip, Deflate/Inflate, and DeflateRaw/InflateRaw classes.
-	Each class takes the same options, and is a readable/writable Stream.
+	Options for Brotli compression and decompression.
+**/
+typedef BrotliOptions = {
+	/**
+		default: `zlib.constants.BROTLI_OPERATION_PROCESS`
+	**/
+	@:optional var flush:Int;
+
+	/**
+		default: `zlib.constants.BROTLI_OPERATION_FINISH`
+	**/
+	@:optional var finishFlush:Int;
+
+	/**
+		default: 16*1024
+	**/
+	@:optional var chunkSize:Int;
+
+	/**
+		Key-value object containing indexed Brotli parameters.
+	**/
+	@:optional var params:DynamicAccess<Int>;
+
+	/**
+		The maximum length of the output that can be produced by zlib streams.
+		Default: `buffer.kMaxLength`
+	**/
+	@:optional var maxOutputLength:Int;
+
+	/**
+		If `true`, returns an object with `buffer` and `engine`.
+		Default: `false`
+	**/
+	@:optional var info:Bool;
+}
+
+/**
+	This provides bindings to Gzip/Gunzip, Deflate/Inflate, DeflateRaw/InflateRaw,
+	and BrotliCompress/BrotliDecompress classes.
+	Each class takes options, and is a readable/writable Stream.
 **/
 @:jsRequire("zlib")
 extern class Zlib {
@@ -172,6 +211,22 @@ extern class Zlib {
 	static function createUnzip(?options:ZlibOptions):Unzip;
 
 	/**
+		Returns a new `BrotliCompress` object with an `options`.
+	**/
+	static function createBrotliCompress(?options:BrotliOptions):BrotliCompress;
+
+	/**
+		Returns a new `BrotliDecompress` object with an `options`.
+	**/
+	static function createBrotliDecompress(?options:BrotliOptions):BrotliDecompress;
+
+	/**
+		Computes a 32-bit Cyclic Redundancy Check checksum of `data`.
+		If `value` is given, it is used as the starting value of the checksum.
+	**/
+	static function crc32(data:EitherType<String, Buffer>, ?value:Int):Int;
+
+	/**
 		Compress a string with `Deflate`.
 	**/
 	@:overload(function(buf:EitherType<String, Buffer>, options:ZlibOptions, callback:Error->Buffer->Void):Void {})
@@ -247,4 +302,26 @@ extern class Zlib {
 		Decompress a raw Buffer with `Unzip` (synchronous version).
 	**/
 	static function unzipSync(buf:EitherType<String, Buffer>, ?options:ZlibOptions):Buffer;
+
+	/**
+		Compress a string with `BrotliCompress`.
+	**/
+	@:overload(function(buf:EitherType<String, Buffer>, options:BrotliOptions, callback:Error->Buffer->Void):Void {})
+	static function brotliCompress(buf:EitherType<String, Buffer>, callback:Error->Buffer->Void):Void;
+
+	/**
+		Compress a string with `BrotliCompress` (synchronous version).
+	**/
+	static function brotliCompressSync(buf:EitherType<String, Buffer>, ?options:BrotliOptions):Buffer;
+
+	/**
+		Decompress a Buffer with `BrotliDecompress`.
+	**/
+	@:overload(function(buf:EitherType<String, Buffer>, options:BrotliOptions, callback:Error->Buffer->Void):Void {})
+	static function brotliDecompress(buf:EitherType<String, Buffer>, callback:Error->Buffer->Void):Void;
+
+	/**
+		Decompress a Buffer with `BrotliDecompress` (synchronous version).
+	**/
+	static function brotliDecompressSync(buf:EitherType<String, Buffer>, ?options:BrotliOptions):Buffer;
 }
