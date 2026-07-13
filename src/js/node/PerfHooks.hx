@@ -26,7 +26,6 @@ import haxe.Constraints.Function;
 import haxe.extern.EitherType;
 import js.node.perf_hooks.IntervalHistogram;
 import js.node.perf_hooks.Performance;
-import js.node.perf_hooks.PerformanceObserver;
 import js.node.perf_hooks.RecordableHistogram;
 
 /**
@@ -87,13 +86,6 @@ extern class PerfHooks {
 		@see https://nodejs.org/api/perf_hooks.html#perf_hookstimerifyfn-options
 	**/
 	static function timerify<T:Function>(fn:T, ?options:TimerifyOptions):T;
-
-	/**
-		The `PerformanceObserver` class.
-
-		@see https://nodejs.org/api/perf_hooks.html#class-performanceobserver
-	**/
-	static var PerformanceObserver(default, never):Class<PerformanceObserver>;
 }
 
 /**

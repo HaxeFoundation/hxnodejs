@@ -29,6 +29,10 @@ import js.node.PerfHooks.TimerifyOptions;
 import js.node.web.Event;
 import js.node.web.EventTarget;
 
+// Bring secondary types (option typedefs) from sibling modules into scope.
+import js.node.perf_hooks.PerformanceMark;
+import js.node.perf_hooks.PerformanceMeasure;
+
 /**
 	Events emitted by `Performance` (via `EventTarget`).
 **/
@@ -116,8 +120,8 @@ extern class Performance extends EventTarget {
 	/**
 		Creates a new `PerformanceMeasure` entry in the Performance Timeline.
 	**/
-	@:overload(function(name:String, ?startMark:String, ?endMark:String):PerformanceMeasure {})
-	function measure(name:String, options:PerformanceMeasureOptions):PerformanceMeasure;
+	@:overload(function(name:String, options:PerformanceMeasureOptions):PerformanceMeasure {})
+	function measure(name:String, ?startMark:String, ?endMark:String):PerformanceMeasure;
 
 	/**
 		An instance of the `PerformanceNodeTiming` class that provides performance metrics for
