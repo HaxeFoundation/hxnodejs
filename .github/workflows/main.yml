@@ -25,30 +25,26 @@ jobs:
         haxe doc.hxml
       name: Build
 
+    - name: Upload artifact
+      if: matrix.haxe_ver == 'latest'
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./bin/api
+
   deploy:
     needs: build
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
     steps:
-    - uses: actions/checkout@v7
+      - name: Deploy artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
 
-    - uses: krdlab/setup-haxe@v2
-      with:
-        haxe-version: latest
-
-    - run: haxelib dev hxnodejs .
-      name: Set haxelib dev path
-
-    - run: |
-        haxe build.hxml
-        haxelib git dox https://github.com/HaxeFoundation/dox
-        haxe doc.hxml
-      name: Build docs
-
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: bin/api
