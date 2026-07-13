@@ -33,6 +33,7 @@ jobs:
 
   test:
     strategy:
+      fail-fast: false
       matrix:
         haxe_ver: [4.0.5, 4.3.7, latest]
         runner: [ubuntu-latest, windows-latest, macos-latest]
