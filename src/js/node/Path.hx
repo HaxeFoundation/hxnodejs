@@ -83,6 +83,13 @@ extern class Path {
 	static function join(paths:haxe.extern.Rest<String>):String;
 
 	/**
+		The `path.matchesGlob()` method determines if `path` matches the `pattern`.
+
+		@see https://nodejs.org/api/path.html#pathmatchesglobpath-pattern
+	**/
+	static function matchesGlob(path:String, pattern:String):Bool;
+
+	/**
 		The `path.normalize()` method normalizes the given `path`, resolving `'..'` and `'.'` segments.
 
 		@see https://nodejs.org/api/path.html#path_path_normalize_path
@@ -189,6 +196,7 @@ private typedef PathModule = {
 	function dirname(path:String):String;
 	function basename(path:String, ?ext:String):String;
 	function extname(path:String):String;
+	function matchesGlob(path:String, pattern:String):Bool;
 	var sep(default, null):String;
 	var delimiter(default, null):String;
 	function parse(pathString:String):PathObject;

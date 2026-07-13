@@ -170,11 +170,51 @@ extern class Tls {
 	static var CLIENT_RENEG_WINDOW:Int;
 
 	/**
+		The default value of the `ciphers` option of `Tls.createSecureContext`.
+		It can be assigned any of the supported OpenSSL ciphers.
+	**/
+	static var DEFAULT_CIPHERS:String;
+
+	/**
+		The default named curve to use for ECDH key agreement in a tls server.
+		The default value is `'auto'`.
+	**/
+	static var DEFAULT_ECDH_CURVE:String;
+
+	/**
+		The default value of the `maxVersion` option of `Tls.createSecureContext`.
+		It can be assigned any of the supported TLS protocol versions:
+		`'TLSv1.3'`, `'TLSv1.2'`, `'TLSv1.1'`, or `'TLSv1'`.
+	**/
+	static var DEFAULT_MAX_VERSION:String;
+
+	/**
+		The default value of the `minVersion` option of `Tls.createSecureContext`.
+		It can be assigned any of the supported TLS protocol versions:
+		`'TLSv1.3'`, `'TLSv1.2'`, `'TLSv1.1'`, or `'TLSv1'`.
+	**/
+	static var DEFAULT_MIN_VERSION:String;
+
+	/**
+		An immutable array of strings representing the root certificates (in PEM format)
+		from the bundled Mozilla CA store as supplied by the current Node.js version.
+	**/
+	static var rootCertificates(default, null):Array<String>;
+
+	/**
 		Size of slab buffer used by all tls servers and clients. Default: 10 * 1024 * 1024.
 
 		Don't change the defaults unless you know what you are doing.
 	**/
 	static var SLAB_BUFFER_SIZE:Int;
+
+	/**
+		Returns an array containing the CA certificates from various sources, depending on `type`.
+
+		Valid values for `type` are `'default'`, `'system'`, `'bundled'` and `'extra'`.
+		Default: `'default'`.
+	**/
+	static function getCACertificates(?type:String):Array<String>;
 
 	/**
 		Returns an array with the names of the supported SSL ciphers.
