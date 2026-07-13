@@ -29,6 +29,7 @@ import js.node.Process;
 import js.node.Timers.Immediate;
 import js.node.Timers.Timeout;
 import js.node.console.Console;
+import js.node.perf_hooks.Performance;
 #if haxe4
 import js.Syntax.code;
 #end
@@ -153,6 +154,23 @@ extern class Node {
 		return code("process");
 		#else
 		return untyped __js__("process");
+		#end
+	}
+
+	/**
+		An object that can be used to collect performance metrics from the current Node.js instance.
+		It is similar to `window.performance` in browsers.
+
+		@see https://nodejs.org/api/globals.html#performance
+		@see https://nodejs.org/api/perf_hooks.html#perf_hooksperformance
+	**/
+	static var performance(get, never):Performance;
+
+	private static inline function get_performance():Performance {
+		#if haxe4
+		return code("performance");
+		#else
+		return untyped __js__("performance");
 		#end
 	}
 
