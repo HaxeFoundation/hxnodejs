@@ -46,6 +46,14 @@ extern class Os {
 	static function arch():String;
 
 	/**
+		Returns an estimate of the default amount of parallelism a program should use.
+		Always returns a value greater than zero.
+
+		@see https://nodejs.org/api/os.html#osavailableparallelism
+	**/
+	static function availableParallelism():Int;
+
+	/**
 		Returns an object containing commonly used operating system specific constants for error codes, process signals, and so on. The specific constants currently defined are described in OS Constants.
 
 		@see https://nodejs.org/api/os.html#os_os_constants
@@ -58,6 +66,14 @@ extern class Os {
 		@see https://nodejs.org/api/os.html#os_os_cpus
 	**/
 	static function cpus():Array<CPU>;
+
+	/**
+		The platform-specific file path of the null device.
+		`'\\.\nul'` on Windows and `'/dev/null'` on POSIX.
+
+		@see https://nodejs.org/api/os.html#osdevnull
+	**/
+	static var devNull(default, null):String;
 
 	/**
 		The `os.endianness()` method returns a string identifying the endianness of the CPU for which the Node.js binary was compiled.
@@ -100,6 +116,13 @@ extern class Os {
 		@see https://nodejs.org/api/os.html#os_os_loadavg
 	**/
 	static function loadavg():Array<Float>;
+
+	/**
+		Returns the machine type as a string, such as `arm`, `arm64`, `aarch64`, `mips`, `mips64`, `ppc64`, `ppc64le`, `s390x`, `i386`, `i686`, `x86_64`.
+
+		@see https://nodejs.org/api/os.html#osmachine
+	**/
+	static function machine():String;
 
 	/**
 		The `os.networkInterfaces()` method returns an object containing only network interfaces that have been assigned a network address.
@@ -163,6 +186,15 @@ extern class Os {
 		@see https://nodejs.org/api/os.html#os_os_userinfo_options
 	**/
 	static function userInfo(?options:{encoding:String}):OsUserInfo;
+
+	/**
+		Returns a string identifying the kernel version.
+
+		On POSIX systems, the operating system release is determined by calling uname(3). On Windows, `RtlGetVersion()` is used, and if it is not available, `GetVersionExW()` will be used.
+
+		@see https://nodejs.org/api/os.html#osversion
+	**/
+	static function version():String;
 }
 
 /**

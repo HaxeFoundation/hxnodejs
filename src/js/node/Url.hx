@@ -22,6 +22,7 @@
 
 package js.node;
 
+import haxe.extern.EitherType;
 import js.node.url.URL;
 
 /**
@@ -95,6 +96,66 @@ extern class Url {
 	**/
 	@:deprecated
 	static function resolve(from:String, to:String):String;
+
+	/**
+		This utility function converts a URL object into an ordinary options object as expected by the `http.request()` and `https.request()` APIs.
+
+		@see https://nodejs.org/api/url.html#urlurltohttpoptionsurl
+	**/
+	static function urlToHttpOptions(url:URL):UrlHttpOptions;
+}
+
+/**
+	Options object returned by `Url.urlToHttpOptions`, compatible with `http.request` / `https.request`.
+
+	@see https://nodejs.org/api/url.html#urlurltohttpoptionsurl
+**/
+typedef UrlHttpOptions = {
+	/**
+		Protocol to use.
+	**/
+	@:optional var protocol:String;
+
+	/**
+		A domain name or IP address of the server to issue the request to.
+	**/
+	@:optional var hostname:String;
+
+	/**
+		The fragment portion of the URL.
+	**/
+	@:optional var hash:String;
+
+	/**
+		The serialized query portion of the URL.
+	**/
+	@:optional var search:String;
+
+	/**
+		The path portion of the URL.
+	**/
+	@:optional var pathname:String;
+
+	/**
+		Request path. Should include query string if any.
+		E.g. `'/index.html?page=12'`.
+	**/
+	@:optional var path:String;
+
+	/**
+		The serialized URL.
+	**/
+	@:optional var href:String;
+
+	/**
+		Port of remote server.
+	**/
+	@:optional var port:EitherType<String, Int>;
+
+	/**
+		Basic authentication i.e. `'user:password'` to compute an Authorization header.
+	**/
+	@:optional var auth:String;
 }
 
 typedef UrlFormatOptions = {
