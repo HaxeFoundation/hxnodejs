@@ -281,7 +281,7 @@ typedef FsPromisesWatchOptions = {
 	/**
 		Allows aborting an in-progress watch with an AbortSignal.
 	**/
-	@:optional var signal:js.html.AbortSignal;
+	@:optional var signal:js.node.web.AbortSignal;
 }
 
 /**

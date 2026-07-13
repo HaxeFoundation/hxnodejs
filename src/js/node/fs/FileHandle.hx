@@ -38,10 +38,13 @@ import js.Promise;
 	A `FileHandle` object is a wrapper for a numeric file descriptor.
 
 	Instances are created by `FsPromises.open()`.
+	Not a public export of `fs/promises` (`require("fs/promises").FileHandle` is undefined),
+	so this is a plain extern like `Stats` / `ReadStream`.
+
+	`Symbol.asyncDispose` (await using) is intentionally deferred.
 
 	@see https://nodejs.org/api/fs.html#class-filehandle
 **/
-@:jsRequire("fs/promises", "FileHandle")
 extern class FileHandle extends EventEmitter<FileHandle> {
 	/**
 		The numeric file descriptor managed by this `FileHandle`.
@@ -107,6 +110,13 @@ extern class FileHandle extends EventEmitter<FileHandle> {
 	function readLines(?options:FsCreateReadStreamOptions):Interface;
 
 	/**
+		Returns a byte-oriented `ReadableStream` for the file contents.
+
+		Typed as `Dynamic` until web streams externs are added (same pattern as `Blob.stream`).
+	**/
+	function readableWebStream(?options:FileHandleReadableWebStreamOptions):Dynamic;
+
+	/**
 		Read from a file and write to an array of buffers.
 	**/
 	@:overload(function(buffers:Array<FsVectorBuffer>):Promise<FileHandleReadvResult> {})
@@ -165,6 +175,17 @@ enum abstract FileHandleEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T>
 		Emitted when the `FileHandle` has been closed and can no longer be used.
 	**/
 	var Close:FileHandleEvent<Void->Void> = "close";
+}
+
+/**
+	Options for `FileHandle.readableWebStream`.
+**/
+typedef FileHandleReadableWebStreamOptions = {
+	/**
+		When `true`, closes the `FileHandle` when the stream is closed.
+		Default: `false`.
+	**/
+	@:optional var autoClose:Bool;
 }
 
 /**
