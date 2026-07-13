@@ -23,11 +23,6 @@
 package js.node.test;
 
 import haxe.extern.EitherType;
-#if haxe4
-import js.lib.Date as JsDate;
-#else
-import js.Date as JsDate;
-#end
 
 /**
 	Timer / Date APIs that can be mocked via `MockTimers.enable()`.
@@ -51,8 +46,8 @@ typedef MockTimersEnableOptions = {
 	/**
 		Initial time (ms) or `Date` used as the value for `Date.now()`. Default: `0`.
 	**/
-	@:optional var now:EitherType<Float, JsDate>;
-};
+	@:optional var now:EitherType<Float, Dynamic>;
+}
 
 /**
 	Mocking timers simulates and controls `setInterval` / `setTimeout` / `setImmediate`
@@ -63,26 +58,36 @@ typedef MockTimersEnableOptions = {
 extern class MockTimers {
 	/**
 		Enable timer mocking for the specified timers.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#timersenableenableoptions
 	**/
 	function enable(?enableOptions:MockTimersEnableOptions):Void;
 
 	/**
 		Restore default behavior of all mocks created by this instance.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#timersreset
 	**/
 	function reset():Void;
 
 	/**
 		Advance time for all mocked timers by `milliseconds` (default: `1`).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#timerstickmilliseconds
 	**/
 	function tick(?milliseconds:Float):Void;
 
 	/**
 		Trigger all pending mocked timers immediately.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#timersrunall
 	**/
 	function runAll():Void;
 
 	/**
 		Set the current Unix timestamp used as reference for mocked `Date` objects.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#timerssettimemilliseconds
 	**/
 	function setTime(milliseconds:Float):Void;
 }

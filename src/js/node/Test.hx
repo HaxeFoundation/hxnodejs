@@ -26,10 +26,11 @@ import haxe.Constraints.Function;
 import haxe.DynamicAccess;
 import haxe.extern.EitherType;
 import js.html.AbortSignal;
+import js.node.test.ItFunction;
 import js.node.test.MockTracker;
 import js.node.test.SuiteContext;
+import js.node.test.SuiteFunction;
 import js.node.test.TestContext;
-import js.node.test.TestFunction;
 import js.node.test.TestsStream;
 #if haxe4
 import js.lib.Error;

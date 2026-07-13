@@ -22,8 +22,14 @@
 
 package js.node.test;
 
-import haxe.extern.EitherType;
-import js.node.Test;
+import js.html.AbortSignal;
+import js.node.Test.HookCallback;
+import js.node.Test.HookOptions;
+import js.node.Test.PlanOptions;
+import js.node.Test.SnapshotAssertionOptions;
+import js.node.Test.TestCallback;
+import js.node.Test.TestOptions;
+import js.node.Test.WaitForOptions;
 #if haxe4
 import js.lib.Error;
 import js.lib.Promise;
@@ -33,186 +39,197 @@ import js.Promise;
 #end
 
 /**
-	Options for `TestContext.plan()`.
-**/
-typedef PlanOptions = {
-	/**
-		Wait behavior for the plan:
-		- `true`: wait indefinitely
-		- `false`: check immediately after the test function completes
-		- number: maximum wait time in milliseconds
-		Default: `false`.
-	**/
-	@:optional var wait:EitherType<Bool, Float>;
-};
+	Passed to each test function to interact with the test runner.
 
-/**
-	Options for `TestContext.waitFor()`.
-**/
-typedef WaitForOptions = {
-	/**
-		Milliseconds to wait after an unsuccessful invocation before trying again.
-		Default: `50`.
-	**/
-	@:optional var interval:Float;
-
-	/**
-		Poll timeout in milliseconds. Default: `1000`.
-	**/
-	@:optional var timeout:Float;
-};
-
-/**
-	Runner-specific assertion helpers on `TestContext`, plus commonly used
-	`node:assert` methods bound to the context for test plans.
-
-	For the full assert API, see `js.node.Assert`.
-
-	@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextassert
-**/
-typedef TestContextAssert = {
-	/**
-		Serialize `value` and compare/write it against the snapshot file for this test.
-	**/
-	function snapshot(value:Dynamic, ?options:SnapshotAssertionOptions):Void;
-
-	/**
-		Serialize `value` and compare/write it to an explicit snapshot file path.
-	**/
-	function fileSnapshot(value:Dynamic, path:String, ?options:SnapshotAssertionOptions):Void;
-
-	function ok(value:Dynamic, ?message:EitherType<String, Error>):Void;
-	function equal<T>(actual:T, expected:T, ?message:EitherType<String, Error>):Void;
-	function notEqual<T>(actual:T, expected:T, ?message:EitherType<String, Error>):Void;
-	function strictEqual<T>(actual:T, expected:T, ?message:EitherType<String, Error>):Void;
-	function notStrictEqual<T>(actual:T, expected:T, ?message:EitherType<String, Error>):Void;
-	function deepEqual<T>(actual:T, expected:T, ?message:EitherType<String, Error>):Void;
-	function notDeepEqual<T>(actual:T, expected:T, ?message:EitherType<String, Error>):Void;
-	function deepStrictEqual<T>(actual:T, expected:T, ?message:EitherType<String, Error>):Void;
-	function notDeepStrictEqual<T>(actual:T, expected:T, ?message:EitherType<String, Error>):Void;
-	function match(string:String, regexp:Dynamic, ?message:EitherType<String, Error>):Void;
-	function doesNotMatch(string:String, regexp:Dynamic, ?message:EitherType<String, Error>):Void;
-	function throws(block:haxe.Constraints.Function, ?error:Dynamic, ?message:String):Void;
-	function doesNotThrow(block:haxe.Constraints.Function, ?error:Dynamic, ?message:String):Void;
-	function ifError(value:Dynamic):Void;
-	function fail(?message:EitherType<String, Error>):Void;
-	function rejects(asyncFn:Dynamic, ?error:Dynamic, ?message:String):Promise<Void>;
-	function doesNotReject(asyncFn:Dynamic, ?error:Dynamic, ?message:String):Promise<Void>;
-};
-
-/**
-	An instance of `TestContext` is passed to each test function in order to
-	interact with the test runner. The constructor is not exposed as part of the API.
+	The `TestContext` constructor is not part of the public API.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/test.html#class-testcontext
 **/
 extern class TestContext {
 	/**
-		Creates a hook running before subtests of the current test.
+		Create a hook that runs before subtests of the current test.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextbeforefn-options
 	**/
-	function before(?fn:HookFn, ?options:HookOptions):Void;
+	@:overload(function(fn:HookCallback):Void {})
+	function before(?fn:HookCallback, ?options:HookOptions):Void;
 
 	/**
-		Creates a hook running before each subtest of the current test.
+		Create a hook that runs before each subtest of the current test.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextbeforeeachfn-options
 	**/
-	function beforeEach(?fn:HookFn, ?options:HookOptions):Void;
+	@:overload(function(fn:HookCallback):Void {})
+	function beforeEach(?fn:HookCallback, ?options:HookOptions):Void;
 
 	/**
-		Creates a hook that runs after the current test finishes.
+		Create a hook that runs after the current test finishes.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextafterfn-options
 	**/
-	function after(?fn:HookFn, ?options:HookOptions):Void;
+	@:overload(function(fn:HookCallback):Void {})
+	function after(?fn:HookCallback, ?options:HookOptions):Void;
 
 	/**
-		Creates a hook running after each subtest of the current test.
+		Create a hook that runs after each subtest of the current test.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextaftereachfn-options
 	**/
-	function afterEach(?fn:HookFn, ?options:HookOptions):Void;
+	@:overload(function(fn:HookCallback):Void {})
+	function afterEach(?fn:HookCallback, ?options:HookOptions):Void;
 
 	/**
-		Assertion methods bound to this context (for plans and snapshots).
+		Assertion methods bound to this context, used for test plans.
+
+		Includes the usual `node:assert` methods (see `js.node.Assert`) plus
+		runner-specific snapshot helpers.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextassert
 	**/
-	var assert(default, never):TestContextAssert;
+	var assert(default, null):TestContextAssert;
 
 	/**
 		Write a diagnostic message included at the end of the test's results.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextdiagnosticmessage
 	**/
 	function diagnostic(message:String):Void;
 
 	/**
 		Absolute path of the test file that created the current test.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextfilepath
 	**/
-	var filePath(default, never):Null<String>;
+	var filePath(default, null):Null<String>;
 
 	/**
 		Name of the test and each of its ancestors, separated by `>`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextfullname
 	**/
-	var fullName(default, never):String;
+	var fullName(default, null):String;
 
 	/**
 		Name of the test.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextname
 	**/
-	var name(default, never):String;
+	var name(default, null):String;
 
 	/**
-		Whether the test succeeded (`false` before the test is executed).
+		Whether the test succeeded. `false` before the test has executed
+		(e.g. in a `beforeEach` hook).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextpassed
 	**/
-	var passed(default, never):Bool;
+	var passed(default, null):Bool;
 
 	/**
-		Failure reason for the test; wrapped and available via `error.cause`.
+		Failure reason for the test when it did not pass; wrapped with `cause`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contexterror
 	**/
-	var error(default, never):Null<Error>;
+	var error(default, null):Null<Error>;
 
 	/**
-		Zero-based attempt number of the test (useful with `--test-rerun-failures`).
+		Zero-based attempt number when using `--test-rerun-failures`.
+
+		Added in: v25.0.0 (documented on the Node 24 test page for newer runtimes).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextattempt
 	**/
-	var attempt(default, never):Int;
+	var attempt(default, null):Int;
 
 	/**
-		Unique identifier of the worker running the current test file, or `undefined`
-		when not running in a test context.
+		Unique worker id for the current test file process, or `undefined`
+		outside a test context.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextworkerid
 	**/
-	var workerId(default, never):Null<Int>;
+	var workerId(default, null):Null<Int>;
 
 	/**
-		Set the number of assertions and subtests expected to run within the test.
+		Set the number of assertions and subtests expected to run.
+		Use `t.assert` (not bare `assert`) so assertions are tracked.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextplancountoptions
 	**/
 	function plan(count:Int, ?options:PlanOptions):Void;
 
 	/**
-		If truthy, only run subtests that have the `only` option set.
+		When `true`, only subtests with the `only` option set are run.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextrunonlyshouldrunonlytests
 	**/
 	function runOnly(shouldRunOnlyTests:Bool):Void;
 
 	/**
-		AbortSignal that can be used to abort test subtasks when the test is aborted.
+		Abort signal for cancelling test subtasks when the test is aborted.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextsignal
 	**/
-	var signal(default, never):Dynamic;
+	var signal(default, null):AbortSignal;
 
 	/**
-		Cause the test's output to indicate the test as skipped.
+		Mark the test as skipped. Does not terminate the test function.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextskipmessage
 	**/
 	function skip(?message:String):Void;
 
 	/**
-		Add a `TODO` directive to the test's output.
+		Mark the test as `TODO`. Does not terminate the test function.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contexttodomessage
 	**/
 	function todo(?message:String):Void;
 
 	/**
 		Create a subtest under the current test.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contexttestname-options-fn
 	**/
-	@:overload(function(?name:String, ?fn:TestFn):Promise<Void> {})
-	@:overload(function(?options:TestOptions, ?fn:TestFn):Promise<Void> {})
-	@:overload(function(?fn:TestFn):Promise<Void> {})
-	function test(?name:String, ?options:TestOptions, ?fn:TestFn):Promise<Void>;
+	@:overload(function(fn:TestCallback):Promise<Void> {})
+	@:overload(function(name:String, fn:TestCallback):Promise<Void> {})
+	@:overload(function(options:TestOptions, fn:TestCallback):Promise<Void> {})
+	function test(?name:String, ?options:TestOptions, ?fn:TestCallback):Promise<Void>;
 
 	/**
-		Poll `condition` until it succeeds or the operation times out.
+		Poll `condition` until it succeeds or the timeout elapses.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextwaitforcondition-options
 	**/
 	function waitFor<T>(condition:Void->T, ?options:WaitForOptions):Promise<T>;
 
 	/**
-		`MockTracker` instance for this test. Restored automatically when the test finishes.
+		`MockTracker` instance for this test.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#class-mocktracker
 	**/
-	var mock(default, never):MockTracker;
+	var mock(default, null):MockTracker;
+}
+
+/**
+	Assertion helpers on `TestContext.assert`.
+
+	Runner-specific snapshot APIs are typed here. The object also exposes the
+	usual `node:assert` methods bound to this context (see `js.node.Assert`);
+	those are intentionally not fully re-declared.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextassert
+**/
+extern class TestContextAssert implements Dynamic {
+	/**
+		Serialize `value` and write/compare against the snapshot file at `path`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextassertfilesnapshotvalue-path-options
+	**/
+	function fileSnapshot(value:Dynamic, path:String, ?options:SnapshotAssertionOptions):Void;
+
+	/**
+		Assert against (or update) a snapshot entry for this test.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextassertsnapshotvalue-options
+	**/
+	function snapshot(value:Dynamic, ?options:SnapshotAssertionOptions):Void;
 }

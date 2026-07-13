@@ -22,45 +22,62 @@
 
 package js.node.test;
 
+import js.html.AbortSignal;
+
 /**
-	An instance of `SuiteContext` is passed to each suite function in order to
-	interact with the test runner. The constructor is not exposed as part of the API.
+	Passed to each suite function to interact with the test runner.
+
+	The `SuiteContext` constructor is not part of the public API.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/test.html#class-suitecontext
 **/
 extern class SuiteContext {
 	/**
 		Absolute path of the test file that created the current suite.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextfilepath-1
 	**/
-	var filePath(default, never):Null<String>;
+	var filePath(default, null):Null<String>;
 
 	/**
 		Name of the suite and each of its ancestors, separated by `>`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextfullname-1
 	**/
-	var fullName(default, never):String;
+	var fullName(default, null):String;
 
 	/**
 		Name of the suite.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextname-1
 	**/
-	var name(default, never):String;
+	var name(default, null):String;
 
 	/**
-		AbortSignal that can be used to abort test subtasks when the suite is aborted.
+		Abort signal for cancelling suite subtasks when the suite is aborted.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextsignal-1
 	**/
-	var signal(default, never):Dynamic;
+	var signal(default, null):AbortSignal;
 
 	/**
 		Whether the suite and all of its subtests have passed.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextpassed-1
 	**/
-	var passed(default, never):Bool;
+	var passed(default, null):Bool;
 
 	/**
-		Zero-based attempt number of the suite (useful with `--test-rerun-failures`).
+		Zero-based attempt number when using `--test-rerun-failures`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextattempt-1
 	**/
-	var attempt(default, never):Int;
+	var attempt(default, null):Int;
 
 	/**
-		Output a diagnostic message about the current suite or its tests.
+		Output a diagnostic message for the suite.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextdiagnosticmessage-1
 	**/
 	function diagnostic(message:String):Void;
 }
