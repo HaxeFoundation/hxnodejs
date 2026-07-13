@@ -22,8 +22,8 @@
 
 package js.node.readline;
 
-import js.html.AbortSignal;
 import js.node.readline.Interface;
+import js.node.web.AbortSignal;
 #if haxe4
 import js.lib.Promise;
 #else

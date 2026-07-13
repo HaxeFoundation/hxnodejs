@@ -22,10 +22,101 @@
 
 package js.node;
 
-import js.node.Readline;
+import haxe.extern.EitherType;
 import js.node.readline.PromisesInterface;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
+import js.node.web.AbortSignal;
+#if haxe4
+import js.lib.Promise;
+#else
+import js.Promise;
+#end
+
+/**
+	Completer result: matching entries, then the substring used for matching.
+**/
+typedef ReadlinePromisesCompleterResult = Array<EitherType<Array<String>, String>>;
+
+/**
+	Tab autocompletion for `readline/promises`.
+	Unlike the callback API, the completer may return a `Promise`.
+**/
+#if haxe4
+typedef ReadlinePromisesCompleterCallback = (line:String) -> EitherType<ReadlinePromisesCompleterResult, Promise<ReadlinePromisesCompleterResult>>;
+#else
+typedef ReadlinePromisesCompleterCallback = String->EitherType<ReadlinePromisesCompleterResult, Promise<ReadlinePromisesCompleterResult>>;
+#end
+
+/**
+	Options for `ReadlinePromises.createInterface`.
+
+	Same surface as `ReadlineOptions`, but `completer` may return a `Promise`.
+
+	@see https://nodejs.org/api/readline.html#readlinepromisescreateinterfaceoptions
+**/
+typedef ReadlinePromisesOptions = {
+	/**
+		The `Readable` stream to listen to.
+	**/
+	var input:IReadable;
+
+	/**
+		The `Writable` stream to write readline data to.
+	**/
+	@:optional var output:IWritable;
+
+	/**
+		An optional function used for Tab autocompletion.
+		May return a `Promise` resolving to the completer result.
+	**/
+	@:optional var completer:ReadlinePromisesCompleterCallback;
+
+	/**
+		`true` if the `input` and `output` streams should be treated like a TTY.
+	**/
+	@:optional var terminal:Bool;
+
+	/**
+		Initial list of history lines.
+	**/
+	@:optional var history:Array<String>;
+
+	/**
+		Maximum number of history lines retained.
+	**/
+	@:optional var historySize:Int;
+
+	/**
+		The prompt string to use.
+	**/
+	@:optional var prompt:String;
+
+	/**
+		Delay threshold for treating `\r\n` as a single newline.
+	**/
+	@:optional var crlfDelay:Int;
+
+	/**
+		If `true`, remove older duplicate history entries.
+	**/
+	@:optional var removeHistoryDuplicates:Bool;
+
+	/**
+		Ambiguous key sequence timeout in milliseconds.
+	**/
+	@:optional var escapeCodeTimeout:Int;
+
+	/**
+		The number of spaces a tab is equal to (minimum 1).
+	**/
+	@:optional var tabSize:Int;
+
+	/**
+		Allows closing the interface using an `AbortSignal`.
+	**/
+	@:optional var signal:AbortSignal;
+}
 
 /**
 	The `readline/promises` API provides an alternative set of interfaces that return promises.
@@ -37,6 +128,6 @@ extern class ReadlinePromises {
 	/**
 		Creates a new `readlinePromises.Interface` instance.
 	**/
-	@:overload(function(input:IReadable, ?output:IWritable, ?completer:ReadlineCompleterCallback, ?terminal:Bool):PromisesInterface {})
-	static function createInterface(options:ReadlineOptions):PromisesInterface;
+	@:overload(function(input:IReadable, ?output:IWritable, ?completer:ReadlinePromisesCompleterCallback, ?terminal:Bool):PromisesInterface {})
+	static function createInterface(options:ReadlinePromisesOptions):PromisesInterface;
 }
