@@ -110,8 +110,25 @@ extern class Node {
 		This means that within the browser `var something` will define a new global variable.
 		In Node.js this is different. The top-level scope is not the global scope; `var something` inside a Node.js module
 		will be local to that module.
+
+		Stability: 3 - Legacy. Use `globalThis` instead.
 	**/
 	static inline var global:Dynamic<Dynamic> = cast Node;
+
+	/**
+		`globalThis` is the universal way to access the global object.
+
+		@see https://nodejs.org/api/globals.html#globalthis
+	**/
+	static var globalThis(get, never):Dynamic<Dynamic>;
+
+	private static inline function get_globalThis():Dynamic<Dynamic> {
+		#if haxe4
+		return code("globalThis");
+		#else
+		return untyped __js__("globalThis");
+		#end
+	}
 
 	/**
 		This variable may appear to be global but is not. See [module](https://nodejs.org/api/modules.html#modules_module).
@@ -174,6 +191,23 @@ extern class Node {
 		`setTimeout` is described in the [timers](https://nodejs.org/api/timers.html) section.
 	**/
 	static function setTimeout(callback:Function, delay:Int, args:Rest<Dynamic>):Timeout;
+
+	/**
+		The WHATWG [`structuredClone`](https://developer.mozilla.org/en-US/docs/Web/API/structuredClone) method.
+
+		@see https://nodejs.org/api/globals.html#structuredclonevalue-options
+	**/
+	static function structuredClone(value:Dynamic, ?options:StructuredCloneOptions):Dynamic;
+}
+
+/**
+	Options for `Node.structuredClone`.
+**/
+typedef StructuredCloneOptions = {
+	/**
+		A list of transferable objects that will be moved rather than cloned.
+	**/
+	@:optional var transfer:Array<Dynamic>;
 }
 
 @:deprecated typedef TimeoutObject = js.node.Timers.Timeout;
