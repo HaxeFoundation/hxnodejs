@@ -39,7 +39,7 @@ extern class StatsFs {
 	var bsize:Int;
 
 	/**
-		Fragment size.
+		Fundamental file system block size.
 	**/
 	var frsize:Int;
 

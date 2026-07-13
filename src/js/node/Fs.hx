@@ -659,13 +659,12 @@ typedef FsGlobOptions = {
 }
 
 /**
-	A buffer descriptor for `Fs.readv` / `Fs.writev`.
+	A buffer for `Fs.readv` / `Fs.writev`.
+
+	Node.js accepts an `ArrayBufferView` (Buffer, TypedArray, or DataView).
+	This library follows the existing `Fs.read` / `Fs.write` convention of typing these as `Buffer`.
 **/
-typedef FsVectorBuffer = EitherType<Buffer, {
-	var buffer:Buffer;
-	@:optional var offset:Int;
-	@:optional var length:Int;
-}>;
+typedef FsVectorBuffer = Buffer;
 
 /**
 	File I/O is provided by simple wrappers around standard POSIX functions.
