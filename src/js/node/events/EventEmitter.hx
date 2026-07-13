@@ -79,6 +79,53 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	static var defaultMaxListeners:Int;
 
 	/**
+		This symbol shall be used to install a listener for only monitoring `'error'`
+		events. Listeners installed using this symbol are called before the regular
+		`'error'` listeners are called.
+
+		@see https://nodejs.org/api/events.html#eventserrormonitor
+	**/
+	#if haxe4
+	static final errorMonitor:Symbol;
+	#else
+	static var errorMonitor(default, never):Dynamic;
+	#end
+
+	/**
+		Value: `Symbol.for('nodejs.rejection')`
+
+		@see https://nodejs.org/api/events.html#eventscapturerejectionsymbol
+	**/
+	#if haxe4
+	static final captureRejectionSymbol:Symbol;
+	#else
+	static var captureRejectionSymbol(default, never):Dynamic;
+	#end
+
+	/**
+		Returns a copy of the array of listeners for the event named `name`.
+
+		@see https://nodejs.org/api/events.html#eventsgeteventlistenersemitter-name
+	**/
+	static function getEventListeners(emitter:IEventEmitter, name:Event<Function>):Array<Function>;
+
+	/**
+		Change the default `maxListeners` value for all `EventEmitter` instances,
+		and optionally apply that change to the given emitters.
+
+		@see https://nodejs.org/api/events.html#eventssetmaxlistenersn-eventtargets
+	**/
+	static function setMaxListeners(n:Int, emitters:Rest<IEventEmitter>):Void;
+
+	/**
+		A class method that returns the number of listeners for the given `eventName`
+		registered on the given `emitter`.
+
+		@see https://nodejs.org/api/events.html#eventsemitterlistenercountemitter-eventname
+	**/
+	static function listenerCount(emitter:IEventEmitter, eventName:Event<Function>):Int;
+
+	/**
 		Alias for `emitter.on(eventName, listener)`.
 
 		@see https://nodejs.org/api/events.html#events_emitter_addlistener_eventname_listener

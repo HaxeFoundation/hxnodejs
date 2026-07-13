@@ -62,6 +62,70 @@ extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements 
 	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, writable3:IWritable, writable4:IWritable, writable5:IWritable,
 		writable6:IWritable, writable7:IWritable, writable8:IWritable, callback:Null<Error>->Void):Void {})
 	static function pipeline(readable:IReadable, streams:Rest<IWritable>):Promise<Void>;
+
+	/**
+		A module method to wait for a readable or writable stream to finish.
+
+		@see https://nodejs.org/api/stream.html#streamfinishedstream-options-callback
+	**/
+	@:overload(function(stream:IStream, callback:Null<Error>->Void):Void {})
+	@:overload(function(stream:IStream, options:StreamFinishedOptions, callback:Null<Error>->Void):Void {})
+	static function finished(stream:IStream, ?options:StreamFinishedOptions):Promise<Void>;
+
+	/**
+		Returns whether the stream is readable.
+
+		@see https://nodejs.org/api/stream.html#streamisreadablestream
+	**/
+	static function isReadable(stream:Dynamic):Bool;
+
+	/**
+		Returns whether the stream is writable.
+
+		@see https://nodejs.org/api/stream.html#streamiswritablestream
+	**/
+	static function isWritable(stream:Dynamic):Bool;
+
+	/**
+		Returns whether the stream has been destroyed.
+
+		@see https://nodejs.org/api/stream.html#streamisdestroyedstream
+	**/
+	static function isDestroyed(stream:Dynamic):Bool;
+
+	/**
+		Returns whether the stream has been read from or written to.
+
+		@see https://nodejs.org/api/stream.html#streamisdisturbedstream
+	**/
+	static function isDisturbed(stream:Dynamic):Bool;
+
+	/**
+		Returns whether the stream has encountered an error.
+
+		@see https://nodejs.org/api/stream.html#streamiserroredstream
+	**/
+	static function isErrored(stream:Dynamic):Bool;
+}
+
+/**
+	Options for `Stream.finished`.
+**/
+typedef StreamFinishedOptions = {
+	/**
+		If `true`, emit `'error'` as an `'error'` event instead of rejecting the Promise / calling the callback.
+	**/
+	@:optional var error:Bool;
+
+	/**
+		Makes `finished()` wait until the stream ends before calling the callback / resolving the Promise if the stream is readable.
+	**/
+	@:optional var readable:Bool;
+
+	/**
+		Makes `finished()` wait until the stream ends before calling the callback / resolving the Promise if the stream is writable.
+	**/
+	@:optional var writable:Bool;
 }
 
 /**
