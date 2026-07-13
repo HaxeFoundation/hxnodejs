@@ -169,6 +169,13 @@ extern class Cluster extends EventEmitter<Cluster> {
 	var isMaster(default, null):Bool;
 
 	/**
+		True if the process is a primary (alias of `isMaster`).
+		This is determined by the process.env.NODE_UNIQUE_ID.
+		If process.env.NODE_UNIQUE_ID is undefined, then `isPrimary` is true.
+	**/
+	var isPrimary(default, null):Bool;
+
+	/**
 		True if the process is not a master (it is the negation of `isMaster`).
 	**/
 	var isWorker(default, null):Bool;
@@ -188,6 +195,11 @@ extern class Cluster extends EventEmitter<Cluster> {
 			`setupMaster` must be called before any calls to `fork`
 	**/
 	function setupMaster(?settings:{?exec:String, ?args:Array<String>, ?silent:Bool}):Void;
+
+	/**
+		Alias of `setupMaster`.
+	**/
+	function setupPrimary(?settings:{?exec:String, ?args:Array<String>, ?silent:Bool}):Void;
 
 	/**
 		Spawn a new worker process.

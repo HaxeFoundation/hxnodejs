@@ -23,8 +23,10 @@
 package js.node;
 
 import haxe.extern.EitherType;
+import js.node.net.BlockList as BlockListObject;
 import js.node.net.Server;
 import js.node.net.Socket;
+import js.node.net.SocketAddress as SocketAddressObject;
 
 typedef NetCreateServerOptions = {
 	> SocketOptionsBase,
@@ -122,4 +124,46 @@ extern class Net {
 		Returns true if input is a version 6 IP address, otherwise returns false.
 	**/
 	static function isIPv6(input:String):Bool;
+
+	/**
+		`BlockList` class constructor.
+
+		@see https://nodejs.org/api/net.html#class-netblocklist
+	**/
+	static var BlockList:Class<BlockListObject>;
+
+	/**
+		`SocketAddress` class constructor.
+
+		@see https://nodejs.org/api/net.html#class-netsocketaddress
+	**/
+	static var SocketAddress:Class<SocketAddressObject>;
+
+	/**
+		Gets the current default value of the `autoSelectFamily` option of `socket.connect(options)`.
+
+		@see https://nodejs.org/api/net.html#netgetdefaultautoselectfamily
+	**/
+	static function getDefaultAutoSelectFamily():Bool;
+
+	/**
+		Sets the default value of the `autoSelectFamily` option of `socket.connect(options)`.
+
+		@see https://nodejs.org/api/net.html#netsetdefaultautoselectfamilyvalue
+	**/
+	static function setDefaultAutoSelectFamily(value:Bool):Void;
+
+	/**
+		Gets the current default value of the `autoSelectFamilyAttemptTimeout` option of `socket.connect(options)`.
+
+		@see https://nodejs.org/api/net.html#netgetdefaultautoselectfamilyattempttimeout
+	**/
+	static function getDefaultAutoSelectFamilyAttemptTimeout():Int;
+
+	/**
+		Sets the default value of the `autoSelectFamilyAttemptTimeout` option of `socket.connect(options)`.
+
+		@see https://nodejs.org/api/net.html#netsetdefaultautoselectfamilyattempttimeoutvalue
+	**/
+	static function setDefaultAutoSelectFamilyAttemptTimeout(ms:Int):Void;
 }
