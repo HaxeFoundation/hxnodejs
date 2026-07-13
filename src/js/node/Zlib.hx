@@ -92,8 +92,15 @@ typedef BrotliOptions = {
 
 	/**
 		The maximum length of the output that can be produced by zlib streams.
+		Default: `buffer.kMaxLength`
 	**/
 	@:optional var maxOutputLength:Int;
+
+	/**
+		If `true`, returns an object with `buffer` and `engine`.
+		Default: `false`
+	**/
+	@:optional var info:Bool;
 }
 
 /**
