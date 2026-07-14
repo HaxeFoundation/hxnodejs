@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,37 +23,39 @@
 package js.node.tls;
 
 import haxe.extern.EitherType;
+import js.lib.Error;
 import js.node.Buffer;
+import js.node.Tls.TlsCreateServerOptions;
 import js.node.events.EventEmitter.Event;
 import js.node.tls.SecureContext;
 import js.node.tls.SecureContext.SecureContextOptions;
 import js.node.tls.TLSSocket;
-import js.lib.Error;
 
 /**
-	Enumeration of events emitted by `Server` in addition to its parent classes.
+	Events emitted by `tls.Server` in addition to its parent `net.Server` events.
 **/
 enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
-		This event is emitted after a new connection has been successfully handshaked.
+		Emitted after a new connection has successfully completed the handshake.
 	**/
-	var SecureConnection:ServerEvent<TLSSocket->Void> = "secureConnection";
+	var SecureConnection:ServerEvent<(socket:TLSSocket) -> Void> = "secureConnection";
 
 	/**
-		When a client connection emits an 'error' event before secure connection is established -
-		it will be forwarded here.
+		Emitted when a client connection reports an error before the secure connection is established.
 
 		Listener arguments:
-			exception - error object
-			securePair - the `TLSSocket` that the error originated from
+			`exception` - error object
+			`tlsSocket` - the `TLSSocket` the error originated from
 	**/
 	var TlsClientError:ServerEvent<(exception:Error, tlsSocket:TLSSocket) -> Void> = "tlsClientError";
 
 	/**
-		@deprecated Use `TlsClientError` (`tlsClientError`) instead.
+		Legacy spelling of the `'tlsClientError'` event.
+
+		@see https://nodejs.org/api/tls.html#event-tlsclienterror
 	**/
-	@:deprecated("Use ServerEvent.TlsClientError / 'tlsClientError'")
-	var ClientError:ServerEvent<Error->TLSSocket->Void> = "clientError";
+	@:deprecated("Use ServerEvent.TlsClientError / 'tlsClientError' instead")
+	var ClientError:ServerEvent<(exception:Error, tlsSocket:TLSSocket) -> Void> = "clientError";
 
 	/**
 		Emitted when key material is generated or received from a client for generating TLS session tickets.
@@ -61,79 +63,78 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	var Keylog:ServerEvent<(line:Buffer, tlsSocket:TLSSocket) -> Void> = "keylog";
 
 	/**
-		Emitted on creation of TLS session.
+		Emitted when a new TLS session is created.
 		May be used to store sessions in external storage.
 
-		`callback` must be invoked eventually, otherwise no data will be sent or received from secure connection.
+		`callback` must eventually be invoked, otherwise data will not be sent or received.
 
 		Listener arguments:
-			sessionId
-			sessionData
-			callback
+			`sessionId`
+			`sessionData`
+			`callback`
 	**/
-	var NewSession:ServerEvent<(sessionId:Buffer, sessionData:Buffer, callback:Void->Void) -> Void> = "newSession";
+	var NewSession:ServerEvent<(sessionId:Buffer, sessionData:Buffer, callback:() -> Void) -> Void> = "newSession";
 
 	/**
-		Emitted when client wants to resume previous TLS session.
+		Emitted when a client wants to resume a previous TLS session.
 
-		Event listener may perform lookup in external storage using given sessionId,
-		and invoke callback(null, sessionData) once finished.
-
-		If session can't be resumed (i.e. doesn't exist in storage) one may call callback(null, null).
-
-		Calling callback(err) will terminate incoming connection and destroy socket.
+		Look up `sessionId` in external storage and invoke `callback(null, sessionData)`.
+		If the session cannot be resumed, call `callback(null, null)`.
+		Calling `callback(err)` terminates the incoming connection.
 
 		Listener arguments:
-			sessionId
-			callback
+			`sessionId`
+			`callback`
 	**/
 	var ResumeSession:ServerEvent<(sessionId:Buffer, callback:(Null<Error>, Null<Buffer>) -> Void) -> Void> = "resumeSession";
 
 	/**
 		Emitted when the client sends a certificate status request.
-		You could parse server's current certificate to obtain OCSP url and certificate id,
-		and after obtaining OCSP response invoke `callback(null, resp)`, where `resp` is a `Buffer` instance.
-		Both certificate and issuer are a Buffer DER-representations of the primary and issuer's certificates.
-		They could be used to obtain OCSP certificate id and OCSP endpoint url.
 
-		Alternatively, `callback(null, null)` could be called, meaning that there is no OCSP response.
+		Parse the server certificate to obtain an OCSP URL/id, then invoke `callback(null, resp)`
+		with an OCSP response `Buffer`, or `callback(null, null)` for no response.
+		Calling `callback(err)` destroys the socket with that error.
 
-		Calling `callback(err)` will result in a `socket.destroy(err)` call.
+		`certificate` and `issuer` are DER-encoded buffers for the leaf and issuer certificates.
 	**/
 	var OCSPRequest:ServerEvent<(certificate:Buffer, issuer:Buffer, callback:(Null<Error>, Null<Buffer>) -> Void) -> Void> = "OCSPRequest";
 }
 
 /**
-	This class is a subclass of `net.Server` and has the same methods on it.
-	Instead of accepting just raw TCP connections, this accepts encrypted connections using TLS or SSL.
+	A `net.Server` subclass that accepts TLS/SSL connections instead of raw TCP.
+
+	@see https://nodejs.org/api/tls.html#class-tlsserver
 **/
 @:jsRequire("tls", "Server")
 extern class Server extends js.node.net.Server {
 	/**
-		Returns `Buffer` instance holding the keys currently used for encryption/decryption of the TLS Session Tickets.
+		Returns a 48-byte `Buffer` of the keys currently used for TLS session ticket encryption.
 	**/
 	function getTicketKeys():Buffer;
 
 	/**
-		Updates the keys for encryption/decryption of the TLS Session Tickets.
+		Updates the keys used for encryption/decryption of TLS session tickets.
 
-		NOTE: the buffer should be 48 bytes long. See server `ticketKeys` option for
-		more information on how it is going to be used.
-
-		NOTE: the change is effective only for the future server connections. Existing or currently pending
-		server connections will use previous keys.
+		`keys` must be 48 bytes. See the server `ticketKeys` option.
+		Only future connections use the new keys; existing connections keep the previous keys.
 	**/
 	function setTicketKeys(keys:Buffer):Void;
 
 	/**
-		Add secure context that will be used if client request's SNI hostname
-		is matching passed hostname (wildcards can be used).
+		Adds a secure context used when the client's SNI hostname matches `hostname` (wildcards allowed).
+		When multiple contexts match, the most recently added is used.
 	**/
-	function addContext(hostname:String, credentials:EitherType<SecureContext, SecureContextOptions>):Void;
+	function addContext(hostname:String, context:EitherType<SecureContext, SecureContextOptions>):Void;
 
 	/**
-		The `server.setSecureContext()` method replaces the secure context of an existing server.
-		Existing connections to the server are not interrupted.
+		Replaces the secure context of an existing server.
+		Existing connections are not interrupted.
 	**/
 	function setSecureContext(options:SecureContextOptions):Void;
+
+	/**
+		Removed in Node.js 24 (DEP0122). Pass options to `Tls.createServer` instead.
+	**/
+	@:deprecated("Removed in Node.js 24 (DEP0122). Pass options to Tls.createServer instead")
+	function setOptions(options:TlsCreateServerOptions):Void;
 }

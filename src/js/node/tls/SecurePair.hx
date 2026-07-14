@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -29,18 +29,20 @@ import js.node.events.EventEmitter;
 **/
 enum abstract SecurePairEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
-		The event is emitted from the `SecurePair` once the pair has successfully established a secure connection.
+		Emitted once the pair has successfully established a secure connection.
 
-		Similarly to the checking for the server 'secureConnection' event,
-		`SecurePair.cleartext.authorized` should be checked to confirm whether
-		the certificate used properly authorized.
+		Check `SecurePair.cleartext.authorized` to confirm whether
+		the certificate was properly authorized.
 	**/
-	var Secure:SecurePairEvent<Void->Void> = "secure";
+	var Secure:SecurePairEvent<() -> Void> = "secure";
 }
 
 /**
 	Returned by `Tls.createSecurePair`.
+
+	Removed in Node.js 24 with `tls.createSecurePair` (DEP0064). Use `TLSSocket` instead.
 **/
+@:deprecated("Removed in Node.js 24. Use TLSSocket instead")
 extern class SecurePair extends EventEmitter<SecurePair> {
 	var cleartext(default, null):TLSSocket;
 	var encrypted(default, null):js.node.stream.Duplex.IDuplex;

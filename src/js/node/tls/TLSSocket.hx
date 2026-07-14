@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,153 +26,172 @@ import haxe.Constraints.Function;
 import haxe.extern.EitherType;
 import js.lib.Error;
 import js.node.Buffer;
+import js.node.Tls.DetailedPeerCertificate;
+import js.node.Tls.PeerCertificate;
 import js.node.Tls.TlsClientOptionsBase;
 import js.node.Tls.TlsServerOptionsBase;
 import js.node.crypto.X509Certificate;
 import js.node.events.EventEmitter.Event;
+import js.node.stream.Duplex.IDuplex;
 import js.node.tls.SecureContext.SecureContextOptions;
 
 /**
-	Enumeration of events emitted by `TLSSocket` objects in addition to its parent class events.
+	Events emitted by `TLSSocket` in addition to its parent `net.Socket` events.
 **/
 enum abstract TLSSocketEvent<T:Function>(Event<T>) to Event<T> {
 	/**
-		This event is emitted after a new connection has been successfully handshaked.
+		Emitted when the handshaking process for a new connection has successfully completed.
+		The listener runs whether or not the server certificate was authorized.
 
-		The listener will be called no matter if the server's certificate was authorized or not.
-
-		It is up to the user to test `TLSSocket.authorized` to see if the server certificate
-		was signed by one of the specified CAs. If `TLSSocket.authorized` is false then the error
-		can be found in `TLSSocket.authorizationError`. Also if NPN was used - you can
-		check `TLSSocket.npnProtocol` for negotiated protocol.
+		Check `authorized` to see if the peer certificate was signed by a configured CA.
+		If `authorized` is false, see `authorizationError`. When ALPN was used, see `alpnProtocol`.
 	**/
-	var SecureConnect:TLSSocketEvent<Void->Void> = "secureConnect";
+	var SecureConnect:TLSSocketEvent<() -> Void> = "secureConnect";
 
 	/**
-		Emitted once when the connection is established and the handshake completes (server-side companion of secureConnect).
+		Emitted when the session has been established (server-side companion of `'secureConnect'`).
 	**/
-	var Secure:TLSSocketEvent<Void->Void> = "secure";
+	var Secure:TLSSocketEvent<() -> Void> = "secure";
 
 	/**
-		This event will be emitted if `requestOCSP` option was set.
+		Emitted if the `requestOCSP` option was set.
 
-		`response` is a `Buffer` object, containing server's OCSP response.
-
-		Traditionally, the response is a signed object from the server's CA
-		that contains information about server's certificate revocation status.
+		`response` is a `Buffer` containing the server's OCSP response.
 	**/
-	var OCSPResponse:TLSSocketEvent<Buffer->Void> = "OCSPResponse";
+	var OCSPResponse:TLSSocketEvent<(response:Buffer) -> Void> = "OCSPResponse";
 
 	/**
-		Emitted when key material is generated / received for the purpose of generating a TLS session ticket.
+		Emitted when key material is generated or received for generating a TLS session ticket.
 	**/
-	var Keylog:TLSSocketEvent<Buffer->Void> = "keylog";
+	var Keylog:TLSSocketEvent<(line:Buffer) -> Void> = "keylog";
 
 	/**
-		Emitted on session establishment / update with the TLS session `Buffer`.
+		Emitted on session establishment or update with the TLS session `Buffer`.
 	**/
-	var Session:TLSSocketEvent<Null<Buffer>->Void> = "session";
+	var Session:TLSSocketEvent<(session:Null<Buffer>) -> Void> = "session";
 }
 
+/**
+	Options for constructing a `TLSSocket`.
+**/
 typedef TLSSocketOptions = {
 	> TlsServerOptionsBase,
 	> TlsClientOptionsBase,
+	> SecureContextOptions,
 
 	/**
-		An optional TLS context object from `Tls.createSecureContext`
+		Optional TLS context from `Tls.createSecureContext`.
+		If omitted, one is created from the remaining options.
 	**/
 	@:optional var secureContext:SecureContext;
 
 	/**
-		If true - TLS socket will be instantiated in server-mode
+		If true, the TLS socket is instantiated in server mode.
+
+		Default: false.
 	**/
 	@:optional var isServer:Bool;
 
+	/**
+		Optional `net.Server` instance.
+	**/
 	@:optional var server:js.node.net.Server;
+
+	/**
+		If true, TLS packet trace information is written to `stderr`.
+
+		Default: false.
+	**/
+	@:optional var enableTrace:Bool;
 }
 
 /**
-	This is a wrapped version of `net.Socket` that does transparent encryption
-	of written data and all required TLS negotiation.
+	A duplex stream that performs transparent TLS encryption of written data
+	and the required TLS negotiation.
 
-	Its `encrypted` field is always true.
+	Its `encrypted` property is always `true`.
+
+	@see https://nodejs.org/api/tls.html#class-tlstlssocket
 **/
 @:jsRequire("tls", "TLSSocket")
 extern class TLSSocket extends js.node.net.Socket {
 	/**
-		Construct a new TLSSocket object from existing TCP socket.
+		Construct a new `TLSSocket` from an existing duplex stream (typically a `net.Socket`).
 	**/
-	function new(socket:js.node.net.Socket, options:TLSSocketOptions);
+	function new(socket:IDuplex, ?options:TLSSocketOptions);
 
 	/**
-		true if the peer certificate was signed by one of the specified CAs, otherwise false
+		`true` if the peer certificate was signed by one of the specified CAs, otherwise `false`.
 	**/
 	var authorized(default, null):Bool;
 
 	/**
 		The reason why the peer's certificate has not been verified.
-
-		This property becomes available only when `authorized` is false.
+		Set only when `authorized` is `false`.
 	**/
-	var authorizationError(default, null):Null<String>;
+	var authorizationError(default, null):Null<Error>;
+
+	/**
+		Server name requested via the SNI TLS extension, when available.
+	**/
+	var servername(default, null):Null<EitherType<String, Bool>>;
 
 	/**
 		Negotiated protocol name via NPN.
 
-		@deprecated Use `alpnProtocol` instead.
+		NPN was superseded by ALPN; use `alpnProtocol` instead.
 	**/
 	@:deprecated("Use alpnProtocol instead")
 	var npnProtocol(default, null):String;
 
 	/**
-		String containing the selected ALPN protocol. When ALPN has no selected protocol, this is
-		the empty string. When ALPN has not been negotiated / disabled, this is `false`.
+		The selected ALPN protocol.
+		`null` before the handshake completes; `false` if ALPN was not negotiated / disabled;
+		otherwise the protocol string (may be empty if none was selected).
 	**/
-	var alpnProtocol(default, null):EitherType<String, Bool>;
+	var alpnProtocol(default, null):Null<EitherType<String, Bool>>;
 
 	/**
 		Returns an object representing the peer's certificate.
 
-		The returned object has some properties corresponding to the field of the certificate.
-		If `detailed` argument is true - the full chain with issuer property will be returned,
-		if false - only the top certificate without issuer property.
+		If `detailed` is true, the full chain is returned via `issuerCertificate`.
+		If the peer provides no certificate, an empty object is returned.
+		If the socket has been destroyed, `null` is returned.
 	**/
-	function getPeerCertificate(?detailed:Bool):js.node.Tls.PeerCertificate;
+	@:overload(function(detailed:Bool):Null<DetailedPeerCertificate> {})
+	function getPeerCertificate(?detailed:Bool):Null<PeerCertificate>;
 
 	/**
-		Returns the local certificate as an object.
+		Returns the local certificate as an object, or an empty object / `null` if none.
 	**/
-	function getCertificate():Null<js.node.Tls.PeerCertificate>;
+	function getCertificate():Null<PeerCertificate>;
 
 	/**
-		Returns an object representing the cipher name and the SSL/TLS protocol version of the current connection.
+		Returns the cipher name and TLS protocol version of the current connection.
 
-		Example: { name: 'AES256-SHA', version: 'TLSv1/SSLv3' }
-
-		See SSL_CIPHER_get_name() and SSL_CIPHER_get_version() in http://www.openssl.org/docs/ssl/ssl.html#DEALING_WITH_CIPHERS for more information.
+		Example: `{ name: 'AES256-SHA', standardName: '...', version: 'TLSv1.2' }`.
 	**/
 	function getCipher():{name:String, standardName:String, version:String};
 
 	/**
-		Returns an object representing the type, name, and size of parameter of an ephemeral key exchange
-		in Perfect Forward Secrecy on a client connection. Returns empty object when key exchange is not ephemeral.
+		Returns the type, name, and size of an ephemeral key exchange parameter
+		used for Perfect Forward Secrecy on a client connection.
+		Returns `null`/empty when the key exchange is not ephemeral.
 	**/
-	function getEphemeralKeyInfo():Null<{type:String, name:String, size:Int}>;
+	function getEphemeralKeyInfo():Null<{type:String, ?name:String, size:Int}>;
 
 	/**
-		As the `Finished` messages are message digests of the complete handshake
-		(with a total of 192 bits for TLS 1.0 and more for SSL 3.0), they can
-		be used for external authentication procedures when the authentication provided by SSL/TLS is not desired or is not enough.
+		Returns the latest `Finished` message sent to the peer as a `Buffer`, if available.
 	**/
 	function getFinished():Null<Buffer>;
 
 	/**
-		Returns the latest `Finished` message received from the peer as a `Buffer`.
+		Returns the latest `Finished` message received from the peer as a `Buffer`, if available.
 	**/
 	function getPeerFinished():Null<Buffer>;
 
 	/**
-		Returns a list of signature algorithms shared between the server and the client in order of decreasing preference.
+		Returns signature algorithms shared between server and client, most preferred first.
 	**/
 	function getSharedSigalgs():Array<String>;
 
@@ -182,83 +201,69 @@ extern class TLSSocket extends js.node.net.Socket {
 	function isSessionReused():Bool;
 
 	/**
-		Disables TLS renegotiation for this `TLSSocket` instance.
+		Disables TLS renegotiation for this socket. Subsequent renegotiation attempts emit `'error'`.
 	**/
 	function disableRenegotiation():Void;
 
 	/**
-		Enables TLS trace data for debugging.
+		Enables TLS packet trace data for debugging (written to `stderr`).
 	**/
 	function enableTrace():Void;
 
 	/**
-		Keying material is used for validations for secure channel integrity and confidentially.
+		Exports keying material for channel-binding validations.
+
+		@see https://nodejs.org/api/tls.html#tlssocketexportkeyingmateriallength-label-context
 	**/
 	function exportKeyingMaterial(length:Int, label:String, ?context:Buffer):Buffer;
 
 	/**
-		See `Socket.setKeyCert` / set credentials for the socket when using tickets for session resumption or for delayed certificate availability.
+		Sets the socket's key and certificate (for delayed credentials or session-ticket flows).
 	**/
 	function setKeyCert(context:EitherType<SecureContext, SecureContextOptions>):Void;
 
 	/**
-		Returns the peer certificate as an `X509Certificate` object.
-
-		If there is no peer certificate, or the socket has been destroyed, `null` is returned.
+		Returns the peer certificate as an `X509Certificate`, or `null` if none / destroyed.
 	**/
 	function getPeerX509Certificate():Null<X509Certificate>;
 
 	/**
-		Returns the local certificate as an `X509Certificate` object.
-
-		If there is no local certificate, or the socket has been destroyed, `null` is returned.
+		Returns the local certificate as an `X509Certificate`, or `null` if none / destroyed.
 	**/
 	function getX509Certificate():Null<X509Certificate>;
 
 	/**
-		Initiate TLS renegotiation process.
+		Initiates TLS renegotiation.
 
-		The `options` may contain the following fields: rejectUnauthorized, requestCert (See `Tls.createServer` for details).
+		`options` may include `rejectUnauthorized` and `requestCert` (see `Tls.createServer`).
+		`callback` is invoked with `null` once renegotiation completes successfully.
 
-		`callback(err)` will be executed with null as err, once the renegotiation is successfully completed.
-
-		NOTE: Can be used to request peer's certificate after the secure connection has been established.
-		ANOTHER NOTE: When running as the server, socket will be destroyed with an error after handshakeTimeout timeout.
+		When running as a server, the socket may be destroyed after `handshakeTimeout`.
 	**/
-	function renegotiate(options:{?rejectUnauthorized:Bool, ?requestCert:Bool}, ?callback:Error->Void):Bool;
+	function renegotiate(options:{?rejectUnauthorized:Bool, ?requestCert:Bool}, ?callback:(err:Null<Error>) -> Void):Bool;
 
 	/**
-		Set maximum TLS fragment size (default and maximum value is: 16384, minimum is: 512).
-
-		Returns true on success, false otherwise.
-
-		Smaller fragment size decreases buffering latency on the client: large fragments are buffered by the TLS layer
-		until the entire fragment is received and its integrity is verified; large fragments can span multiple roundtrips,
-		and their processing can be delayed due to packet loss or reordering. However, smaller fragments add
-		extra TLS framing bytes and CPU overhead, which may decrease overall server throughput.
+		Sets the maximum TLS fragment size (default and max: 16384, min: 512).
+		Returns `true` on success, `false` otherwise.
 	**/
 	function setMaxSendFragment(size:Int):Bool;
 
 	/**
-		Returns a string containing the negotiated SSL/TLS protocol version of the current connection.
+		Returns the negotiated TLS protocol version string.
 
-		'unknown' will be returned for connected sockets that have not completed the handshaking process.
-		`null` will be returned for server sockets or disconnected client sockets.
+		Returns `'unknown'` for connected sockets that have not finished handshaking.
+		Returns `null` for server sockets or disconnected client sockets.
 	**/
-	function getProtocol():String;
+	function getProtocol():Null<String>;
 
 	/**
-		Return ASN.1 encoded TLS session or null if none was negotiated.
-		Could be used to speed up handshake establishment when reconnecting to the server.
+		Returns the ASN.1 encoded TLS session, or `null` if none was negotiated.
 	**/
 	function getSession():Null<Buffer>;
 
 	/**
-		NOTE: Works only with client TLS sockets.
-
-		Useful only for debugging, for session reuse provide session option to tls.connect.
-
-		Return TLS session ticket or null if none was negotiated.
+		Returns the TLS session ticket, or `null` if none was negotiated (client sockets).
+		Useful for debugging; for session reuse provide `session` to `Tls.connect`.
 	**/
 	function getTLSTicket():Null<Buffer>;
 }
