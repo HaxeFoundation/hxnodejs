@@ -27,8 +27,7 @@ import js.lib.Uint8Array;
 /**
 	WHATWG Encoding Standard `TextEncoder` (global).
 
-	Also available as `js.Node.TextEncoder` and via `js.node.util.TextEncoder`
-	(`require("util").TextEncoder`).
+	Also available via `js.node.util.TextEncoder` (`require("util").TextEncoder`).
 
 	// TODO(section-4): consider aligning `js.node.util.TextEncoder` with `encodeInto`.
 

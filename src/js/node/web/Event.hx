@@ -25,8 +25,6 @@ package js.node.web;
 /**
 	A browser-compatible implementation of the `Event` class.
 
-	Also available as `js.Node.Event`.
-
 	@see https://nodejs.org/api/events.html#class-event
 	@see https://nodejs.org/api/globals.html#class-event
 **/

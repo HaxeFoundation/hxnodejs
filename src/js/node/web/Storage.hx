@@ -28,7 +28,7 @@ package js.node.web;
 	Stability: 1.2 - Release candidate. Enable with `--experimental-webstorage`.
 	`localStorage` persists to the file given by `--localstorage-file`.
 
-	Also available as `js.Node.Storage`, `js.Node.localStorage`, and `js.Node.sessionStorage`.
+	Also available as `js.Node.localStorage` and `js.Node.sessionStorage`.
 
 	@see https://nodejs.org/api/globals.html#class-storage
 	@see https://nodejs.org/api/globals.html#localstorage

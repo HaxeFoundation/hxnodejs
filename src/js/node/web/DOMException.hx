@@ -27,8 +27,6 @@ import js.lib.Error;
 /**
 	The WHATWG `DOMException` class.
 
-	Also available as `js.Node.DOMException`.
-
 	@see https://nodejs.org/api/globals.html#class-domexception
 **/
 @:native("DOMException")
