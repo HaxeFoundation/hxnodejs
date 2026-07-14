@@ -23,6 +23,7 @@
 package js.node.util;
 
 import haxe.DynamicAccess;
+import js.lib.Symbol;
 import js.node.Util.InspectOptions;
 
 @:jsRequire("util", "inspect")
@@ -33,8 +34,8 @@ extern class Inspect {
 		@see https://nodejs.org/api/util.html#util_util_inspect_object_options
 	**/
 	@:selfCall
-	@:overload(function(object:Dynamic, ?showHidden:Bool, ?depth:Int, ?colors:Bool):String {})
-	static function inspect(object:Dynamic, ?options:InspectOptions):String;
+	@:overload(function(object:Any, ?showHidden:Bool, ?depth:Int, ?colors:Bool):String {})
+	static function inspect(object:Any, ?options:InspectOptions):String;
 
 	/**
 		`util.inspect.styles` is a map associating a style name to a color from `util.inspect.colors` properties.
@@ -55,11 +56,7 @@ extern class Inspect {
 
 		@see https://nodejs.org/api/util.html#util_util_inspect_custom
 	**/
-	#if haxe4
-	static final custom:js.lib.Symbol;
-	#else
-	static var custom(default, never):Dynamic;
-	#end
+	static final custom:Symbol;
 
 	/**
 		The `defaultOptions` value allows customization of the default options used by `util.inspect`.

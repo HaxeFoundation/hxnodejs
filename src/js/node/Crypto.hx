@@ -22,20 +22,16 @@
 
 package js.node;
 
+import haxe.DynamicAccess;
 import haxe.extern.EitherType;
+import js.html.SubtleCrypto;
+import js.lib.ArrayBuffer;
+import js.lib.ArrayBufferView;
+import js.lib.Error;
 import js.node.Buffer;
 import js.node.crypto.*;
 import js.node.crypto.DiffieHellman.IDiffieHellman;
 import js.node.tls.SecureContext;
-#if haxe4
-import js.lib.ArrayBuffer;
-import js.lib.ArrayBufferView;
-import js.lib.Error;
-#else
-import js.html.ArrayBuffer;
-import js.html.ArrayBufferView;
-import js.Error;
-#end
 
 /**
 	Enumerations of crypto algorighms to be used.
@@ -98,6 +94,27 @@ extern class Crypto {
 	**/
 	@:deprecated
 	static var fips:Bool;
+
+	/**
+		OpenSSL crypto constants (padding modes, DH check codes, engine methods, etc.).
+	**/
+	static var constants(default, never):DynamicAccess<Int>;
+
+	/**
+		A convenient alias for `Crypto.webcrypto.subtle`.
+	**/
+	static var subtle(default, never):SubtleCrypto;
+
+	/**
+		Node.js Web Crypto API implementation (`crypto.webcrypto`).
+
+		Typed as the Haxe std `js.html.Crypto` surface. Node-specific Web Crypto
+		extensions beyond that DOM typedef are not duplicated here — no separate
+		`js.node.webcrypto` package.
+
+		// TODO(section-4): audit Node-only Web Crypto additions vs `js.html.Crypto`
+	**/
+	static var webcrypto(default, never):js.html.Crypto;
 
 	/**
 		Returns `1` if and only if a FIPS compliant crypto provider is currently in use, `0` otherwise.
@@ -182,6 +199,7 @@ extern class Crypto {
 
 		`key` and `iv` must be 'binary' encoded strings or buffers.
 	**/
+	@:overload(function(algorithm:String, key:EitherType<EitherType<String, Buffer>, KeyObject>, iv:Null<EitherType<String, Buffer>>):Cipher {})
 	static function createCipheriv(algorithm:String, key:EitherType<String, Buffer>, iv:EitherType<String, Buffer>):Cipher;
 
 	/**
@@ -194,6 +212,7 @@ extern class Crypto {
 		Creates and returns a decipher object, with the given algorithm, key and iv.
 		This is the mirror of the `createCipheriv` above.
 	**/
+	@:overload(function(algorithm:String, key:EitherType<EitherType<String, Buffer>, KeyObject>, iv:Null<EitherType<String, Buffer>>):Decipher {})
 	static function createDecipheriv(algorithm:String, key:EitherType<String, Buffer>, iv:EitherType<String, Buffer>):Decipher;
 
 	/**
@@ -230,12 +249,33 @@ extern class Crypto {
 	static function getDiffieHellman(group_name:DiffieHellmanGroupName):IDiffieHellman;
 
 	/**
+		An alias for `getDiffieHellman`.
+	**/
+	static function createDiffieHellmanGroup(name:DiffieHellmanGroupName):IDiffieHellman;
+
+	/**
 		Creates an Elliptic Curve (EC) Diffie-Hellman key exchange object using a predefined curve
 		specified by the `curve_name` string. Use `getCurves` to obtain a list of available curve names.
 		On recent releases, openssl ecparam -list_curves will also display the name
 		and description of each available elliptic curve.
 	**/
 	static function createECDH(curve_name:String):ECDH;
+
+	/**
+		Creates and returns a new key object containing a private key.
+	**/
+	static function createPrivateKey(key:EitherType<String, EitherType<Buffer, CryptoKeyInput>>):KeyObject;
+
+	/**
+		Creates and returns a new key object containing a public key.
+	**/
+	static function createPublicKey(key:EitherType<String, EitherType<Buffer, EitherType<KeyObject, CryptoKeyInput>>>):KeyObject;
+
+	/**
+		Creates and returns a new key object containing a secret key for symmetric encryption or `Hmac`.
+	**/
+	@:overload(function(key:String, encoding:String):KeyObject {})
+	static function createSecretKey(key:EitherType<String, EitherType<Buffer, ArrayBufferView>>):KeyObject;
 
 	/**
 		Asynchronous PBKDF2 applies pseudorandom function HMAC-SHA1 to derive a key of given length
@@ -403,6 +443,111 @@ extern class Crypto {
 	**/
 	@:overload(function(public_key:CryptoKeyOptions, buffer:Buffer):Buffer {})
 	static function publicEncrypt(public_key:String, buffer:Buffer):Buffer;
+
+	/**
+		Asynchronously generates a new random secret key of the given `length`.
+		`type` is currently `'hmac'` or `'aes'`.
+	**/
+	static function generateKey(type:String, options:GenerateKeyOptions, callback:Error->KeyObject->Void):Void;
+
+	/**
+		Synchronously generates a new random secret key of the given `length`.
+		`type` is currently `'hmac'` or `'aes'`.
+	**/
+	static function generateKeySync(type:String, options:GenerateKeyOptions):KeyObject;
+
+	/**
+		Generates a new asymmetric key pair of the given `type`.
+
+		// TODO(section-4): finer-grained overloads per key type / encoding (RSA, EC, Ed25519, …)
+	**/
+	@:overload(function(type:String, options:Any, callback:Error->EitherType<String, KeyObject>->EitherType<String, KeyObject>->Void):Void {})
+	@:overload(function(type:String, callback:Error->KeyObject->KeyObject->Void):Void {})
+	static function generateKeyPair(type:String, options:Any, callback:Error->KeyObject->KeyObject->Void):Void;
+
+	/**
+		Synchronously generates a new asymmetric key pair of the given `type`.
+
+		// TODO(section-4): finer-grained return encodings per key type
+	**/
+	@:overload(function(type:String):KeyPairKeyObjectResult {})
+	static function generateKeyPairSync(type:String, ?options:Any):EitherType<KeyPairKeyObjectResult, KeyPairEncodedResult>;
+
+	/**
+		Generates a pseudorandom prime of `size` bits.
+	**/
+	@:overload(function(size:Int, options:GeneratePrimeOptions, callback:Error->EitherType<ArrayBuffer, Any>->Void):Void {})
+	static function generatePrime(size:Int, callback:Error->ArrayBuffer->Void):Void;
+
+	/**
+		Generates a pseudorandom prime of `size` bits (synchronous).
+	**/
+	static function generatePrimeSync(size:Int, ?options:GeneratePrimeOptions):EitherType<ArrayBuffer, Any>;
+
+	/**
+		One-shot hashing. Returns a digest for `data` using `algorithm`.
+	**/
+	@:overload(function(algorithm:String, data:EitherType<String, EitherType<Buffer, ArrayBufferView>>, options:HashOptions):EitherType<String, Buffer> {})
+	static function hash(algorithm:String, data:EitherType<String, EitherType<Buffer, ArrayBufferView>>, ?encoding:String):EitherType<String, Buffer>;
+
+	/**
+		Calculates and returns the signature for `data` using the given private key and algorithm.
+	**/
+	@:overload(function(algorithm:Null<String>, data:EitherType<Buffer, ArrayBufferView>, key:EitherType<String, EitherType<Buffer, KeyObject>>,
+		callback:Error->Buffer->Void):Void {})
+	static function sign(algorithm:Null<String>, data:EitherType<Buffer, ArrayBufferView>,
+		key:EitherType<String, EitherType<Buffer, EitherType<KeyObject, CryptoKeyInput>>>):Buffer;
+
+	/**
+		Verifies the given signature for `data` using the given key and algorithm.
+	**/
+	@:overload(function(algorithm:Null<String>, data:EitherType<Buffer, ArrayBufferView>,
+		key:EitherType<String, EitherType<Buffer, EitherType<KeyObject, CryptoKeyInput>>>, signature:EitherType<Buffer, ArrayBufferView>,
+		callback:Error->Bool->Void):Void {})
+	static function verify(algorithm:Null<String>, data:EitherType<Buffer, ArrayBufferView>,
+		key:EitherType<String, EitherType<Buffer, EitherType<KeyObject, CryptoKeyInput>>>,
+		signature:EitherType<Buffer, ArrayBufferView>):Bool;
+
+	/**
+		Computes the Diffie-Hellman shared secret based on a `privateKey` and a `publicKey`.
+	**/
+	@:overload(function(options:DiffieHellmanOptions, callback:Error->Buffer->Void):Void {})
+	static function diffieHellman(options:DiffieHellmanOptions):Buffer;
+
+	/**
+		A Web Crypto-compatible implementation of `getRandomValues`.
+	**/
+	static function getRandomValues<T:ArrayBufferView>(typedArray:T):T;
+
+	/**
+		Returns information about the secure heap usage used by OpenSSL.
+	**/
+	static function secureHeapUsed():SecureHeapUsage;
+
+	/**
+		Key encapsulation (KEM) using a public key.
+	**/
+	@:overload(function(key:EitherType<String, EitherType<Buffer, EitherType<KeyObject, CryptoKeyInput>>>,
+		callback:Error->EncapsulateResult->Void):Void {})
+	static function encapsulate(key:EitherType<String, EitherType<Buffer, EitherType<KeyObject, CryptoKeyInput>>>):EncapsulateResult;
+
+	/**
+		Key decapsulation using a private key.
+	**/
+	@:overload(function(key:EitherType<String, EitherType<Buffer, EitherType<KeyObject, CryptoKeyInput>>>,
+		ciphertext:EitherType<ArrayBuffer, ArrayBufferView>, callback:Error->Buffer->Void):Void {})
+	static function decapsulate(key:EitherType<String, EitherType<Buffer, EitherType<KeyObject, CryptoKeyInput>>>,
+		ciphertext:EitherType<ArrayBuffer, ArrayBufferView>):Buffer;
+
+	/**
+		Provides an asynchronous Argon2 implementation.
+	**/
+	static function argon2(algorithm:Argon2Algorithm, parameters:Argon2Parameters, callback:Error->Buffer->Void):Void;
+
+	/**
+		Provides a synchronous Argon2 implementation.
+	**/
+	static function argon2Sync(algorithm:Argon2Algorithm, parameters:Argon2Parameters):Buffer;
 }
 
 /**
@@ -552,4 +697,105 @@ typedef CipherInfo = {
 		`'ocb'`, `'ofb'`, `'stream'`, `'wrap'`, `'xts'`.
 	**/
 	@:optional var mode:String;
+}
+
+/**
+	Input object accepted by several crypto key helpers.
+**/
+typedef CryptoKeyInput = {
+	var key:EitherType<String, EitherType<Buffer, ArrayBufferView>>;
+	@:optional var format:String;
+	@:optional var type:String;
+	@:optional var passphrase:EitherType<String, Buffer>;
+	@:optional var encoding:String;
+}
+
+/**
+	Options for `Crypto.generateKey` / `generateKeySync`.
+**/
+typedef GenerateKeyOptions = {
+	var length:Int;
+}
+
+/**
+	Result when `generateKeyPairSync` returns KeyObject instances.
+**/
+typedef KeyPairKeyObjectResult = {
+	var publicKey:KeyObject;
+	var privateKey:KeyObject;
+}
+
+/**
+	Result when `generateKeyPairSync` returns encoded keys.
+**/
+typedef KeyPairEncodedResult = {
+	var publicKey:EitherType<String, Buffer>;
+	var privateKey:EitherType<String, Buffer>;
+}
+
+/**
+	Options for `Crypto.generatePrime` / `generatePrimeSync`.
+**/
+typedef GeneratePrimeOptions = {
+	@:optional var safe:Bool;
+	@:optional var bigint:Bool;
+	@:optional var add:EitherType<ArrayBuffer, ArrayBufferView>;
+	@:optional var rem:EitherType<ArrayBuffer, ArrayBufferView>;
+}
+
+/**
+	Options for one-shot `Crypto.hash`.
+**/
+typedef HashOptions = {
+	@:optional var outputEncoding:String;
+	@:optional var outputLength:Int;
+}
+
+/**
+	Options for `Crypto.diffieHellman`.
+**/
+typedef DiffieHellmanOptions = {
+	var privateKey:KeyObject;
+	var publicKey:KeyObject;
+}
+
+/**
+	Result of `Crypto.secureHeapUsed`.
+**/
+typedef SecureHeapUsage = {
+	var total:Float;
+	var min:Float;
+	var used:Float;
+	var utilization:Float;
+}
+
+/**
+	Result of `Crypto.encapsulate`.
+**/
+typedef EncapsulateResult = {
+	var sharedKey:Buffer;
+	var ciphertext:Buffer;
+}
+
+/**
+	Argon2 algorithm identifiers.
+**/
+enum abstract Argon2Algorithm(String) from String to String {
+	var Argon2d = "argon2d";
+	var Argon2i = "argon2i";
+	var Argon2id = "argon2id";
+}
+
+/**
+	Parameters for `Crypto.argon2` / `argon2Sync`.
+**/
+typedef Argon2Parameters = {
+	var message:EitherType<String, EitherType<ArrayBuffer, ArrayBufferView>>;
+	var nonce:EitherType<String, EitherType<ArrayBuffer, ArrayBufferView>>;
+	var parallelism:Int;
+	var tagLength:Int;
+	var memory:Int;
+	var passes:Int;
+	@:optional var secret:EitherType<String, EitherType<ArrayBuffer, ArrayBufferView>>;
+	@:optional var associatedData:EitherType<String, EitherType<ArrayBuffer, ArrayBufferView>>;
 }

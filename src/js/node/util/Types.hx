@@ -34,49 +34,56 @@ extern class Types {
 
 		@see https://nodejs.org/api/util.html#util_util_types_isanyarraybuffer_value
 	**/
-	static function isAnyArrayBuffer(value:Dynamic):Bool;
+	static function isAnyArrayBuffer(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an `arguments` object.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isargumentsobject_value
 	**/
-	static function isArgumentsObject(value:Dynamic):Bool;
+	static function isArgumentsObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `ArrayBuffer` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isarraybuffer_value
 	**/
-	static function isArrayBuffer(value:Dynamic):Bool;
+	static function isArrayBuffer(value:Any):Bool;
+
+	/**
+		Returns `true` if the value is an `ArrayBufferView` (TypedArray or DataView).
+
+		@see https://nodejs.org/api/util.html#util_util_types_isarraybufferview_value
+	**/
+	static function isArrayBufferView(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an async function.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isasyncfunction_value
 	**/
-	static function isAsyncFunction(value:Dynamic):Bool;
+	static function isAsyncFunction(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a `BigInt64Array` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isbigint64array_value
 	**/
-	static function isBigInt64Array(value:Dynamic):Bool;
+	static function isBigInt64Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a `BigUint64Array` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isbiguint64array_value
 	**/
-	static function isBigUint64Array(value:Dynamic):Bool;
+	static function isBigUint64Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a boolean object, e.g. created by `new Boolean()`.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isbooleanobject_value
 	**/
-	static function isBooleanObject(value:Dynamic):Bool;
+	static function isBooleanObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is any boxed primitive object, e.g. created by `new Boolean()`, `new String()` or
@@ -84,222 +91,242 @@ extern class Types {
 
 		@see https://nodejs.org/api/util.html#util_util_types_isboxedprimitive_value
 	**/
-	static function isBoxedPrimitive(value:Dynamic):Bool;
+	static function isBoxedPrimitive(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `DataView` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isdataview_value
 	**/
-	static function isDataView(value:Dynamic):Bool;
+	static function isDataView(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Date` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isdate_value
 	**/
-	static function isDate(value:Dynamic):Bool;
+	static function isDate(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a native `External` value.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isexternal_value
 	**/
-	static function isExternal(value:Dynamic):Bool;
+	static function isExternal(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Float32Array` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isfloat32array_value
 	**/
-	static function isFloat32Array(value:Dynamic):Bool;
+	static function isFloat32Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Float64Array` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isfloat64array_value
 	**/
-	static function isFloat64Array(value:Dynamic):Bool;
+	static function isFloat64Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a generator function.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isgeneratorfunction_value
 	**/
-	static function isGeneratorFunction(value:Dynamic):Bool;
+	static function isGeneratorFunction(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a generator object as returned from a built-in generator function.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isgeneratorobject_value
 	**/
-	static function isGeneratorObject(value:Dynamic):Bool;
+	static function isGeneratorObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Int8Array` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isint8array_value
 	**/
-	static function isInt8Array(value:Dynamic):Bool;
+	static function isInt8Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Int16Array` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isint16array_value
 	**/
-	static function isInt16Array(value:Dynamic):Bool;
+	static function isInt16Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Int32Array` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isint32array_value
 	**/
-	static function isInt32Array(value:Dynamic):Bool;
+	static function isInt32Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Map` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_ismap_value
 	**/
-	static function isMap(value:Dynamic):Bool;
+	static function isMap(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an iterator returned for a built-in `Map` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_ismapiterator_value
 	**/
-	static function isMapIterator(value:Dynamic):Bool;
+	static function isMapIterator(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an instance of a Module Namespace Object.
 
 		@see https://nodejs.org/api/util.html#util_util_types_ismodulenamespaceobject_value
 	**/
-	static function isModuleNamespaceObject(value:Dynamic):Bool;
+	static function isModuleNamespaceObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an instance of a built-in `Error` type.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isnativeerror_value
 	**/
-	static function isNativeError(value:Dynamic):Bool;
+	static function isNativeError(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a number object, e.g. created by `new Number()`.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isnumberobject_value
 	**/
-	static function isNumberObject(value:Dynamic):Bool;
+	static function isNumberObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Promise`.
 
 		@see https://nodejs.org/api/util.html#util_util_types_ispromise_value
 	**/
-	static function isPromise(value:Dynamic):Bool;
+	static function isPromise(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a `Proxy` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isproxy_value
 	**/
-	static function isProxy(value:Dynamic):Bool;
+	static function isProxy(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a regular expression object.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isregexp_value
 	**/
-	static function isRegExp(value:Dynamic):Bool;
+	static function isRegExp(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Set` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isset_value
 	**/
-	static function isSet(value:Dynamic):Bool;
+	static function isSet(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an iterator returned for a built-in `Set` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_issetiterator_value
 	**/
-	static function isSetIterator(value:Dynamic):Bool;
+	static function isSetIterator(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `SharedArrayBuffer` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_issharedarraybuffer_value
 	**/
-	static function isSharedArrayBuffer(value:Dynamic):Bool;
+	static function isSharedArrayBuffer(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a string object, e.g. created by `new String()`.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isstringobject_value
 	**/
-	static function isStringObject(value:Dynamic):Bool;
+	static function isStringObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a symbol object, created by calling `Object()` on a `Symbol` primitive.
 
 		@see https://nodejs.org/api/util.html#util_util_types_issymbolobject_value
 	**/
-	static function isSymbolObject(value:Dynamic):Bool;
+	static function isSymbolObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `TypedArray` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_istypedarray_value
 	**/
-	static function isTypedArray(value:Dynamic):Bool;
+	static function isTypedArray(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Uint8Array` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isuint8array_value
 	**/
-	static function isUint8Array(value:Dynamic):Bool;
+	static function isUint8Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Uint8ClampedArray` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isuint8clampedarray_value
 	**/
-	static function isUint8ClampedArray(value:Dynamic):Bool;
+	static function isUint8ClampedArray(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Uint16Array` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isuint16array_value
 	**/
-	static function isUint16Array(value:Dynamic):Bool;
+	static function isUint16Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Uint32Array` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isuint32array_value
 	**/
-	static function isUint32Array(value:Dynamic):Bool;
+	static function isUint32Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `WeakMap` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isweakmap_value
 	**/
-	static function isWeakMap(value:Dynamic):Bool;
+	static function isWeakMap(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `WeakSet` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_isweakset_value
 	**/
-	static function isWeakSet(value:Dynamic):Bool;
+	static function isWeakSet(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `WebAssembly.Module` instance.
 
 		@see https://nodejs.org/api/util.html#util_util_types_iswebassemblycompiledmodule_value
 	**/
-	static function isWebAssemblyCompiledModule(value:Dynamic):Bool;
+	static function isWebAssemblyCompiledModule(value:Any):Bool;
+
+	/**
+		Returns `true` if the value is a `BigInt` object boxed wrapper (not a primitive BigInt).
+	**/
+	static function isBigIntObject(value:Any):Bool;
+
+	/**
+		Returns `true` if the value is a `Float16Array` instance.
+	**/
+	static function isFloat16Array(value:Any):Bool;
+
+	/**
+		Returns `true` if the value is a `KeyObject` from the `crypto` module.
+	**/
+	static function isKeyObject(value:Any):Bool;
+
+	/**
+		Returns `true` if the value is a Web Crypto `CryptoKey` instance.
+	**/
+	static function isCryptoKey(value:Any):Bool;
 }

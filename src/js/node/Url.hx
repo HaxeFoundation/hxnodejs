@@ -23,6 +23,7 @@
 package js.node;
 
 import haxe.extern.EitherType;
+import js.node.Buffer;
 import js.node.url.URL;
 
 /**
@@ -40,15 +41,23 @@ extern class Url {
 	/**
 		Returns the Unicode serialization of the `domain`. If `domain` is an invalid domain, the empty string is returned.
 
-		It performs the inverse operation to `url.dmainToASCII()`.
+		It performs the inverse operation to `url.domainToASCII()`.
 	**/
 	static function domainToUnicode(domain:String):String;
 
 	/**
 		This function ensures the correct decodings of percent-encoded characters as well as ensuring a cross-platform valid absolute path string.
 	**/
+	@:overload(function(url:String, ?options:FileUrlToPathOptions):String {})
+	@:overload(function(url:URL, ?options:FileUrlToPathOptions):String {})
 	@:overload(function(url:String):String {})
 	static function fileURLToPath(url:URL):String;
+
+	/**
+		Like `fileURLToPath` but returns a `Buffer` containing the path.
+	**/
+	@:overload(function(url:String, ?options:FileUrlToPathOptions):Buffer {})
+	static function fileURLToPathBuffer(url:URL, ?options:FileUrlToPathOptions):Buffer;
 
 	/**
 		Returns a customizable serialization of a URL `String` representation of a [WHATWG URL](https://nodejs.org/api/url.html#url_the_whatwg_url_api) object.
@@ -67,7 +76,7 @@ extern class Url {
 		This function ensures that `path` is resolved absolutely,
 		and that the URL control characters are correctly encoded when converting into a File URL.
 	**/
-	static function pathToFileURL(path:String):URL;
+	static function pathToFileURL(path:String, ?options:PathToFileUrlOptions):URL;
 
 	/**
 		Takes a URL string, parses it, and returns a URL object.
@@ -96,6 +105,14 @@ extern class Url {
 	**/
 	@:deprecated
 	static function resolve(from:String, to:String):String;
+
+	/**
+		Deprecated legacy helper similar to `resolve`, operating on URL objects.
+
+		@see https://nodejs.org/api/url.html
+	**/
+	@:deprecated
+	static function resolveObject(source:EitherType<String, UrlObject>, relative:EitherType<String, UrlObject>):UrlObject;
 
 	/**
 		This utility function converts a URL object into an ordinary options object as expected by the `http.request()` and `https.request()` APIs.
@@ -297,4 +314,24 @@ typedef UrlObject = {
 		For example: '#hash'
 	**/
 	@:optional var hash:String;
+}
+
+/**
+	Options for `Url.fileURLToPath` / `fileURLToPathBuffer`.
+**/
+typedef FileUrlToPathOptions = {
+	/**
+		`true` if the path should retain Windows-style separators.
+	**/
+	@:optional var windows:Bool;
+}
+
+/**
+	Options for `Url.pathToFileURL`.
+**/
+typedef PathToFileUrlOptions = {
+	/**
+		`true` if the path is a Windows path.
+	**/
+	@:optional var windows:Bool;
 }
