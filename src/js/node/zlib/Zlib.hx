@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,12 @@ package js.node.zlib;
 
 /**
 	Not exported by the zlib module.
-	It is documented here because it is the base class of the compressor/decompressor classes.
+	Documented here as the base class of the compressor/decompressor classes.
+
+	Renamed from `Zlib` to `ZlibBase` in Node.js documentation (v11.7.0+);
+	this type keeps the historical Haxe name.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/zlib.html#class-zlibzlibbase
 **/
 extern class Zlib extends js.node.stream.Transform<Zlib> {
 	/**
@@ -34,18 +39,26 @@ extern class Zlib extends js.node.stream.Transform<Zlib> {
 	var bytesWritten(default, null):Float;
 
 	/**
+		Close the underlying handle.
+	**/
+	function close(?callback:Void->Void):Void;
+
+	/**
 		Flush pending data.
 
-		`kind` defaults to `Zlib.Z_FULL_FLUSH`.
+		`kind` defaults to `Zlib.constants.Z_FULL_FLUSH` for zlib-based streams,
+		`Zlib.constants.BROTLI_OPERATION_FLUSH` for Brotli-based streams, and
+		`Zlib.constants.ZSTD_e_flush` for Zstd-based streams.
 
-		Don't call this frivolously, premature flushes negatively impact the effectiveness of the compression algorithm.
+		Don't call this frivolously; premature flushes negatively impact the
+		effectiveness of the compression algorithm.
 	**/
 	@:overload(function(kind:Int, callback:Void->Void):Void {})
 	function flush(callback:Void->Void):Void;
 
 	/**
 		Dynamically update the compression level and compression strategy.
-		Only applicable to deflate algorithm.
+		Only available for zlib-based (deflate) streams — not Brotli or Zstd.
 	**/
 	function params(level:Int, strategy:Int, callback:Void->Void):Void;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,6 +24,8 @@ package js.node.zlib;
 
 /**
 	Decompress either a Gzip- or Deflate-compressed stream by auto-detecting the header.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/zlib.html#class-zlibunzip
 **/
 @:jsRequire("zlib", "Unzip")
 extern class Unzip extends Zlib {}

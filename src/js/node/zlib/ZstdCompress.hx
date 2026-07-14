@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,6 +26,8 @@ package js.node.zlib;
 	Compress data using the Zstandard (zstd) algorithm.
 
 	Stability: 1 - Experimental
+
+	@see https://nodejs.org/docs/latest-v24.x/api/zlib.html#class-zlibzstdcompress
 **/
 @:jsRequire("zlib", "ZstdCompress")
 extern class ZstdCompress extends Zlib {}
