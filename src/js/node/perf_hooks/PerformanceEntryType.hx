@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@ package js.node.perf_hooks;
 /**
 	Type of a performance entry (`performanceEntry.entryType`).
 
-	@see https://nodejs.org/api/perf_hooks.html#performanceentryentrytype
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceentryentrytype
 **/
 enum abstract PerformanceEntryType(String) from String to String {
 	/** Node.js only **/

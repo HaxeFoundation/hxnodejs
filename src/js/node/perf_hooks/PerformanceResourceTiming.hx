@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,96 +27,126 @@ package js.node.perf_hooks;
 
 	The constructor of this class is not exposed to users directly.
 
-	@see https://nodejs.org/api/perf_hooks.html#class-performanceresourcetiming
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#class-performanceresourcetiming
 **/
 @:jsRequire("perf_hooks", "PerformanceResourceTiming")
 extern class PerformanceResourceTiming extends PerformanceEntry {
 	/**
 		The high resolution millisecond timestamp at immediately before dispatching the `fetch` request.
 		If the resource is not intercepted by a worker the property will always return 0.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingworkerstart
 	**/
-	var workerStart(default, null):Float;
+	final workerStart:Float;
 
 	/**
 		The high resolution millisecond timestamp that represents the start time of the fetch which
 		initiates the redirect.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingredirectstart
 	**/
-	var redirectStart(default, null):Float;
+	final redirectStart:Float;
 
 	/**
 		The high resolution millisecond timestamp that will be created immediately after receiving the
 		last byte of the response of the last redirect.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingredirectend
 	**/
-	var redirectEnd(default, null):Float;
+	final redirectEnd:Float;
 
 	/**
 		The high resolution millisecond timestamp immediately before the Node.js starts to fetch the resource.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingfetchstart
 	**/
-	var fetchStart(default, null):Float;
+	final fetchStart:Float;
 
 	/**
 		The high resolution millisecond timestamp immediately before the Node.js starts the domain name
 		lookup for the resource.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingdomainlookupstart
 	**/
-	var domainLookupStart(default, null):Float;
+	final domainLookupStart:Float;
 
 	/**
 		The high resolution millisecond timestamp representing the time immediately after the Node.js
 		finished the domain name lookup for the resource.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingdomainlookupend
 	**/
-	var domainLookupEnd(default, null):Float;
+	final domainLookupEnd:Float;
 
 	/**
 		The high resolution millisecond timestamp representing the time immediately before Node.js starts
 		to establish the connection to the server to retrieve the resource.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingconnectstart
 	**/
-	var connectStart(default, null):Float;
+	final connectStart:Float;
 
 	/**
 		The high resolution millisecond timestamp representing the time immediately after Node.js finishes
 		establishing the connection to the server to retrieve the resource.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingconnectend
 	**/
-	var connectEnd(default, null):Float;
+	final connectEnd:Float;
 
 	/**
 		The high resolution millisecond timestamp representing the time immediately before Node.js starts
 		the handshake process to secure the current connection.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingsecureconnectionstart
 	**/
-	var secureConnectionStart(default, null):Float;
+	final secureConnectionStart:Float;
 
 	/**
 		The high resolution millisecond timestamp representing the time immediately before Node.js receives
 		the first byte of the response from the server.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingrequeststart
 	**/
-	var requestStart(default, null):Float;
+	final requestStart:Float;
 
 	/**
 		The high resolution millisecond timestamp representing the time immediately after Node.js receives
 		the last byte of the resource or immediately before the transport connection is closed, whichever
 		comes first.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingresponseend
 	**/
-	var responseEnd(default, null):Float;
+	final responseEnd:Float;
 
 	/**
 		A number representing the size (in octets) of the fetched resource. The size includes the response
 		header fields plus the response payload body.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingtransfersize
 	**/
-	var transferSize(default, null):Float;
+	final transferSize:Float;
 
 	/**
 		A number representing the size (in octets) received from the fetch (HTTP or cache), of the payload
 		body, before removing any applied content-codings.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingencodedbodysize
 	**/
-	var encodedBodySize(default, null):Float;
+	final encodedBodySize:Float;
 
 	/**
 		A number representing the size (in octets) received from the fetch (HTTP or cache), of the message
 		body, after removing any applied content-codings.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingdecodedbodysize
 	**/
-	var decodedBodySize(default, null):Float;
+	final decodedBodySize:Float;
 
 	/**
 		Returns an object that is the JSON representation of the `PerformanceResourceTiming` object.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingtojson
 	**/
 	override function toJSON():Dynamic;
 }

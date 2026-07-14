@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,13 +26,15 @@ package js.node.perf_hooks;
 	Used to provide access to the `PerformanceEntry` instances passed to a `PerformanceObserver`.
 	The constructor of this class is not exposed to users.
 
-	@see https://nodejs.org/api/perf_hooks.html#class-performanceobserverentrylist
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#class-performanceobserverentrylist
 **/
 @:jsRequire("perf_hooks", "PerformanceObserverEntryList")
 extern class PerformanceObserverEntryList {
 	/**
 		Returns a list of `PerformanceEntry` objects in chronological order with respect to
 		`performanceEntry.startTime`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceobserverentrylistgetentries
 	**/
 	function getEntries():Array<PerformanceEntry>;
 
@@ -40,12 +42,16 @@ extern class PerformanceObserverEntryList {
 		Returns a list of `PerformanceEntry` objects in chronological order with respect to
 		`performanceEntry.startTime` whose `performanceEntry.name` is equal to `name`, and optionally,
 		whose `performanceEntry.entryType` is equal to `type`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceobserverentrylistgetentriesbynamename-type
 	**/
 	function getEntriesByName(name:String, ?type:PerformanceEntryType):Array<PerformanceEntry>;
 
 	/**
 		Returns a list of `PerformanceEntry` objects in chronological order with respect to
 		`performanceEntry.startTime` whose `performanceEntry.entryType` is equal to `type`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceobserverentrylistgetentriesbytypetype
 	**/
 	function getEntriesByType(type:PerformanceEntryType):Array<PerformanceEntry>;
 }

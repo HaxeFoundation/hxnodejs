@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -29,14 +29,16 @@ import haxe.extern.EitherType;
 
 	The constructor of this class is not exposed to users directly.
 
-	@see https://nodejs.org/api/perf_hooks.html#class-performancemeasure
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#class-performancemeasure
 **/
 @:jsRequire("perf_hooks", "PerformanceMeasure")
 extern class PerformanceMeasure extends PerformanceEntry {
 	/**
 		Additional detail specified when creating with `Performance.measure()` method.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancemeasuredetail
 	**/
-	var detail(default, null):Dynamic;
+	final detail:Dynamic;
 }
 
 /**

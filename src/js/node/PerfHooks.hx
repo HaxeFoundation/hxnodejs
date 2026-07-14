@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -44,19 +44,19 @@ extern class PerfHooks {
 
 		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#perf_hooksperformance
 	**/
-	static var performance(default, never):Performance;
+	static final performance:Performance;
 
 	/**
 		Constants for garbage collection kinds and flags.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#perf_hooksconstants
 	**/
-	static var constants(default, never):PerfHooksConstants;
+	static final constants:PerfHooksConstants;
 
 	/**
 		Returns a `RecordableHistogram`.
 
-		@see https://nodejs.org/api/perf_hooks.html#perf_hookscreatehistogramoptions
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#perf_hookscreatehistogramoptions
 	**/
 	static function createHistogram(?options:CreateHistogramOptions):RecordableHistogram;
 
@@ -66,7 +66,7 @@ extern class PerfHooks {
 
 		This property is an extension by Node.js. It is not available in Web browsers.
 
-		@see https://nodejs.org/api/perf_hooks.html#perf_hooksmonitoreventloopdelayoptions
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#perf_hooksmonitoreventloopdelayoptions
 	**/
 	static function monitorEventLoopDelay(?options:EventLoopMonitorOptions):IntervalHistogram;
 
@@ -78,7 +78,7 @@ extern class PerfHooks {
 		Added in Node.js v24.12.0 (Active LTS). On earlier versions (including Node.js 22 LTS)
 		this is `undefined` at module level; use `PerfHooks.performance.eventLoopUtilization` instead.
 
-		@see https://nodejs.org/api/perf_hooks.html#perf_hookseventlooputilizationutilization1-utilization2
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#perf_hookseventlooputilizationutilization1-utilization2
 	**/
 	static function eventLoopUtilization(?utilization1:EventLoopUtilization, ?utilization2:EventLoopUtilization):EventLoopUtilization;
 
@@ -93,7 +93,7 @@ extern class PerfHooks {
 		Added in Node.js v24.12.0 (Active LTS). On earlier versions (including Node.js 22 LTS)
 		this is `undefined` at module level; use `PerfHooks.performance.timerify` instead.
 
-		@see https://nodejs.org/api/perf_hooks.html#perf_hookstimerifyfn-options
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#perf_hookstimerifyfn-options
 	**/
 	static function timerify<T:Function>(fn:T, ?options:TimerifyOptions):T;
 }
@@ -102,17 +102,17 @@ extern class PerfHooks {
 	Constants exported by `perf_hooks.constants`.
 **/
 typedef PerfHooksConstants = {
-	var NODE_PERFORMANCE_GC_MAJOR(default, never):Int;
-	var NODE_PERFORMANCE_GC_MINOR(default, never):Int;
-	var NODE_PERFORMANCE_GC_INCREMENTAL(default, never):Int;
-	var NODE_PERFORMANCE_GC_WEAKCB(default, never):Int;
-	var NODE_PERFORMANCE_GC_FLAGS_NO(default, never):Int;
-	var NODE_PERFORMANCE_GC_FLAGS_CONSTRUCT_RETAINED(default, never):Int;
-	var NODE_PERFORMANCE_GC_FLAGS_FORCED(default, never):Int;
-	var NODE_PERFORMANCE_GC_FLAGS_SYNCHRONOUS_PHANTOM_PROCESSING(default, never):Int;
-	var NODE_PERFORMANCE_GC_FLAGS_ALL_AVAILABLE_GARBAGE(default, never):Int;
-	var NODE_PERFORMANCE_GC_FLAGS_ALL_EXTERNAL_MEMORY(default, never):Int;
-	var NODE_PERFORMANCE_GC_FLAGS_SCHEDULE_IDLE(default, never):Int;
+	final NODE_PERFORMANCE_GC_MAJOR:Int;
+	final NODE_PERFORMANCE_GC_MINOR:Int;
+	final NODE_PERFORMANCE_GC_INCREMENTAL:Int;
+	final NODE_PERFORMANCE_GC_WEAKCB:Int;
+	final NODE_PERFORMANCE_GC_FLAGS_NO:Int;
+	final NODE_PERFORMANCE_GC_FLAGS_CONSTRUCT_RETAINED:Int;
+	final NODE_PERFORMANCE_GC_FLAGS_FORCED:Int;
+	final NODE_PERFORMANCE_GC_FLAGS_SYNCHRONOUS_PHANTOM_PROCESSING:Int;
+	final NODE_PERFORMANCE_GC_FLAGS_ALL_AVAILABLE_GARBAGE:Int;
+	final NODE_PERFORMANCE_GC_FLAGS_ALL_EXTERNAL_MEMORY:Int;
+	final NODE_PERFORMANCE_GC_FLAGS_SCHEDULE_IDLE:Int;
 }
 
 /**

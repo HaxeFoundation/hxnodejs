@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@ package js.node.perf_hooks;
 /**
 	Exposes marks created via the `Performance.mark()` method.
 
-	@see https://nodejs.org/api/perf_hooks.html#class-performancemark
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#class-performancemark
 **/
 @:jsRequire("perf_hooks", "PerformanceMark")
 extern class PerformanceMark extends PerformanceEntry {
@@ -33,8 +33,10 @@ extern class PerformanceMark extends PerformanceEntry {
 
 	/**
 		Additional detail specified when creating with `Performance.mark()` method.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancemarkdetail
 	**/
-	var detail(default, null):Dynamic;
+	final detail:Dynamic;
 }
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -29,29 +29,35 @@ package js.node.perf_hooks;
 
 	The constructor of this class is not exposed to users directly.
 
-	@see https://nodejs.org/api/perf_hooks.html#class-performancenodeentry
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#class-performancenodeentry
 **/
 extern class PerformanceNodeEntry extends PerformanceEntry {
 	/**
 		Additional detail specific to the `entryType`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenodeentrydetail
 	**/
-	var detail(default, null):Dynamic;
+	final detail:Dynamic;
 
 	/**
 		Stability: 0 - Deprecated: Use `detail` instead.
 
 		When `entryType` is equal to `'gc'`, contains additional information about
 		garbage collection operation.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenodeentryflags
 	**/
 	@:deprecated("Use detail instead")
-	var flags(default, null):Int;
+	final flags:Int;
 
 	/**
 		Stability: 0 - Deprecated: Use `detail` instead.
 
 		When `entryType` is equal to `'gc'`, identifies the type of garbage collection
 		operation that occurred.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenodeentrykind
 	**/
 	@:deprecated("Use detail instead")
-	var kind(default, null):Int;
+	final kind:Int;
 }

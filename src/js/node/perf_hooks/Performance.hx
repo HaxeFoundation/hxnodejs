@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,6 @@
 package js.node.perf_hooks;
 
 import haxe.Constraints.Function;
-import haxe.extern.EitherType;
 import js.node.PerfHooks.EventLoopUtilization;
 import js.node.PerfHooks.TimerifyOptions;
 import js.node.web.Event;
@@ -44,7 +43,7 @@ enum abstract PerformanceEvent(String) from String to String {
 		`performance.clearResourceTimings()` in the event listener to allow more entries
 		to be added to the performance timeline buffer.
 
-		@see https://nodejs.org/api/perf_hooks.html#event-resourcetimingbufferfull
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#event-resourcetimingbufferfull
 	**/
 	var ResourceTimingBufferFull = "resourcetimingbufferfull";
 }
@@ -55,26 +54,31 @@ enum abstract PerformanceEvent(String) from String to String {
 
 	Extends `EventTarget` (not `EventEmitter`).
 
-	@see https://nodejs.org/api/perf_hooks.html#class-performance
-	@see https://nodejs.org/api/globals.html#performance
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#perf_hooksperformance
 **/
 @:jsRequire("perf_hooks", "Performance")
 extern class Performance extends EventTarget {
 	/**
 		If `name` is not provided, removes all `PerformanceMark` objects from the Performance Timeline.
 		If `name` is provided, removes only the named mark.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceclearmarksname
 	**/
 	function clearMarks(?name:String):Void;
 
 	/**
 		If `name` is not provided, removes all `PerformanceMeasure` objects from the Performance Timeline.
 		If `name` is provided, removes only the named measure.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceclearmeasuresname
 	**/
 	function clearMeasures(?name:String):Void;
 
 	/**
 		If `name` is not provided, removes all `PerformanceResourceTiming` objects from the Resource Timeline.
 		If `name` is provided, removes only the named resource.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceclearresourcetimingsname
 	**/
 	function clearResourceTimings(?name:String):Void;
 
@@ -86,12 +90,16 @@ extern class Performance extends EventTarget {
 
 		Prefer this over the module-level `PerfHooks.eventLoopUtilization` when targeting
 		Node.js 22 LTS as well as Node.js 24; the module-level alias was only added in v24.12.0.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceeventlooputilizationutilization1-utilization2
 	**/
 	function eventLoopUtilization(?utilization1:EventLoopUtilization, ?utilization2:EventLoopUtilization):EventLoopUtilization;
 
 	/**
 		Returns a list of `PerformanceEntry` objects in chronological order with respect to
 		`performanceEntry.startTime`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancegetentries
 	**/
 	function getEntries():Array<PerformanceEntry>;
 
@@ -99,17 +107,23 @@ extern class Performance extends EventTarget {
 		Returns a list of `PerformanceEntry` objects in chronological order with respect to
 		`performanceEntry.startTime` whose `performanceEntry.name` is equal to `name`, and optionally,
 		whose `performanceEntry.entryType` is equal to `type`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancegetentriesbynamename-type
 	**/
 	function getEntriesByName(name:String, ?type:PerformanceEntryType):Array<PerformanceEntry>;
 
 	/**
 		Returns a list of `PerformanceEntry` objects in chronological order with respect to
 		`performanceEntry.startTime` whose `performanceEntry.entryType` is equal to `type`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancegetentriesbytypetype
 	**/
 	function getEntriesByType(type:PerformanceEntryType):Array<PerformanceEntry>;
 
 	/**
 		Creates a new `PerformanceMark` entry in the Performance Timeline.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancemarkname-options
 	**/
 	function mark(name:String, ?options:PerformanceMarkOptions):PerformanceMark;
 
@@ -117,12 +131,16 @@ extern class Performance extends EventTarget {
 		Creates a new `PerformanceResourceTiming` entry in the Resource Timeline.
 
 		This property is an extension by Node.js. It is not available in Web browsers.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancemarkresourcetimingtiminginfo-requestedurl-initiatortype-global-cachemode-bodyinfo-responsestatus-deliverytype
 	**/
 	function markResourceTiming(timingInfo:Dynamic, requestedUrl:String, initiatorType:String, global:Dynamic, cacheMode:String, bodyInfo:Dynamic,
 		responseStatus:Int, ?deliveryType:String):PerformanceResourceTiming;
 
 	/**
 		Creates a new `PerformanceMeasure` entry in the Performance Timeline.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancemeasurename-startmarkoroptions-endmark
 	**/
 	@:overload(function(name:String, options:PerformanceMeasureOptions):PerformanceMeasure {})
 	function measure(name:String, ?startMark:String, ?endMark:String):PerformanceMeasure;
@@ -132,12 +150,16 @@ extern class Performance extends EventTarget {
 		specific Node.js operational milestones.
 
 		This property is an extension by Node.js. It is not available in Web browsers.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenodetiming
 	**/
-	var nodeTiming(default, null):PerformanceNodeTiming;
+	final nodeTiming:PerformanceNodeTiming;
 
 	/**
 		Returns the current high resolution millisecond timestamp, where 0 represents the start
 		of the current `node` process.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenow
 	**/
 	function now():Float;
 
@@ -146,14 +168,18 @@ extern class Performance extends EventTarget {
 		"resource" type performance entry objects.
 
 		By default the max buffer size is set to 250.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancesetresourcetimingbuffersizemaxsize
 	**/
 	function setResourceTimingBufferSize(maxSize:Int):Void;
 
 	/**
 		The timeOrigin specifies the high resolution millisecond timestamp at which the current
 		`node` process began, measured in Unix time.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancetimeorigin
 	**/
-	var timeOrigin(default, null):Float;
+	final timeOrigin:Float;
 
 	/**
 		Wraps a function within a new function that measures the running time of the wrapped function.
@@ -164,16 +190,20 @@ extern class Performance extends EventTarget {
 
 		Prefer this over the module-level `PerfHooks.timerify` when targeting Node.js 22 LTS as well
 		as Node.js 24; the module-level alias was only added in v24.12.0.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancetimerifyfn-options
 	**/
 	function timerify<T:Function>(fn:T, ?options:TimerifyOptions):T;
 
 	/**
 		An object which is JSON representation of the `performance` object.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancetojson
 	**/
 	function toJSON():Dynamic;
 
 	/**
 		Event handler for the `'resourcetimingbufferfull'` event.
 	**/
-	var onresourcetimingbufferfull:EitherType<Event->Void, Function>;
+	var onresourcetimingbufferfull:Null<(event:Event) -> Void>;
 }

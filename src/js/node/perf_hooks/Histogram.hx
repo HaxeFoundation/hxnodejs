@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,60 +27,79 @@ package js.node.perf_hooks;
 
 	The constructor of this class is not exposed to users.
 
-	@see https://nodejs.org/api/perf_hooks.html#class-histogram
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#class-histogram
 **/
 extern class Histogram {
 	/**
 		The number of samples recorded by the histogram.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogramcount
 	**/
-	var count(default, null):Float;
+	final count:Float;
 
 	/**
 		The number of samples recorded by the histogram (as a BigInt).
 
 		// TODO: type as BigInt when hxnodejs provides one.
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogramcountbigint
 	**/
-	var countBigInt(default, null):Dynamic;
+	final countBigInt:Dynamic;
 
 	/**
 		The number of times the event loop delay exceeded the maximum 1 hour event loop delay threshold.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogramexceeds
 	**/
-	var exceeds(default, null):Float;
+	final exceeds:Float;
 
 	/**
 		The number of times the event loop delay exceeded the maximum 1 hour event loop delay threshold (as a BigInt).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogramexceedsbigint
 	**/
-	var exceedsBigInt(default, null):Dynamic;
+	final exceedsBigInt:Dynamic;
 
 	/**
 		The maximum recorded event loop delay.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogrammax
 	**/
-	var max(default, null):Float;
+	final max:Float;
 
 	/**
 		The maximum recorded event loop delay (as a BigInt).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogrammaxbigint
 	**/
-	var maxBigInt(default, null):Dynamic;
+	final maxBigInt:Dynamic;
 
 	/**
 		The mean of the recorded event loop delays.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogrammean
 	**/
-	var mean(default, null):Float;
+	final mean:Float;
 
 	/**
 		The minimum recorded event loop delay.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogrammin
 	**/
-	var min(default, null):Float;
+	final min:Float;
 
 	/**
 		The minimum recorded event loop delay (as a BigInt).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogramminbigint
 	**/
-	var minBigInt(default, null):Dynamic;
+	final minBigInt:Dynamic;
 
 	/**
 		Returns the value at the given percentile.
 
 		@param percentile A percentile value in the range (0, 100].
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogrampercentilepercentile
 	**/
 	function percentile(percentile:Float):Float;
 
@@ -88,28 +107,37 @@ extern class Histogram {
 		Returns the value at the given percentile (as a BigInt).
 
 		@param percentile A percentile value in the range (0, 100].
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogrampercentilebigintpercentile
 	**/
 	function percentileBigInt(percentile:Float):Dynamic;
 
 	/**
 		Returns a `Map` object detailing the accumulated percentile distribution.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogrampercentiles
 	**/
-	var percentiles(default, null):js.lib.Map<Float, Float>;
+	final percentiles:js.lib.Map<Float, Float>;
 
 	/**
 		Returns a `Map` object detailing the accumulated percentile distribution (BigInt keys/values).
 
 		// TODO: type as Map<BigInt, BigInt> when hxnodejs provides BigInt.
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogrampercentilesbigint
 	**/
-	var percentilesBigInt(default, null):Dynamic;
+	final percentilesBigInt:Dynamic;
 
 	/**
 		Resets the collected histogram data.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogramreset
 	**/
 	function reset():Void;
 
 	/**
 		The standard deviation of the recorded event loop delays.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogramstddev
 	**/
-	var stddev(default, null):Float;
+	final stddev:Float;
 }

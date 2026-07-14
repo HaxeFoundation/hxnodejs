@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,30 +25,38 @@ package js.node.perf_hooks;
 /**
 	The constructor of this class is not exposed to users directly.
 
-	@see https://nodejs.org/api/perf_hooks.html#class-performanceentry
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#class-performanceentry
 **/
 @:jsRequire("perf_hooks", "PerformanceEntry")
 extern class PerformanceEntry {
 	/**
 		The total number of milliseconds elapsed for this entry.
 		This value will not be meaningful for all Performance Entry types.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceentryduration
 	**/
-	var duration(default, null):Float;
+	final duration:Float;
 
 	/**
 		The type of the performance entry.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceentryentrytype
 	**/
-	var entryType(default, null):PerformanceEntryType;
+	final entryType:PerformanceEntryType;
 
 	/**
 		The name of the performance entry.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceentryname
 	**/
-	var name(default, null):String;
+	final name:String;
 
 	/**
 		The high resolution millisecond timestamp marking the starting time of the Performance Entry.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceentrystarttime
 	**/
-	var startTime(default, null):Float;
+	final startTime:Float;
 
 	/**
 		Returns a JSON representation of the `PerformanceEntry` object.

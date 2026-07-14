@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,36 +26,46 @@ package js.node.perf_hooks;
 	`PerformanceObserver` objects provide notifications when new `PerformanceEntry`
 	instances have been added to the Performance Timeline.
 
-	@see https://nodejs.org/api/perf_hooks.html#class-performanceobserver
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#class-performanceobserver
 **/
 @:jsRequire("perf_hooks", "PerformanceObserver")
 extern class PerformanceObserver {
 	/**
 		Get supported entry types.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceobserversupportedentrytypes
 	**/
-	static var supportedEntryTypes(default, never):Array<PerformanceEntryType>;
+	static final supportedEntryTypes:Array<PerformanceEntryType>;
 
 	/**
 		Creates a new `PerformanceObserver`.
 
 		The `callback` is invoked when a `PerformanceObserver` is notified about new
 		`PerformanceEntry` instances.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#new-performanceobservercallback
 	**/
 	function new(callback:PerformanceObserverCallback);
 
 	/**
 		Disconnects the `PerformanceObserver` instance from all notifications.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceobserverdisconnect
 	**/
 	function disconnect():Void;
 
 	/**
 		Subscribes the instance to notifications of new instances identified either by
 		`options.entryTypes` or `options.type`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceobserverobserveoptions
 	**/
 	function observe(options:PerformanceObserverObserveOptions):Void;
 
 	/**
 		Returns the current list of entries stored in the performance observer, emptying it out.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceobservertakerecords
 	**/
 	function takeRecords():Array<PerformanceEntry>;
 }
@@ -63,7 +73,7 @@ extern class PerformanceObserver {
 /**
 	Callback invoked when a `PerformanceObserver` is notified about new entries.
 **/
-typedef PerformanceObserverCallback = PerformanceObserverEntryList->PerformanceObserver->Void;
+typedef PerformanceObserverCallback = (list:PerformanceObserverEntryList, observer:PerformanceObserver) -> Void;
 
 /**
 	Options for `PerformanceObserver.observe`.

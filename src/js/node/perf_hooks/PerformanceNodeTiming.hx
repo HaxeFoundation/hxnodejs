@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,43 +28,55 @@ package js.node.perf_hooks;
 	Provides timing details for Node.js itself. The constructor of this class is
 	not exposed to users.
 
-	@see https://nodejs.org/api/perf_hooks.html#class-performancenodetiming
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#class-performancenodetiming
 **/
 extern class PerformanceNodeTiming extends PerformanceEntry {
 	/**
 		The high resolution millisecond timestamp at which the Node.js process completed bootstrapping.
 		If bootstrapping has not yet finished, the property has the value of -1.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenodetimingbootstrapcomplete
 	**/
-	var bootstrapComplete(default, null):Float;
+	final bootstrapComplete:Float;
 
 	/**
 		The high resolution millisecond timestamp at which the Node.js environment was initialized.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenodetimingenvironment
 	**/
-	var environment(default, null):Float;
+	final environment:Float;
 
 	/**
 		The high resolution millisecond timestamp of the amount of time the event loop has been idle
 		within the event loop's event provider (e.g. `epoll_wait`). This does not take CPU usage into
 		consideration. If the event loop has not yet started, the property has the value of 0.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenodetimingidletime
 	**/
-	var idleTime(default, null):Float;
+	final idleTime:Float;
 
 	/**
 		The high resolution millisecond timestamp at which the Node.js event loop exited.
 		If the event loop has not yet exited, the property has the value of -1.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenodetimingloopexit
 	**/
-	var loopExit(default, null):Float;
+	final loopExit:Float;
 
 	/**
 		The high resolution millisecond timestamp at which the Node.js event loop started.
 		If the event loop has not yet started, the property has the value of -1.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenodetimingloopstart
 	**/
-	var loopStart(default, null):Float;
+	final loopStart:Float;
 
 	/**
 		The high resolution millisecond timestamp at which the Node.js process was initialized.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenodetimingnodestart
 	**/
-	var nodeStart(default, null):Float;
+	final nodeStart:Float;
 
 	/**
 		A wrapper to the `uv_metrics_info` function. Returns the current set of event loop metrics.
@@ -72,13 +84,17 @@ extern class PerformanceNodeTiming extends PerformanceEntry {
 		It is recommended to use this property inside a function whose execution was scheduled using
 		`setImmediate` to avoid collecting metrics before finishing all operations scheduled during
 		the current loop iteration.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenodetiminguvmetricsinfo
 	**/
-	var uvMetricsInfo(default, null):UVMetrics;
+	final uvMetricsInfo:UVMetrics;
 
 	/**
 		The high resolution millisecond timestamp at which the V8 platform was initialized.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performancenodetimingv8start
 	**/
-	var v8Start(default, null):Float;
+	final v8Start:Float;
 }
 
 /**

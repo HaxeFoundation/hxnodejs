@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,11 +27,13 @@ import haxe.extern.EitherType;
 /**
 	A `Histogram` that can record values.
 
-	@see https://nodejs.org/api/perf_hooks.html#class-recordablehistogram-extends-histogram
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#class-recordablehistogram-extends-histogram
 **/
 extern class RecordableHistogram extends Histogram {
 	/**
 		Adds the values from `other` to this histogram.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogramaddother
 	**/
 	function add(other:RecordableHistogram):Void;
 
@@ -39,12 +41,15 @@ extern class RecordableHistogram extends Histogram {
 		Records `val` in the histogram.
 
 		// TODO: allow BigInt when hxnodejs gains a BigInt type (Node accepts number | bigint).
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogramrecordval
 	**/
 	function record(val:EitherType<Float, Dynamic>):Void;
 
 	/**
 		Calculates the amount of time (in nanoseconds) that has passed since the previous call
 		to `recordDelta()` and records that amount in the histogram.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogramrecorddelta
 	**/
 	function recordDelta():Void;
 }
