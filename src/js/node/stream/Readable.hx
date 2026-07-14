@@ -26,11 +26,7 @@ import js.node.Iterator;
 import js.node.Stream;
 import js.node.events.EventEmitter.Event;
 import js.node.stream.Writable.IWritable;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Readable streams are an abstraction for a source from which data is consumed.
@@ -292,7 +288,23 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 		@see https://nodejs.org/api/stream.html#streamreadableisdisturbedstream
 	**/
-	static function isDisturbed(stream:Dynamic):Bool;
+	static function isDisturbed(stream:Any):Bool;
+
+	/**
+		Creates a Node.js `Readable` from a web `ReadableStream`.
+		// TODO(section-6): type `readableStream` as web `ReadableStream` once available.
+
+		@see https://nodejs.org/api/stream.html#streamreadablefromwebreadablestream-options
+	**/
+	static function fromWeb(readableStream:Any, ?options:ReadableWebOptions):IReadable;
+
+	/**
+		Creates a web `ReadableStream` from a Node.js `Readable`.
+		// TODO(section-6): return typed web `ReadableStream` once available.
+
+		@see https://nodejs.org/api/stream.html#streamreadabletowebstreamreadable-options
+	**/
+	static function toWeb(streamReadable:IReadable, ?options:ReadableToWebOptions):Any;
 }
 
 /**
@@ -328,26 +340,39 @@ typedef ReadableNewOptions = {
 	/**
 		Implementation for the `stream._read()` method.
 	**/
-	#if haxe4
 	@:optional var read:(size:Int) -> Void;
-	#else
-	@:optional var read:Int->Void;
-	#end
 
 	/**
 		Implementation for the `stream._destroy()` method.
 	**/
-	#if haxe4
 	@:optional var destroy:(err:Null<Error>, callback:Null<Error>->Void) -> Void;
-	#else
-	@:optional var destroy:Null<Error>->(Null<Error>->Void)->Void;
-	#end
 
 	/**
 		Whether this stream should automatically call `.destroy()` on itself after ending.
 		Default: `false`.
 	**/
 	@:optional var autoDestroy:Bool;
+}
+
+/**
+	Options for `Readable.fromWeb`.
+**/
+typedef ReadableWebOptions = {
+	@:optional var encoding:String;
+	@:optional var highWaterMark:Int;
+	@:optional var objectMode:Bool;
+	@:optional var signal:js.node.web.AbortSignal;
+}
+
+/**
+	Options for `Readable.toWeb`.
+**/
+typedef ReadableToWebOptions = {
+	@:optional var strategy:{?highWaterMark:Int, ?size:Any->Int};
+	/**
+		When `'bytes'`, produces a BYOB-capable bytes stream.
+	**/
+	@:optional var type:String;
 }
 
 /**

@@ -24,15 +24,13 @@ package js;
 
 import haxe.Constraints.Function;
 import haxe.extern.Rest;
+import js.Syntax.code;
 import js.node.Module;
 import js.node.Process;
 import js.node.Timers.Immediate;
 import js.node.Timers.Timeout;
 import js.node.console.Console;
 import js.node.perf_hooks.Performance;
-#if haxe4
-import js.Syntax.code;
-#end
 
 /**
 	Node.js globals
@@ -45,11 +43,7 @@ extern class Node {
 	static var __dirname(get, never):String;
 
 	private static inline function get___dirname():String {
-		#if haxe4
 		return code("__dirname");
-		#else
-		return untyped __js__("__dirname");
-		#end
 	}
 
 	/**
@@ -58,11 +52,7 @@ extern class Node {
 	static var __filename(get, never):String;
 
 	private static inline function get___filename():String {
-		#if haxe4
 		return code("__filename");
-		#else
-		return untyped __js__("__filename");
-		#end
 	}
 
 	/**
@@ -86,11 +76,7 @@ extern class Node {
 	static var console(get, never):Console;
 
 	private static inline function get_console():Console {
-		#if haxe4
 		return code("console");
-		#else
-		return untyped __js__("console");
-		#end
 	}
 
 	/**
@@ -99,11 +85,7 @@ extern class Node {
 	static var exports(get, never):Dynamic<Dynamic>;
 
 	private static inline function get_exports():Dynamic<Dynamic> {
-		#if haxe4
 		return code("exports");
-		#else
-		return untyped __js__("exports");
-		#end
 	}
 
 	/**
@@ -124,11 +106,7 @@ extern class Node {
 	static var globalThis(get, never):Dynamic<Dynamic>;
 
 	private static inline function get_globalThis():Dynamic<Dynamic> {
-		#if haxe4
 		return code("globalThis");
-		#else
-		return untyped __js__("globalThis");
-		#end
 	}
 
 	/**
@@ -137,11 +115,7 @@ extern class Node {
 	static var module(get, never):Module;
 
 	private static inline function get_module():Module {
-		#if haxe4
 		return code("module");
-		#else
-		return untyped __js__("module");
-		#end
 	}
 
 	/**
@@ -150,11 +124,7 @@ extern class Node {
 	static var process(get, never):Process;
 
 	private static inline function get_process():Process {
-		#if haxe4
 		return code("process");
-		#else
-		return untyped __js__("process");
-		#end
 	}
 
 	/**
@@ -167,11 +137,7 @@ extern class Node {
 	static var performance(get, never):Performance;
 
 	private static inline function get_performance():Performance {
-		#if haxe4
 		return code("performance");
-		#else
-		return untyped __js__("performance");
-		#end
 	}
 
 	/**
@@ -188,11 +154,7 @@ extern class Node {
 		This variable may appear to be global but is not. See [require()](https://nodejs.org/api/modules.html#modules_require_id).
 	**/
 	static inline function require(module:String):Dynamic {
-		#if haxe4
 		return code("require({0})", module);
-		#else
-		return untyped __js__("require({0})", module);
-		#end
 	}
 
 	/**

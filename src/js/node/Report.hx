@@ -1,11 +1,12 @@
 package js.node;
 
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
+/**
+	Diagnostic report API available via `process.report`.
+
+	@see https://nodejs.org/api/process.html#processreport
+**/
 extern class Report {
 	/**
 		If the reports are written in compact mode.
@@ -41,6 +42,14 @@ extern class Report {
 		When the diagnostic report was generated in case of a uncaught exception.
 	**/
 	var reportOnUncaughtException:Bool;
+
+	/**
+		If `true`, the environment variables are excluded from the report.
+		Default: `false`.
+
+		@see https://nodejs.org/api/process.html#processreportexcludeenv
+	**/
+	var excludeEnv:Bool;
 
 	/**
 		The signal that triggered the diagnostic report.

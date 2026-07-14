@@ -22,11 +22,7 @@
 
 package js.node.stream;
 
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	A `Transform` stream is a `Duplex` stream where the output is computed in some way from the input.
@@ -52,11 +48,7 @@ extern class Transform<TSelf:Transform<TSelf>> extends Duplex<TSelf> implements 
 
 		@see https://nodejs.org/api/stream.html#stream_transform_transform_chunk_encoding_callback
 	**/
-	#if haxe4
 	private function _transform(chunk:Dynamic, encoding:String, callback:(error:Null<Error>, data:Dynamic) -> Void):Void;
-	#else
-	private function _transform(chunk:Dynamic, encoding:String, callback:Null<Error>->Dynamic->Void):Void;
-	#end
 }
 
 /**
@@ -68,11 +60,7 @@ typedef TransformNewOptions = {
 	/**
 		Implementation for the `stream._transform()` method.
 	**/
-	#if haxe4
 	@:optional var transform:(chunk:Dynamic, encoding:String, callback:(error:Null<Error>, data:Dynamic) -> Void) -> Void;
-	#else
-	@:optional var transform:Dynamic->String->(Null<Error>->Dynamic->Void)->Void;
-	#end
 
 	/**
 		Implementation for the `stream._flush()` method.

@@ -23,17 +23,16 @@
 package js.node;
 
 import haxe.DynamicAccess;
+import haxe.Constraints.Function;
 import haxe.extern.EitherType;
 import haxe.extern.Rest;
+import js.lib.Error;
 import js.node.child_process.ChildProcess.ChildProcessSendOptions;
 import js.node.events.EventEmitter;
-import js.node.stream.Readable;
-import js.node.stream.Writable;
-#if haxe4
-import js.lib.Error;
-#else
-import js.Error;
-#end
+import js.node.process.ProcessFinalization;
+import js.node.process.ProcessPermission;
+import js.node.stream.Readable.IReadable;
+import js.node.stream.Writable.IWritable;
 
 /**
 	Enumeration of events emitted by the Process class.
@@ -50,14 +49,7 @@ enum abstract ProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	var Exit:ProcessEvent<Int->Void> = "exit";
 
 	/**
-		Emitted when node empties it's event loop and has nothing else to schedule.
-
-		Normally, node exits when there is no work scheduled, but a listener for `beforeExit`
-		can make asynchronous calls, and cause node to continue.
-
-		`beforeExit` is not emitted for conditions causing explicit termination, such as `process.exit()`
-		or uncaught exceptions, and should not be used as an alternative to the `exit` event
-		unless the intention is to schedule more work.
+		Emitted when node empties its event loop and has nothing else to schedule.
 	**/
 	var BeforeExit:ProcessEvent<Int->Void> = "beforeExit";
 
@@ -67,20 +59,47 @@ enum abstract ProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 		will not occur.
 	**/
 	var UncaughtException:ProcessEvent<Error->Void> = "uncaughtException";
+
+	/**
+		This event is emitted before an `'uncaughtException'` event is emitted or a hook installed via
+		`process.setUncaughtExceptionCaptureCallback()` is called.
+	**/
+	var UncaughtExceptionMonitor:ProcessEvent<Error->Void> = "uncaughtExceptionMonitor";
+
+	/**
+		Emitted whenever a `Promise` is rejected and no error handler is attached to the promise within a turn of the event loop.
+	**/
+	var UnhandledRejection:ProcessEvent<(reason:Dynamic, promise:js.lib.Promise<Dynamic>) -> Void> = "unhandledRejection";
+
+	/**
+		Emitted whenever a `Promise` has been rejected and an error handler was attached to it later than after an event loop turn.
+	**/
+	var RejectionHandled:ProcessEvent<(promise:js.lib.Promise<Dynamic>) -> Void> = "rejectionHandled";
+
+	/**
+		The `process` object emits a `'warning'` event whenever Node.js emits a process warning.
+	**/
+	var Warning:ProcessEvent<(warning:Error) -> Void> = "warning";
+
+	/**
+		Emitted when a message is received over IPC. Available for child processes.
+	**/
+	var Message:ProcessEvent<(message:Dynamic, sendHandle:Dynamic) -> Void> = "message";
+
+	/**
+		Emitted after calling `process.disconnect()` in a child process.
+	**/
+	var Disconnect:ProcessEvent<Void->Void> = "disconnect";
 }
 
 extern class Process extends EventEmitter<Process> {
 	/**
 		A Writable Stream to stdout.
-
-		`stderr` and `stdout` are unlike other streams in Node in that writes to them are usually blocking.
 	**/
 	var stdout:IWritable;
 
 	/**
 		A writable stream to stderr.
-
-		`stderr` and `stdout` are unlike other streams in Node in that writes to them are usually blocking.
 	**/
 	var stderr:IWritable;
 
@@ -91,18 +110,14 @@ extern class Process extends EventEmitter<Process> {
 
 	/**
 		An array containing the command line arguments.
-		The first element will be `node`, the second element will be the name of the JavaScript file.
-		The next elements will be any additional command line arguments.
-
-		E.g:
-			$ node process-2.js one two=three four
-			0: node
-			1: /Users/mjr/work/node/process-2.js
-			2: one
-			3: two=three
-			4: four
 	**/
 	var argv:Array<String>;
+
+	/**
+		The `process.argv0` property stores a read-only copy of the original value of `argv[0]`
+		passed when Node.js starts.
+	**/
+	var argv0(default, null):String;
 
 	/**
 		This is the absolute pathname of the executable that started the process.
@@ -111,12 +126,13 @@ extern class Process extends EventEmitter<Process> {
 
 	/**
 		This is the set of node-specific command line options from the executable that started the process.
-		These options do not show up in `argv`, and do not include the node executable, the name of the script,
-		or any options following the script name.
-
-		These options are useful in order to spawn child processes with the same execution environment as the parent.
 	**/
 	var execArgv:Array<String>;
+
+	/**
+		If the Node.js process is spawned with an IPC channel, `process.connected` is `true` while connected.
+	**/
+	var connected(default, null):Bool;
 
 	/**
 		This causes node to emit an abort. This will cause node to exit and generate a core file.
@@ -147,8 +163,6 @@ extern class Process extends EventEmitter<Process> {
 	/**
 		A number which will be the process exit code, when the process either exits gracefully,
 		or is exited via `process.exit()` without specifying a code.
-
-		Specifying a code to `process.exit(code)` will override any previous setting of `process.exitCode`.
 	**/
 	var exitCode:Null<Int>;
 
@@ -160,51 +174,55 @@ extern class Process extends EventEmitter<Process> {
 
 	/**
 		Sets the group identity of the process. See setgid(2).
-		This accepts either a numerical ID or a groupname string.
-		If a groupname is specified, this method blocks while resolving it to a numerical ID.
-
-		Note: this function is only available on POSIX platforms (i.e. not Windows)
 	**/
 	@:overload(function(id:String):Void {})
 	function setgid(id:Int):Void;
 
 	/**
 		Gets the user identity of the process. See getuid(2).
-		Note: this function is only available on POSIX platforms (i.e. not Windows)
 	**/
 	function getuid():Int;
 
 	/**
 		Sets the user identity of the process. See setuid(2).
-		This accepts either a numerical ID or a username string.
-		If a username is specified, this method blocks while resolving it to a numerical ID.
-
-		Note: this function is only available on POSIX platforms (i.e. not Windows)
 	**/
 	@:overload(function(id:String):Void {})
 	function setuid(id:Int):Void;
 
 	/**
+		Gets the effective group identity of the process. See getegid(2).
+	**/
+	function getegid():Int;
+
+	/**
+		Sets the effective group identity of the process. See setegid(2).
+	**/
+	@:overload(function(id:String):Void {})
+	function setegid(id:Int):Void;
+
+	/**
+		Gets the effective user identity of the process. See geteuid(2).
+	**/
+	function geteuid():Int;
+
+	/**
+		Sets the effective user identity of the process. See seteuid(2).
+	**/
+	@:overload(function(id:String):Void {})
+	function seteuid(id:Int):Void;
+
+	/**
 		Returns an array with the supplementary group IDs.
-		POSIX leaves it unspecified if the effective group ID is included but node.js ensures it always is.
-		Note: this function is only available on POSIX platforms (i.e. not Windows)
 	**/
 	function getgroups():Array<Int>;
 
 	/**
 		Sets the supplementary group IDs.
-		This is a privileged operation, meaning you need to be root or have the CAP_SETGID capability.
-
-		Note: this function is only available on POSIX platforms (i.e. not Windows)
-		The list can contain group IDs, group names or both.
 	**/
 	function setgroups(groups:Array<EitherType<String, Int>>):Void;
 
 	/**
-		Reads /etc/group and initializes the group access list, using all groups of which the user is a member.
-		This is a privileged operation, meaning you need to be root or have the CAP_SETGID capability.
-
-		Note: this function is only available on POSIX platforms (i.e. not Windows)
+		Reads /etc/group and initializes the group access list.
 	**/
 	function initgroups(user:EitherType<String, Int>, extra_group:EitherType<String, Int>):Void;
 
@@ -220,23 +238,24 @@ extern class Process extends EventEmitter<Process> {
 
 	/**
 		An Object containing the JavaScript representation of the configure options that were used to compile the current node executable.
-		This is the same as the "config.gypi" file that was produced when running the ./configure script.
 	**/
-	var config:Dynamic<Dynamic>;
+	var config:DynamicAccess<Dynamic>;
+
+	/**
+		IPC channel reference for the process, if present.
+		// TODO(section-5): refine IPC channel type when child_process IPC is audited.
+	**/
+	var channel(default, null):Null<Dynamic>;
+
+	/**
+		The debugger port of the Node.js process.
+	**/
+	var debugPort:Int;
 
 	/**
 		Send a signal to a process.
-		`pid` is the process id and `signal` is the string describing the signal to send. Signal names are strings like 'SIGINT' or 'SIGHUP'.
-
-		If omitted, the `signal` will be 'SIGTERM'. See Signal Events and kill(2) for more information.
-
-		Will throw an error if target does not exist, and as a special case,
-		a signal of 0 can be used to test for the existence of a process.
-
-		Note that just because the name of this function is `kill`, it is really just a signal sender, like the kill system call.
-		The signal sent may do something other than kill the target process.
 	**/
-	function kill(pid:Int, ?signal:String):Void;
+	function kill(pid:Int, ?signal:EitherType<String, Int>):Bool;
 
 	/**
 		The PID of the process.
@@ -245,10 +264,6 @@ extern class Process extends EventEmitter<Process> {
 
 	/**
 		Getter/setter to set what is displayed in 'ps'.
-
-		When used as a setter, the maximum length is platform-specific and probably short.
-		On Linux and OS X, it's limited to the size of the binary name plus the length of the
-		command line arguments because it overwrites the argv memory.
 	**/
 	var title:String;
 
@@ -278,24 +293,91 @@ extern class Process extends EventEmitter<Process> {
 	var report:Report;
 
 	/**
+		Permission model API when the process is started with `--permission`.
+		`null` / unavailable when the permission model is not enabled.
+	**/
+	var permission(default, null):Null<ProcessPermission>;
+
+	/**
+		Provides APIs for registering callbacks invoked during process finalization.
+	**/
+	var finalization(default, null):ProcessFinalization;
+
+	/**
+		A boolean reflecting whether the current Node.js process is running with `--pending-deprecation` enabled.
+	**/
+	var noDeprecation:Bool;
+
+	/**
+		Enable logging of deprecation warnings.
+	**/
+	var traceDeprecation:Bool;
+
+	/**
+		Throw on deprecated API usage.
+	**/
+	var throwDeprecation:Bool;
+
+	/**
+		A boolean value that indicates whether source maps are enabled for Node stacks.
+	**/
+	var sourceMapsEnabled(default, null):Bool;
+
+	/**
+		A set of flags from `NODE_OPTIONS` and command-line that Node.js allows.
+	**/
+	var allowedNodeEnvironmentFlags(default, null):js.lib.Set<String>;
+
+	/**
+		Provides a way to get available features known at compile/runtime.
+	**/
+	var features(default, null):ProcessFeatures;
+
+	/**
 		Returns an object describing the memory usage of the Node process measured in bytes.
 	**/
 	function memoryUsage():MemoryUsage;
 
 	/**
-		On the next loop around the event loop call this callback.
-		This is not a simple alias to setTimeout(fn, 0), it's much more efficient.
-		It typically runs before any other I/O events fire, but there are some exceptions.
+		Returns the resident set size (RSS) used by the process in bytes.
+	**/
+	@:native("memoryUsage.rss")
+	function memoryUsageRss():Float;
 
-		This is important in developing APIs where you want to give the user the chance to
-		assign event handlers after an object has been constructed, but before any I/O has occurred.
+	/**
+		Returns information about the V8 heap spaces and usage of process resources.
+	**/
+	function resourceUsage():ResourceUsage;
+
+	/**
+		Returns the user and system CPU time usage of the current process, in microseconds.
+	**/
+	function cpuUsage(?previousValue:CpuUsage):CpuUsage;
+
+	/**
+		Gets the amount of free memory that is still available to the process, in bytes.
+		May return `undefined`/`0` if not supported.
+	**/
+	function availableMemory():Float;
+
+	/**
+		Gets the amount of memory available to the process (based on cgroup / ulimit etc.).
+		May return `undefined` if not constrained.
+	**/
+	function constrainedMemory():Float;
+
+	/**
+		Returns an array of strings naming active resources currently keeping the event loop alive.
+	**/
+	function getActiveResourcesInfo():Array<String>;
+
+	/**
+		On the next loop around the event loop call this callback.
 	**/
 	function nextTick(callback:Void->Void, args:Rest<Dynamic>):Void;
 
 	/**
 		Sets or reads the process's file mode creation mask.
-		Child processes inherit the mask from the parent process.
-		Returns the old mask if mask argument is given, otherwise returns the current mask.
 	**/
 	function umask(?mask:Int):Int;
 
@@ -305,64 +387,117 @@ extern class Process extends EventEmitter<Process> {
 	function uptime():Float;
 
 	/**
-		Returns the current high-resolution real time in a [seconds, nanoseconds] tuple Array.
-		It is relative to an arbitrary time in the past.
-		It is not related to the time of day and therefore not subject to clock drift.
-		The primary use is for measuring performance between intervals.
-		You may pass in the result of a previous call to `hrtime` to get a diff reading,
-		useful for benchmarks and measuring intervals
+		Returns the current high-resolution real time in a `[seconds, nanoseconds]` tuple Array.
 	**/
 	@:overload(function(prev:Array<Float>):Array<Float> {})
 	function hrtime():Array<Float>;
 
 	/**
-		Alternate way to retrieve require.main. The difference is that if the main module changes at runtime,
-		require.main might still refer to the original main module in modules that were required
-		before the change occurred. Generally it's safe to assume that the two refer to the same module.
-
-		As with require.main, it will be undefined if there was no entry script.
+		The `bigint` version of `process.hrtime()` that returns nanoseconds as a `bigint`.
+		Typed as `Dynamic` for Haxe 4.0.5 compatibility (no `js.lib.BigInt` there).
 	**/
+	@:native("hrtime.bigint")
+	function hrtimeBigint():Dynamic;
+
+	/**
+		Alternate way to retrieve require.main.
+		@deprecated Use `Require.main` instead.
+	**/
+	@:deprecated
 	var mainModule(default, null):Module;
 
 	/**
 		Send a message to the parent process.
-
 		Only available for child processes. See `ChildProcess.send`.
+		// TODO(section-5): type `sendHandle` with net.Socket / net.Server / dgram.Socket.
 	**/
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, options:ChildProcessSendOptions, ?callback:Error->Void):Bool {})
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:Error->Void):Bool {})
-	function send(message:Dynamic, ?callback:Error->Void):Bool;
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, options:ChildProcessSendOptions, ?callback:Null<Error>->Void):Bool {})
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:Null<Error>->Void):Bool {})
+	function send(message:Dynamic, ?callback:Null<Error>->Void):Bool;
 
 	/**
 		Close the IPC channel to parent process.
-
-		Only available for child processes. See `ChildProcess.disconnect`.
 	**/
 	function disconnect():Void;
 
 	/**
-		Disable run-time deprecation warnings.
-		See `Util.deprecate`.
+		The `process.emitWarning()` method can be used to emit custom or application specific process warnings.
 	**/
-	var noDeprecation:Bool;
+	@:overload(function(warning:String, ?type:String, ?code:String, ?ctor:Function):Void {})
+	@:overload(function(warning:String, options:EmitWarningOptions):Void {})
+	function emitWarning(warning:EitherType<String, Error>, ?type:String, ?code:String, ?ctor:Function):Void;
 
 	/**
-		Enable logging of deprecation warnings.
-		See `Util.deprecate`.
+		Loads environment variables from a `.env` file into `process.env`.
 	**/
-	var traceDeprecation:Bool;
+	function loadEnvFile(?path:String):Void;
 
 	/**
-		Throw on deprecated API usage.
-		See `Util.deprecate`.
+		Returns the built-in module with the given `id`, or `undefined` if not found.
 	**/
-	var throwDeprecation:Bool;
+	function getBuiltinModule(id:String):Dynamic;
+
+	/**
+		Sets a user-provided function as the uncaughtException capture callback.
+	**/
+	function setUncaughtExceptionCaptureCallback(fn:Null<Error->Void>):Void;
+
+	/**
+		Indicates whether a callback has been set using `setUncaughtExceptionCaptureCallback`.
+	**/
+	function hasUncaughtExceptionCaptureCallback():Bool;
+
+	/**
+		Enable or disable Source Map v3 support for stack traces.
+	**/
+	function setSourceMapsEnabled(value:Bool):Void;
+
+	/**
+		Reference a value that implements `Symbol.dispose` / ref counting so it keeps the event loop alive.
+	**/
+	function ref(maybeRefable:Dynamic):Void;
+
+	/**
+		Unreference a previously referenced value.
+	**/
+	function unref(maybeRefable:Dynamic):Void;
+
+	/**
+		Returns the CPU usage statistics of the current worker thread.
+	**/
+	function threadCpuUsage(?previousValue:CpuUsage):CpuUsage;
 }
 
 typedef MemoryUsage = {
 	rss:Float,
 	heapTotal:Float,
-	heapUsed:Float
+	heapUsed:Float,
+	?external:Float,
+	?arrayBuffers:Float
+}
+
+typedef CpuUsage = {
+	user:Float,
+	system:Float
+}
+
+typedef ResourceUsage = {
+	userCPUTime:Float,
+	systemCPUTime:Float,
+	maxRSS:Float,
+	sharedMemorySize:Float,
+	unsharedDataSize:Float,
+	unsharedStackSize:Float,
+	minorPageFault:Float,
+	majorPageFault:Float,
+	swappedOut:Float,
+	fsRead:Float,
+	fsWrite:Float,
+	ipcSent:Float,
+	ipcReceived:Float,
+	signalsCount:Float,
+	voluntaryContextSwitches:Float,
+	involuntaryContextSwitches:Float
 }
 
 typedef Release = {
@@ -371,4 +506,30 @@ typedef Release = {
 	?headersUrl:String,
 	?libUrl:String,
 	?lts:String
+}
+
+typedef EmitWarningOptions = {
+	@:optional var type:String;
+	@:optional var code:String;
+	@:optional var detail:String;
+	@:optional var ctor:Function;
+}
+
+/**
+	Boolean flags describing process feature availability.
+
+	@see https://nodejs.org/api/process.html#processfeatures
+**/
+typedef ProcessFeatures = {
+	var inspector(default, null):Bool;
+	var debug(default, null):Bool;
+	var uv(default, null):Bool;
+	var ipv6(default, null):Bool;
+	var tls(default, null):Bool;
+	var tls_alpn(default, null):Bool;
+	var tls_ocsp(default, null):Bool;
+	var tls_sni(default, null):Bool;
+	@:optional var typescript(default, null):EitherType<Bool, String>;
+	@:optional var require_module(default, null):Bool;
+	@:optional var cached_builtins(default, null):Bool;
 }

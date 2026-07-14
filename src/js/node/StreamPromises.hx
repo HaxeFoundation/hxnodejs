@@ -23,14 +23,10 @@
 package js.node;
 
 import haxe.extern.Rest;
+import js.lib.Promise;
 import js.node.Stream;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
-#if haxe4
-import js.lib.Promise;
-#else
-import js.Promise;
-#end
 
 /**
 	The `stream/promises` API provides an alternative set of asynchronous stream

@@ -22,6 +22,15 @@
 
 package js.node;
 
+/**
+	Constants exported by Node.js core modules (legacy aggregate module).
+
+	Prefer module-specific constants (e.g. `fs.constants`, `os.constants`, `crypto.constants`)
+	over `require('constants')`. This extern only mirrors a subset historically used by
+	crypto engine/padding callers.
+
+	@see https://nodejs.org/api/crypto.html#crypto-constants
+**/
 @:jsRequire("constants")
 extern class Constants {
 	static var ENGINE_METHOD_RSA(default, null):Int;

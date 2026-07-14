@@ -20,7 +20,26 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package js.node;
+package js.node.process;
 
-typedef Iterator<T> = js.lib.Iterator<T>;
-typedef IteratorStep<T> = js.lib.Iterator.IteratorStep<T>;
+/**
+	Process finalization registry API (`process.finalization`).
+
+	@see https://nodejs.org/api/process.html#processfinalization
+**/
+extern class ProcessFinalization {
+	/**
+		Registers a callback invoked before the event loop exits when `ref` becomes unreachable.
+	**/
+	function register<T>(ref:T, callback:(ref:T, event:String) -> Void):Void;
+
+	/**
+		Registers a callback invoked on the `beforeExit` event when `ref` remains alive.
+	**/
+	function registerBeforeExit<T>(ref:T, callback:(ref:T, event:String) -> Void):Void;
+
+	/**
+		Unregisters a resource previously registered with `register` / `registerBeforeExit`.
+	**/
+	function unregister(ref:Dynamic):Void;
+}

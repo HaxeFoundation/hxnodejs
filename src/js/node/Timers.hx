@@ -135,4 +135,11 @@ extern class Timeout {
 		Creating too many of these can adversely impact performance of the Node.js application.
 	**/
 	function unref():Timeout;
+
+	/**
+		Cancels the timeout.
+
+		Stability: 3 - Legacy: Use `clearTimeout()` instead.
+	**/
+	function close():Timeout;
 }

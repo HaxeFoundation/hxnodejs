@@ -20,7 +20,16 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package js.node;
+package js.node.process;
 
-typedef Iterator<T> = js.lib.Iterator<T>;
-typedef IteratorStep<T> = js.lib.Iterator.IteratorStep<T>;
+/**
+	Process permission model API (`process.permission`).
+
+	@see https://nodejs.org/api/process.html#processpermission
+**/
+extern class ProcessPermission {
+	/**
+		Verifies whether the process is able to access the given `scope` (with optional `reference`).
+	**/
+	function has(scope:String, ?reference:String):Bool;
+}

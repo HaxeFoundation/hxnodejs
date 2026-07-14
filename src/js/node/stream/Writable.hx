@@ -26,14 +26,9 @@ import haxe.extern.EitherType;
 import js.node.Stream;
 import js.node.events.EventEmitter.Event;
 import js.node.stream.Readable.IReadable;
-#if haxe4
 import js.lib.Error;
 import js.lib.Object;
 import js.lib.Uint8Array;
-#else
-import js.Error;
-import js.html.Uint8Array;
-#end
 
 /**
 	Writable streams are an abstraction for a destination to which data is written.
@@ -258,6 +253,22 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 		@see https://nodejs.org/api/tty.html#tty_writestream_istty
 	**/
 	var isTTY(default, null):Bool;
+
+	/**
+		Creates a Node.js `Writable` from a web `WritableStream`.
+		// TODO(section-6): type `writableStream` as web `WritableStream` once available.
+
+		@see https://nodejs.org/api/stream.html#streamwritablefromwebwritablestream-options
+	**/
+	static function fromWeb(writableStream:Any, ?options:WritableNewOptions):IWritable;
+
+	/**
+		Creates a web `WritableStream` from a Node.js `Writable`.
+		// TODO(section-6): return typed web `WritableStream` once available.
+
+		@see https://nodejs.org/api/stream.html#streamwritabletowebstreamwritable
+	**/
+	static function toWeb(streamWritable:IWritable):Any;
 }
 
 /**
@@ -298,40 +309,24 @@ typedef WritableNewOptions = {
 	/**
 		`write` <Function> Implementation for the stream._write() method.
 	**/
-	#if haxe4
 	@:optional var write:(chunk:Dynamic, encoding:String, callback:Null<Error>->Void) -> Void;
-	#else
-	@:optional var write:Dynamic->String->Null<Error>->Void->Void;
-	#end
 
 	/**
 		`writev` <Function> Implementation for the stream._writev() method.
 	**/
-	#if haxe4
 	@:optional var writev:(chunks:Array<Chunk>, callback:Null<Error>->Void) -> Void;
-	#else
-	@:optional var writev:Array<Chunk>->(Null<Error>->Void)->Void;
-	#end
 
 	/**
 		`destroy` <Function> Implementation for the stream._destroy() method.
 	**/
-	#if haxe4
 	@:optional var destroy:(error:Null<Error>, callback:Null<Error>->Void) -> Void;
-	#else
-	@:optional var destroy:Null<Error>->(Null<Error>->Void)->Void;
-	#end
 
 	/**
 		`final` <Function> Implementation for the stream._final() method.
 	**/
 	// TODO @native in typedef cannot work now
 	// @:native("final")
-	#if haxe4
 	@:optional var final_:(error:Null<Error>) -> Void;
-	#else
-	@:optional var final_:Null<Error>->Void;
-	#end
 
 	/**
 		`autoDestroy` <boolean> Whether this stream should automatically call .destroy() on itself after ending. Default: false.
@@ -344,11 +339,7 @@ abstract WritableNewOptionsAdapter(WritableNewOptions) {
 	@:from
 	public static function from(options:WritableNewOptions):WritableNewOptionsAdapter {
 		if (!Reflect.hasField(options, "final")) {
-			#if haxe4
 			Object.defineProperty(options, "final", {get: function() return options.final_});
-			#else
-			untyped __js__("Object.defineProperty({0}, {1}, {2})", options, "final", {get: function() return options.final_});
-			#end
 		}
 		return cast options;
 	}
