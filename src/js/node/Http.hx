@@ -123,10 +123,8 @@ extern class Http {
 
 	/**
 		Undici `WebSocket` constructor exposed via `node:http`.
-
-		// TODO(section-6): prefer `js.node.web` WebSocket typing once section 6 lands
 	**/
-	static var WebSocket:Class<Any>;
+	static var WebSocket:Class<js.node.web.WebSocket>;
 
 	/**
 		Parent class of `http.ClientRequest` and `http.ServerResponse`.

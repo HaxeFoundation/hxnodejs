@@ -310,19 +310,17 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 
 	/**
 		Creates a Node.js `Duplex` from a pair of web streams.
-		// TODO(section-6): type web stream pair once available.
 
 		@see https://nodejs.org/api/stream.html#streamduplexfromwebpair-options
 	**/
-	static function fromWeb(pair:Any, ?options:DuplexNewOptions):IDuplex;
+	static function fromWeb(pair:js.node.web.ReadableStream.ReadableWritablePair, ?options:DuplexNewOptions):IDuplex;
 
 	/**
 		Creates a pair of web streams from a Node.js `Duplex`.
-		// TODO(section-6): return typed web stream pair once available.
 
 		@see https://nodejs.org/api/stream.html#streamduplextowebstreamduplex-options
 	**/
-	static function toWeb(streamDuplex:IDuplex):Any;
+	static function toWeb(streamDuplex:IDuplex):js.node.web.ReadableStream.ReadableWritablePair;
 }
 
 /**

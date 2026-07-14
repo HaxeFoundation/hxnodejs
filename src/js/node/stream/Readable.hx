@@ -292,19 +292,17 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 	/**
 		Creates a Node.js `Readable` from a web `ReadableStream`.
-		// TODO(section-6): type `readableStream` as web `ReadableStream` once available.
 
 		@see https://nodejs.org/api/stream.html#streamreadablefromwebreadablestream-options
 	**/
-	static function fromWeb(readableStream:Any, ?options:ReadableWebOptions):IReadable;
+	static function fromWeb(readableStream:js.node.web.ReadableStream, ?options:ReadableWebOptions):IReadable;
 
 	/**
 		Creates a web `ReadableStream` from a Node.js `Readable`.
-		// TODO(section-6): return typed web `ReadableStream` once available.
 
 		@see https://nodejs.org/api/stream.html#streamreadabletowebstreamreadable-options
 	**/
-	static function toWeb(streamReadable:IReadable, ?options:ReadableToWebOptions):Any;
+	static function toWeb(streamReadable:IReadable, ?options:ReadableToWebOptions):js.node.web.ReadableStream;
 }
 
 /**
