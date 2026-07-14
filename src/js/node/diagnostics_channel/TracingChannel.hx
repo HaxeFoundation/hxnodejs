@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -41,7 +41,7 @@ typedef TracingChannelChannels = {
 /**
 	Handler for a tracing channel message.
 **/
-typedef TracingChannelMessageHandler = Dynamic->Void;
+typedef TracingChannelMessageHandler = (message:Dynamic) -> Void;
 
 /**
 	Set of TracingChannel Channels subscribers.
@@ -93,27 +93,27 @@ extern class TracingChannel {
 	/**
 		Channel for the `start` event (`tracing:${name}:start`).
 	**/
-	var start(default, never):Channel;
+	final start:Channel;
 
 	/**
 		Channel for the `end` event (`tracing:${name}:end`).
 	**/
-	var end(default, never):Channel;
+	final end:Channel;
 
 	/**
 		Channel for the `asyncStart` event (`tracing:${name}:asyncStart`).
 	**/
-	var asyncStart(default, never):Channel;
+	final asyncStart:Channel;
 
 	/**
 		Channel for the `asyncEnd` event (`tracing:${name}:asyncEnd`).
 	**/
-	var asyncEnd(default, never):Channel;
+	final asyncEnd:Channel;
 
 	/**
 		Channel for the `error` event (`tracing:${name}:error`).
 	**/
-	var error(default, never):Channel;
+	final error:Channel;
 
 	/**
 		This is a helper to check if any of the TracingChannel Channels have subscribers.
@@ -121,7 +121,7 @@ extern class TracingChannel {
 
 		@see https://nodejs.org/docs/latest-v24.x/api/diagnostics_channel.html#tracingchannelhassubscribers
 	**/
-	var hasSubscribers(default, never):Bool;
+	final hasSubscribers:Bool;
 
 	/**
 		Helper to subscribe a collection of functions to the corresponding channels.

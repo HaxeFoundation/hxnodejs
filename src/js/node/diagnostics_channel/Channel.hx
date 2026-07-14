@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -40,17 +40,19 @@ typedef ChannelName = EitherType<String, Symbol>;
 		* `message` - The message data
 		* `name` - The name of the channel
 **/
-typedef ChannelListener = Dynamic->ChannelName->Void;
+typedef ChannelListener = (message:Dynamic, name:ChannelName) -> Void;
 
 /**
 	Transform function used by `Channel.bindStore` to convert published context
 	data into the value stored in an `AsyncLocalStorage` instance.
 **/
-typedef ChannelStoreTransform = Dynamic->Dynamic;
+typedef ChannelStoreTransform = (context:Dynamic) -> Dynamic;
 
 /**
 	The class `Channel` represents an individual named channel within the data pipeline.
 	It is used to track subscribers and to publish messages when there are subscribers present.
+	It exists as a separate object to avoid channel lookups at publish time, enabling very fast
+	publish speeds and allowing for heavy use while incurring very minimal cost.
 
 	Channels are created with `DiagnosticsChannel.channel(name)`; constructing a channel
 	directly with `new Channel(name)` is not supported.
@@ -64,7 +66,7 @@ extern class Channel {
 	/**
 		The channel name.
 	**/
-	var name(default, never):ChannelName;
+	final name:ChannelName;
 
 	/**
 		Check if there are active subscribers to this channel.
@@ -72,7 +74,7 @@ extern class Channel {
 
 		@see https://nodejs.org/docs/latest-v24.x/api/diagnostics_channel.html#channelhassubscribers
 	**/
-	var hasSubscribers(default, never):Bool;
+	final hasSubscribers:Bool;
 
 	/**
 		Publish a message to any subscribers to the channel.
@@ -89,6 +91,9 @@ extern class Channel {
 		to the channel. Any errors thrown in the message handler will trigger an
 		`'uncaughtException'`.
 
+		Deprecation of this method was revoked in Node.js v24.8.0; prefer
+		`DiagnosticsChannel.subscribe(name, onMessage)` for module-level subscribe when convenient.
+
 		@see https://nodejs.org/docs/latest-v24.x/api/diagnostics_channel.html#channelsubscribeonmessage
 	**/
 	function subscribe(onMessage:ChannelListener):Void;
@@ -98,6 +103,9 @@ extern class Channel {
 		`channel.subscribe(onMessage)`.
 
 		Returns `true` if the handler was found, `false` otherwise.
+
+		Deprecation of this method was revoked in Node.js v24.8.0; prefer
+		`DiagnosticsChannel.unsubscribe(name, onMessage)` for module-level unsubscribe when convenient.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/diagnostics_channel.html#channelunsubscribeonmessage
 	**/

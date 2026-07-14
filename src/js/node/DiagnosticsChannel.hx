@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -30,7 +30,7 @@ import js.node.diagnostics_channel.TracingChannel;
 import js.node.diagnostics_channel.TracingChannel.TracingChannelChannels;
 
 /**
-	The `diagnostics_channel` module provides an API to create named channels
+	The `node:diagnostics_channel` module provides an API to create named channels
 	to report arbitrary message data for diagnostics purposes.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/diagnostics_channel.html
