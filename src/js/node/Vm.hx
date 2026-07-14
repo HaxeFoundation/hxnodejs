@@ -166,10 +166,10 @@ extern class Vm {
 		Compiles and executes `code` inside the V8 debug context.
 		Removed from modern Node.js versions.
 	**/
-	@:deprecated("Removed from Node.js; do not use")
+	@:deprecated("Removed from Node.js; use the inspector module instead")
 	static function runInDebugContext(code:String):Dynamic;
 
-	@:deprecated("use new js.node.vm.Script(...) instead")
+	@:deprecated("Use new js.node.vm.Script(...) instead")
 	static function createScript(code:String, ?options:EitherType<String, ScriptOptions>):Script;
 
 	/**
