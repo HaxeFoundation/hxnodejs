@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,14 +23,16 @@
 package js.node.assert;
 
 import haxe.Constraints.Function;
-import js.lib.Error;
 
 /**
-	Deprecated tracking helper for verifying that functions were called the expected number of times.
+	Deprecated tracking helper for verifying that functions were called the
+	expected number of times.
 
-	@see https://nodejs.org/api/assert.html#class-assertcalltracker
+	Stability: 0 - Deprecated since Node.js v20.1.0. Prefer `node:test` mock helpers.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/assert.html#class-assertcalltracker
 **/
-@:deprecated("Use custom call tracking instead")
+@:deprecated("Use node:test mock helpers instead")
 @:jsRequire("assert", "CallTracker")
 extern class CallTracker {
 	function new();
@@ -39,7 +41,7 @@ extern class CallTracker {
 		Returns a wrapper function that tracks calls to `fn`.
 		Must be called exactly `exact` times before `verify()`.
 	**/
-	@:overload(function(?exact:Int):Void->Void {})
+	@:overload(function(?exact:Int):() -> Void {})
 	@:overload(function(fn:Function, ?exact:Int):Function {})
 	function calls(?fn:Function, ?exact:Int):Function;
 

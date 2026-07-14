@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -29,10 +29,11 @@ import js.lib.RegExp;
 /**
 	Instance-oriented surface matching `js.node.Assert` method signatures.
 
-	Used for bound assert objects such as `TestContext.assert` and `Assert.strict`.
+	Used for bound assert objects such as `TestContext.assert` and `Assert.strict`,
+	and as the base of constructible `js.node.assert.Assert` instances.
 	Keep in sync with the static methods on `js.node.Assert`.
 
-	@see https://nodejs.org/api/assert.html
+	@see https://nodejs.org/docs/latest-v24.x/api/assert.html
 **/
 extern class AssertMethods {
 	/**
@@ -57,23 +58,24 @@ extern class AssertMethods {
 	/**
 		Awaits `asyncFn` and checks that the promise is not rejected.
 	**/
-	@:overload(function(asyncFn:Void->Promise<Any>, ?error:Class<Any>, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Any>, ?error:RegExp, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Any>, ?error:Any->Bool, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Any>, ?error:Class<Any>, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Any>, ?error:RegExp, ?message:String):Void {})
-	function doesNotReject(asyncFn:Promise<Any>, ?error:Any->Bool, ?message:String):Void;
+	@:overload(function(asyncFn:() -> Promise<Any>, ?error:Class<Any>, ?message:String):Promise<Void> {})
+	@:overload(function(asyncFn:() -> Promise<Any>, ?error:RegExp, ?message:String):Promise<Void> {})
+	@:overload(function(asyncFn:() -> Promise<Any>, ?error:(error:Any) -> Bool, ?message:String):Promise<Void> {})
+	@:overload(function(asyncFn:Promise<Any>, ?error:Class<Any>, ?message:String):Promise<Void> {})
+	@:overload(function(asyncFn:Promise<Any>, ?error:RegExp, ?message:String):Promise<Void> {})
+	function doesNotReject(asyncFn:Promise<Any>, ?error:(error:Any) -> Bool, ?message:String):Promise<Void>;
 
 	/**
 		Asserts that `fn` does not throw.
 	**/
-	@:overload(function(fn:Void->Void, ?error:Class<Any>, ?message:String):Void {})
-	@:overload(function(fn:Void->Void, ?error:RegExp, ?message:String):Void {})
-	function doesNotThrow(fn:Void->Void, ?error:Any->Bool, ?message:String):Void;
+	@:overload(function(fn:() -> Void, ?error:Class<Any>, ?message:String):Void {})
+	@:overload(function(fn:() -> Void, ?error:RegExp, ?message:String):Void {})
+	function doesNotThrow(fn:() -> Void, ?error:(error:Any) -> Bool, ?message:String):Void;
 
 	/**
 		An alias of `strictEqual`.
 	**/
+	@:deprecated("Use strictEqual instead")
 	@:overload(function<T>(actual:T, expected:T, ?message:String):Void {})
 	function equal<T>(actual:T, expected:T, ?message:Error):Void;
 
@@ -135,16 +137,16 @@ extern class AssertMethods {
 	/**
 		Awaits `asyncFn` and checks that the promise is rejected.
 	**/
-	@:overload(function(asyncFn:Void->Promise<Any>, ?error:Class<Any>, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Any>, ?error:RegExp, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Any>, ?error:Any->Bool, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Any>, ?error:Any, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Any>, ?error:Error, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Any>, ?error:Class<Any>, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Any>, ?error:RegExp, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Any>, ?error:Any->Bool, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Any>, ?error:Any, ?message:String):Void {})
-	function rejects(asyncFn:Promise<Any>, ?error:Error, ?message:String):Void;
+	@:overload(function(asyncFn:() -> Promise<Any>, ?error:Class<Any>, ?message:String):Promise<Void> {})
+	@:overload(function(asyncFn:() -> Promise<Any>, ?error:RegExp, ?message:String):Promise<Void> {})
+	@:overload(function(asyncFn:() -> Promise<Any>, ?error:(error:Any) -> Bool, ?message:String):Promise<Void> {})
+	@:overload(function(asyncFn:() -> Promise<Any>, ?error:Any, ?message:String):Promise<Void> {})
+	@:overload(function(asyncFn:() -> Promise<Any>, ?error:Error, ?message:String):Promise<Void> {})
+	@:overload(function(asyncFn:Promise<Any>, ?error:Class<Any>, ?message:String):Promise<Void> {})
+	@:overload(function(asyncFn:Promise<Any>, ?error:RegExp, ?message:String):Promise<Void> {})
+	@:overload(function(asyncFn:Promise<Any>, ?error:(error:Any) -> Bool, ?message:String):Promise<Void> {})
+	@:overload(function(asyncFn:Promise<Any>, ?error:Any, ?message:String):Promise<Void> {})
+	function rejects(asyncFn:Promise<Any>, ?error:Error, ?message:String):Promise<Void>;
 
 	/**
 		Tests strict equality between `actual` and `expected`.
@@ -155,8 +157,9 @@ extern class AssertMethods {
 	/**
 		Expects `fn` to throw an error.
 	**/
-	@:overload(function(fn:Void->Void, ?error:RegExp, ?message:String):Void {})
-	@:overload(function(fn:Void->Void, ?error:Any->Bool, ?message:String):Void {})
-	@:overload(function(fn:Void->Void, ?error:Any, ?message:String):Void {})
-	function throws(fn:Void->Void, ?error:Error, ?message:String):Void;
+	@:overload(function(fn:() -> Void, ?error:Class<Any>, ?message:String):Void {})
+	@:overload(function(fn:() -> Void, ?error:RegExp, ?message:String):Void {})
+	@:overload(function(fn:() -> Void, ?error:(error:Any) -> Bool, ?message:String):Void {})
+	@:overload(function(fn:() -> Void, ?error:Any, ?message:String):Void {})
+	function throws(fn:() -> Void, ?error:Error, ?message:String):Void;
 }
