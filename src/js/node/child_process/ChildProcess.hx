@@ -223,8 +223,8 @@ extern class ChildProcess extends EventEmitter<ChildProcess> {
 
 		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#subprocesssymboldispose
 	**/
-	@:native("Symbol.dispose")
-	function dispose():Void;
+	extern inline function dispose():Void
+		js.Syntax.code("{0}[Symbol.dispose]()", this);
 
 	/**
 		When using `fork`, write to the child using `send`;
