@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,9 +23,13 @@
 package js.node.dgram;
 
 import haxe.extern.EitherType;
-import js.node.events.EventEmitter;
-import js.node.net.Socket.SocketAdress;
+import js.lib.ArrayBufferView;
 import js.lib.Error;
+import js.node.Dns;
+import js.node.events.EventEmitter;
+import js.node.net.BlockList;
+import js.node.net.Socket.SocketAdress;
+import js.node.web.AbortSignal;
 
 /**
 	Enumeration of events for the `Socket` object.
@@ -34,32 +38,33 @@ enum abstract SocketEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when a new datagram is available on a socket.
 		Listener arguments:
-			msg - received data
-			rinfo - sender's address information and the number of bytes in the datagram
+			`msg` - received data
+			`rinfo` - sender's address information and the number of bytes in the datagram
 	**/
 	var Message:SocketEvent<MessageListener> = "message";
 
 	/**
-		Emitted when a socket starts listening for datagrams.
-		This happens as soon as UDP sockets are created.
+		Emitted once the `dgram.Socket` is addressable and can receive data.
+		This happens either explicitly with `socket.bind()` or implicitly the first time
+		data is sent using `socket.send()`.
 	**/
-	var Listening:SocketEvent<Void->Void> = "listening";
+	var Listening:SocketEvent<() -> Void> = "listening";
 
 	/**
-		Emitted when a socket is closed with `close`.
-		No new message events will be emitted on this socket.
+		Emitted after a socket is closed with `close()`.
+		No new `'message'` events will be emitted on this socket.
 	**/
-	var Close:SocketEvent<Void->Void> = "close";
+	var Close:SocketEvent<() -> Void> = "close";
 
 	/**
-		Emitted when an error occurs.
+		Emitted whenever any error occurs.
 	**/
-	var Error:SocketEvent<Error->Void> = "error";
+	var Error:SocketEvent<(err:Error) -> Void> = "error";
 
 	/**
-		Emitted when a socket has been connected with `socket.connect()`.
+		Emitted after a socket has been associated with a remote address via `socket.connect()`.
 	**/
-	var Connect:SocketEvent<Void->Void> = "connect";
+	var Connect:SocketEvent<() -> Void> = "connect";
 }
 
 /**
@@ -74,10 +79,12 @@ typedef MessageRemoteInfo = {
 	var size:Int;
 }
 
-typedef MessageListener = Buffer->MessageRemoteInfo->Void;
+typedef MessageListener = (msg:Buffer, rinfo:MessageRemoteInfo) -> Void;
+
+typedef SocketSendCallback = (error:Null<Error>, bytes:Int) -> Void;
 
 /**
-	Enumeration of possible datagram socket types
+	Enumeration of possible datagram socket types.
 **/
 enum abstract SocketType(String) from String to String {
 	var Udp4 = "udp4";
@@ -85,27 +92,34 @@ enum abstract SocketType(String) from String to String {
 }
 
 /**
-	Options passed to the Socket constructor.
+	Options for `Dgram.createSocket`.
 **/
 typedef SocketOptions = {
 	/**
-		Type of the socket. Either udp4 or udp6.
+		The family of socket. Must be either `'udp4'` or `'udp6'`.
 	**/
 	var type:SocketType;
 
 	/**
-		When true, `Socket.bind` will reuse the address, even if another process has already bound a socket on it.
-		Defaults to false.
+		When `true`, `socket.bind()` will reuse the address, even if another process has already
+		bound a socket on it, but only one socket can receive the data.
+		Default: `false`.
 	**/
 	@:optional var reuseAddr:Bool;
 
 	/**
-		When `true`, enables `SO_REUSEPORT` so multiple processes can bind to the same address/port.
+		When `true`, `socket.bind()` will reuse the port, even if another process has already bound
+		a socket on it. Incoming datagrams are distributed to listening sockets.
+		Available only on some platforms (Linux 3.9+, DragonFlyBSD 3.6+, FreeBSD 12.0+, Solaris 11.4, AIX 7.2.5+).
+		On unsupported platforms, this option raises an error when the socket is bound.
+		Default: `false`.
 	**/
 	@:optional var reusePort:Bool;
 
 	/**
-		Used to set the `IPV6_V6ONLY` socket option.
+		Setting `ipv6Only` to `true` will disable dual-stack support, i.e., binding to address `::`
+		won't make `0.0.0.0` be bound.
+		Default: `false`.
 	**/
 	@:optional var ipv6Only:Bool;
 
@@ -122,44 +136,59 @@ typedef SocketOptions = {
 	/**
 		Custom lookup function. Defaults to `Dns.lookup`.
 	**/
-	@:optional var lookup:String->js.node.Dns.DnsLookupOptions->js.node.Dns.DnsLookupCallbackSingle->Void;
+	@:optional var lookup:(hostname:String, options:DnsLookupOptions, callback:DnsLookupCallbackSingle) -> Void;
 
 	/**
-		AbortSignal that can be used to close the socket.
+		An `AbortSignal` that may be used to close the socket.
 	**/
-	@:optional var signal:js.node.web.AbortSignal;
+	@:optional var signal:AbortSignal;
 
 	/**
-		When `true`, the receive buffer receives a cloned, shared `ArrayBuffer`.
-		Default: `false`.
-		Stability: 1 - Experimental.
+		Can be used for discarding inbound datagrams to specific IP addresses, IP ranges, or IP subnets.
+		This does not work if the server is behind a reverse proxy, NAT, etc., because the address
+		checked against the blocklist is the address of the proxy, or the one specified by the NAT.
 	**/
-	@:optional var receiveBlockList:js.node.net.BlockList;
+	@:optional var receiveBlockList:BlockList;
 
 	/**
-		When `true`, messages to blocked destinations are dropped.
-		Stability: 1 - Experimental.
+		Can be used for disabling outbound access to specific IP addresses, IP ranges, or IP subnets.
 	**/
-	@:optional var sendBlockList:js.node.net.BlockList;
+	@:optional var sendBlockList:BlockList;
 }
 
 /**
-	Options for `Socket.bind` method.
+	Options for `Socket.bind`.
 **/
 typedef SocketBindOptions = {
-	var port:Int;
+	/**
+		Port to bind. If not specified or `0`, the OS attempts to bind to a random port.
+	**/
+	@:optional var port:Int;
+
+	/**
+		Address to bind. If not specified, the OS attempts to listen on all addresses.
+	**/
 	@:optional var address:String;
 
 	/**
-		If false (default), then cluster workers will use the same underlying handle, allowing connection handling
-		duties to be shared. When true, the handle is not shared, and attempted port sharing results in an error.
+		When `false` (default), cluster workers share the same underlying handle.
+		When `true`, the handle is not shared and attempted port sharing results in an error.
+		Creating a socket with `reusePort: true` causes `exclusive` to always be `true` when `bind` is called.
 	**/
 	@:optional var exclusive:Bool;
+
+	/**
+		When an `fd` greater than `0` is set, wrap an existing socket with the given file descriptor.
+		In this case, `port` and `address` are ignored.
+	**/
+	@:optional var fd:Int;
 }
 
 /**
 	Encapsulates the datagram functionality.
-	It should be created via `Dgram.createSocket`.
+
+	New instances are created using `Dgram.createSocket`.
+	The `new` keyword must not be used to create `dgram.Socket` instances.
 **/
 @:jsRequire("dgram", "Socket")
 extern class Socket extends EventEmitter<Socket> {
@@ -167,38 +196,46 @@ extern class Socket extends EventEmitter<Socket> {
 	private function new(options:SocketOptions, ?callback:MessageListener);
 
 	/**
-		The destination `port` and `address` must be specified.
-		A string may be supplied for the `address` parameter, and it will be resolved with DNS.
+		Broadcasts a datagram on the socket.
 
-		If the `address` is omitted or is an empty string, '0.0.0.0' or '::0' is used instead.
-		Depending on the network configuration, those defaults may or may not work; it's best to be
-		explicit about the destination address.
+		For connectionless sockets, the destination `port` and `address` must be specified.
+		Connected sockets use their associated remote endpoint, so `port` and `address` must not be set.
 
-		If the socket has not been previously bound with a call to `bind`, it gets assigned a random
-		port number and is bound to the "all interfaces" address ('0.0.0.0' for udp4 sockets, '::0' for udp6 sockets.)
+		`msg` may be a `String`, `Buffer` / `ArrayBufferView` (`TypedArray` or `DataView`), or an array of
+		those. When `msg` is a string it is automatically converted to a `Buffer` with `'utf8'` encoding.
+		`offset` and `length` are supported only for buffer-like messages (not strings or arrays).
 
-		An optional `callback` may be specified to detect DNS errors or for determining when it's safe
-		to reuse the buf object. Note that DNS lookups delay the time to send for at least one tick.
+		If `address` is omitted or nullish, `'127.0.0.1'` (udp4) or `'::1'` (udp6) is used.
+		If the socket has not been bound, it is assigned a random port and bound to all interfaces.
+
+		An optional `callback` may be specified to detect DNS errors or for determining when it is safe
+		to reuse the buffer. DNS lookups delay the time to send by at least one tick.
 		The only way to know for sure that the datagram has been sent is by using a `callback`.
 	**/
-	@:overload(function(msg:EitherType<Buffer, EitherType<String, Array<EitherType<Buffer, String>>>>, ?callback:Error->Int->Void):Void {})
-	@:overload(function(msg:EitherType<Buffer, EitherType<String, Array<EitherType<Buffer, String>>>>, port:Int, ?callback:Error->Int->Void):Void {})
-	@:overload(function(msg:EitherType<Buffer, EitherType<String, Array<EitherType<Buffer, String>>>>, port:Int, address:String,
-		?callback:Error->Int->Void):Void {})
-	@:overload(function(msg:Buffer, offset:Int, length:Int, ?callback:Error->Int->Void):Void {})
-	@:overload(function(msg:Buffer, offset:Int, length:Int, port:Int, ?callback:Error->Int->Void):Void {})
-	function send(buf:Buffer, offset:Int, length:Int, port:Int, address:String, ?callback:Error->Int->Void):Void;
+	@:overload(function(msg:EitherType<String, EitherType<ArrayBufferView, Array<EitherType<String, ArrayBufferView>>>>,
+		?callback:SocketSendCallback):Void {})
+	@:overload(function(msg:EitherType<String, EitherType<ArrayBufferView, Array<EitherType<String, ArrayBufferView>>>>, port:Int,
+		?callback:SocketSendCallback):Void {})
+	@:overload(function(msg:EitherType<String, EitherType<ArrayBufferView, Array<EitherType<String, ArrayBufferView>>>>, port:Int, address:String,
+		?callback:SocketSendCallback):Void {})
+	@:overload(function(msg:ArrayBufferView, offset:Int, length:Int, ?callback:SocketSendCallback):Void {})
+	@:overload(function(msg:ArrayBufferView, offset:Int, length:Int, port:Int, ?callback:SocketSendCallback):Void {})
+	function send(msg:ArrayBufferView, offset:Int, length:Int, port:Int, address:String, ?callback:SocketSendCallback):Void;
 
 	/**
-		Associates the `dgram.Socket` to a remote address and port. Subsequent messages will be sent to that
-		destination. Calling `connect()` on an already-connected socket regenerates an `ERR_SOCKET_DGRAM_IS_CONNECTED` error.
+		Associates the `dgram.Socket` to a remote address and port. Subsequent messages are sent to that
+		destination, and the socket only receives messages from that remote peer.
+
+		Calling `connect()` on an already-connected socket throws `ERR_SOCKET_DGRAM_IS_CONNECTED`.
+		If `address` is not provided, `'127.0.0.1'` (udp4) or `'::1'` (udp6) is used.
 	**/
-	@:overload(function(port:Int, callback:Void->Void):Void {})
-	@:overload(function(port:Int, address:String, ?callback:Void->Void):Void {})
-	function connect(port:Int, ?callback:Void->Void):Void;
+	@:overload(function(port:Int, callback:() -> Void):Void {})
+	@:overload(function(port:Int, address:String, ?callback:() -> Void):Void {})
+	function connect(port:Int, ?callback:() -> Void):Void;
 
 	/**
 		A synchronous function that disassociates a connected `dgram.Socket` from its remote address.
+		Throws `ERR_SOCKET_DGRAM_NOT_CONNECTED` if the socket is not connected.
 	**/
 	function disconnect():Void;
 
@@ -209,114 +246,128 @@ extern class Socket extends EventEmitter<Socket> {
 	function remoteAddress():SocketAdress;
 
 	/**
-		Listen for datagrams on a named `port` and optional `address`.
-		If `port` is not specified, the OS will try to bind to a random port.
-		If `address` is not specified, the OS will try to listen on all addresses.
-		After binding is done, a "listening" event is emitted and the `callback` (if specified) is called.
-		Specifying both a "listening" event listener and `callback` is not harmful but not very useful.
+		Causes the socket to listen for datagram messages on a named `port` and optional `address`.
+		If `port` is not specified or is `0`, the OS attempts to bind to a random port.
+		If `address` is not specified, the OS attempts to listen on all addresses.
+		After binding is done, a `'listening'` event is emitted and the `callback` (if specified) is called.
 
-		A bound datagram socket keeps the node process running to receive datagrams.
+		A bound datagram socket keeps the Node.js process running to receive datagrams.
 
-		If binding fails, an "error" event is generated. In rare case (e.g. binding a closed socket),
-		an `Error` may be thrown by this method.
+		If binding fails, an `'error'` event is generated. In rare cases (e.g. binding a closed socket),
+		an `Error` may be thrown.
 	**/
-	@:overload(function(options:SocketBindOptions, ?callback:Void->Void):Void {})
-	@:overload(function(port:Int, address:String, ?callback:Void->Void):Void {})
-	@:overload(function(port:Int, ?callback:Void->Void):Void {})
-	function bind(?callback:Void->Void):Void;
+	@:overload(function(options:SocketBindOptions, ?callback:() -> Void):Void {})
+	@:overload(function(port:Int, address:String, ?callback:() -> Void):Void {})
+	@:overload(function(port:Int, ?callback:() -> Void):Void {})
+	function bind(?callback:() -> Void):Void;
 
 	/**
 		Close the underlying socket and stop listening for data on it.
 
-		If a `callback` is provided, it is added as a listener for the 'close' event.
+		If a `callback` is provided, it is added as a listener for the `'close'` event.
 	**/
-	function close(?callback:Void->Void):Void;
+	function close(?callback:() -> Void):Void;
 
 	/**
-		Returns an object containing the address information for a socket.
+		Returns an object containing the address information for a socket (`address`, `family`, `port`).
+		Throws `EBADF` if called on an unbound socket.
 	**/
 	function address():SocketAdress;
 
 	/**
-		Sets or clears the SO_BROADCAST socket option.
+		Sets or clears the `SO_BROADCAST` socket option.
 		When this option is set, UDP packets may be sent to a local interface's broadcast address.
+		Throws `EBADF` if called on an unbound socket.
 	**/
 	function setBroadcast(flag:Bool):Void;
 
 	/**
-		Sets the IP_TTL socket option. TTL stands for "Time to Live," but in this context it specifies
+		Sets the `IP_TTL` socket option. TTL stands for "Time to Live," but in this context it specifies
 		the number of IP hops that a packet is allowed to go through. Each router or gateway that forwards
 		a packet decrements the TTL. If the TTL is decremented to 0 by a router, it will not be forwarded.
 		Changing TTL values is typically done for network probes or when multicasting.
 
 		The argument to `setTTL` is a number of hops between 1 and 255. The default on most systems is 64.
+		Throws `EBADF` if called on an unbound socket.
 	**/
 	function setTTL(ttl:Int):Void;
 
 	/**
-		Sets the IP_MULTICAST_TTL socket option. TTL stands for "Time to Live," but in this context it specifies
+		Sets the `IP_MULTICAST_TTL` socket option. TTL stands for "Time to Live," but in this context it specifies
 		the number of IP hops that a packet is allowed to go through, specifically for multicast traffic.
 		Each router or gateway that forwards a packet decrements the TTL. If the TTL is decremented to 0 by a router,
 		it will not be forwarded.
 
 		The argument to `setMulticastTTL` is a number of hops between 0 and 255. The default on most systems is 1.
+		Throws `EBADF` if called on an unbound socket.
 	**/
 	function setMulticastTTL(ttl:Int):Void;
 
 	/**
-		Sets or clears the IP_MULTICAST_LOOP socket option.
+		Sets or clears the `IP_MULTICAST_LOOP` socket option.
 		When this option is set, multicast packets will also be received on the local interface.
+		Throws `EBADF` if called on an unbound socket.
 	**/
 	function setMulticastLoopback(flag:Bool):Void;
 
 	/**
-		Tells the kernel to join a multicast group with IP_ADD_MEMBERSHIP socket option.
+		Tells the kernel to join a multicast group with the `IP_ADD_MEMBERSHIP` socket option.
 
-		If `multicastInterface` is not specified, the OS will try to add membership to all valid interfaces.
+		If `multicastInterface` is not specified, the OS chooses one interface and adds membership to it.
+		To add membership on every available interface, call `addMembership` once per interface.
+
+		When called on an unbound socket, this method implicitly binds to a random port on all interfaces.
 	**/
 	function addMembership(multicastAddress:String, ?multicastInterface:String):Void;
 
 	/**
-		Opposite of `addMembership` - tells the kernel to leave a multicast group with IP_DROP_MEMBERSHIP socket option.
-		This is automatically called by the kernel when the socket is closed or process terminates,
-		so most apps will never need to call this.
+		Opposite of `addMembership` — tells the kernel to leave a multicast group with the `IP_DROP_MEMBERSHIP`
+		socket option. This is automatically called by the kernel when the socket is closed or the process
+		terminates, so most apps will never need to call this.
 
-		If `multicastInterface` is not specified, the OS will try to drop membership to all valid interfaces.
+		If `multicastInterface` is not specified, the OS will try to drop membership on all valid interfaces.
 	**/
 	function dropMembership(multicastAddress:String, ?multicastInterface:String):Void;
 
 	/**
-		Instructs the kernel to join a source-specific multicast channel with the `IP_ADD_SOURCE_MEMBERSHIP` socket option.
+		Instructs the kernel to join a source-specific multicast channel with the `IP_ADD_SOURCE_MEMBERSHIP`
+		socket option. When called on an unbound socket, this method implicitly binds to a random port on all interfaces.
 	**/
 	function addSourceSpecificMembership(sourceAddress:String, groupAddress:String, ?multicastInterface:String):Void;
 
 	/**
-		Instructs the kernel to leave a source-specific multicast channel with the `IP_DROP_SOURCE_MEMBERSHIP` socket option.
+		Instructs the kernel to leave a source-specific multicast channel with the `IP_DROP_SOURCE_MEMBERSHIP`
+		socket option. Automatically called when the socket is closed or the process terminates.
 	**/
 	function dropSourceSpecificMembership(sourceAddress:String, groupAddress:String, ?multicastInterface:String):Void;
 
 	/**
-		Sets the default outgoing multicast interface of the socket to a chosen interface or back to system interface selection.
+		Sets the default outgoing multicast interface of the socket to a chosen interface or back to system
+		interface selection. Throws `EBADF` if called on an unbound socket.
 	**/
 	function setMulticastInterface(multicastInterface:String):Void;
 
 	/**
 		Sets the `SO_RCVBUF` socket option.
+		Throws `ERR_SOCKET_BUFFER_SIZE` if called on an unbound socket.
 	**/
 	function setRecvBufferSize(size:Int):Void;
 
 	/**
 		Sets the `SO_SNDBUF` socket option.
+		Throws `ERR_SOCKET_BUFFER_SIZE` if called on an unbound socket.
 	**/
 	function setSendBufferSize(size:Int):Void;
 
 	/**
 		Gets the current value of the `SO_RCVBUF` socket option.
+		Throws `ERR_SOCKET_BUFFER_SIZE` if called on an unbound socket.
 	**/
 	function getRecvBufferSize():Int;
 
 	/**
 		Gets the current value of the `SO_SNDBUF` socket option.
+		Throws `ERR_SOCKET_BUFFER_SIZE` if called on an unbound socket.
 	**/
 	function getSendBufferSize():Int;
 
@@ -333,13 +384,15 @@ extern class Socket extends EventEmitter<Socket> {
 	/**
 		Calling `unref` on a socket will allow the program to exit if this is the only active socket in the event system.
 		If the socket is already `unref`d calling `unref` again will have no effect.
+		Returns a reference to the socket so calls can be chained.
 	**/
-	function unref():Void;
+	function unref():Socket;
 
 	/**
 		Opposite of `unref`, calling `ref` on a previously `unref`d socket will not let
 		the program exit if it's the only socket left (the default behavior).
 		If the socket is `ref`d calling `ref` again will have no effect.
+		Returns a reference to the socket so calls can be chained.
 	**/
-	function ref():Void;
+	function ref():Socket;
 }

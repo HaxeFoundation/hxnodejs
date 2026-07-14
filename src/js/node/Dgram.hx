@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,18 +25,20 @@ package js.node;
 import js.node.dgram.Socket;
 
 /**
-	Datagram sockets
+	The `node:dgram` module provides an implementation of UDP datagram sockets.
 **/
 @:jsRequire("dgram")
 extern class Dgram {
 	/**
-		Creates a datagram `Socket` of the specified types.
+		Creates a `dgram.Socket` object.
 
-		Takes an optional `callback` which is added as a listener for 'message' events.
+		Once the socket is created, calling `socket.bind()` will instruct the socket to begin
+		listening for datagram messages. When `address` and `port` are not passed to `socket.bind()`
+		the method will bind the socket to the "all interfaces" address on a random port
+		(it does the right thing for both `udp4` and `udp6` sockets). The bound address and port
+		can be retrieved using `socket.address().address` and `socket.address().port`.
 
-		Call `socket.bind` if you want to receive datagrams. `socket.bind` will bind to
-		the "all interfaces" address on a random port (it does the right thing for both `udp4` and `udp6` sockets).
-		You can then retrieve the address and port with `socket.address().address` and `socket.address().port`.
+		The optional `callback` is attached as a listener for `'message'` events.
 	**/
 	@:overload(function(type:SocketType, ?callback:MessageListener):Socket {})
 	static function createSocket(options:SocketOptions, ?callback:MessageListener):Socket;
