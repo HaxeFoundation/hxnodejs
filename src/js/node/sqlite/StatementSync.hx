@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,6 +28,8 @@ import js.node.Iterator;
 /**
 	A prepared statement created via `DatabaseSync.prepare()`.
 
+	Cannot be constructed directly. All APIs execute synchronously.
+
 	@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#class-statementsync
 **/
 @:jsRequire("node:sqlite", "StatementSync")
@@ -43,40 +45,50 @@ extern class StatementSync {
 	var sourceSQL(default, null):String;
 
 	/**
-		Execute and return all result rows.
+		Executes the statement and returns all result rows.
 
 		Accepts an optional named-parameters object followed by anonymous bind values
 		(Node's `all([namedParameters][, ...anonymousParameters])`).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#statementallnamedparameters-anonymousparameters
 	**/
-	function all(args:Rest<Dynamic>):Array<Dynamic>;
+	function all(args:Rest<Any>):Array<Any>;
 
 	/**
 		Column metadata for the prepared statement result set.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#statementcolumns
 	**/
 	function columns():Array<StatementColumnInfo>;
 
 	/**
-		Execute and return the first result row, or `undefined`.
+		Executes the statement and returns the first result row, or `undefined`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#statementgetnamedparameters-anonymousparameters
 	**/
-	function get(args:Rest<Dynamic>):Null<Dynamic>;
+	function get(args:Rest<Any>):Null<Any>;
 
 	/**
-		Execute and return an iterator of result rows.
+		Executes the statement and returns an iterator of result rows.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#statementiteratenamedparameters-anonymousparameters
 	**/
-	function iterate(args:Rest<Dynamic>):Iterator<Dynamic>;
+	function iterate(args:Rest<Any>):Iterator<Any>;
 
 	/**
-		Execute a mutating statement and return change summary.
+		Executes a mutating statement and returns a change summary.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#statementrunnamedparameters-anonymousparameters
 	**/
-	function run(args:Rest<Dynamic>):StatementResult;
+	function run(args:Rest<Any>):StatementResult;
 
 	/**
-		Allow binding named parameters without the SQL prefix character.
+		Allows binding named parameters without the SQL prefix character.
 	**/
 	function setAllowBareNamedParameters(enabled:Bool):Void;
 
 	/**
-		Ignore unknown named parameters when binding.
+		Ignores unknown named parameters when binding.
 	**/
 	function setAllowUnknownNamedParameters(enabled:Bool):Void;
 
@@ -88,7 +100,7 @@ extern class StatementSync {
 	/**
 		When enabled, `INTEGER` columns are read as JavaScript BigInt values.
 
-		// TODO: replace Dynamic BigInt usages with a proper BigInt type when hxnodejs provides one.
+		Typed loosely until hxnodejs exposes a `BigInt` type.
 	**/
 	function setReadBigInts(enabled:Bool):Void;
 }
@@ -99,15 +111,13 @@ extern class StatementSync {
 typedef StatementResult = {
 	/**
 		Rows modified. Number or BigInt depending on statement configuration.
-
-		// TODO: tighten with BigInt when available.
 	**/
-	var changes:Dynamic;
+	var changes:Any;
 
 	/**
 		Most recently inserted rowid. Number or BigInt depending on configuration.
 	**/
-	var lastInsertRowid:Dynamic;
+	var lastInsertRowid:Any;
 }
 
 /**

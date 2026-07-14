@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,7 @@ package js.node;
 
 import haxe.extern.EitherType;
 import js.lib.Promise;
-import js.node.buffer.Buffer;
+import js.node.Buffer;
 import js.node.sqlite.DatabaseSync;
 import js.node.url.URL;
 
@@ -45,7 +45,9 @@ extern class Sqlite {
 	static var constants(default, never):SqliteConstants;
 
 	/**
-		Make a backup of `sourceDb` to `path`.
+		Makes a backup of `sourceDb` to `path`.
+
+		Returns a promise that fulfills with the total number of backed-up pages.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#sqlitebackupsourcedb-path-options
 	**/
@@ -53,7 +55,7 @@ extern class Sqlite {
 }
 
 /**
-	Path accepted by SQLite open / backup APIs.
+	Path accepted by SQLite open / backup APIs (`string`, `Buffer`, or `URL`).
 **/
 typedef SqlitePath = EitherType<String, EitherType<Buffer, URL>>;
 
@@ -61,14 +63,29 @@ typedef SqlitePath = EitherType<String, EitherType<Buffer, URL>>;
 	Options for `Sqlite.backup`.
 **/
 typedef SqliteBackupOptions = {
+	/**
+		Name of the source database. Default: `"main"`.
+	**/
 	@:optional var source:String;
+
+	/**
+		Name of the target database. Default: `"main"`.
+	**/
 	@:optional var target:String;
+
+	/**
+		Number of pages transmitted in each backup batch. Default: `100`.
+	**/
 	@:optional var rate:Int;
+
+	/**
+		Called after each backup step with progress information.
+	**/
 	@:optional var progress:SqliteBackupProgress->Void;
 }
 
 /**
-	Progress info for `Sqlite.backup`.
+	Progress info passed to `SqliteBackupOptions.progress`.
 **/
 typedef SqliteBackupProgress = {
 	var totalPages:Float;
@@ -76,7 +93,7 @@ typedef SqliteBackupProgress = {
 }
 
 /**
-	Constants exported by `node:sqlite`.
+	Constants exported by `node:sqlite` (`Sqlite.constants`).
 
 	Includes authorizer action codes, authorizer results, and changeset conflict codes.
 **/

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -30,12 +30,13 @@ import js.node.sqlite.StatementSync.StatementResult;
 	LRU cache of prepared statements created via `DatabaseSync.createTagStore()`.
 
 	Tagged-template call sites pass a `string[]` of template elements followed by
-	bound values (Node's template-tag convention).
+	bound values (Node's template-tag convention). Not constructible directly.
 
 	Added in: v24.9.0
 
 	@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#class-sqltagstore
 **/
+@:jsRequire("node:sqlite", "SQLTagStore")
 extern class SQLTagStore {
 	/**
 		Number of prepared statements currently in the cache.
@@ -53,27 +54,27 @@ extern class SQLTagStore {
 	var db(default, null):DatabaseSync;
 
 	/**
-		Execute query and return all rows (template-tag style).
+		Executes the query and returns all rows (template-tag style).
 	**/
-	function all(strings:Array<String>, values:Rest<Dynamic>):Array<Dynamic>;
+	function all(strings:Array<String>, values:Rest<Any>):Array<Any>;
 
 	/**
-		Execute query and return the first row (template-tag style).
+		Executes the query and returns the first row (template-tag style).
 	**/
-	function get(strings:Array<String>, values:Rest<Dynamic>):Null<Dynamic>;
+	function get(strings:Array<String>, values:Rest<Any>):Null<Any>;
 
 	/**
-		Execute query and iterate rows (template-tag style).
+		Executes the query and iterates rows (template-tag style).
 	**/
-	function iterate(strings:Array<String>, values:Rest<Dynamic>):Iterator<Dynamic>;
+	function iterate(strings:Array<String>, values:Rest<Any>):Iterator<Any>;
 
 	/**
-		Execute a mutating statement (template-tag style).
+		Executes a mutating statement (template-tag style).
 	**/
-	function run(strings:Array<String>, values:Rest<Dynamic>):StatementResult;
+	function run(strings:Array<String>, values:Rest<Any>):StatementResult;
 
 	/**
-		Clear all cached prepared statements.
+		Clears all cached prepared statements.
 	**/
 	function clear():Void;
 }

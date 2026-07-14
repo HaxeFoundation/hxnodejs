@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -34,12 +34,17 @@ import js.node.sqlite.StatementSync;
 /**
 	A single synchronous connection to a SQLite database.
 
+	All APIs exposed by this class execute synchronously.
+	Implements `Symbol.dispose` (closes the connection; no-op if already closed).
+
 	@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#class-databasesync
 **/
 @:jsRequire("node:sqlite", "DatabaseSync")
 extern class DatabaseSync {
 	/**
 		Constructs a new database connection.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#new-databasesyncpath-options
 	**/
 	function new(path:SqlitePath, ?options:DatabaseSyncOptions);
 
@@ -54,7 +59,14 @@ extern class DatabaseSync {
 	var isTransaction(default, null):Bool;
 
 	/**
-		Configured SQLite run-time limits for this connection.
+		SQLite run-time limits for this connection.
+
+		Each property can be read or written. Setting a property to `Infinity`
+		resets that limit to its compile-time maximum.
+
+		Added in: v24.15.0
+
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databaselimits
 	**/
 	var limits(default, null):DatabaseSyncLimits;
 
@@ -94,35 +106,37 @@ extern class DatabaseSync {
 	function createTagStore(?maxSize:Int):SQLTagStore;
 
 	/**
-		Replace database contents with a serialized buffer.
+		Replaces database contents with a serialized buffer.
+
+		Added in: v24.16.0
 
 		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databasedeserializebuffer-options
 	**/
-	function deserialize(buffer:EitherType<ArrayBuffer, Uint8Array>, ?options:DatabaseSerializeOptions):Void;
+	function deserialize(buffer:EitherType<ArrayBuffer, Uint8Array>, ?options:DatabaseDeserializeOptions):Void;
 
 	/**
-		Enable or disable defensive mode.
+		Enables or disables defensive mode.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databaseenabledefensiveenabled
 	**/
 	function enableDefensive(enabled:Bool):Void;
 
 	/**
-		Enable or disable the `loadExtension` SQL function / method.
+		Enables or disables the `loadExtension` SQL function / method.
 
-		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databaseenableloadextensionenabled
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databaseenableloadextensionallow
 	**/
 	function enableLoadExtension(enabled:Bool):Void;
 
 	/**
-		Execute one or more SQL statements without returning results.
+		Executes one or more SQL statements without returning results.
 	**/
 	function exec(sql:String):Void;
 
 	/**
 		Registers a SQL function callable from SQL.
 
-		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databasefunctionname-options-func
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databasefunctionname-options-function
 	**/
 	@:native("function")
 	@:overload(function(name:String, fn:Function):Void {})
@@ -130,11 +144,15 @@ extern class DatabaseSync {
 
 	/**
 		Loads a shared library into the connection.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databaseloadextensionpath-entrypoint
 	**/
 	function loadExtension(path:String, ?entryPoint:String):Void;
 
 	/**
 		Location of the database file, or `null` for in-memory databases.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databaselocationdbname
 	**/
 	function location(?dbName:String):Null<String>;
 
@@ -145,11 +163,15 @@ extern class DatabaseSync {
 
 	/**
 		Creates a new prepared statement.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databasepreparesql-options
 	**/
-	function prepare(sql:String):StatementSync;
+	function prepare(sql:String, ?options:StatementPrepareOptions):StatementSync;
 
 	/**
-		Serialize the database. Returns a `Uint8Array`.
+		Serializes the database. Returns a `Uint8Array`.
+
+		Added in: v24.16.0
 
 		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databaseserializedbname
 	**/
@@ -157,6 +179,10 @@ extern class DatabaseSync {
 
 	/**
 		Sets the authorizer callback used during statement compilation.
+
+		Pass `null` to clear the current authorizer.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databasesetauthorizercallback
 	**/
 	function setAuthorizer(?callback:Null<Int->Null<String>->Null<String>->Null<String>->Null<String>->Int>):Void;
 }
@@ -176,13 +202,13 @@ typedef DatabaseSyncOptions = {
 	@:optional var allowBareNamedParameters:Bool;
 	@:optional var allowUnknownNamedParameters:Bool;
 	@:optional var defensive:Bool;
-	@:optional var limits:DatabaseSyncLimits;
+	@:optional var limits:DatabaseSyncLimitsOptions;
 }
 
 /**
-	SQLite run-time limits for `DatabaseSyncOptions.limits`.
+	Partial SQLite run-time limits for `DatabaseSyncOptions.limits`.
 **/
-typedef DatabaseSyncLimits = {
+typedef DatabaseSyncLimitsOptions = {
 	@:optional var length:Float;
 	@:optional var sqlLength:Float;
 	@:optional var column:Float;
@@ -197,6 +223,25 @@ typedef DatabaseSyncLimits = {
 }
 
 /**
+	SQLite run-time limits exposed by `DatabaseSync.limits`.
+
+	Values may be set to `Infinity` to reset a limit to its compile-time maximum.
+**/
+typedef DatabaseSyncLimits = {
+	var length:Float;
+	var sqlLength:Float;
+	var column:Float;
+	var exprDepth:Float;
+	var compoundSelect:Float;
+	var vdbeOp:Float;
+	var functionArg:Float;
+	var attach:Float;
+	var likePatternLength:Float;
+	var variableNumber:Float;
+	var triggerDepth:Float;
+}
+
+/**
 	Options for `DatabaseSync.aggregate`.
 **/
 typedef SqliteAggregateOptions = {
@@ -204,7 +249,10 @@ typedef SqliteAggregateOptions = {
 	@:optional var directOnly:Bool;
 	@:optional var useBigIntArguments:Bool;
 	@:optional var varargs:Bool;
-	@:optional var start:Dynamic;
+	/**
+		Identity value for the aggregation, or a function that returns it.
+	**/
+	var start:Any;
 	var step:Function;
 	@:optional var result:Function;
 	@:optional var inverse:Function;
@@ -237,8 +285,23 @@ typedef ApplyChangesetOptions = {
 }
 
 /**
-	Options for `deserialize`.
+	Options for `DatabaseSync.deserialize`.
 **/
-typedef DatabaseSerializeOptions = {
-	@:optional var readOnly:Bool;
+typedef DatabaseDeserializeOptions = {
+	/**
+		Name of the database to deserialize into. Default: `"main"`.
+	**/
+	@:optional var dbName:String;
+}
+
+/**
+	Options for `DatabaseSync.prepare`.
+
+	When omitted, values inherit from the corresponding `DatabaseSync` options.
+**/
+typedef StatementPrepareOptions = {
+	@:optional var readBigInts:Bool;
+	@:optional var returnArrays:Bool;
+	@:optional var allowBareNamedParameters:Bool;
+	@:optional var allowUnknownNamedParameters:Bool;
 }

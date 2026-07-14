@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,6 +28,7 @@ import js.lib.Uint8Array;
 	Tracks changes for later changeset / patchset application.
 
 	Created via `DatabaseSync.createSession()`.
+	Implements `Symbol.dispose` (closes the session; no-op if already closed).
 
 	@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#class-session
 **/
