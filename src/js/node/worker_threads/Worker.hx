@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2025 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,6 +25,10 @@ package js.node.worker_threads;
 import haxe.extern.EitherType;
 import js.lib.Error;
 import js.lib.Promise;
+import js.node.PerfHooks.EventLoopUtilization;
+import js.node.Process.CpuUsage;
+import js.node.V8.V8HeapSnapshotOptions;
+import js.node.V8.V8HeapStatistics;
 import js.node.WorkerThreads.WorkerResourceLimits;
 import js.node.events.EventEmitter;
 import js.node.stream.Readable.IReadable;
@@ -35,16 +39,43 @@ import js.node.url.URL;
 	Events emitted by `Worker`.
 **/
 enum abstract WorkerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
-	var Error:WorkerEvent<Error->Void> = "error";
-	var Exit:WorkerEvent<Int->Void> = "exit";
-	// TODO(section-5): message value is structured-clone Dynamic
-	var Message:WorkerEvent<Dynamic->Void> = "message";
-	var MessageError:WorkerEvent<Error->Void> = "messageerror";
-	var Online:WorkerEvent<Void->Void> = "online";
+	/**
+		Emitted if the worker thread throws an uncaught exception.
+		The worker is terminated in that case.
+	**/
+	var Error:WorkerEvent<(err:Error) -> Void> = "error";
+
+	/**
+		Emitted once the worker has stopped.
+		Final event emitted by any `Worker` instance.
+	**/
+	var Exit:WorkerEvent<(exitCode:Int) -> Void> = "exit";
+
+	/**
+		Emitted when the worker invokes `parentPort.postMessage()`.
+		// TODO(section-5): message value is structured-clone Dynamic
+	**/
+	var Message:WorkerEvent<(value:Dynamic) -> Void> = "message";
+
+	/**
+		Emitted when deserializing a message failed.
+	**/
+	var MessageError:WorkerEvent<(error:Error) -> Void> = "messageerror";
+
+	/**
+		Emitted when the worker thread has started executing JavaScript code.
+	**/
+	var Online:WorkerEvent<() -> Void> = "online";
 }
 
 /**
 	The `Worker` class represents an independent JavaScript execution thread.
+
+	Most Node.js APIs are available inside of it. Creating `Worker` instances
+	inside other `Worker`s is supported.
+
+	// TODO(section-5): `Symbol.asyncDispose` (`await using`) terminates the worker;
+	// add when Disposable models are standardized in hxnodejs.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/worker_threads.html#class-worker
 **/
@@ -56,37 +87,62 @@ extern class Worker extends EventEmitter<Worker> {
 	function new(filename:EitherType<String, URL>, ?options:WorkerOptions);
 
 	/**
-		Send a message to the worker that will be received via `require('worker_threads').parentPort.on('message')`.
+		Send a message to the worker that will be received via
+		`require('worker_threads').parentPort.on('message')`.
 		// TODO(section-5): value typing for structured clone remains application-defined Dynamic
 	**/
 	function postMessage(value:Dynamic, ?transferList:Array<Transferable>):Void;
 
 	/**
-		Opposite of `unref()`. Calls will take effect if the Worker previously was `unref`ed.
+		Opposite of `unref()`. Calling `ref()` on a previously `unref`ed worker
+		does not let the program exit if it is the only active handle left.
 	**/
 	function ref():Void;
 
 	/**
-		Calling `unref` on a worker allows the thread to exit if this is the only active handle in the event system.
+		Allows the thread to exit if this is the only active handle in the event system.
 	**/
 	function unref():Void;
 
 	/**
 		Stop all JavaScript execution in the worker thread as soon as possible.
-		Returns a Promise for the exit code.
+		Returns a Promise for the exit code fulfilled when `'exit'` is emitted.
 	**/
 	function terminate():Promise<Int>;
 
 	/**
-		Returns a readable stream for a V8 snapshot of the current state of the Worker.
+		Returns thread CPU usage identical to `process.threadCpuUsage()`,
+		or rejects with `ERR_WORKER_NOT_RUNNING` if the worker has stopped.
 	**/
-	function getHeapSnapshot():Promise<IReadable>;
+	function cpuUsage(?prev:CpuUsage):Promise<CpuUsage>;
 
 	/**
-		Returns statistics about the worker's V8 heap.
-		// TODO(section-5): align with V8HeapStatistics once shared typing is practical
+		Returns a readable stream for a V8 snapshot of the current state of the Worker.
 	**/
-	function getHeapStatistics():Promise<Dynamic>;
+	function getHeapSnapshot(?options:V8HeapSnapshotOptions):Promise<IReadable>;
+
+	/**
+		Returns statistics identical to `V8.getHeapStatistics()`,
+		or rejects with `ERR_WORKER_NOT_RUNNING` if the worker has stopped.
+	**/
+	function getHeapStatistics():Promise<V8HeapStatistics>;
+
+	/**
+		Starts a CPU profile. Supports `await using` to discard on scope exit.
+		// TODO(section-5): refine profile-handle typing / Symbol.asyncDispose
+	**/
+	function startCpuProfile():Promise<WorkerCpuProfileHandle>;
+
+	/**
+		Starts a heap profile. Supports `await using` to discard on scope exit.
+		// TODO(section-5): refine profile-handle typing / Symbol.asyncDispose
+	**/
+	function startHeapProfile():Promise<WorkerHeapProfileHandle>;
+
+	/**
+		An object that can be used to query performance information from a worker.
+	**/
+	var performance(default, null):WorkerPerformance;
 
 	/**
 		An integer identifier for the referenced thread. Identical to `threadId` inside the worker.
@@ -94,34 +150,40 @@ extern class Worker extends EventEmitter<Worker> {
 	var threadId(default, null):Int;
 
 	/**
-		Optional name assigned when creating the worker.
+		Optional name assigned when creating the worker, or `null` if not running.
 	**/
 	var threadName(default, null):Null<String>;
 
 	/**
-		If `stdin: true` was passed to the constructor, this is a writable stream connected to worker's `process.stdin`.
+		If `stdin: true` was passed to the constructor, a writable stream connected to the worker's `process.stdin`.
 	**/
 	var stdin(default, null):Null<IWritable>;
 
 	/**
-		A readable stream connected to worker's `process.stdout`.
+		A readable stream connected to the worker's `process.stdout`.
 	**/
 	var stdout(default, null):IReadable;
 
 	/**
-		A readable stream connected to worker's `process.stderr`.
+		A readable stream connected to the worker's `process.stderr`.
 	**/
 	var stderr(default, null):IReadable;
 
 	/**
-		An object containing information about the resource limits of the Worker.
+		JS engine resource constraints for this Worker.
+		Empty object if the worker has stopped.
 	**/
 	var resourceLimits(default, null):Null<WorkerResourceLimits>;
 }
 
+/**
+	Options for `new Worker(filename, options)`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/worker_threads.html#new-workerfilename-options
+**/
 typedef WorkerOptions = {
 	/**
-		Additional data to send in parallel.
+		Additional data cloned into the worker as `workerData`.
 		// TODO(section-5): workerData typing is application-defined
 	**/
 	@:optional var workerData:Dynamic;
@@ -131,26 +193,67 @@ typedef WorkerOptions = {
 	**/
 	@:optional var transferList:Array<Transferable>;
 
+	/**
+		Arguments stringified and appended to `process.argv` in the worker.
+	**/
+	@:optional var argv:Array<Dynamic>;
+
+	/**
+		If `true` and `filename` is a string, interpret it as a script to evaluate
+		once the worker is online.
+	**/
+	@:optional var eval:Bool;
+
 	@:optional var stdin:Bool;
 	@:optional var stdout:Bool;
 	@:optional var stderr:Bool;
 
 	/**
-		Executable used to create the worker.
+		Node CLI options passed to the worker (available as `process.execArgv`).
+		V8 / process-affecting flags are not supported. Default: inherit from parent.
 	**/
 	@:optional var execArgv:Array<String>;
 
 	/**
-		An optional environment object keyed like `process.env`.
-		Use `WorkerThreads.SHARE_ENV` to share the env.
+		Initial `process.env` inside the Worker.
+		Use `WorkerThreads.SHARE_ENV` to share the parent's environment.
 	**/
 	@:optional var env:EitherType<haxe.DynamicAccess<String>, js.lib.Symbol>;
 
 	@:optional var resourceLimits:WorkerResourceLimits;
+
+	/**
+		Optional name for the thread / worker title (debugging). Default: `'WorkerThread'`.
+	**/
 	@:optional var name:String;
 
 	/**
-		If `true`, track unmanaged resources managed by the worker.
+		If `true`, track unmanaged FDs opened via `fs.open` / `fs.close`. Default: `true`.
 	**/
 	@:optional var trackUnmanagedFds:Bool;
+}
+
+/**
+	Worker-specific performance helpers.
+**/
+typedef WorkerPerformance = {
+	/**
+		Same as `PerfHooks.eventLoopUtilization`, but for this worker instance.
+		Values are `0` before `'online'` or after `'exit'`.
+	**/
+	function eventLoopUtilization(?utilization1:EventLoopUtilization, ?utilization2:EventLoopUtilization):EventLoopUtilization;
+}
+
+/**
+	Handle returned by `Worker.startCpuProfile`.
+**/
+typedef WorkerCpuProfileHandle = {
+	function stop():Promise<String>;
+}
+
+/**
+	Handle returned by `Worker.startHeapProfile`.
+**/
+typedef WorkerHeapProfileHandle = {
+	function stop():Promise<String>;
 }

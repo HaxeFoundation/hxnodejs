@@ -22,23 +22,47 @@
 
 package js.node.worker_threads;
 
-import haxe.extern.EitherType;
-import js.lib.ArrayBuffer;
-import js.node.fs.FileHandle;
-import js.node.web.AbortSignal;
-import js.node.web.ReadableStream;
-import js.node.web.TransformStream;
-import js.node.web.WritableStream;
+import js.node.web.EventTarget;
+import js.node.web.MessageEvent;
 
 /**
-	Objects accepted in a `worker_threads` `transferList` / structured-clone transfer list.
+	Asynchronous one-to-many messaging with all other `BroadcastChannel` instances
+	bound to the same channel name.
 
-	Matches the Node.js transferable set that already has externs in this repo
-	(`ArrayBuffer`, `MessagePort`, `AbortSignal`, `FileHandle`, and web streams).
-	Does not invent types such as `SharedArrayBuffer` that are not yet externed.
+	Also available as the web global `js.node.web.BroadcastChannel`.
 
-	@see https://nodejs.org/docs/latest-v24.x/api/worker_threads.html#portpostmessagevalue-transferlist
+	@see https://nodejs.org/docs/latest-v24.x/api/worker_threads.html#class-broadcastchannel
 **/
-typedef Transferable = EitherType<ArrayBuffer,
-	EitherType<MessagePort,
-		EitherType<AbortSignal, EitherType<FileHandle, EitherType<ReadableStream, EitherType<WritableStream, TransformStream>>>>>>;
+@:jsRequire("worker_threads", "BroadcastChannel")
+extern class BroadcastChannel extends EventTarget {
+	/**
+		The channel name.
+	**/
+	var name(default, null):String;
+
+	var onmessage:Null<MessageEvent->Void>;
+	var onmessageerror:Null<MessageEvent->Void>;
+
+	function new(name:String):Void;
+
+	/**
+		Closes the channel connection.
+	**/
+	function close():Void;
+
+	/**
+		Posts a message that will be delivered to all other `BroadcastChannel`
+		objects listening on the same name.
+	**/
+	function postMessage(message:Any):Void;
+
+	/**
+		Opposite of `unref()`. Returns `this`.
+	**/
+	function ref():BroadcastChannel;
+
+	/**
+		Allows the thread to exit if this is the only active handle. Returns `this`.
+	**/
+	function unref():BroadcastChannel;
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2025 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,13 +23,21 @@
 package js.node.worker_threads;
 
 /**
-	Instances of `MessageChannel` represent an asynchronous two-way communications channel.
+	An asynchronous two-way communications channel pairing two linked `MessagePort`s.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/worker_threads.html#class-messagechannel
 **/
 @:jsRequire("worker_threads", "MessageChannel")
 extern class MessageChannel {
 	function new():Void;
+
+	/**
+		Port whose opposite is `port2`.
+	**/
 	var port1(default, null):MessagePort;
+
+	/**
+		Port whose opposite is `port1`.
+	**/
 	var port2(default, null):MessagePort;
 }

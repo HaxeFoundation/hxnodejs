@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2025 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,43 +24,71 @@ package js.node.worker_threads;
 
 import js.lib.Error;
 import js.node.events.EventEmitter;
+import js.node.web.MessageEvent;
 
 /**
 	Events emitted by `MessagePort`.
 **/
 enum abstract MessagePortEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
-	var Close:MessagePortEvent<Void->Void> = "close";
-	// TODO(section-5): message value is structured-clone Dynamic
-	var Message:MessagePortEvent<Dynamic->Void> = "message";
-	var MessageError:MessagePortEvent<Error->Void> = "messageerror";
+	/**
+		Emitted once either side of the channel has been disconnected.
+	**/
+	var Close:MessagePortEvent<() -> Void> = "close";
+
+	/**
+		Emitted for any incoming message containing the cloned `postMessage` value.
+		// TODO(section-5): message value is structured-clone Dynamic
+	**/
+	var Message:MessagePortEvent<(value:Dynamic) -> Void> = "message";
+
+	/**
+		Emitted when deserializing a message failed.
+	**/
+	var MessageError:MessagePortEvent<(error:Error) -> Void> = "messageerror";
 }
 
 /**
-	Instances of `MessagePort` represent one end of an asynchronous two-way communication channel.
+	One end of an asynchronous two-way communication channel.
+
+	Matches browser `MessagePort`s. Node.js documents inheritance from `EventTarget`;
+	this extern keeps `EventEmitter` for the existing `.on` / enum-event ergonomics.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/worker_threads.html#class-messageport
 **/
 @:jsRequire("worker_threads", "MessagePort")
 extern class MessagePort extends EventEmitter<MessagePort> {
 	/**
+		EventTarget-style handler; setting it automatically calls `start()`.
+	**/
+	var onmessage:Null<MessageEvent->Void>;
+
+	/**
+		EventTarget-style handler for deserialization failures.
+	**/
+	var onmessageerror:Null<MessageEvent->Void>;
+
+	/**
 		Sends a JavaScript value to the receiving end of the channel.
-		`transferList` may include ArrayBuffer, MessagePort, AbortSignal, FileHandle, or web streams.
+		`transferList` may include `ArrayBuffer`, `MessagePort`, `AbortSignal`,
+		`FileHandle`, or web streams (see `Transferable`).
 		// TODO(section-5): value typing for structured clone remains application-defined Dynamic
 	**/
 	function postMessage(value:Dynamic, ?transferList:Array<Transferable>):Void;
 
 	/**
-		Disables further sending of messages from either port. Once done, no further messages can be received.
+		Disables further sending of messages from either port.
+		Once done, no further messages can be received.
 	**/
 	function close():Void;
 
 	/**
-		Starts receiving messages. Automatically called if a listener for `'message'` is attached.
+		Starts receiving messages. Automatically called if a listener for `'message'`
+		is attached. Exists mainly for parity with the Web `MessagePort` API.
 	**/
 	function start():Void;
 
 	/**
-		Opposite of `unref()`. Increases active handle count.
+		Opposite of `unref()`. Increases the active handle count.
 	**/
 	function ref():Void;
 
@@ -70,7 +98,7 @@ extern class MessagePort extends EventEmitter<MessagePort> {
 	function unref():Void;
 
 	/**
-		If true, the MessagePort will keep the event loop of the thread alive.
+		Returns `true` if the MessagePort will keep the event loop of the thread alive.
 	**/
 	function hasRef():Bool;
 }
