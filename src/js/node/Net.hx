@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,48 +25,16 @@ package js.node;
 import haxe.extern.EitherType;
 import js.node.net.BlockList as BlockListObject;
 import js.node.net.Server;
+import js.node.net.Server.ServerOptions;
 import js.node.net.Socket;
 import js.node.net.SocketAddress as SocketAddressObject;
 
-typedef NetCreateServerOptions = {
-	> SocketOptionsBase,
+/**
+	Options for `Net.createServer` / `new Server()`.
 
-	/**
-		If true, then the socket associated with each incoming connection will be paused,
-		and no data will be read from its handle.
-
-		This allows connections to be passed between processes without any data being read by the original process.
-		To begin reading data from a paused socket, call `resume`.
-
-		Default: false
-	**/
-	@:optional var pauseOnConnect:Bool;
-
-	/**
-		If set to `true`, it enables keep-alive functionality on the socket immediately after the connection is established.
-	**/
-	@:optional var keepAlive:Bool;
-
-	/**
-		If set to a positive number, it sets the initial delay before the first keepalive probe is sent on an idle socket.
-	**/
-	@:optional var keepAliveInitialDelay:Int;
-
-	/**
-		If set to `true`, it disables the use of Nagle's algorithm immediately after a connection is established.
-	**/
-	@:optional var noDelay:Bool;
-
-	/**
-		Optionally overrides all `net.Socket`s' `readableHighWaterMark` and `writableHighWaterMark`.
-	**/
-	@:optional var highWaterMark:Int;
-
-	/**
-		`net.BlockList` used as an IP allow/deny list for incoming connections.
-	**/
-	@:optional var blockList:BlockListObject;
-}
+	Alias of `js.node.net.Server.ServerOptions`.
+**/
+typedef NetCreateServerOptions = ServerOptions;
 
 /**
 	Options for the `Net.connect` method (TCP version).
@@ -94,15 +62,15 @@ enum abstract NetIsIPResult(Int) to Int {
 }
 
 /**
-	The net module provides you with an asynchronous network wrapper.
-	It contains methods for creating both servers and clients (called streams).
+	The net module provides an asynchronous network API for creating stream-based
+	TCP or IPC servers (`createServer`) and clients (`createConnection`).
 **/
 @:jsRequire("net")
 extern class Net {
 	/**
-		Creates a new TCP server.
+		Creates a new TCP or IPC server.
 
-		The `connectionListener` argument is automatically set as a listener for the 'connection' event.
+		The `connectionListener` argument is automatically set as a listener for the `'connection'` event.
 	**/
 	@:overload(function(options:NetCreateServerOptions, ?connectionListener:Socket->Void):Server {})
 	static function createServer(?connectionListener:Socket->Void):Server;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,6 +25,14 @@ package js.node.net;
 import haxe.extern.EitherType;
 
 /**
+	IP version used by `BlockList` add/check methods.
+**/
+enum abstract BlockListAddressType(String) from String to String {
+	var IPv4 = "ipv4";
+	var IPv6 = "ipv6";
+}
+
+/**
 	The `BlockList` object can be used with some network APIs to specify rules
 	for disabling inbound or outbound access to specific IP addresses, IP ranges, or IP subnets.
 **/
@@ -42,16 +50,16 @@ extern class BlockList {
 	/**
 		Adds a rule to block the given IP address.
 
-		`type` is either `'ipv4'` or `'ipv6'`. Default: `'ipv4'`.
+		`type` defaults to `'ipv4'`.
 	**/
-	function addAddress(address:EitherType<String, SocketAddress>, ?type:String):Void;
+	function addAddress(address:EitherType<String, SocketAddress>, ?type:BlockListAddressType):Void;
 
 	/**
 		Adds a rule to block a range of IP addresses from `start` (inclusive) to `end` (inclusive).
 
-		`type` is either `'ipv4'` or `'ipv6'`. Default: `'ipv4'`.
+		`type` defaults to `'ipv4'`.
 	**/
-	function addRange(start:EitherType<String, SocketAddress>, end:EitherType<String, SocketAddress>, ?type:String):Void;
+	function addRange(start:EitherType<String, SocketAddress>, end:EitherType<String, SocketAddress>, ?type:BlockListAddressType):Void;
 
 	/**
 		Adds a rule to block a range of IP addresses specified as a subnet mask.
@@ -59,16 +67,16 @@ extern class BlockList {
 		`prefix` is the number of CIDR prefix bits. For IPv4, this must be between 0 and 32.
 		For IPv6, this must be between 0 and 128.
 
-		`type` is either `'ipv4'` or `'ipv6'`. Default: `'ipv4'`.
+		`type` defaults to `'ipv4'`.
 	**/
-	function addSubnet(net:EitherType<String, SocketAddress>, prefix:Int, ?type:String):Void;
+	function addSubnet(net:EitherType<String, SocketAddress>, prefix:Int, ?type:BlockListAddressType):Void;
 
 	/**
 		Returns `true` if the given IP address matches any of the rules added to the `BlockList`.
 
-		`type` is either `'ipv4'` or `'ipv6'`. Default: `'ipv4'`.
+		`type` defaults to `'ipv4'`.
 	**/
-	function check(address:EitherType<String, SocketAddress>, ?type:String):Bool;
+	function check(address:EitherType<String, SocketAddress>, ?type:BlockListAddressType):Bool;
 
 	/**
 		The list of rules added to the blocklist.

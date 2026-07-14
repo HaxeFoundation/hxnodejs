@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,9 +23,10 @@
 package js.node.net;
 
 import haxe.extern.EitherType;
+import js.lib.Error;
 import js.node.Dns;
 import js.node.events.EventEmitter.Event;
-import js.lib.Error;
+import js.node.web.AbortSignal;
 
 /**
 	Enumeration of events for `Socket` objects.
@@ -34,8 +35,10 @@ enum abstract SocketEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted after resolving the hostname but before connecting.
 		Not applicable to UNIX sockets.
+
+		Listener arguments: `err`, `address`, `family`, `host`.
 	**/
-	var Lookup:SocketEvent<Null<Error>->String->DnsAddressFamily->Void> = "lookup";
+	var Lookup:SocketEvent<(err:Null<Error>, address:String, family:Null<DnsAddressFamily>, host:String) -> Void> = "lookup";
 
 	/**
 		Emitted when a socket connection is successfully established. See `Socket.connect`.
@@ -141,37 +144,78 @@ typedef SocketOptions = {
 	> SocketOptionsBase,
 
 	/**
-		allows you to specify the existing file descriptor of socket.
+		If specified, wrap around an existing socket with the given file descriptor,
+		otherwise a new socket will be created.
 	**/
 	@:optional var fd:Null<Int>;
 
 	/**
-		allow reads on this socket (NOTE: Works only when `fd` is passed)
+		Allow reads on this socket (NOTE: Works only when `fd` is passed). Default: `false`.
 	**/
 	@:optional var readable:Bool;
 
 	/**
-		allow writes on this socket (NOTE: Works only when `fd` is passed)
+		Allow writes on this socket (NOTE: Works only when `fd` is passed). Default: `false`.
 	**/
 	@:optional var writable:Bool;
 
 	/**
-		If set to `false`, then the socket will automatically end the stream when the other end of the socket sends a FIN packet.
-		See `allowHalfOpen` for more information. Default: `false`.
+		If specified, incoming data is stored in a single `buffer` and passed to the supplied `callback`
+		when data arrives on the socket. This disables normal streaming `data` events.
+
+		@see https://nodejs.org/api/net.html#new-netsocketoptions
 	**/
 	@:optional var onread:SocketOnReadOptions;
 
 	/**
-		AbortSignal used to abort an ongoing connect / read.
+		AbortSignal that may be used to destroy the socket.
 	**/
-	@:optional var signal:js.node.web.AbortSignal;
+	@:optional var signal:AbortSignal;
+
+	/**
+		If set to `true`, enables keep-alive functionality on the socket immediately after the connection is established.
+		Default: `false`.
+	**/
+	@:optional var keepAlive:Bool;
+
+	/**
+		If set to a positive number, sets the initial delay before the first keepalive probe is sent on an idle socket.
+		Default: `0`.
+	**/
+	@:optional var keepAliveInitialDelay:Int;
+
+	/**
+		If set to `true`, disables the use of Nagle's algorithm immediately after the socket is established.
+		Default: `false`.
+	**/
+	@:optional var noDelay:Bool;
+
+	/**
+		`net.BlockList` for disabling outbound access to specific IP addresses, ranges, or subnets.
+	**/
+	@:optional var blockList:BlockList;
+
+	/**
+		The initial Type of Service (TOS) value (0-255).
+
+		@see https://nodejs.org/api/net.html#new-netsocketoptions
+	**/
+	@:optional var typeOfService:Int;
 }
 
 /**
 	Optional `onread` callback options for `Socket`.
 **/
 typedef SocketOnReadOptions = {
+	/**
+		Either a reusable chunk of memory to use for storing incoming data, or a function that returns such.
+	**/
 	var buffer:EitherType<js.node.Buffer, () -> js.node.Buffer>;
+
+	/**
+		Called for every chunk of incoming data with the number of bytes written and a reference to `buffer`.
+		Return `false` to implicitly `pause()` the socket.
+	**/
 	var callback:(bytesWritten:Int, buffer:js.node.Buffer) -> Bool;
 }
 
@@ -201,8 +245,9 @@ typedef SocketConnectOptionsTcp = {
 	@:optional var localPort:Int;
 
 	/**
-		Version of IP stack. Defaults to 4.
-		Use `0` for dual-stack / auto family selection.
+		Version of IP stack. Must be `4`, `6`, or `0`.
+		The value `0` indicates that both IPv4 and IPv6 addresses are allowed.
+		Default: `0`.
 	**/
 	@:optional var family:DnsAddressFamily;
 
@@ -232,12 +277,15 @@ typedef SocketConnectOptionsTcp = {
 	@:optional var noDelay:Bool;
 
 	/**
-		If set to `true`, enables TCP_KEEPALIVE on the connection.
+		If set to `true`, enables a family autodetection algorithm (RFC 8305 §5).
+		Ignored if `family` is not `0` or if `localAddress` is set.
+		Default: `Net.getDefaultAutoSelectFamily()`.
 	**/
 	@:optional var autoSelectFamily:Bool;
 
 	/**
 		Timeout in milliseconds for autoSelectFamily connection attempts.
+		Default: `Net.getDefaultAutoSelectFamilyAttemptTimeout()`.
 	**/
 	@:optional var autoSelectFamilyAttemptTimeout:Int;
 
@@ -249,7 +297,7 @@ typedef SocketConnectOptionsTcp = {
 	/**
 		AbortSignal used to abort an ongoing connect.
 	**/
-	@:optional var signal:js.node.web.AbortSignal;
+	@:optional var signal:AbortSignal;
 }
 
 /**
@@ -264,7 +312,7 @@ typedef SocketConnectOptionsUnix = {
 	/**
 		AbortSignal used to abort an ongoing connect.
 	**/
-	@:optional var signal:js.node.web.AbortSignal;
+	@:optional var signal:AbortSignal;
 }
 
 /**
@@ -334,19 +382,17 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 	function connect(options:EitherType<SocketConnectOptionsTcp, SocketConnectOptionsUnix>, ?connectListener:Void->Void):Socket;
 
 	/**
-		`Socket` has the property that `socket.write` always works. This is to help users get up and running quickly.
-		The computer cannot always keep up with the amount of data that is written to a socket - the network connection
-		simply might be too slow. Node will internally queue up the data written to a socket and send it out over the
-		wire when it is possible. (Internally it is polling on the socket's file descriptor for being writable).
-
-		The consequence of this internal buffering is that memory may grow. This property shows the number of characters
-		currently buffered to be written. (Number of characters is approximately equal to the number of bytes to be written,
-		but the buffer may contain strings, and the strings are lazily encoded, so the exact number of bytes is not known.)
+		This property shows the number of characters buffered for writing.
+		The buffer may contain strings whose length after encoding is not yet known,
+		so this number is only an approximation of the number of bytes in the buffer.
 
 		Users who experience large or growing `bufferSize` should attempt to "throttle" the data flows
 		in their program with `pause` and `resume`.
+
+		@deprecated Since v14.6.0 — use `writableLength` instead.
 	**/
-	var bufferSize:Int;
+	@:deprecated("Use writableLength instead")
+	var bufferSize(default, null):Int;
 
 	/**
 		A boolean value that indicates if the connection is destroyed or not.
@@ -363,7 +409,7 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 		If `exception` is specified, an 'error' event will be emitted and
 		any listeners for that event will receive exception as an argument.
 	**/
-	function destroy(?exception:Error):Void;
+	function destroy(?exception:Error):Socket;
 
 	/**
 		Destroys the socket after all data has been written.
@@ -388,7 +434,7 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 
 		The optional `callback` parameter will be added as a one time listener for the 'timeout' event.
 	**/
-	function setTimeout(timeout:Int, ?callback:Void->Void):Void;
+	function setTimeout(timeout:Int, ?callback:Void->Void):Socket;
 
 	/**
 		Disables the Nagle algorithm.
@@ -396,7 +442,7 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 		Setting true for `noDelay` will immediately fire off data each time `write` is called.
 		`noDelay` defaults to true.
 	**/
-	function setNoDelay(?noDelay:Bool):Void;
+	function setNoDelay(?noDelay:Bool):Socket;
 
 	/**
 		Enable/disable keep-alive functionality, and optionally set the initial delay
@@ -410,8 +456,26 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 		Setting 0 for `initialDelay` will leave the value unchanged from the default (or previous) setting.
 		Defaults to 0.
 	**/
-	@:overload(function(?initialDelay:Int):Void {})
-	function setKeepAlive(enable:Bool, ?initialDelay:Int):Void;
+	@:overload(function(?initialDelay:Int):Socket {})
+	function setKeepAlive(enable:Bool, ?initialDelay:Int):Socket;
+
+	/**
+		Returns the current Type of Service (TOS) field for IPv4 packets or Traffic Class for IPv6 packets.
+
+		`setTypeOfService` may be called before the socket is connected; the value will be cached and applied
+		when the socket establishes a connection. `getTypeOfService` returns the currently set value even before connection.
+
+		@see https://nodejs.org/api/net.html#socketgettypeofservice
+	**/
+	function getTypeOfService():Int;
+
+	/**
+		Sets the Type of Service (TOS) field for IPv4 packets or Traffic Class for IPv6 packets sent from this socket.
+		`tos` must be in the range 0-255.
+
+		@see https://nodejs.org/api/net.html#socketsettypeservicetos
+	**/
+	function setTypeOfService(tos:Int):Socket;
 
 	/**
 		Returns the bound address, the address family name and port of the socket as reported by the operating system.
@@ -434,36 +498,39 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 	/**
 		The string representation of the remote IP address.
 		For example, '74.125.127.100' or '2001:4860:a005::68'.
+		May be `undefined` if the socket is destroyed.
 	**/
-	var remoteAddress(default, null):String;
+	var remoteAddress(default, null):Null<String>;
 
 	/**
 		The string representation of the remote IP family.
 		'IPv4' or 'IPv6'.
+		May be `undefined` if the socket is destroyed.
 	**/
-	var remoteFamily(default, null):SocketAdressFamily;
+	var remoteFamily(default, null):Null<SocketAdressFamily>;
 
 	/**
 		The numeric representation of the remote port. For example, 80 or 21.
+		May be `undefined` if the socket is destroyed.
 	**/
-	var remotePort(default, null):Int;
+	var remotePort(default, null):Null<Int>;
 
 	/**
 		The string representation of the local IP address the remote client is connecting on.
 		For example, if you are listening on '0.0.0.0' and the client connects on '192.168.1.1',
 		the value would be '192.168.1.1'.
 	**/
-	var localAddress(default, null):String;
+	var localAddress(default, null):Null<String>;
 
 	/**
 		The numeric representation of the local port. For example, 80 or 21.
 	**/
-	var localPort(default, null):Int;
+	var localPort(default, null):Null<Int>;
 
 	/**
 		The string representation of the local IP family. `'IPv4'` or `'IPv6'`.
 	**/
-	var localFamily(default, null):SocketAdressFamily;
+	var localFamily(default, null):Null<SocketAdressFamily>;
 
 	/**
 		This property is only present when using `autoSelectFamily` and represents attempted addresses.

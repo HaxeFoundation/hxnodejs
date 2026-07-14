@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,6 +23,40 @@
 package js.node.net;
 
 /**
+	IP version for `SocketAddress` construction.
+**/
+enum abstract SocketAddressFamily(String) from String to String {
+	var IPv4 = "ipv4";
+	var IPv6 = "ipv6";
+}
+
+/**
+	Options for `new SocketAddress()`.
+**/
+typedef SocketAddressOptions = {
+	/**
+		The network address as either an IPv4 or IPv6 string.
+		Default: `'127.0.0.1'` if `family` is `'ipv4'`; `'::'` if `family` is `'ipv6'`.
+	**/
+	@:optional var address:String;
+
+	/**
+		Either `'ipv4'` or `'ipv6'`. Default: `'ipv4'`.
+	**/
+	@:optional var family:SocketAddressFamily;
+
+	/**
+		An IPv6 flow-label used only if `family` is `'ipv6'`.
+	**/
+	@:optional var flowlabel:Int;
+
+	/**
+		An IP port.
+	**/
+	@:optional var port:Int;
+}
+
+/**
 	Represents a network endpoint as an IP address and port pair.
 
 	@see https://nodejs.org/api/net.html#class-netsocketaddress
@@ -32,16 +66,9 @@ extern class SocketAddress {
 	/**
 		Creates a new `SocketAddress`.
 
-		`family` is either `'ipv4'` or `'ipv6'`. Default: `'ipv4'`.
-
 		@see https://nodejs.org/api/net.html#new-netsocketaddressoptions
 	**/
-	function new(?options:{
-		?address:String,
-		?family:String,
-		?flowlabel:Int,
-		?port:Int
-	}):Void;
+	function new(?options:SocketAddressOptions):Void;
 
 	/**
 		Parses an IP address and optional port string into a `SocketAddress`.
@@ -61,7 +88,7 @@ extern class SocketAddress {
 	/**
 		Either `'ipv4'` or `'ipv6'`.
 	**/
-	var family(default, null):String;
+	var family(default, null):SocketAddressFamily;
 
 	/**
 		An IP port.
