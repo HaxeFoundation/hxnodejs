@@ -63,6 +63,8 @@ extern class SuiteContext {
 	/**
 		Whether the suite and all of its subtests have passed.
 
+		Added in: v24.16.0
+
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextpassed-1
 	**/
 	var passed(default, null):Bool;
@@ -70,12 +72,16 @@ extern class SuiteContext {
 	/**
 		Zero-based attempt number when using `--test-rerun-failures`.
 
+		Added in: v24.16.0
+
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextattempt-1
 	**/
 	var attempt(default, null):Int;
 
 	/**
 		Output a diagnostic message for the suite.
+
+		Added in: v24.16.0
 
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextdiagnosticmessage-1
 	**/

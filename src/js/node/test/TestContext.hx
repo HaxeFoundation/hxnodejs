@@ -131,7 +131,7 @@ extern class TestContext {
 	/**
 		Zero-based attempt number when using `--test-rerun-failures`.
 
-		Added in: v25.0.0 (documented on the Node 24 test page for newer runtimes).
+		Added in: v25.0.0
 
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextattempt
 	**/
@@ -140,6 +140,8 @@ extern class TestContext {
 	/**
 		Unique worker id for the current test file process, or `undefined`
 		outside a test context.
+
+		Added in: v24.15.0
 
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextworkerid
 	**/

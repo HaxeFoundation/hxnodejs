@@ -110,6 +110,8 @@ extern class Test {
 	/**
 		Shorthand for expecting a test to fail: `test(name, { expectFailure: true }[, fn])`.
 
+		Same function as `test.expectFailure` / `it.expectFailure`.
+
 		Added in: v24.14.0
 
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#expecting-tests-to-fail
