@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,4 +22,9 @@
 
 package js.node;
 
+/**
+	Convenience typedef for `js.node.buffer.Buffer`.
+
+	@see https://nodejs.org/api/buffer.html
+**/
 typedef Buffer = js.node.buffer.Buffer;

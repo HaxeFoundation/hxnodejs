@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -34,8 +34,9 @@ package js.node.buffer;
 	for an indeterminate amount of time, it may be appropriate to create an un-pooled `Buffer` instance
 	using `SlowBuffer` then copy out the relevant bits.
 
-	Use of `SlowBuffer` should be used only as a last resort after a developer has observed
-	undue memory retention in their applications.
+	Deprecated since Node.js v6.0.0. Prefer `Buffer.allocUnsafeSlow()`.
+
+	@see https://nodejs.org/api/buffer.html#class-slowbuffer
 **/
 @:deprecated("SlowBuffer is deprecated, use Buffer.allocUnsafeSlow() instead")
 @:jsRequire("buffer", "SlowBuffer")
