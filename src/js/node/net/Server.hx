@@ -245,10 +245,12 @@ extern class Server extends EventEmitter<Server> {
 		Returns the bound address, the address family name and port of the server as reported by the operating system.
 		Useful to find which port was assigned when giving getting an OS-assigned address.
 
-		For a server listening on a pipe or Unix domain socket, the name is returned as a string.
 		Returns `null` before the `'listening'` event has been emitted or after calling `close`.
+
+		For a server listening on a pipe or Unix domain socket, Node returns the path as a `String` at runtime;
+		that case is omitted here so TCP callers can access `.port` / `.address` / `.family` without casting.
 	**/
-	function address():Null<EitherType<SocketAdress, String>>;
+	function address():Null<SocketAdress>;
 
 	/**
 		Calling `unref` on a server will allow the program to exit if this is the only active server in the event system.
