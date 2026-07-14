@@ -25,9 +25,6 @@ package js.node.perf_hooks;
 /**
 	A `Histogram` that is periodically updated on a given interval.
 
-	As of Node.js v24.2.0, also implements `[Symbol.dispose]()` which calls `disable()`.
-	// TODO: model `[Symbol.dispose]()` / Web IDL `Disposable` when hxnodejs supports it.
-
 	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#class-intervalhistogram-extends-histogram
 **/
 extern class IntervalHistogram extends Histogram {
@@ -46,4 +43,15 @@ extern class IntervalHistogram extends Histogram {
 		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogramenable
 	**/
 	function enable():Bool;
+
+	/**
+		Disables the update interval timer when the histogram is disposed.
+
+		Corresponds to JavaScript `histogram[Symbol.dispose]()`. Added in Node.js v24.2.0.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#histogramsymboldispose
+	**/
+	public inline function dispose():Void {
+		js.Syntax.code("{0}[Symbol.dispose]()", this);
+	}
 }

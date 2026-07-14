@@ -111,6 +111,12 @@ extern class PerformanceResourceTiming extends PerformanceEntry {
 	final requestStart:Float;
 
 	/**
+		The high resolution millisecond timestamp representing the time immediately after the first byte of
+		the response is received from the server.
+	**/
+	final responseStart:Float;
+
+	/**
 		The high resolution millisecond timestamp representing the time immediately after Node.js receives
 		the last byte of the resource or immediately before the transport connection is closed, whichever
 		comes first.
@@ -144,9 +150,32 @@ extern class PerformanceResourceTiming extends PerformanceEntry {
 	final decodedBodySize:Float;
 
 	/**
+		A string representing the type of resource fetch that initiated this timing entry
+		(for example `'fetch'` or `'xmlhttprequest'`).
+	**/
+	final initiatorType:String;
+
+	/**
+		A string representing the network protocol used to fetch the resource
+		(for example `'http/1.1'` or `'h2'`).
+	**/
+	final nextHopProtocol:String;
+
+	/**
+		A number representing the HTTP response status code returned when fetching the resource.
+	**/
+	final responseStatus:Float;
+
+	/**
+		A string representing how the resource was delivered (for example cache delivery type).
+		Empty string when not applicable.
+	**/
+	final deliveryType:String;
+
+	/**
 		Returns an object that is the JSON representation of the `PerformanceResourceTiming` object.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#performanceresourcetimingtojson
 	**/
-	override function toJSON():Dynamic;
+	override function toJSON():Any;
 }
