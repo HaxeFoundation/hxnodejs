@@ -738,11 +738,10 @@ extern class Buffer extends Uint8Array {
 
 	/**
 		Resolves a `'blob:nodedata:...'` URL to the associated Blob.
-		// TODO(section-6): return typed Blob once web Blob externs are available.
 
 		@see https://nodejs.org/api/buffer.html#bufferresolveobjecturlid
 	**/
-	static inline function resolveObjectURL(id:String):Dynamic {
+	static inline function resolveObjectURL(id:String):Null<js.node.web.Blob> {
 		return BufferModule.resolveObjectURL(id);
 	}
 
@@ -801,7 +800,7 @@ private extern class BufferModule {
 	static function isAscii(input:EitherType<ArrayBufferView, ArrayBuffer>):Bool;
 	static function atob(data:String):String;
 	static function btoa(data:String):String;
-	static function resolveObjectURL(id:String):Dynamic;
+	static function resolveObjectURL(id:String):Null<js.node.web.Blob>;
 	static var constants(default, never):BufferConstants;
 }
 

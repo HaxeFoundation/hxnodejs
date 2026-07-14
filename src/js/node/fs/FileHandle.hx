@@ -108,8 +108,7 @@ extern class FileHandle extends EventEmitter<FileHandle> {
 	/**
 		Returns a byte-oriented `ReadableStream` for the file contents.
 	**/
-	// TODO(section-6): return typed ReadableStream once web streams externs are available
-	function readableWebStream(?options:FileHandleReadableWebStreamOptions):Dynamic;
+	function readableWebStream(?options:FileHandleReadableWebStreamOptions):js.node.web.ReadableStream;
 
 	/**
 		Read from a file and write to an array of buffers.
