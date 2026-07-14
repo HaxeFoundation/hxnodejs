@@ -20,31 +20,32 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package js.node.perf_hooks;
-
-import haxe.extern.EitherType;
+package js.node.trace_events;
 
 /**
-	A `Histogram` that can record values.
+	Enables or disables tracing for a set of categories.
+	Created via `TraceEvents.createTracing()`.
 
-	@see https://nodejs.org/api/perf_hooks.html#class-recordablehistogram-extends-histogram
+	@see https://nodejs.org/docs/latest-v24.x/api/tracing.html#tracing-object
 **/
-extern class RecordableHistogram extends Histogram {
+extern class Tracing {
 	/**
-		Adds the values from `other` to this histogram.
+		A comma-separated list of the trace event categories covered by this object.
 	**/
-	function add(other:RecordableHistogram):Void;
+	var categories(default, null):String;
 
 	/**
-		Records `val` in the histogram.
-
-		// TODO: allow BigInt when hxnodejs gains a BigInt type (Node accepts number | bigint).
+		`true` only if this `Tracing` object has been enabled.
 	**/
-	function record(val:EitherType<Float, Dynamic>):Void;
+	var enabled(default, null):Bool;
 
 	/**
-		Calculates the amount of time (in nanoseconds) that has passed since the previous call
-		to `recordDelta()` and records that amount in the histogram.
+		Enables this `Tracing` object for its set of categories.
 	**/
-	function recordDelta():Void;
+	function enable():Void;
+
+	/**
+		Disables this `Tracing` object.
+	**/
+	function disable():Void;
 }

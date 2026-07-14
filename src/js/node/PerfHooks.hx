@@ -32,7 +32,7 @@ import js.node.perf_hooks.RecordableHistogram;
 	This module provides an implementation of a subset of the W3C Web Performance APIs
 	as well as additional APIs for Node.js-specific performance measurements.
 
-	@see https://nodejs.org/api/perf_hooks.html
+	@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html
 **/
 @:jsRequire("perf_hooks")
 extern class PerfHooks {
@@ -40,14 +40,17 @@ extern class PerfHooks {
 		An object that can be used to collect performance metrics from the current Node.js instance.
 		It is similar to `window.performance` in browsers.
 
-		@see https://nodejs.org/api/perf_hooks.html#perf_hooksperformance
+		// TODO(section-1): `Node.performance` in `src/js/Node.hx` still has a Haxe 3
+		// `untyped __js__` fallback; drop that when section-1 audits globals.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#perf_hooksperformance
 	**/
 	static var performance(default, never):Performance;
 
 	/**
 		Constants for garbage collection kinds and flags.
 
-		@see https://nodejs.org/api/perf_hooks.html#perf_hooksconstants
+		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#perf_hooksconstants
 	**/
 	static var constants(default, never):PerfHooksConstants;
 
@@ -120,12 +123,16 @@ typedef CreateHistogramOptions = {
 	/**
 		The lowest discernible value. Must be an integer value greater than 0.
 		Default: `1`.
+
+		// TODO: allow BigInt when hxnodejs gains a BigInt type (Node accepts number | bigint).
 	**/
 	@:optional var lowest:EitherType<Float, Dynamic>;
 
 	/**
 		The highest recordable value. Must be an integer value that is equal to or greater than
 		two times `lowest`. Default: `Number.MAX_SAFE_INTEGER`.
+
+		// TODO: allow BigInt when hxnodejs gains a BigInt type (Node accepts number | bigint).
 	**/
 	@:optional var highest:EitherType<Float, Dynamic>;
 

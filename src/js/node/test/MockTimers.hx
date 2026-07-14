@@ -23,11 +23,7 @@
 package js.node.test;
 
 import haxe.extern.EitherType;
-#if haxe4
 import js.lib.Date as JsDate;
-#else
-import js.Date as JsDate;
-#end
 
 /**
 	Timer / Date APIs that can be mocked via `MockTimers.enable()`.

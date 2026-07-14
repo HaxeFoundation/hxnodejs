@@ -25,18 +25,12 @@ package js.node.diagnostics_channel;
 import haxe.Constraints.Function;
 import haxe.extern.EitherType;
 import haxe.extern.Rest;
-#if haxe4
 import js.lib.Symbol;
-#end
 
 /**
 	Channel name: a string or symbol.
 **/
-#if haxe4
 typedef ChannelName = EitherType<String, Symbol>;
-#else
-typedef ChannelName = EitherType<String, Dynamic>;
-#end
 
 /**
 	Handler invoked when a message is published on a channel.
@@ -119,6 +113,8 @@ extern class Channel {
 
 		Stability: 1 - Experimental
 
+		// TODO(section-5): type `store` as AsyncLocalStorage once async_hooks externs land.
+
 		@see https://nodejs.org/docs/latest-v24.x/api/diagnostics_channel.html#channelbindstorestore-transform
 	**/
 	function bindStore(store:Dynamic, ?transform:ChannelStoreTransform):Void;
@@ -131,6 +127,8 @@ extern class Channel {
 		Returns `true` if the store was found, `false` otherwise.
 
 		Stability: 1 - Experimental
+
+		// TODO(section-5): type `store` as AsyncLocalStorage once async_hooks externs land.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/diagnostics_channel.html#channelunbindstorestore
 	**/

@@ -57,7 +57,7 @@ extern class DomStorage {
 	/**
 		Registers storage for inspection.
 	**/
-	static function registerStorage(params:Dynamic):Void;
+	static function registerStorage(params:DomStorageRegisterParams):Void;
 }
 
 typedef DomStorageId = {
@@ -86,4 +86,15 @@ typedef DomStorageItemUpdatedParams = {
 
 typedef DomStorageItemsClearedParams = {
 	var storageId:DomStorageId;
+}
+
+/**
+	Parameters for `DomStorage.registerStorage`.
+
+	`storageMap` is the storage backing object; shape follows the experimental
+	storage-inspection API (kept pragmatic).
+**/
+typedef DomStorageRegisterParams = {
+	var isLocalStorage:Bool;
+	var storageMap:{};
 }

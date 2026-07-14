@@ -31,9 +31,10 @@ import js.node.inspector.promises.Session;
 	Stability: 1 - Experimental.
 
 	Module-level helpers match `Inspector`; use `js.node.inspector.promises.Session`
-	for a `Session` whose `post` returns a `Promise`.
+	for a `Session` whose `post` returns a `Promise`. DevTools helpers live under
+	`js.node.inspector` (`Network`, `NetworkResources`, `DomStorage`).
 
-	@see https://nodejs.org/api/inspector.html#promises-api
+	@see https://nodejs.org/docs/latest-v24.x/api/inspector.html#promises-api
 **/
 @:jsRequire("inspector/promises")
 extern class InspectorPromises {
@@ -41,7 +42,8 @@ extern class InspectorPromises {
 		Activate inspector on host and port.
 
 		Returns a Disposable (`{ [Symbol.dispose](): void }`) that calls `close()`.
-		Typed as `Dynamic` because hxnodejs does not yet model the Web IDL `Disposable` interface.
+
+		// TODO: model Web IDL `Disposable` / `Symbol.dispose` instead of `Dynamic`.
 	**/
 	static function open(?port:Int, ?host:String, ?wait:Bool):Dynamic;
 

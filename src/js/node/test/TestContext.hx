@@ -23,7 +23,7 @@
 package js.node.test;
 
 import haxe.extern.EitherType;
-import js.html.AbortSignal;
+import js.node.web.AbortSignal;
 import js.node.Test.HookCallback;
 import js.node.Test.HookOptions;
 import js.node.Test.PlanOptions;
@@ -31,13 +31,8 @@ import js.node.Test.SnapshotAssertionOptions;
 import js.node.Test.TestCallback;
 import js.node.Test.TestOptions;
 import js.node.Test.WaitForOptions;
-#if haxe4
 import js.lib.Error;
 import js.lib.Promise;
-#else
-import js.Error;
-import js.Promise;
-#end
 
 /**
 	Passed to each test function to interact with the test runner.
@@ -219,6 +214,8 @@ extern class TestContext {
 	Runner-specific snapshot APIs are typed here. The object also exposes the
 	usual `node:assert` methods bound to this context (see `js.node.Assert`);
 	those are intentionally not fully re-declared.
+
+	// TODO(section-4): compose with `js.node.Assert` method signatures instead of `implements Dynamic`.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextassert
 **/

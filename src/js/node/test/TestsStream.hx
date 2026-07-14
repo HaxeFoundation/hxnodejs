@@ -26,11 +26,7 @@ import haxe.Constraints.Function;
 import haxe.extern.EitherType;
 import js.node.events.EventEmitter.Event;
 import js.node.stream.Readable;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Events emitted by `TestsStream`.

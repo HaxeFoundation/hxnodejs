@@ -24,11 +24,7 @@ package js.node.test;
 
 import js.node.Test.SuiteCallback;
 import js.node.Test.TestOptions;
-#if haxe4
 import js.lib.Promise;
-#else
-import js.Promise;
-#end
 
 /**
 	Callable suite entry (`describe` / `suite`) with `.skip`, `.todo`, `.only`,

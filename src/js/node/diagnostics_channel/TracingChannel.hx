@@ -24,11 +24,7 @@ package js.node.diagnostics_channel;
 
 import haxe.Constraints.Function;
 import haxe.extern.Rest;
-#if haxe4
 import js.lib.Promise;
-#else
-import js.Promise;
-#end
 
 /**
 	Object containing all the TracingChannel Channels, passed to
