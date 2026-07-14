@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,16 +23,25 @@
 package js.node.async_hooks;
 
 /**
-	The callbacks registered via `AsyncHooks.createHook` return an `AsyncHook` instance.
+	Instance returned by `AsyncHooks.createHook`, used to enable or disable hook callbacks.
+
+	Stability: 1 - Experimental. Prefer `AsyncLocalStorage` for async context tracking.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html#class-asynchook
 **/
 extern class AsyncHook {
 	/**
 		Enable the callbacks for a given `AsyncHook` instance.
+		Hooks are disabled by default after creation.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html#asynchookenable
 	**/
 	function enable():AsyncHook;
 
 	/**
 		Disable the callbacks for a given `AsyncHook` instance.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html#asynchookdisable
 	**/
 	function disable():AsyncHook;
 }

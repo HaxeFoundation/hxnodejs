@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,11 +22,14 @@
 
 package js.node;
 
+import haxe.DynamicAccess;
+
 /**
 	The `async_hooks` module provides an API to track asynchronous resources.
 
-	Prefer `js.node.async_hooks.AsyncLocalStorage` for most application-level async context tracking.
-	`createHook` remains available but is a lower-level / less recommended API.
+	Stability: 1 - Experimental for `createHook` / `AsyncHook` / `executionAsyncResource`.
+	Prefer `js.node.async_hooks.AsyncLocalStorage` for async context tracking, or
+	`js.node.DiagnosticsChannel` for diagnostics data.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html
 **/
@@ -34,54 +37,79 @@ package js.node;
 extern class AsyncHooks {
 	/**
 		Registers functions to be called for different lifetime events of each async operation.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html#async_hookscreatehookoptions
 	**/
 	static function createHook(options:AsyncHookOptions):js.node.async_hooks.AsyncHook;
 
 	/**
 		Returns the `asyncId` of the current execution context.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html#async_hooksexecutionasyncid
 	**/
 	static function executionAsyncId():Float;
 
 	/**
 		Returns the resource object associated with the topmost async frame.
 		Using undocumented handle APIs on the returned object may crash the process.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html#async_hooksexecutionasyncresource
 	**/
-	// TODO(section-5): type executionAsyncResource beyond Dynamic when handle shapes are modeled
 	static function executionAsyncResource():Dynamic;
 
 	/**
 		Returns the `asyncId` of the resource that caused (or "triggered") the current execution.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html#async_hookstriggerasyncid
 	**/
 	static function triggerAsyncId():Float;
+
+	/**
+		Map of provider type names to numeric ids used by `async_hooks` init events.
+		Replaces the deprecated `process.binding('async_wrap').Providers` API.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html#async_hooksasyncwrapproviders
+	**/
+	static final asyncWrapProviders:DynamicAccess<Int>;
 }
 
 /**
 	Callbacks for `AsyncHooks.createHook`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html#hook-callbacks
 **/
 typedef AsyncHookOptions = {
 	/**
 		Called during object construction when the resource is initialized.
-		// TODO(section-5): type resource beyond Dynamic
+		The `resource` argument is the internal handle; its shape is undocumented.
 	**/
-	@:optional var init:Float->String->Float->Dynamic->Void;
+	@:optional var init:(asyncId:Float, type:String, triggerAsyncId:Float, resource:Dynamic) -> Void;
 
 	/**
 		Called just before the resource's callback is called.
 	**/
-	@:optional var before:Float->Void;
+	@:optional var before:(asyncId:Float) -> Void;
 
 	/**
 		Called immediately after the resource's callback has completed.
 	**/
-	@:optional var after:Float->Void;
+	@:optional var after:(asyncId:Float) -> Void;
 
 	/**
 		Called after the resource is destroyed.
 	**/
-	@:optional var destroy:Float->Void;
+	@:optional var destroy:(asyncId:Float) -> Void;
 
 	/**
 		Called when the Promise-related callback is resolved.
 	**/
-	@:optional var promiseResolve:Float->Void;
+	@:optional var promiseResolve:(asyncId:Float) -> Void;
+
+	/**
+		Whether the hook should track `Promise`s.
+		Cannot be `false` if `promiseResolve` is set. Default: `true`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html#disabling-promise-execution-tracking
+	**/
+	@:optional var trackPromises:Bool;
 }

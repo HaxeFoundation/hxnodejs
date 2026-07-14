@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,62 +24,88 @@ package js.node.async_hooks;
 
 import haxe.Constraints.Function;
 import haxe.extern.EitherType;
+import haxe.extern.Rest;
 
 /**
-	The class `AsyncResource` is designed to be extended by the embedder's async resources.
-	Using this, users can easily trigger the lifetime events of their own resources.
+	Designed to be extended by embedders' async resources so users can
+	trigger the lifetime events of their own resources.
 
-	@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html#class-asyncresource
+	Stability: 2 - Stable.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/async_context.html#class-asyncresource
 **/
 @:jsRequire("async_hooks", "AsyncResource")
 extern class AsyncResource {
 	/**
 		Create a new `AsyncResource` object.
+		Instantiating also triggers the `init` hook.
+		If `triggerAsyncId` is omitted, `executionAsyncId()` is used.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_context.html#new-asyncresourcetype-options
 	**/
 	function new(type:String, ?options:EitherType<Float, AsyncResourceOptions>);
 
 	/**
-		Call the provided function with the provided arguments in the execution context of the async resource.
-		// TODO(section-5): type Rest args more precisely when binding helpers are standardized
+		Call the provided function with the provided arguments in the execution
+		context of the async resource.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_context.html#asyncresourceruninasyncscopefn-thisarg-args
 	**/
-	function runInAsyncScope(fn:Function, ?thisArg:Dynamic, ?args:Array<Dynamic>):Dynamic;
+	function runInAsyncScope(fn:Function, ?thisArg:Dynamic, args:Rest<Dynamic>):Dynamic;
 
 	/**
-		Call `AsyncHooks.emitDestroy()` after binding / pending work is finished.
+		Call all `destroy` hooks. Must be called manually exactly once;
+		an error is thrown if called more than once.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_context.html#asyncresourceemitdestroy
 	**/
 	function emitDestroy():AsyncResource;
 
 	/**
 		Returns the unique `asyncId` assigned to the resource.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_context.html#asyncresourceasyncid
 	**/
 	function asyncId():Float;
 
 	/**
 		Returns the trigger `asyncId` of the resource.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_context.html#asyncresourcetriggerasyncid
 	**/
 	function triggerAsyncId():Float;
 
 	/**
-		Binds the given function to execute within this async resource's stack.
+		Binds the given function to execute within this async resource's scope.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_context.html#asyncresourcebindfn-thisarg
 	**/
 	function bind(fn:Function, ?thisArg:Dynamic):Function;
 
 	/**
-		Binds the given function to execute within a given execution context of an async resource.
+		Binds the given function to the current execution context.
+		`type` is an optional name associated with the underlying `AsyncResource`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/async_context.html#asyncresourcebindfn-type-thisarg
 	**/
 	@:native("bind")
-	static function bindStatic(fn:Function, type:EitherType<String, AsyncResource>, ?thisArg:Dynamic):Function;
+	static function bindStatic(fn:Function, ?type:String, ?thisArg:Dynamic):Function;
 }
 
+/**
+	Options for `AsyncResource` construction.
+**/
 typedef AsyncResourceOptions = {
 	/**
-		The ID of the execution context that created this async event. Default: `executionAsyncId()`.
+		The ID of the execution context that created this async event.
+		Default: `executionAsyncId()`.
 	**/
 	@:optional var triggerAsyncId:Float;
 
 	/**
 		Disables automatic `emitDestroy` when the object is garbage collected.
-		This usually means the resource has to manually call `emitDestroy()`. Default: `false`.
+		This usually means the resource has to manually call `emitDestroy()`.
+		Default: `false`.
 	**/
 	@:optional var requireManualDestroy:Bool;
 }
