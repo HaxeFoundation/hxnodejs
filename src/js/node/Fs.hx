@@ -32,11 +32,9 @@ import js.node.fs.ReadStream;
 import js.node.fs.Stats;
 import js.node.fs.StatsFs;
 import js.node.fs.WriteStream;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
+import js.lib.Promise;
+import js.node.web.Blob;
 
 /**
 	Most FS functions now support passing `String` and `Buffer`.
@@ -659,6 +657,32 @@ typedef FsGlobOptions = {
 }
 
 /**
+	Disposable temporary directory returned by `Fs.mkdtempDisposableSync`.
+**/
+typedef FsMkdtempDisposable = {
+	/**
+		The path of the created directory.
+	**/
+	var path:String;
+
+	/**
+		Removes the created directory and its contents.
+		Same as the `[Symbol.dispose]` method on the returned object.
+	**/
+	function remove():Void;
+}
+
+/**
+	Options for `Fs.openAsBlob`.
+**/
+typedef FsOpenAsBlobOptions = {
+	/**
+		An optional MIME type for the blob.
+	**/
+	@:optional var type:String;
+}
+
+/**
 	A buffer for `Fs.readv` / `Fs.writev`.
 
 	Node.js accepts an `ArrayBufferView` (Buffer, TypedArray, or DataView).
@@ -914,6 +938,7 @@ extern class Fs {
 		`cache` is an object literal of mapped paths that can be used to force a specific path resolution
 		or avoid additional `stat` calls for known real paths.
 	**/
+	// TODO(section-2): model `realpath.native` / `realpathSync.native` function properties
 	@:overload(function(path:FsPath, callback:Error->String->Void):Void {})
 	static function realpath(path:FsPath, cache:DynamicAccess<String>, callback:Error->String->Void):Void;
 
@@ -980,6 +1005,7 @@ extern class Fs {
 
 		The created folder path is passed as a string to the `callback`'s second parameter.
 	**/
+	@:overload(function(prefix:String, options:EitherType<String, {?encoding:String}>, callback:Error->String->Void):Void {})
 	static function mkdtemp(prefix:String, callback:Error->String->Void):Void;
 
 	/**
@@ -987,7 +1013,19 @@ extern class Fs {
 
 		Returns the created folder path.
 	**/
-	static function mkdtempSync(template:String):String;
+	@:overload(function(prefix:String, options:EitherType<String, {?encoding:String}>):String {})
+	static function mkdtempSync(prefix:String):String;
+
+	/**
+		Synchronously creates a unique temporary directory and returns a disposable object.
+
+		When the object is disposed (or `remove` is called), the directory and its contents are removed
+		if they still exist.
+
+		@see https://nodejs.org/api/fs.html#fsmkdtempdisposablesyncprefix-options
+	**/
+	@:overload(function(prefix:String, options:EitherType<String, {?encoding:String}>):FsMkdtempDisposable {})
+	static function mkdtempDisposableSync(prefix:String):FsMkdtempDisposable;
 
 	/**
 		Asynchronous readdir(3).
@@ -1081,6 +1119,17 @@ extern class Fs {
 	**/
 	@:overload(function(path:FsPath, flags:FsOpenFlag):Int {})
 	static function openSync(path:FsPath, flags:FsOpenFlag, mode:FsMode):Int;
+
+	/**
+		Returns a `Blob` whose data is backed by the given file.
+
+		The file must not be modified after the `Blob` is created.
+		Any modifications will cause reading the `Blob` data to fail with a `DOMException` error.
+
+		@see https://nodejs.org/api/fs.html#fsopenasblobpath-options
+	**/
+	@:overload(function(path:FsPath):Promise<Blob> {})
+	static function openAsBlob(path:FsPath, options:FsOpenAsBlobOptions):Promise<Blob>;
 
 	/**
 		Change file timestamps of the file referenced by the supplied path.
@@ -1184,17 +1233,17 @@ extern class Fs {
 		On Linux, positional writes don't work when the file is opened in append mode. The kernel ignores the position
 		argument and always appends the data to the end of the file.
 	**/
-	@:overload(function(fd:Int, data:Dynamic, position:Int, encoding:String, callback:Error->Int->String->Void):Void {})
-	@:overload(function(fd:Int, data:Dynamic, position:Int, callback:Error->Int->String->Void):Void {})
-	@:overload(function(fd:Int, data:Dynamic, callback:Error->Int->String->Void):Void {})
+	@:overload(function(fd:Int, data:String, position:Int, encoding:String, callback:Error->Int->String->Void):Void {})
+	@:overload(function(fd:Int, data:String, position:Int, callback:Error->Int->String->Void):Void {})
+	@:overload(function(fd:Int, data:String, callback:Error->Int->String->Void):Void {})
 	@:overload(function(fd:Int, buffer:Buffer, offset:Int, length:Int, callback:Error->Int->Buffer->Void):Void {})
 	static function write(fd:Int, buffer:Buffer, offset:Int, length:Int, position:Int, callback:Error->Int->Buffer->Void):Void;
 
 	/**
 		Synchronous version of `write`. Returns the number of bytes written.
 	**/
-	@:overload(function(fd:Int, data:Dynamic, position:Int, encoding:String):Int {})
-	@:overload(function(fd:Int, data:Dynamic, ?position:Int):Int {})
+	@:overload(function(fd:Int, data:String, position:Int, encoding:String):Int {})
+	@:overload(function(fd:Int, data:String, ?position:Int):Int {})
 	static function writeSync(fd:Int, buffer:Buffer, offset:Int, length:Int, ?position:Int):Int;
 
 	/**

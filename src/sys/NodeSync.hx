@@ -6,7 +6,7 @@ private extern class Deasync {
 }
 
 class NodeSync {
-	public static function callMany(f:Dynamic->Void):Array<Dynamic> {
+	public static function callMany(f:Dynamic->Void):Array<Dynamic> { // TODO(section-2): replace Dynamic with typed callback/result once ErrnoException lands
 		var retArgs = null;
 		var wait = Reflect.makeVarArgs(function(args) retArgs = args);
 		f(wait);

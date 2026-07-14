@@ -3,7 +3,7 @@ package sys.net;
 @:coreApi
 @:allow(sys.net.Socket)
 class Host {
-	#if (haxe_ver >= 3.3) public #end var host(default, null):String;
+	public var host(default, null):String;
 
 	public var ip(default, null):Int;
 

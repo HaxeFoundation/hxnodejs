@@ -29,11 +29,7 @@ import js.node.fs.Dirent;
 import js.node.fs.FileHandle;
 import js.node.fs.Stats;
 import js.node.fs.StatsFs;
-#if haxe4
 import js.lib.Promise;
-#else
-import js.Promise;
-#end
 
 /**
 	Minimal async iterator surface used by `glob` / `watch` (for `for await...of`).
@@ -148,6 +144,17 @@ extern class FsPromises {
 	**/
 	@:overload(function(prefix:String):Promise<String> {})
 	static function mkdtemp(prefix:String, options:EitherType<String, {?encoding:String}>):Promise<String>;
+
+	/**
+		Asynchronously creates a unique temporary directory and returns an async-disposable object.
+
+		When the object is disposed (or `remove` is awaited), the directory and its contents are removed
+		if they still exist.
+
+		@see https://nodejs.org/api/fs.html#fspromisesmkdtempdisposableprefix-options
+	**/
+	@:overload(function(prefix:String):Promise<FsPromisesMkdtempDisposable> {})
+	static function mkdtempDisposable(prefix:String, options:EitherType<String, {?encoding:String}>):Promise<FsPromisesMkdtempDisposable>;
 
 	/**
 		Opens a `FileHandle`.
@@ -297,4 +304,20 @@ typedef FsPromisesWatchEvent = {
 		The name of the file that changed.
 	**/
 	var filename:Null<EitherType<String, Buffer>>;
+}
+
+/**
+	Async-disposable temporary directory returned by `FsPromises.mkdtempDisposable`.
+**/
+typedef FsPromisesMkdtempDisposable = {
+	/**
+		The path of the created directory.
+	**/
+	var path:String;
+
+	/**
+		Asynchronously removes the created directory and its contents.
+		Same as the `[Symbol.asyncDispose]` method on the returned object.
+	**/
+	function remove():Promise<Void>;
 }

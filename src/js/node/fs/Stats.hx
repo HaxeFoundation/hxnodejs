@@ -38,6 +38,28 @@ extern class Stats {
 	var blocks:Null<Float>;
 
 	/**
+		Milliseconds timestamp of `atime`.
+	**/
+	var atimeMs:Float;
+
+	/**
+		Milliseconds timestamp of `mtime`.
+	**/
+	var mtimeMs:Float;
+
+	/**
+		Milliseconds timestamp of `ctime`.
+	**/
+	var ctimeMs:Float;
+
+	/**
+		Milliseconds timestamp of `birthtime`.
+	**/
+	var birthtimeMs:Float;
+
+	// TODO(section-2): atimeNs/mtimeNs/ctimeNs/birthtimeNs (bigint when `{bigint: true}` is passed to stat)
+
+	/**
 		"Access Time" - Time when file data last accessed.
 
 		Changed by the mknod(2), utimes(2), and read(2) system calls.

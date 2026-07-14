@@ -2,16 +2,13 @@ package sys;
 
 import js.node.Fs;
 import js.node.Path;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 @:dce
 @:coreApi
 class FileSystem {
 	public static function exists(path:String):Bool {
+		// TODO(section-2): typed Node ErrnoException instead of Dynamic catch
 		return try {
 			Fs.accessSync(path);
 			true;
@@ -27,6 +24,7 @@ class FileSystem {
 	}
 
 	public static inline function fullPath(relPath:String):String {
+		// TODO(section-2): typed Node ErrnoException instead of Dynamic catch
 		return try Fs.realpathSync(relPath) catch (e:Dynamic) null;
 	}
 
@@ -37,10 +35,12 @@ class FileSystem {
 	}
 
 	public static function isDirectory(path:String):Bool {
+		// TODO(section-2): typed Node ErrnoException instead of Dynamic catch
 		return try Fs.statSync(path).isDirectory() catch (e:Dynamic) false;
 	}
 
 	public static function createDirectory(path:String):Void {
+		// TODO(section-2): typed Node ErrnoException instead of Dynamic catch
 		try {
 			Fs.mkdirSync(path);
 		} catch (e:Dynamic) {

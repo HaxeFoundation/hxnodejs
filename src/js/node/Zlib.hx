@@ -26,11 +26,7 @@ import haxe.DynamicAccess;
 import haxe.extern.EitherType;
 import js.node.Buffer;
 import js.node.zlib.*;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 typedef ZlibOptions = {
 	/**
@@ -104,8 +100,52 @@ typedef BrotliOptions = {
 }
 
 /**
+	Options for Zstandard (zstd) compression and decompression.
+
+	Stability: 1 - Experimental
+**/
+typedef ZstdOptions = {
+	/**
+		default: `zlib.constants.ZSTD_e_continue`
+	**/
+	@:optional var flush:Int;
+
+	/**
+		default: `zlib.constants.ZSTD_e_end`
+	**/
+	@:optional var finishFlush:Int;
+
+	/**
+		default: 16*1024
+	**/
+	@:optional var chunkSize:Int;
+
+	/**
+		Key-value object containing indexed Zstd parameters.
+	**/
+	@:optional var params:DynamicAccess<Int>;
+
+	/**
+		The maximum length of the output that can be produced by zlib streams.
+		Default: `buffer.kMaxLength`
+	**/
+	@:optional var maxOutputLength:Int;
+
+	/**
+		If `true`, returns an object with `buffer` and `engine`.
+		Default: `false`
+	**/
+	@:optional var info:Bool;
+
+	/**
+		Optional dictionary used to improve compression efficiency.
+	**/
+	@:optional var dictionary:Buffer;
+}
+
+/**
 	This provides bindings to Gzip/Gunzip, Deflate/Inflate, DeflateRaw/InflateRaw,
-	and BrotliCompress/BrotliDecompress classes.
+	BrotliCompress/BrotliDecompress, and ZstdCompress/ZstdDecompress classes.
 	Each class takes options, and is a readable/writable Stream.
 **/
 @:jsRequire("zlib")
@@ -176,6 +216,13 @@ extern class Zlib {
 	static var Z_NULL(default, null):Int;
 
 	/**
+		Object containing all zlib constants (including Z_*, BROTLI_*, and ZSTD_*).
+		Prefer this over the legacy top-level `Z_*` fields on this class.
+	**/
+	// TODO(section-2): typed ZlibConstants covering Z_*/BROTLI_*/ZSTD_* instead of DynamicAccess
+	static var constants(default, null):DynamicAccess<Int>;
+
+	/**
 		Returns a new `Gzip` object with an `options`.
 	**/
 	static function createGzip(?options:ZlibOptions):Gzip;
@@ -219,6 +266,20 @@ extern class Zlib {
 		Returns a new `BrotliDecompress` object with an `options`.
 	**/
 	static function createBrotliDecompress(?options:BrotliOptions):BrotliDecompress;
+
+	/**
+		Returns a new `ZstdCompress` object with an `options`.
+
+		Stability: 1 - Experimental
+	**/
+	static function createZstdCompress(?options:ZstdOptions):ZstdCompress;
+
+	/**
+		Returns a new `ZstdDecompress` object with an `options`.
+
+		Stability: 1 - Experimental
+	**/
+	static function createZstdDecompress(?options:ZstdOptions):ZstdDecompress;
 
 	/**
 		Computes a 32-bit Cyclic Redundancy Check checksum of `data`.
@@ -324,4 +385,34 @@ extern class Zlib {
 		Decompress a Buffer with `BrotliDecompress` (synchronous version).
 	**/
 	static function brotliDecompressSync(buf:EitherType<String, Buffer>, ?options:BrotliOptions):Buffer;
+
+	/**
+		Compress a chunk of data with `ZstdCompress`.
+
+		Stability: 1 - Experimental
+	**/
+	@:overload(function(buf:EitherType<String, Buffer>, options:ZstdOptions, callback:Error->Buffer->Void):Void {})
+	static function zstdCompress(buf:EitherType<String, Buffer>, callback:Error->Buffer->Void):Void;
+
+	/**
+		Compress a chunk of data with `ZstdCompress` (synchronous version).
+
+		Stability: 1 - Experimental
+	**/
+	static function zstdCompressSync(buf:EitherType<String, Buffer>, ?options:ZstdOptions):Buffer;
+
+	/**
+		Decompress a chunk of data with `ZstdDecompress`.
+
+		Stability: 1 - Experimental
+	**/
+	@:overload(function(buf:EitherType<String, Buffer>, options:ZstdOptions, callback:Error->Buffer->Void):Void {})
+	static function zstdDecompress(buf:EitherType<String, Buffer>, callback:Error->Buffer->Void):Void;
+
+	/**
+		Decompress a chunk of data with `ZstdDecompress` (synchronous version).
+
+		Stability: 1 - Experimental
+	**/
+	static function zstdDecompressSync(buf:EitherType<String, Buffer>, ?options:ZstdOptions):Buffer;
 }

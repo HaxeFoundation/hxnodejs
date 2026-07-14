@@ -28,11 +28,7 @@ import js.node.Fs;
 import js.node.events.EventEmitter;
 import js.node.events.EventEmitter.Event;
 import js.node.readline.Interface;
-#if haxe4
 import js.lib.Promise;
-#else
-import js.Promise;
-#end
 
 /**
 	A `FileHandle` object is a wrapper for a numeric file descriptor.
@@ -111,9 +107,8 @@ extern class FileHandle extends EventEmitter<FileHandle> {
 
 	/**
 		Returns a byte-oriented `ReadableStream` for the file contents.
-
-		Typed as `Dynamic` until web streams externs are added (same pattern as `Blob.stream`).
 	**/
+	// TODO(section-2): return typed ReadableStream once web streams externs are available
 	function readableWebStream(?options:FileHandleReadableWebStreamOptions):Dynamic;
 
 	/**
