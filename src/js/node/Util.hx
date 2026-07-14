@@ -221,6 +221,16 @@ extern class Util {
 	static function getCallSite(?frameCount:Int, ?options:GetCallSitesOptions):Array<CallSiteObject>;
 
 	/**
+		Converts a POSIX signal name (e.g. `'SIGTERM'`) to the corresponding process exit code.
+	**/
+	static function convertProcessSignalToExitCode(signal:String):Int;
+
+	/**
+		Enables or disables printing a stack trace when Node.js receives `SIGINT`.
+	**/
+	static function setTraceSigInt(enable:Bool):Void;
+
+	/**
 		Deprecated predecessor of `Console.error`.
 	**/
 	@:deprecated("Use js.Node.console.error instead")
