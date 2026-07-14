@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -33,6 +33,9 @@ import js.node.web.AbortSignal;
 
 /**
 	Base class for all streams.
+	Also the `stream` module façade exporting stream helpers and constructors.
+
+	@see https://nodejs.org/api/stream.html
 **/
 @:jsRequire("stream") // the module itself is also a class
 extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements IStream {
@@ -43,7 +46,7 @@ extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements 
 
 		@see https://nodejs.org/api/stream.html#streams-promises-api
 	**/
-	static var promises(default, never):StreamPromises;
+	static final promises:StreamPromises;
 
 	/**
 		A module method to pipe between streams forwarding errors and properly cleaning up
@@ -103,6 +106,13 @@ extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements 
 		@see https://nodejs.org/api/stream.html#streamaddabortsignalsignal-stream
 	**/
 	static function addAbortSignal(signal:AbortSignal, stream:IStream):IStream;
+
+	/**
+		Destroys the stream, optionally with an error.
+
+		Exported by the `stream` module (undocumented helper used by pipeline cleanup).
+	**/
+	static function destroy(stream:IStream, ?error:Error):Void;
 
 	/**
 		Returns the default highWaterMark used by streams.

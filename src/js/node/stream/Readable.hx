@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -202,6 +202,35 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	var readableObjectMode(default, null):Bool;
 
 	/**
+		Returns whether the stream was destroyed or errored before emitting `'end'`.
+
+		@see https://nodejs.org/api/stream.html#readablereadableaborted
+	**/
+	var readableAborted(default, null):Bool;
+
+	/**
+		Returns whether `'data'` has been emitted.
+
+		@see https://nodejs.org/api/stream.html#readablereadabledidread
+	**/
+	var readableDidRead(default, null):Bool;
+
+	/**
+		This property reflects the current state of a `Readable` stream as described
+		in the Three states section.
+
+		@see https://nodejs.org/api/stream.html#readablereadableflowing
+	**/
+	var readableFlowing(default, null):Null<Bool>;
+
+	/**
+		Returns the error if the stream has been destroyed with an error.
+
+		@see https://nodejs.org/api/stream.html#readableerrored
+	**/
+	var errored(default, null):Null<Error>;
+
+	/**
 		The `readable.resume()` method causes an explicitly paused `Readable` stream to resume emitting `'data'` events,
 		switching the stream into flowing mode.
 
@@ -238,12 +267,141 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	**/
 	function wrap(stream:Dynamic):IReadable;
 
+	/**
+		`readable.compose(stream)` is equivalent to `stream.compose(readable, stream)`.
+
+		@see https://nodejs.org/api/stream.html#readablecomposestream-options
+	**/
+	function compose(stream:Any, ?options:StreamComposeOptions):IReadable;
+
+	/**
+		Returns an async iterator over the stream with an optional `destroyOnReturn` flag.
+
+		@see https://nodejs.org/api/stream.html#readableiteratoroptions
+	**/
+	function iterator(?options:ReadableIteratorOptions):js.lib.Iterator<Dynamic>;
+
+	/**
+		This method allows mapping over the stream. For each chunk, `fn` is called and
+		the return value is pushed to the output stream.
+
+		Stability: 1 - Experimental
+
+		@see https://nodejs.org/api/stream.html#readablemapfn-options
+	**/
+	function map(fn:Dynamic->Dynamic, ?options:ReadableMapOptions):IReadable;
+
+	/**
+		This method allows filtering the stream. Chunks for which `fn` returns a truthy
+		value are passed through.
+
+		Stability: 1 - Experimental
+
+		@see https://nodejs.org/api/stream.html#readablefilterfn-options
+	**/
+	function filter(fn:Dynamic->Dynamic, ?options:ReadableMapOptions):IReadable;
+
+	/**
+		This method allows iterating a stream. For each chunk, `fn` is called.
+		Returns a Promise that is fulfilled when the stream completes or rejects on error.
+
+		Stability: 1 - Experimental
+
+		@see https://nodejs.org/api/stream.html#readableforeachfn-options
+	**/
+	function forEach(fn:Dynamic->Dynamic, ?options:ReadableForEachOptions):js.lib.Promise<Void>;
+
+	/**
+		This method allows easily obtaining the contents of a stream as an array.
+
+		Stability: 1 - Experimental
+
+		@see https://nodejs.org/api/stream.html#readabletoarrayoptions
+	**/
+	function toArray(?options:ReadableSignalOptions):js.lib.Promise<Array<Dynamic>>;
+
+	/**
+		This method is similar to `Array.prototype.some` and calls `fn` on each chunk
+		until the awaited return value is `true`.
+
+		Stability: 1 - Experimental
+
+		@see https://nodejs.org/api/stream.html#readablesomefn-options
+	**/
+	function some(fn:Dynamic->Dynamic, ?options:ReadableForEachOptions):js.lib.Promise<Bool>;
+
+	/**
+		This method is similar to `Array.prototype.find` and calls `fn` on each chunk
+		until the awaited return value is truthy, returning that chunk.
+
+		Stability: 1 - Experimental
+
+		@see https://nodejs.org/api/stream.html#readablefindfn-options
+	**/
+	function find(fn:Dynamic->Dynamic, ?options:ReadableForEachOptions):js.lib.Promise<Null<Dynamic>>;
+
+	/**
+		This method is similar to `Array.prototype.every` and calls `fn` on each chunk
+		until the awaited return value is `false`.
+
+		Stability: 1 - Experimental
+
+		@see https://nodejs.org/api/stream.html#readableeveryfn-options
+	**/
+	function every(fn:Dynamic->Dynamic, ?options:ReadableForEachOptions):js.lib.Promise<Bool>;
+
+	/**
+		This method allows mapping over a stream, flattening the return value (sync
+		iterable, async iterable, readable stream, or promise) into the output stream.
+
+		Stability: 1 - Experimental
+
+		@see https://nodejs.org/api/stream.html#readableflatmapfn-options
+	**/
+	function flatMap(fn:Dynamic->Dynamic, ?options:ReadableMapOptions):IReadable;
+
+	/**
+		This method returns a new stream with the first `limit` chunks dropped.
+
+		Stability: 1 - Experimental
+
+		@see https://nodejs.org/api/stream.html#readabledroplimit-options
+	**/
+	function drop(limit:Int, ?options:ReadableSignalOptions):IReadable;
+
+	/**
+		This method returns a new stream with the first `limit` chunks taken.
+
+		Stability: 1 - Experimental
+
+		@see https://nodejs.org/api/stream.html#readabletakelimit-options
+	**/
+	function take(limit:Int, ?options:ReadableSignalOptions):IReadable;
+
+	/**
+		This method calls `fn` on each chunk of the stream to reduce to a single value.
+
+		Stability: 1 - Experimental
+
+		@see https://nodejs.org/api/stream.html#readablereducefn-initial-options
+	**/
+	@:overload(function(fn:(previous:Dynamic, data:Dynamic) -> Dynamic, ?options:ReadableSignalOptions):js.lib.Promise<Dynamic> {})
+	function reduce(fn:(previous:Dynamic, data:Dynamic) -> Dynamic, initial:Dynamic, ?options:ReadableSignalOptions):js.lib.Promise<Dynamic>;
+
 	// --------- API for implementing a Readable Stream -----------------------
 
 	/**
-		@see https://nodejs.org/api/stream.html#stream_new_stream_readable_options
+		@see https://nodejs.org/api/stream.html#new-streamreadableoptions
 	**/
 	function new(?options:ReadableNewOptions);
+
+	/**
+		This function **MUST NOT** be called by application code directly.
+		It should be implemented by child classes, and called by the internal `Readable` class methods only.
+
+		@see https://nodejs.org/api/stream.html#readable_constructcallback
+	**/
+	private function _construct(callback:Null<Error>->Void):Void;
 
 	/**
 		This function **MUST NOT** be called by application code directly.
@@ -280,8 +438,23 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	var isTTY(default, null):Bool;
 
 	// --------- static API  --------------------------------------------------
-	// TODO @:overload(function<T>(iterable:AsyncIterator<T>, ?options:ReadableNewOptions):IReadable {})
+
+	/**
+		A utility method for creating readable streams out of iterators / async iterables.
+
+		@see https://nodejs.org/api/stream.html#streamreadablefromiterable-options
+	**/
+	@:overload(function(iterable:Any, ?options:ReadableNewOptions):IReadable {})
 	static function from<T>(iterable:Iterator<T>, ?options:ReadableNewOptions):IReadable;
+
+	/**
+		Prior to Node.js 0.10, streams did not implement the entire `stream` module API.
+		`Readable.wrap()` can be used to create a readable stream that uses a old-style
+		stream as its data source.
+
+		@see https://nodejs.org/api/stream.html#streamreadablewrapstream
+	**/
+	static function wrap(stream:Any):IReadable;
 
 	/**
 		Returns whether the stream has been read from or cancelled.
@@ -312,7 +485,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 typedef ReadableNewOptions = {
 	/**
 		The maximum number of bytes to store in the internal buffer before ceasing to read from the underlying resource.
-		Default: `16384` (16kb), or `16` for `objectMode` streams.
+		Default: `65536` (64 KiB), or `16` for `objectMode` streams.
 	**/
 	@:optional var highWaterMark:Int;
 
@@ -346,10 +519,62 @@ typedef ReadableNewOptions = {
 	@:optional var destroy:(err:Null<Error>, callback:Null<Error>->Void) -> Void;
 
 	/**
+		Implementation for the `stream._construct()` method.
+	**/
+	@:optional var construct:(callback:Null<Error>->Void) -> Void;
+
+	/**
 		Whether this stream should automatically call `.destroy()` on itself after ending.
-		Default: `false`.
+		Default: `true`.
 	**/
 	@:optional var autoDestroy:Bool;
+
+	/**
+		A signal representing possible cancellation.
+	**/
+	@:optional var signal:js.node.web.AbortSignal;
+}
+
+/**
+	Options for `readable.iterator`.
+**/
+typedef ReadableIteratorOptions = {
+	/**
+		When `false`, exiting early from a `for await...of` iteration will not destroy the stream.
+		Default: `true`.
+	**/
+	@:optional var destroyOnReturn:Bool;
+}
+
+/**
+	Shared options for experimental readable operators that accept a signal.
+**/
+typedef ReadableSignalOptions = {
+	@:optional var signal:js.node.web.AbortSignal;
+}
+
+/**
+	Options for `readable.map` / `filter` / `flatMap`.
+**/
+typedef ReadableMapOptions = {
+	> ReadableSignalOptions,
+	/**
+		The maximum concurrent invocation of `fn`. Default: `1`.
+	**/
+	@:optional var concurrency:Int;
+	/**
+		How many items to buffer while waiting for consumption.
+		Default: `concurrency * 2 - 1`.
+	**/
+	@:optional var highWaterMark:Int;
+}
+
+/**
+	Options for `readable.forEach` / `some` / `every` / `find`.
+**/
+typedef ReadableForEachOptions = {
+	> ReadableSignalOptions,
+	@:optional var concurrency:Int;
 }
 
 /**
@@ -404,6 +629,14 @@ extern interface IReadable extends IStream {
 
 	var readableObjectMode(default, null):Bool;
 
+	var readableAborted(default, null):Bool;
+
+	var readableDidRead(default, null):Bool;
+
+	var readableFlowing(default, null):Null<Bool>;
+
+	var errored(default, null):Null<Error>;
+
 	function resume():IReadable;
 
 	function setEncoding(encoding:String):IReadable;
@@ -413,4 +646,31 @@ extern interface IReadable extends IStream {
 	function unshift(chunk:Null<Dynamic>, ?encoding:String):Void;
 
 	function wrap(stream:Dynamic):IReadable;
+
+	function compose(stream:Any, ?options:StreamComposeOptions):IReadable;
+
+	function iterator(?options:ReadableIteratorOptions):js.lib.Iterator<Dynamic>;
+
+	function map(fn:Dynamic->Dynamic, ?options:ReadableMapOptions):IReadable;
+
+	function filter(fn:Dynamic->Dynamic, ?options:ReadableMapOptions):IReadable;
+
+	function forEach(fn:Dynamic->Dynamic, ?options:ReadableForEachOptions):js.lib.Promise<Void>;
+
+	function toArray(?options:ReadableSignalOptions):js.lib.Promise<Array<Dynamic>>;
+
+	function some(fn:Dynamic->Dynamic, ?options:ReadableForEachOptions):js.lib.Promise<Bool>;
+
+	function find(fn:Dynamic->Dynamic, ?options:ReadableForEachOptions):js.lib.Promise<Null<Dynamic>>;
+
+	function every(fn:Dynamic->Dynamic, ?options:ReadableForEachOptions):js.lib.Promise<Bool>;
+
+	function flatMap(fn:Dynamic->Dynamic, ?options:ReadableMapOptions):IReadable;
+
+	function drop(limit:Int, ?options:ReadableSignalOptions):IReadable;
+
+	function take(limit:Int, ?options:ReadableSignalOptions):IReadable;
+
+	@:overload(function(fn:(previous:Dynamic, data:Dynamic) -> Dynamic, ?options:ReadableSignalOptions):js.lib.Promise<Dynamic> {})
+	function reduce(fn:(previous:Dynamic, data:Dynamic) -> Dynamic, initial:Dynamic, ?options:ReadableSignalOptions):js.lib.Promise<Dynamic>;
 }

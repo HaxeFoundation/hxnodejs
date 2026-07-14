@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -32,5 +32,8 @@ package js.node.stream;
 **/
 @:jsRequire("stream", "PassThrough")
 extern class PassThrough extends Transform<PassThrough> {
-	function new();
+	/**
+		@see https://nodejs.org/api/stream.html#class-streampassthrough
+	**/
+	function new(?options:Transform.TransformNewOptions);
 }

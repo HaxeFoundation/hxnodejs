@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -168,8 +168,8 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 
 		@see https://nodejs.org/api/stream.html#stream_writable_end_chunk_encoding_callback
 	**/
-	@:overload(function(?callback:EitherType<Void->Void, Null<Error>->Void>):Void {})
-	function end(chunk:Dynamic, ?encoding:String, ?callback:EitherType<Void->Void, Null<Error>->Void>):Void;
+	@:overload(function(?callback:EitherType<Void->Void, Null<Error>->Void>):TSelf {})
+	function end(chunk:Dynamic, ?encoding:String, ?callback:EitherType<Void->Void, Null<Error>->Void>):TSelf;
 
 	/**
 		The `writable.setDefaultEncoding()` method sets the default `encoding` for a Writable stream.
@@ -213,7 +213,7 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 
 		@see https://nodejs.org/api/stream.html#stream_writable_writablehighwatermark
 	**/
-	var writablehighWaterMark(default, null):Int;
+	var writableHighWaterMark(default, null):Int;
 
 	/**
 		This property contains the number of bytes (or objects) in the queue ready to be written.
@@ -231,6 +231,27 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 	var writableObjectMode(default, null):Bool;
 
 	/**
+		Returns whether the stream was destroyed or errored before emitting `'finish'`.
+
+		@see https://nodejs.org/api/stream.html#writablewritableaborted
+	**/
+	var writableAborted(default, null):Bool;
+
+	/**
+		Number of times `writable.uncork()` needs to be called to fully uncork the stream.
+
+		@see https://nodejs.org/api/stream.html#writablewritablecorked
+	**/
+	var writableCorked(default, null):Int;
+
+	/**
+		Is `true` if the stream's buffer has been full and stream will emit `'drain'`.
+
+		@see https://nodejs.org/api/stream.html#writablewritableneeddrain
+	**/
+	var writableNeedDrain(default, null):Bool;
+
+	/**
 		The `writable.write()` method writes some data to the stream, and calls the supplied `callback` once the data has been fully handled.
 		If an error occurs, the `callback` may or may not be called with the error as its first argument.
 		To reliably detect write errors, add a listener for the `'error'` event.
@@ -241,6 +262,14 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 
 	// --------- API for implementing a Writable Stream -----------------------
 	// function new(?options:DuplexNewOptions);
+
+	/**
+		This function **MUST NOT** be called by application code directly.
+		It should be implemented by child classes, and called by the internal `Writable` class methods only.
+
+		@see https://nodejs.org/api/stream.html#writable_constructcallback
+	**/
+	private function _construct(callback:Null<Error>->Void):Void;
 
 	/**
 		All `Writable` stream implementations must provide a `writable._write()` method to send data to the underlying resource.
@@ -262,7 +291,7 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 
 	/**
 		The `_final()` method must not be called directly.
-		t may be implemented by child classes, and if so, will be called by the internal `Writable` class methods only.
+		It may be implemented by child classes, and if so, will be called by the internal `Writable` class methods only.
 
 		@see https://nodejs.org/api/stream.html#stream_writable_final_callback
 	**/
@@ -302,7 +331,6 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 
 	/**
 		A utility method for creating duplex streams from various sources.
-		// TODO(section-6): refine Blob / web stream input types once available.
 
 		@see https://nodejs.org/api/stream.html#streamduplexfromsrc
 	**/

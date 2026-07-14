@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -135,8 +135,8 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_end_chunk_encoding_callback
 	**/
-	@:overload(function(?callback:EitherType<Void->Void, Null<Error>->Void>):Void {})
-	function end(chunk:Dynamic, ?encoding:String, ?callback:EitherType<Void->Void, Null<Error>->Void>):Void;
+	@:overload(function(?callback:EitherType<Void->Void, Null<Error>->Void>):TSelf {})
+	function end(chunk:Dynamic, ?encoding:String, ?callback:EitherType<Void->Void, Null<Error>->Void>):TSelf;
 
 	/**
 		The `writable.setDefaultEncoding()` method sets the default `encoding` for a Writable stream.
@@ -180,7 +180,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 		@see https://nodejs.org/api/stream.html#stream_writable_writablehighwatermark
 	**/
-	var writablehighWaterMark(default, null):Int;
+	var writableHighWaterMark(default, null):Int;
 
 	/**
 		This property contains the number of bytes (or objects) in the queue ready to be written.
@@ -198,6 +198,34 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 	var writableObjectMode(default, null):Bool;
 
 	/**
+		Returns whether the stream was destroyed or errored before emitting `'finish'`.
+
+		@see https://nodejs.org/api/stream.html#writablewritableaborted
+	**/
+	var writableAborted(default, null):Bool;
+
+	/**
+		Number of times `writable.uncork()` needs to be called to fully uncork the stream.
+
+		@see https://nodejs.org/api/stream.html#writablewritablecorked
+	**/
+	var writableCorked(default, null):Int;
+
+	/**
+		Is `true` if the stream's buffer has been full and stream will emit `'drain'`.
+
+		@see https://nodejs.org/api/stream.html#writablewritableneeddrain
+	**/
+	var writableNeedDrain(default, null):Bool;
+
+	/**
+		Returns the error if the stream has been destroyed with an error.
+
+		@see https://nodejs.org/api/stream.html#writableerrored
+	**/
+	var errored(default, null):Null<Error>;
+
+	/**
 		The `writable.write()` method writes some data to the stream, and calls the supplied `callback` once the data has been fully handled.
 		If an error occurs, the `callback` may or may not be called with the error as its first argument.
 		To reliably detect write errors, add a listener for the `'error'` event.
@@ -209,9 +237,17 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 	// --------- API for implementing a Writable Stream -----------------------
 
 	/**
-		@see https://nodejs.org/api/stream.html#stream_constructor_new_stream_writable_options
+		@see https://nodejs.org/api/stream.html#constructor-new-streamwritableoptions
 	**/
 	function new(?options:WritableNewOptionsAdapter);
+
+	/**
+		This function **MUST NOT** be called by application code directly.
+		It should be implemented by child classes, and called by the internal `Writable` class methods only.
+
+		@see https://nodejs.org/api/stream.html#writable_constructcallback
+	**/
+	private function _construct(callback:Null<Error>->Void):Void;
 
 	/**
 		All `Writable` stream implementations must provide a `writable._write()` method to send data to the underlying resource.
@@ -238,7 +274,7 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 	/**
 		The `_final()` method **must not** be called directly.
-		t may be implemented by child classes, and if so, will be called by the internal `Writable` class methods only.
+		It may be implemented by child classes, and if so, will be called by the internal `Writable` class methods only.
 
 		@see https://nodejs.org/api/stream.html#stream_writable_final_callback
 	**/
@@ -274,7 +310,8 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 **/
 typedef WritableNewOptions = {
 	/**
-		`highWaterMark` <number> Buffer level when stream.write() starts returning `false`. Default: `16384` (16kb), or 16 for `objectMode` streams.
+		Buffer level when stream.write() starts returning `false`.
+		Default: `65536` (64 KiB), or `16` for `objectMode` streams.
 	**/
 	@:optional var highWaterMark:Int;
 
@@ -320,16 +357,26 @@ typedef WritableNewOptions = {
 	@:optional var destroy:(error:Null<Error>, callback:Null<Error>->Void) -> Void;
 
 	/**
-		`final` <Function> Implementation for the stream._final() method.
+		Implementation for the stream._final() method.
+		Exposed to JS as `final` via `WritableNewOptionsAdapter`.
 	**/
-	// TODO @native in typedef cannot work now
-	// @:native("final")
-	@:optional var final_:(error:Null<Error>) -> Void;
+	@:optional var final_:(callback:Null<Error>->Void) -> Void;
 
 	/**
-		`autoDestroy` <boolean> Whether this stream should automatically call .destroy() on itself after ending. Default: false.
+		Implementation for the stream._construct() method.
+	**/
+	@:optional var construct:(callback:Null<Error>->Void) -> Void;
+
+	/**
+		Whether this stream should automatically call `.destroy()` on itself after ending.
+		Default: `true`.
 	**/
 	@:optional var autoDestroy:Bool;
+
+	/**
+		A signal representing possible cancellation.
+	**/
+	@:optional var signal:js.node.web.AbortSignal;
 }
 
 @:forward
@@ -355,8 +402,8 @@ extern interface IWritable extends IStream {
 
 	var destroyed(default, null):Bool;
 
-	@:overload(function(?callback:EitherType<Void->Void, Null<Error>->Void>):Void {})
-	function end(chunk:Dynamic, ?encoding:String, ?callback:EitherType<Void->Void, Null<Error>->Void>):Void;
+	@:overload(function(?callback:EitherType<Void->Void, Null<Error>->Void>):IWritable {})
+	function end(chunk:Dynamic, ?encoding:String, ?callback:EitherType<Void->Void, Null<Error>->Void>):IWritable;
 
 	function setDefaultEncoding(encoding:String):IWritable;
 
@@ -368,11 +415,17 @@ extern interface IWritable extends IStream {
 
 	var writableFinished(default, null):Bool;
 
-	var writablehighWaterMark(default, null):Int;
+	var writableHighWaterMark(default, null):Int;
 
 	var writableLength(default, null):Int;
 
 	var writableObjectMode(default, null):Bool;
+
+	var writableAborted(default, null):Bool;
+
+	var writableCorked(default, null):Int;
+
+	var writableNeedDrain(default, null):Bool;
 
 	function write(chunk:Dynamic, ?encoding:String, ?callback:EitherType<Void->Void, Null<Error>->Void>):Bool;
 

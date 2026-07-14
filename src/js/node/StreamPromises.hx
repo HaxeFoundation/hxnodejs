@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -44,6 +44,8 @@ extern class StreamPromises {
 
 		Requires at least a source and a destination. Pass `options` (including `signal`)
 		as the last argument when needed.
+
+		@see https://nodejs.org/api/stream.html#streampipelinestreams-options
 	**/
 	@:overload(function(readable:IReadable, writable1:IWritable, ?options:StreamPipelineOptions):Promise<Void> {})
 	@:overload(function(readable:IReadable, writable1:IWritable, writable2:IWritable, ?options:StreamPipelineOptions):Promise<Void> {})
@@ -63,6 +65,8 @@ extern class StreamPromises {
 	/**
 		Returns a Promise that fulfills when the stream is no longer readable,
 		writable or has experienced an error or a premature close event.
+
+		@see https://nodejs.org/api/stream.html#streamfinishedstream-options
 	**/
 	static function finished(stream:IStream, ?options:StreamFinishedOptions):Promise<Void>;
 }
