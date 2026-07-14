@@ -22,15 +22,12 @@
 
 package js.node.child_process;
 
+import haxe.extern.EitherType;
+import js.lib.Error;
 import js.node.Stream;
 import js.node.events.EventEmitter;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
-#if haxe4
-import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Enumeration of events emitted by `ChildProcess` objects.
@@ -42,7 +39,7 @@ enum abstract ChildProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 			2. The process could not be killed, or
 			3. Sending a message to the child process failed for whatever reason.
 
-		Note that the exit-event may or may not fire after an error has occured.
+		Note that the exit-event may or may not fire after an error has occurred.
 		If you are listening on both events to fire a function, remember to guard against calling your function twice.
 
 		See also `ChildProcess.kill` and `ChildProcess.send`.
@@ -55,27 +52,14 @@ enum abstract ChildProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 		Listener arguments:
 			code - the exit code, if it exited normally.
 			signal - the signal passed to kill the child process, if it was killed by the parent.
-
-		If the process terminated normally, `code` is the final exit code of the process, otherwise null.
-		If the process terminated due to receipt of a signal, `signal` is the string name of the signal, otherwise null.
-
-		Note that the child process stdio streams might still be open.
-
-		Also, note that node establishes signal handlers for 'SIGINT' and 'SIGTERM',
-		so it will not terminate due to receipt of those signals, it will exit.
-		See waitpid(2).
 	**/
-	var Exit:ChildProcessEvent<Int->String->Void> = "exit";
+	var Exit:ChildProcessEvent<Null<Int>->Null<String>->Void> = "exit";
 
 	/**
 		This event is emitted when the stdio streams of a child process have all terminated.
 		This is distinct from `Exit`, since multiple processes might share the same stdio streams.
-
-		Listener arguments:
-			code - the exit code, if it exited normally.
-			signal - the signal passed to kill the child process, if it was killed by the parent.
 	**/
-	var Close:ChildProcessEvent<Int->String->Void> = "close";
+	var Close:ChildProcessEvent<Null<Int>->Null<String>->Void> = "close";
 
 	/**
 		This event is emitted after calling the `disconnect` method in the parent or in the child.
@@ -86,13 +70,20 @@ enum abstract ChildProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 	/**
 		Messages send by `send` are obtained using the message event.
 
-		This event can also be listened on the `process` object to receive messages from the parent.
-
 		Listener arguments:
 			message - a parsed JSON object or primitive value
 			sendHandle - a Socket or Server object
+
+		// TODO(section-5): tighten message/sendHandle typing beyond Dynamic once IPC handle unions are modeled
 	**/
 	var Message:ChildProcessEvent<Dynamic->Dynamic->Void> = "message";
+
+	/**
+		The `'spawn'` event is emitted once the child process has spawned successfully.
+		If the child process does not spawn successfully, the `'spawn'` event is not emitted
+		and the `'error'` event is emitted instead.
+	**/
+	var Spawn:ChildProcessEvent<Void->Void> = "spawn";
 }
 
 typedef ChildProcessSendOptions = {
@@ -111,6 +102,8 @@ typedef ChildProcessSendOptions = {
 
 	The `ChildProcess` class is not intended to be used directly. Use the spawn() or fork() module methods
 	to create a `ChildProcess` instance.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#class-childprocess
 **/
 extern class ChildProcess extends EventEmitter<ChildProcess> {
 	/**
@@ -119,102 +112,116 @@ extern class ChildProcess extends EventEmitter<ChildProcess> {
 
 		If the child stdio streams are shared with the parent, then this will not be set.
 	**/
-	var stdin(default, null):IWritable;
+	var stdin(default, null):Null<IWritable>;
 
 	/**
 		A Readable Stream that represents the child process's stdout.
 
 		If the child stdio streams are shared with the parent, then this will not be set.
 	**/
-	var stdout(default, null):IReadable;
+	var stdout(default, null):Null<IReadable>;
 
 	/**
 		A Readable Stream that represents the child process's stderr.
 
 		If the child stdio streams are shared with the parent, then this will not be set.
 	**/
-	var stderr(default, null):IReadable;
+	var stderr(default, null):Null<IReadable>;
 
 	/**
-		The parent end of the stdio pipes.
+		A sparse array of pipes to the child process, corresponding with positions
+		in the `stdio` option that have been set to the value `'pipe'`.
 	**/
-	var stdio(default, null):Array<IStream>;
+	var stdio(default, null):Array<Null<IStream>>;
 
 	/**
 		The PID of the child process.
+
+		If the child process could not be spawned successfully, then the value is `undefined`.
 	**/
-	var pid(default, null):Int;
+	var pid(default, null):Null<Int>;
 
 	/**
-		Set to false after `disconnect' is called
+		Set to false after `disconnect` is called.
 		If `connected` is false, it is no longer possible to send messages.
 	**/
 	var connected(default, null):Bool;
 
 	/**
-		Send a signal to the child process.
-
-		If no argument is given, the process will be sent 'SIGTERM'.
-		See signal(7) for a list of available signals.
-
-		May emit an 'error' event when the signal cannot be delivered.
-
-		Sending a signal to a child process that has already exited is not an error
-		but may have unforeseen consequences: if the PID (the process ID) has been reassigned to another process,
-		the signal will be delivered to that process instead. What happens next is anyone's guess.
-
-		Note that while the function is called `kill`, the signal delivered to the child process may not actually kill it.
-		`kill` really just sends a signal to a process. See kill(2)
+		The `subprocess.killed` property indicates whether the child process successfully received
+		a signal from `subprocess.kill()`. The `killed` property does not indicate that the child process
+		has been terminated.
 	**/
-	function kill(?signal:String):Void;
+	var killed(default, null):Bool;
 
 	/**
-		When using `fork` you can write to the child using `send` and messages are received by a 'message' event on the child.
-
-		In the child the `Process` object will have a `send` method, and process will emit objects each time it receives
-		a message on its channel.
-
-		Please note that the `send` method on both the parent and child are synchronous - sending large chunks of data is
-		not advised (pipes can be used instead, see `spawn`).
-
-		There is a special case when sending a {cmd: 'NODE_foo'} `message`. All messages containing a `NODE_` prefix in
-		its cmd property will not be emitted in the 'message' event, since they are internal messages used by node core.
-		Messages containing the prefix are emitted in the 'internalMessage' event, you should by all means avoid using
-		this feature, it is subject to change without notice.
-
-		The `sendHandle` option is for sending a TCP server or socket object to another process.
-		The child will receive the object as its second argument to the message event.
-
-		The `callback` option is a function that is invoked after the message is sent but before the target may have received it.
-		It is called with a single argument: null on success, or an `Error` object on failure.
-
-		Emits an 'error' event if the message cannot be sent, for example because the child process has already exited.
-
-		Returns true under normal circumstances or false when the backlog of unsent messages exceeds a threshold that
-		makes it unwise to send more. Use the callback mechanism to implement flow control.
+		The `subprocess.exitCode` property indicates the exit code of the child process.
+		If the child process is still running, the field will be `null`.
 	**/
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, options:ChildProcessSendOptions, ?callback:Error->Void):Bool {})
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:Error->Void):Bool {})
-	function send(message:Dynamic, ?callback:Error->Void):Bool;
+	var exitCode(default, null):Null<Int>;
+
+	/**
+		The `subprocess.signalCode` property indicates the signal that caused the child process to terminate,
+		or `null` if it terminated normally.
+	**/
+	var signalCode(default, null):Null<String>;
+
+	/**
+		The executable file name of the child process that is launched.
+
+		For example, on Linux this would be `'bin/bash'` when spawning bash. For `fork()`, it would be the path
+		to the `node` binary.
+	**/
+	var spawnfile(default, null):String;
+
+	/**
+		The command-line arguments of the child process.
+	**/
+	var spawnargs(default, null):Array<String>;
+
+	/**
+		While the IPC channel established by `fork` is open, this is a reference to that channel.
+		Otherwise `null`.
+	**/
+	// TODO(section-5): type IPC channel pipe more precisely than Null<Dynamic>
+	var channel(default, null):Null<Dynamic>;
+
+	/**
+		Send a signal to the child process.
+
+		If no argument is given, the process will be sent `'SIGTERM'`.
+		See signal(7) for a list of available signals.
+
+		Returns `true` if `kill()` succeeded, else `false`.
+	**/
+	function kill(?signal:EitherType<String, Int>):Bool;
+
+	/**
+		When using `fork` you can write to the child using `send`
+		and messages are received by a `'message'` event on the child.
+
+		// TODO(section-5): replace Dynamic message/sendHandle with structured IPC types
+	**/
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, options:ChildProcessSendOptions, ?callback:Null<Error>->Void):Bool {})
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:Null<Error>->Void):Bool {})
+	function send(message:Dynamic, ?callback:Null<Error>->Void):Bool;
 
 	/**
 		Close the IPC channel between parent and child, allowing the child to exit gracefully once there are no other
 		connections keeping it alive.
-
-		After calling this method the `connected` flag will be set to false in both the parent and child,
-		and it is no longer possible to send messages.
-
-		The 'disconnect' event will be emitted when there are no messages in the process of being received,
-		most likely immediately.
-
-		Note that you can also call `process.disconnect` in the child process.
 	**/
 	function disconnect():Void;
 
 	/**
 		By default, the parent will wait for the detached child to exit.
-		To prevent the parent from waiting for a given child, use the `unref` method,
-		and the parent's event loop will not include the child in its reference count.
+		To prevent the parent from waiting for a given child, use the `unref` method.
 	**/
 	function unref():Void;
+
+	/**
+		Opposite of `unref()`. Calls reference the child from the parent's event loop so that
+		the parent will wait for the child to exit before exiting itself
+		(unless there are other references keeping the parent alive).
+	**/
+	function ref():Void;
 }

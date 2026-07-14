@@ -29,7 +29,7 @@ import js.node.events.EventEmitter;
 /**
 	Enumeration of events emitted by `Domain` objects.
 **/
-@:deprecated
+@:deprecated("The domain module is deprecated. Use AsyncLocalStorage / async_hooks instead.")
 enum abstract DomainEvent<T:Function>(Event<T>) to Event<T> {
 	var Error:DomainEvent<DomainError->Void> = "error";
 	var Dispose:DomainEvent<Void->Void> = "dispose";
@@ -38,7 +38,7 @@ enum abstract DomainEvent<T:Function>(Event<T>) to Event<T> {
 /**
 	Any time an Error object is routed through a domain, a few extra fields are added to it.
 **/
-@:deprecated
+@:deprecated("The domain module is deprecated. Use AsyncLocalStorage / async_hooks instead.")
 typedef DomainError = {
 	/**
 		The domain that first handled the error.
@@ -65,7 +65,7 @@ typedef DomainError = {
 	The Domain class encapsulates the functionality of routing errors
 	and uncaught exceptions to the active Domain object.
 **/
-@:deprecated
+@:deprecated("The domain module is deprecated. Use AsyncLocalStorage / async_hooks instead.")
 extern class Domain extends EventEmitter<Domain> {
 	/**
 		Run the supplied function in the context of the domain, implicitly binding all event emitters, timers,

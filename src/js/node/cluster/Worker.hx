@@ -22,16 +22,16 @@
 
 package js.node.cluster;
 
+import js.lib.Error;
 import js.node.Cluster.ListeningEventAddress;
 import js.node.child_process.ChildProcess;
 import js.node.events.EventEmitter;
-#if haxe4
-import js.lib.Error;
-#else
-import js.Error;
-#end
 
+/**
+	@see https://nodejs.org/docs/latest-v24.x/api/cluster.html#class-worker
+**/
 enum abstract WorkerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
+	// TODO(section-5): tighten message/handle typing beyond Dynamic
 	var Message:WorkerEvent<Dynamic->Dynamic->Void> = "message";
 	var Online:WorkerEvent<Void->Void> = "online";
 	var Listening:WorkerEvent<ListeningEventAddress->Void> = "listening";
@@ -42,7 +42,7 @@ enum abstract WorkerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 
 /**
 	A Worker object contains all public information and method about a worker.
-	In the master it can be obtained using `Cluster.workers`.
+	In the primary it can be obtained using `Cluster.workers`.
 	In a worker it can be obtained using `Cluster.worker`.
 **/
 extern class Worker extends EventEmitter<Worker> {
@@ -51,50 +51,41 @@ extern class Worker extends EventEmitter<Worker> {
 
 		While a worker is alive, this is the key that indexes it in `Cluster.workers`
 	**/
-	var id(default, null):String;
+	var id(default, null):Int;
 
 	/**
 		All workers are created using `ChildProcess.fork`, the returned object from this function is stored as `process`.
 		In a worker, the global process is stored.
-
-		Note that workers will call `process.exit(0)` if the 'disconnect' event occurs on process
-		and `suicide` is not true. This protects against accidental disconnection.
 	**/
 	var process:ChildProcess;
 
 	/**
-		Set by calling `kill` or `disconnect`, until then it is undefined.
-
-		Lets you distinguish between voluntary and accidental exit, the master may choose
-		not to respawn a worker based on this value.
-
-		(an alias to `exitedAfterDisconnect` in newer node.js versions)
+		Deprecated alias for `exitedAfterDisconnect`.
 	**/
+	@:deprecated("Use exitedAfterDisconnect instead")
 	var suicide:Null<Bool>;
 
 	/**
-		Set by calling `kill` or `disconnect`. Until then, it is undefined.
+		Set by calling `kill` or `disconnect`. Until then, it is `undefined`.
 
-		Lets you distinguish between voluntary and accidental exit, the master may choose
+		Lets you distinguish between voluntary and accidental exit, the primary may choose
 		not to respawn a worker based on this value.
 	**/
 	var exitedAfterDisconnect:Null<Bool>;
 
 	/**
 		This function is equal to the `send` methods provided by `ChildProcess.fork`.
-		In the master you should use this function to send a `message` to a specific worker.
+		In the primary you should use this function to send a `message` to a specific worker.
 
-		In a worker you can also use `process.send`, it is the same function.
+		// TODO(section-5): replace Dynamic message/sendHandle with structured IPC types
 	**/
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:Error->Void):Bool {})
-	function send(message:Dynamic, ?callback:Error->Void):Bool;
+	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:Null<Error>->Void):Bool {})
+	function send(message:Dynamic, ?callback:Null<Error>->Void):Bool;
 
 	/**
-		This function will kill the worker. In the master, it does this by disconnecting the `worker.process`,
+		This function will kill the worker. In the primary, it does this by disconnecting the `worker.process`,
 		and once disconnected, killing with `signal`. In the worker, it does it by disconnecting the channel,
 		and then exiting with code 0.
-
-		Causes `suicide` to be set.
 	**/
 	function kill(?signal:String):Void;
 
@@ -102,17 +93,12 @@ extern class Worker extends EventEmitter<Worker> {
 		In a worker, this function will close all servers, wait for the 'close' event on those servers,
 		and then disconnect the IPC channel.
 
-		In the master, an internal message is sent to the worker causing it to call `disconnect` on itself.
-
-		Causes `suicide` to be set.
+		Returns a reference to `worker`.
 	**/
-	function disconnect():Void;
+	function disconnect():Worker;
 
 	/**
-		This function returns true if the worker is connected to its master via its IPC channel, false otherwise
-
-		A worker is connected to its master after it's been created.
-		It is disconnected after the 'disconnect' event is emitted.
+		This function returns true if the worker is connected to its primary via its IPC channel, false otherwise.
 	**/
 	function isConnected():Bool;
 

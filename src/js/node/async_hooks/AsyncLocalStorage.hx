@@ -20,29 +20,34 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package js.node.readline;
+package js.node.async_hooks;
 
-import js.lib.Promise;
-import js.node.readline.Interface;
-import js.node.web.AbortSignal;
+import haxe.Constraints.Function;
 
 /**
-	Instances of `readlinePromises.Interface` are constructed using
-	`ReadlinePromises.createInterface()`.
+	Async local storage stores shared context across callbacks / promise chains.
 
-	Differs from `readline.Interface` mainly in that `question` returns a `Promise`.
-
-	@see https://nodejs.org/docs/latest-v24.x/api/readline.html#class-readlinepromisesinterface
+	@see https://nodejs.org/docs/latest-v24.x/api/async_hooks.html#class-asynclocalstorage
 **/
-@:jsRequire("readline/promises", "Interface")
-extern class PromisesInterface extends Interface {
-	/**
-		Displays `query` by writing it to `output`, waits for user input on `input`,
-		then fulfills with the provided input.
+@:jsRequire("async_hooks", "AsyncLocalStorage")
+extern class AsyncLocalStorage<T> {
+	function new():Void;
 
-		When called, resumes the `input` stream if it has been paused.
-		If called after `close()`, returns a rejected promise.
+	/**
+		Runs a function synchronously within a context and returns its return value.
+		// TODO(section-5): model variadic args without Rest for broader Haxe 4.0.x coverage
 	**/
-	@:overload(function(query:String):Promise<String> {})
-	function question(query:String, options:{?signal:AbortSignal}):Promise<String>;
+	function run<R>(store:T, callback:Function, ?args:Array<Dynamic>):R;
+
+	function enterWith(store:T):Void;
+
+	function exit<R>(callback:Function, ?args:Array<Dynamic>):R;
+
+	function getStore():Null<T>;
+
+	function disable():Void;
+
+	static function bind<F:Function>(fn:F):F;
+
+	static function snapshot():Function;
 }

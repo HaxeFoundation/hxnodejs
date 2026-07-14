@@ -27,11 +27,15 @@ import js.node.domain.Domain as DomainObject;
 /**
 	Domains provide a way to handle multiple different IO operations as a single group.
 
+	Stability: 0 - Deprecated. Prefer `js.node.AsyncHooks` / `AsyncLocalStorage` for async context tracking.
+
 	If any of the event emitters or callbacks registered to a domain emit an error event, or throw an error,
 	then the domain object will be notified, rather than losing the context of the error in the process.on('uncaughtException') handler,
 	or causing the program to exit immediately with an error code.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/domain.html
 **/
-@:deprecated
+@:deprecated("The domain module is deprecated. Use AsyncLocalStorage / async_hooks instead.")
 @:jsRequire("domain")
 extern class Domain {
 	/**

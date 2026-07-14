@@ -22,10 +22,12 @@
 
 package js.node;
 
+import haxe.DynamicAccess;
+import haxe.extern.EitherType;
 import js.node.vm.Script;
 
 /**
-	Options object used by Vm.run* methods.
+	Options object used by `Vm.run*` methods.
 **/
 typedef VmRunOptions = {
 	> ScriptOptions,
@@ -33,8 +35,85 @@ typedef VmRunOptions = {
 }
 
 /**
-	Using this class JavaScript code can be compiled and
-	run immediately or compiled, saved, and run later.
+	Options for `Vm.createContext`.
+**/
+typedef VmCreateContextOptions = {
+	/**
+		Human-readable name of the newly created context. Default: `'VM Context i'`, where `i` is an ascending
+		numerical index of the created context.
+	**/
+	@:optional var name:String;
+
+	/**
+		Origin corresponding to the newly created context for display purposes. The origin should be formatted like a
+		URL, but with only scheme, host, and port (if necessary). Default: `''`.
+	**/
+	@:optional var origin:String;
+
+	/**
+		If set to `true` any wrappers corresponding to `contextObject` properties may be invoked. Default: `false`.
+	**/
+	@:optional var codeGeneration:VmCodeGenerationOptions;
+
+	/**
+		If set to `afterEvaluate`, microtasks will be run immediately after evaluating code on the context
+		(before returning from e.g. `runInContext`). Default: `undefined`.
+	**/
+	@:optional var microtaskMode:String;
+}
+
+typedef VmCodeGenerationOptions = {
+	/**
+		If set to `false` any calls to `eval` or function constructors (`Function`, `GeneratorFunction`, etc) will throw
+		an `EvalError`. Default: `true`.
+	**/
+	@:optional var strings:Bool;
+
+	/**
+		If set to `false` any attempt to compile a WebAssembly module will throw a `WebAssembly.CompileError`.
+		Default: `true`.
+	**/
+	@:optional var wasm:Bool;
+}
+
+/**
+	Options for `Vm.compileFunction`.
+**/
+typedef VmCompileFunctionOptions = {
+	> ScriptOptions,
+	/**
+		Provides an optional data with V8's code cache data for the supplied source.
+	**/
+	@:optional var parsingContext:VmContext<Dynamic>;
+
+	/**
+		An array containing context extension objects. Modules and wrappers used in `code` will be available as if
+		they were referenced from these objects.
+	**/
+	@:optional var contextExtensions:Array<DynamicAccess<Dynamic>>;
+}
+
+/**
+	Options for experimental `Vm.measureMemory`.
+**/
+typedef VmMeasureMemoryOptions = {
+	/**
+		`'summary'` or `'detailed'`. Default: `'summary'`.
+	**/
+	@:optional var mode:String;
+
+	/**
+		`'self'` or `'all'`. Default: `'self'`.
+	**/
+	@:optional var execution:String;
+}
+
+/**
+	The `vm` module enables compiling and running code within V8 Virtual Machine contexts.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/vm.html
+
+	// TODO(section-5): add vm.Module / SourceTextModule / SyntheticModule externs (large experimental surface)
 **/
 @:jsRequire("vm")
 extern class Vm {
@@ -42,51 +121,28 @@ extern class Vm {
 		Compiles `code`, runs it and returns the result.
 		Running code does not have access to local scope.
 
-		`filename` is optional, it's used only in stack traces.
-
-		In case of syntax error in `code` emits the syntax error to stderr and throws an exception.
+		// TODO(section-5): Dynamic is intentional for arbitrary JS eval results; refine per-call sites when possible
 	**/
-	static function runInThisContext(code:String, ?options:VmRunOptions):Dynamic;
+	static function runInThisContext(code:String, ?options:EitherType<String, VmRunOptions>):Dynamic;
 
 	/**
 		Compiles `code`, contextifies `sandbox` if passed or creates a new contextified sandbox if it's omitted,
 		and then runs the code with the sandbox as the global object and returns the result.
-
-		`runInNewContext` takes the same options as `runInThisContext`.
-
-		Note that running untrusted code is a tricky business requiring great care. `runInNewContext` is quite useful,
-		but safely running untrusted code requires a separate process.
 	**/
 	@:overload(function(code:String, ?sandbox:{}):Dynamic {})
 	static function runInNewContext(code:String, sandbox:{}, ?options:VmRunOptions):Dynamic;
 
 	/**
 		Compiles `code`, then runs it in `contextifiedSandbox` and returns the result.
-
-		Running code does not have access to local scope. The `contextifiedSandbox` object must have been previously
-		contextified via `createContext`; it will be used as the global object for code.
-
-		`runInContext` takes the same options as `runInThisContext`.
-
-		Note that running untrusted code is a tricky business requiring great care. `runInContext` is quite useful,
-		but safely running untrusted code requires a separate process.
 	**/
-	static function runInContext(code:String, contextifiedSandbox:VmContext<Dynamic>, ?options:VmRunOptions):Dynamic;
+	static function runInContext(code:String, contextifiedSandbox:VmContext<Dynamic>, ?options:EitherType<String, VmRunOptions>):Dynamic;
 
 	/**
-
-		If given a sandbox object, will "contextify" that sandbox so that it can be used in calls to `runInContext` or
-		`Script.runInContext`. Inside scripts run as such, sandbox will be the global object, retaining all its existing
-		properties but also having the built-in objects and functions any standard global object has. Outside of scripts
-		run by the vm module, sandbox will be unchanged.
-
-		If not given a sandbox object, returns a new, empty contextified sandbox object you can use.
-
-		This function is useful for creating a sandbox that can be used to run multiple scripts, e.g. if you were
-		emulating a web browser it could be used to create a single sandbox representing a window's global object,
-		then run all <script> tags together inside that sandbox.
+		If given a sandbox object, will "contextify" that sandbox so that it can be used in calls to `runInContext`
+		or `Script.runInContext`.
 	**/
-	static function createContext<T:{}>(?sandbox:T):VmContext<T>;
+	@:overload(function():VmContext<Dynamic> {})
+	static function createContext<T:{}>(sandbox:T, ?options:VmCreateContextOptions):VmContext<T>;
 
 	/**
 		Returns whether or not a sandbox object has been contextified by calling `createContext` on it.
@@ -94,16 +150,51 @@ extern class Vm {
 	static function isContext(sandbox:{}):Bool;
 
 	/**
-		Compiles and executes `code` inside the V8 debug context.
-		The primary use case is to get access to the V8 debug object:
-
-		Note that the debug context and object are intrinsically tied to V8's debugger implementation
-		and may change (or even get removed) without prior warning.
+		Compiles the given `code` into a function object that may use the provided `params` as formal parameters
+		and may use the objects in `options.contextExtensions` as its local scope.
 	**/
+	static function compileFunction(code:String, ?params:Array<String>, ?options:VmCompileFunctionOptions):haxe.Constraints.Function;
+
+	/**
+		Measure the known V8 heap memory attributed to this context / all contexts (experimental).
+
+		// TODO(section-5): type Promise result of measureMemory
+	**/
+	static function measureMemory(?options:VmMeasureMemoryOptions):js.lib.Promise<Dynamic>;
+
+	/**
+		Compiles and executes `code` inside the V8 debug context.
+		Removed from modern Node.js versions.
+	**/
+	@:deprecated("Removed from Node.js; do not use")
 	static function runInDebugContext(code:String):Dynamic;
 
 	@:deprecated("use new js.node.vm.Script(...) instead")
-	static function createScript(code:String, ?options:ScriptOptions):Script;
+	static function createScript(code:String, ?options:EitherType<String, ScriptOptions>):Script;
+
+	/**
+		Returns an object containing commonly used constants for VM operations.
+	**/
+	static var constants(default, null):VmConstants;
+}
+
+/**
+	Constants exported by `vm.constants`.
+**/
+typedef VmConstants = {
+	/**
+		A constant that can be used as the `importModuleDynamically` option to `vm.Script`
+		or `vm.compileFunction` so that Node.js uses the default ESM loader from the main context
+		to load the requested module.
+	**/
+	var USE_MAIN_CONTEXT_DEFAULT_LOADER:Dynamic;
+
+	/**
+		When passed as `contextObject` to `vm.createContext()`, this constant creates an empty context
+		with an object wrapper that allows code running in that context to see the outer context's Object
+		prototype methods, but also has its own independent Object/Array prototypes and builtins.
+	**/
+	var DONT_CONTEXTIFY:Dynamic;
 }
 
 /**

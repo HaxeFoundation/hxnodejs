@@ -23,15 +23,11 @@
 package js.node;
 
 import haxe.extern.EitherType;
+import js.lib.Promise;
 import js.node.readline.PromisesInterface;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
 import js.node.web.AbortSignal;
-#if haxe4
-import js.lib.Promise;
-#else
-import js.Promise;
-#end
 
 /**
 	Completer result: matching entries, then the substring used for matching.
@@ -42,18 +38,14 @@ typedef ReadlinePromisesCompleterResult = Array<EitherType<Array<String>, String
 	Tab autocompletion for `readline/promises`.
 	Unlike the callback API, the completer may return a `Promise`.
 **/
-#if haxe4
 typedef ReadlinePromisesCompleterCallback = (line:String) -> EitherType<ReadlinePromisesCompleterResult, Promise<ReadlinePromisesCompleterResult>>;
-#else
-typedef ReadlinePromisesCompleterCallback = String->EitherType<ReadlinePromisesCompleterResult, Promise<ReadlinePromisesCompleterResult>>;
-#end
 
 /**
 	Options for `ReadlinePromises.createInterface`.
 
 	Same surface as `ReadlineOptions`, but `completer` may return a `Promise`.
 
-	@see https://nodejs.org/api/readline.html#readlinepromisescreateinterfaceoptions
+	@see https://nodejs.org/docs/latest-v24.x/api/readline.html#readlinepromisescreateinterfaceoptions
 **/
 typedef ReadlinePromisesOptions = {
 	/**
@@ -95,7 +87,7 @@ typedef ReadlinePromisesOptions = {
 	/**
 		Delay threshold for treating `\r\n` as a single newline.
 	**/
-	@:optional var crlfDelay:Int;
+	@:optional var crlfDelay:Float;
 
 	/**
 		If `true`, remove older duplicate history entries.
@@ -121,7 +113,7 @@ typedef ReadlinePromisesOptions = {
 /**
 	The `readline/promises` API provides an alternative set of interfaces that return promises.
 
-	@see https://nodejs.org/api/readline.html#promises-api
+	@see https://nodejs.org/docs/latest-v24.x/api/readline.html#promises-api
 **/
 @:jsRequire("readline/promises")
 extern class ReadlinePromises {

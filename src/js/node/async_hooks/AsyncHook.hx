@@ -20,29 +20,19 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package js.node.readline;
-
-import js.lib.Promise;
-import js.node.readline.Interface;
-import js.node.web.AbortSignal;
+package js.node.async_hooks;
 
 /**
-	Instances of `readlinePromises.Interface` are constructed using
-	`ReadlinePromises.createInterface()`.
-
-	Differs from `readline.Interface` mainly in that `question` returns a `Promise`.
-
-	@see https://nodejs.org/docs/latest-v24.x/api/readline.html#class-readlinepromisesinterface
+	The callbacks registered via `AsyncHooks.createHook` return an `AsyncHook` instance.
 **/
-@:jsRequire("readline/promises", "Interface")
-extern class PromisesInterface extends Interface {
+extern class AsyncHook {
 	/**
-		Displays `query` by writing it to `output`, waits for user input on `input`,
-		then fulfills with the provided input.
-
-		When called, resumes the `input` stream if it has been paused.
-		If called after `close()`, returns a rejected promise.
+		Enable the callbacks for a given `AsyncHook` instance.
 	**/
-	@:overload(function(query:String):Promise<String> {})
-	function question(query:String, options:{?signal:AbortSignal}):Promise<String>;
+	function enable():AsyncHook;
+
+	/**
+		Disable the callbacks for a given `AsyncHook` instance.
+	**/
+	function disable():AsyncHook;
 }

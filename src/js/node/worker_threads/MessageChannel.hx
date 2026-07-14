@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2025 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -20,29 +20,16 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package js.node.readline;
-
-import js.lib.Promise;
-import js.node.readline.Interface;
-import js.node.web.AbortSignal;
+package js.node.worker_threads;
 
 /**
-	Instances of `readlinePromises.Interface` are constructed using
-	`ReadlinePromises.createInterface()`.
+	Instances of `MessageChannel` represent an asynchronous two-way communications channel.
 
-	Differs from `readline.Interface` mainly in that `question` returns a `Promise`.
-
-	@see https://nodejs.org/docs/latest-v24.x/api/readline.html#class-readlinepromisesinterface
+	@see https://nodejs.org/docs/latest-v24.x/api/worker_threads.html#class-messagechannel
 **/
-@:jsRequire("readline/promises", "Interface")
-extern class PromisesInterface extends Interface {
-	/**
-		Displays `query` by writing it to `output`, waits for user input on `input`,
-		then fulfills with the provided input.
-
-		When called, resumes the `input` stream if it has been paused.
-		If called after `close()`, returns a rejected promise.
-	**/
-	@:overload(function(query:String):Promise<String> {})
-	function question(query:String, options:{?signal:AbortSignal}):Promise<String>;
+@:jsRequire("worker_threads", "MessageChannel")
+extern class MessageChannel {
+	function new():Void;
+	var port1(default, null):MessagePort;
+	var port2(default, null):MessagePort;
 }

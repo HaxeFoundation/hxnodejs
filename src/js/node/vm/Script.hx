@@ -22,33 +22,58 @@
 
 package js.node.vm;
 
+import haxe.extern.EitherType;
+import js.node.Buffer;
 import js.node.Vm.VmContext;
 
 typedef ScriptOptions = {
 	/**
-		The filename that shows up in any stack traces produced.
+		Specifies the filename used in stack traces produced by this script.
 	**/
 	@:optional var filename:String;
 
 	/**
+		Specifies the line number offset that is displayed in stack traces produced by this script.
+	**/
+	@:optional var lineOffset:Int;
+
+	/**
+		Specifies the column number offset that is displayed in stack traces produced by this script.
+	**/
+	@:optional var columnOffset:Int;
+
+	/**
 		Whether or not to print any errors to stderr, with the line of code that caused them highlighted,
 		before throwing an exception.
-
-		Will capture both syntax errors from compiling code and runtime errors thrown by executing the compiled code.
-
-		Defaults to true.
+		Deprecated alias kept for older Node docs; prefer omitting and relying on engine defaults.
 	**/
 	@:optional var displayErrors:Bool;
+
+	/**
+		Provides an optional data with V8's code cache data for the supplied source.
+	**/
+	@:optional var cachedData:Buffer;
+
+	/**
+		V8-specific option; when `true`, produces cached data used for faster compilation next time.
+		Deprecated in favor of `createCachedData()`.
+	**/
+	@:deprecated("Use createCachedData() instead")
+	@:optional var produceCachedData:Bool;
+
+	/**
+		Used to specify how the modules should be loaded during evaluation.
+		Passed to the experimental `importModuleDynamically` hook.
+
+		// TODO(section-5): type importModuleDynamically callback
+	**/
+	@:optional var importModuleDynamically:Dynamic;
 }
 
 typedef ScriptRunOptions = {
 	/**
 		Whether or not to print any errors to stderr, with the line of code that caused them highlighted,
 		before throwing an exception.
-
-		Will capture both syntax errors from compiling code and runtime errors thrown by executing the compiled code.
-
-		Defaults to true.
 	**/
 	@:optional var displayErrors:Bool;
 
@@ -57,42 +82,64 @@ typedef ScriptRunOptions = {
 		If execution is terminated, an Error will be thrown.
 	**/
 	@:optional var timeout:Int;
+
+	/**
+		If `true`, the execution will be terminated when `SIGINT` (`Ctrl+C`) is received.
+		Existing handlers for the event that have been attached via `process.on('SIGINT')` will be disabled during
+		script execution, but will continue to work after that. Default: `false`.
+	**/
+	@:optional var breakOnSigint:Bool;
 }
 
 /**
 	A class for holding precompiled scripts, and running them in specific sandboxes.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/vm.html#class-vmscript
 **/
 @:jsRequire("vm", "Script")
 extern class Script {
 	/**
 		Creating a new `Script` compiles `code` but does not run it. Instead, the created `Script` object
 		represents this compiled code.
-
-		This script can be run later many times using methods below.
-
-		The returned script is not bound to any global object. It is bound before each run, just for that run.
 	**/
-	function new(code:String, ?options:ScriptOptions);
+	function new(code:String, ?options:EitherType<String, ScriptOptions>);
+
+	/**
+		When producing cached data with `--produce_cached_data`, this value becomes `true` if the produced
+		cached data was rejected by V8.
+	**/
+	var cachedDataRejected(default, null):Null<Bool>;
+
+	/**
+		When the script is compiled using `cachedData` this value will be `true` if the data was accepted by V8.
+	**/
+	var cachedDataProduced(default, null):Null<Bool>;
+
+	/**
+		When `cachedData` is supplied, the rejected or produced status is reflected here.
+	**/
+	var cachedData(default, null):Null<Buffer>;
+
+	/**
+		Creates a code cache that can be used with `Script` constructor's `cachedData` option
+		to avoid recompilation next time.
+	**/
+	function createCachedData():Buffer;
 
 	/**
 		Similar to `Vm.runInThisContext` but a method of a precompiled `Script` object.
-		`runInThisContext` runs the code of script and returns the result.
-		Running code does not have access to local scope, but does have access to the current global object.
+
+		// TODO(section-5): Dynamic is intentional for arbitrary JS eval results
 	**/
 	function runInThisContext(?options:ScriptRunOptions):Dynamic;
 
 	/**
 		Similar to `Vm.runInContext` but a method of a precompiled `Script` object.
-		`runInContext` runs script's compiled code in `contextifiedSandbox` and returns the result.
-		Running code does not have access to local scope.
 	**/
 	function runInContext(contextifiedSandbox:VmContext<Dynamic>, ?options:ScriptRunOptions):Dynamic;
 
 	/**
 		Similar to `Vm.runInNewContext` but a method of a precompiled `Script` object.
-		`runInNewContext` contextifies sandbox if passed or creates a new contextified sandbox if it's omitted,
-		and then runs script's compiled code with the sandbox as the global object and returns the result.
-		Running code does not have access to local scope.
 	**/
 	@:overload(function(sandbox:{}, ?options:ScriptRunOptions):Dynamic {})
 	function runInNewContext(?sandbox:{}):Dynamic;

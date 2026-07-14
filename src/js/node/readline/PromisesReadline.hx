@@ -22,13 +22,9 @@
 
 package js.node.readline;
 
+import js.lib.Promise;
 import js.node.Readline.ClearLineDirection;
 import js.node.stream.Writable.IWritable;
-#if haxe4
-import js.lib.Promise;
-#else
-import js.Promise;
-#end
 
 /**
 	Options for constructing a `PromisesReadline`.
@@ -44,7 +40,7 @@ typedef PromisesReadlineOptions = {
 	The `readlinePromises.Readline` class provides an abstraction for collecting
 	pending actions on a TTY stream and applying them with `commit()`.
 
-	@see https://nodejs.org/api/readline.html#class-readlinepromisesreadline
+	@see https://nodejs.org/docs/latest-v24.x/api/readline.html#class-readlinepromisesreadline
 **/
 @:jsRequire("readline/promises", "Readline")
 extern class PromisesReadline {
