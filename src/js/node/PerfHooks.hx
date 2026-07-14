@@ -123,8 +123,7 @@ typedef CreateHistogramOptions = {
 	/**
 		The lowest discernible value. Must be an integer value greater than 0.
 		Default: `1`.
-	**/
-	/**
+
 		// TODO: allow BigInt when hxnodejs gains a BigInt type (Node accepts number | bigint).
 	**/
 	@:optional var lowest:EitherType<Float, Dynamic>;

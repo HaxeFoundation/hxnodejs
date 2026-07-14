@@ -44,6 +44,21 @@ extern class DatabaseSync {
 	function new(path:SqlitePath, ?options:DatabaseSyncOptions);
 
 	/**
+		Whether the database connection is open.
+	**/
+	var isOpen(default, null):Bool;
+
+	/**
+		Whether a transaction is currently active.
+	**/
+	var isTransaction(default, null):Bool;
+
+	/**
+		Configured SQLite run-time limits for this connection.
+	**/
+	var limits(default, null):DatabaseSyncLimits;
+
+	/**
 		Registers an aggregate function.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databaseaggregatename-options

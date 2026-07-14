@@ -22,6 +22,8 @@
 
 package js.node.inspector;
 
+import haxe.DynamicAccess;
+
 /**
 	Broadcast helpers for Chrome DevTools Protocol `Network.*` events.
 
@@ -101,7 +103,7 @@ extern class Network {
 typedef NetworkRequest = {
 	var url:String;
 	var method:String;
-	@:optional var headers:Dynamic;
+	@:optional var headers:DynamicAccess<String>;
 	@:optional var postData:String;
 	@:optional var hasPostData:Bool;
 }
@@ -113,13 +115,15 @@ typedef NetworkResponse = {
 	@:optional var url:String;
 	@:optional var status:Int;
 	@:optional var statusText:String;
-	@:optional var headers:Dynamic;
+	@:optional var headers:DynamicAccess<String>;
 	@:optional var mimeType:String;
 	@:optional var charset:String;
 }
 
 /**
 	Pragmatic subset of CDP request initiator.
+
+	// TODO: model CDP `StackTrace` for `stack` instead of `Dynamic`.
 **/
 typedef NetworkInitiator = {
 	var type:String;
@@ -219,7 +223,7 @@ typedef NetworkWebSocketHandshakeResponseReceivedParams = {
 typedef NetworkWebSocketResponse = {
 	var status:Int;
 	var statusText:String;
-	@:optional var headers:Dynamic;
+	@:optional var headers:DynamicAccess<String>;
 }
 
 /**

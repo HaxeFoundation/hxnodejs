@@ -31,7 +31,8 @@ import js.node.inspector.promises.Session;
 	Stability: 1 - Experimental.
 
 	Module-level helpers match `Inspector`; use `js.node.inspector.promises.Session`
-	for a `Session` whose `post` returns a `Promise`.
+	for a `Session` whose `post` returns a `Promise`. DevTools helpers live under
+	`js.node.inspector` (`Network`, `NetworkResources`, `DomStorage`).
 
 	@see https://nodejs.org/docs/latest-v24.x/api/inspector.html#promises-api
 **/

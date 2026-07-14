@@ -88,7 +88,13 @@ typedef DomStorageItemsClearedParams = {
 	var storageId:DomStorageId;
 }
 
+/**
+	Parameters for `DomStorage.registerStorage`.
+
+	`storageMap` is the storage backing object; shape follows the experimental
+	storage-inspection API (kept pragmatic).
+**/
 typedef DomStorageRegisterParams = {
-	var storageId:DomStorageId;
-	@:optional var storageKey:String;
+	var isLocalStorage:Bool;
+	var storageMap:{};
 }

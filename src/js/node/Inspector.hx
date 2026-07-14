@@ -28,6 +28,8 @@ import js.node.inspector.InspectorConsole;
 	The `inspector` module provides an API for interacting with the V8 inspector.
 
 	Related types live under `js.node.inspector` (`Session`, `Network`, `NetworkResources`, `DomStorage`).
+	Use those types directly (e.g. `js.node.inspector.Network.requestWillBeSent(...)`) — they map to
+	`inspector.Network` / `inspector.NetworkResources` / `inspector.DOMStorage` via `@:jsRequire`.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/inspector.html
 **/
