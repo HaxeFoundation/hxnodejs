@@ -61,8 +61,11 @@ enum abstract WorkerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 
 	/**
 		Similar to the cluster `'exit'` event, but specific to this worker.
+
+		`code` is the exit code if it exited normally; `signal` is the signal name
+		if it was killed (the other is then `null`).
 	**/
-	var Exit:WorkerEvent<(code:Int, signal:String) -> Void> = "exit";
+	var Exit:WorkerEvent<(code:Null<Int>, signal:Null<String>) -> Void> = "exit";
 
 	/**
 		Same as the `'error'` event from `ChildProcess.fork`.
@@ -122,9 +125,9 @@ extern class Worker extends EventEmitter<Worker> {
 		In the primary this targets a specific worker (same as `ChildProcess.send`).
 		In a worker this sends to the primary (same as `process.send`).
 	**/
-	@:overload(function(message:Dynamic, sendHandle:ChildProcessSendHandle, options:ChildProcessSendOptions, ?callback:Null<Error>->Void):Bool {})
-	@:overload(function(message:Dynamic, sendHandle:ChildProcessSendHandle, ?callback:Null<Error>->Void):Bool {})
-	function send(message:Dynamic, ?callback:Null<Error>->Void):Bool;
+	@:overload(function(message:Dynamic, sendHandle:ChildProcessSendHandle, options:ChildProcessSendOptions, ?callback:(error:Null<Error>) -> Void):Bool {})
+	@:overload(function(message:Dynamic, sendHandle:ChildProcessSendHandle, ?callback:(error:Null<Error>) -> Void):Bool {})
+	function send(message:Dynamic, ?callback:(error:Null<Error>) -> Void):Bool;
 
 	/**
 		Kill the worker.

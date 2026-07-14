@@ -67,9 +67,12 @@ enum abstract ClusterEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when any worker dies.
 
+		`code` is the exit code if it exited normally; `signal` is the signal name
+		if it was killed (the other is then `null`).
+
 		Can be used to restart the worker by calling `fork` again.
 	**/
-	var Exit:ClusterEvent<(worker:Worker, code:Int, signal:String) -> Void> = "exit";
+	var Exit:ClusterEvent<(worker:Worker, code:Null<Int>, signal:Null<String>) -> Void> = "exit";
 
 	/**
 		Emitted every time `setupPrimary` is called.
