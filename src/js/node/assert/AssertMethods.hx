@@ -38,7 +38,7 @@ extern class AssertMethods {
 	/**
 		An alias of `deepStrictEqual`.
 	**/
-	@:deprecated
+	@:deprecated("Use deepStrictEqual instead")
 	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
 	function deepEqual<T>(actual:T, expected:T, ?message:String):Void;
 
@@ -97,7 +97,7 @@ extern class AssertMethods {
 	/**
 		An alias of `notDeepStrictEqual`.
 	**/
-	@:deprecated
+	@:deprecated("Use notDeepStrictEqual instead")
 	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
 	function notDeepEqual<T>(actual:T, expected:T, ?message:String):Void;
 
@@ -110,7 +110,7 @@ extern class AssertMethods {
 	/**
 		An alias of `notStrictEqual`.
 	**/
-	@:deprecated
+	@:deprecated("Use notStrictEqual instead")
 	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
 	function notEqual<T>(actual:T, expected:T, ?message:String):Void;
 

@@ -89,7 +89,7 @@ extern class Url {
 		For instance, given `//foo/bar`, the result would be `{host: 'foo', pathname: '/bar'}` rather than `{pathname: '//foo/bar'}`.
 		Defaults to false.
 	**/
-	@:deprecated
+	@:deprecated("Use js.node.url.URL instead")
 	static function parse(urlString:String, ?parseQueryString:Bool, ?slashesDenoteHost:Bool):UrlObject;
 
 	/**
@@ -103,7 +103,7 @@ extern class Url {
 		resolve('http://example.com/one', '/two') // 'http://example.com/two'
 		```
 	**/
-	@:deprecated
+	@:deprecated("Use js.node.url.URL instead")
 	static function resolve(from:String, to:String):String;
 
 	/**
@@ -111,7 +111,7 @@ extern class Url {
 
 		@see https://nodejs.org/api/url.html
 	**/
-	@:deprecated
+	@:deprecated("Use js.node.url.URL instead")
 	static function resolveObject(source:EitherType<String, UrlObject>, relative:EitherType<String, UrlObject>):UrlObject;
 
 	/**
@@ -209,7 +209,7 @@ typedef UrlFormatOptions = {
 	Parsed URL objects have some or all of the following fields, depending on whether or not they exist in the URL string.
 	Any parts that are not in the URL string will not be in the parsed object.
 **/
-@:deprecated
+@:deprecated("Use js.node.url.URL instead")
 typedef UrlObject = {
 	/**
 		The full URL string that was parsed with both the `protocol` and `host` components converted to lower-case.

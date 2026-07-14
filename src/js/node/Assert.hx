@@ -58,7 +58,7 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_deepequal_actual_expected_message
 	**/
-	@:deprecated
+	@:deprecated("Use deepStrictEqual instead")
 	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
 	static function deepEqual<T>(actual:T, expected:T, ?message:String):Void;
 
@@ -132,7 +132,7 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_fail_actual_expected_message_operator_stackstartfn
 	**/
-	@:deprecated
+	@:deprecated("Use fail with a message or Error instead")
 	@:native("fail")
 	@:overload(function<T>(actual:T, expected:T, ?message:String, ?operator_:String, ?stackStartFn:Function):Void {})
 	static function fail_<T>(actual:T, expected:T, ?message:Error, ?operator_:String, ?stackStartFn:Function):Void;
@@ -159,7 +159,7 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_notdeepequal_actual_expected_message
 	**/
-	@:deprecated
+	@:deprecated("Use notDeepStrictEqual instead")
 	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
 	static function notDeepEqual<T>(actual:T, expected:T, ?message:String):Void;
 
@@ -176,7 +176,7 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_notequal_actual_expected_message
 	**/
-	@:deprecated
+	@:deprecated("Use notStrictEqual instead")
 	@:overload(function<T>(actual:T, expected:T, ?message:Error):Void {})
 	static function notEqual<T>(actual:T, expected:T, ?message:String):Void;
 
