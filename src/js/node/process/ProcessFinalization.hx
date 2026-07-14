@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -30,16 +30,24 @@ package js.node.process;
 extern class ProcessFinalization {
 	/**
 		Registers a callback invoked before the event loop exits when `ref` becomes unreachable.
+		The `event` argument is typically `'exit'`.
+
+		@see https://nodejs.org/api/process.html#processfinalizationregisterref-callback
 	**/
 	function register<T>(ref:T, callback:(ref:T, event:String) -> Void):Void;
 
 	/**
-		Registers a callback invoked on the `beforeExit` event when `ref` remains alive.
+		Registers a callback invoked on the `'beforeExit'` event when `ref` remains alive.
+		The `event` argument is typically `'beforeExit'`.
+
+		@see https://nodejs.org/api/process.html#processfinalizationregisterbeforeexitref-callback
 	**/
 	function registerBeforeExit<T>(ref:T, callback:(ref:T, event:String) -> Void):Void;
 
 	/**
 		Unregisters a resource previously registered with `register` / `registerBeforeExit`.
+
+		@see https://nodejs.org/api/process.html#processfinalizationunregisterref
 	**/
-	function unregister(ref:Dynamic):Void;
+	function unregister(ref:Any):Void;
 }

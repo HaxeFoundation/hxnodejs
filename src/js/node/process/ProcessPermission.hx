@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,12 +24,16 @@ package js.node.process;
 
 /**
 	Process permission model API (`process.permission`).
+	Available when the process is started with `--permission`.
 
 	@see https://nodejs.org/api/process.html#processpermission
 **/
 extern class ProcessPermission {
 	/**
-		Verifies whether the process is able to access the given `scope` (with optional `reference`).
+		Verifies whether the process is able to access the given `scope`
+		(with optional `reference`, e.g. a filesystem path).
+
+		@see https://nodejs.org/api/process.html#processpermissionhasscope-reference
 	**/
 	function has(scope:String, ?reference:String):Bool;
 }
