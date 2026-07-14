@@ -25,9 +25,29 @@ package js.node.child_process;
 import haxe.extern.EitherType;
 import js.lib.Error;
 import js.node.Stream;
+import js.node.dgram.Socket as DgramSocket;
 import js.node.events.EventEmitter;
+import js.node.net.Server as NetServer;
+import js.node.net.Socket as NetSocket;
 import js.node.stream.Readable;
 import js.node.stream.Writable;
+
+/**
+	Handle that may be sent over an IPC channel (`net.Socket`, `net.Server`, or `dgram.Socket`).
+
+	@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#subprocesssendmessage-sendhandle-options-callback
+**/
+typedef ChildProcessSendHandle = EitherType<NetSocket, EitherType<NetServer, DgramSocket>>;
+
+/**
+	Control object for an open IPC channel (`process.channel` / `subprocess.channel`).
+
+	@see https://nodejs.org/docs/latest-v24.x/api/process.html#processchannel
+**/
+typedef ChildProcessChannel = {
+	function ref():Void;
+	function unref():Void;
+}
 
 /**
 	Enumeration of events emitted by `ChildProcess` objects.

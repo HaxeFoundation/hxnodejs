@@ -26,6 +26,7 @@ import haxe.Constraints.Function;
 import haxe.extern.EitherType;
 import haxe.extern.Rest;
 import js.lib.Symbol;
+import js.node.async_hooks.AsyncLocalStorage;
 
 /**
 	Channel name: a string or symbol.
@@ -113,11 +114,9 @@ extern class Channel {
 
 		Stability: 1 - Experimental
 
-		// TODO(section-5): type `store` as AsyncLocalStorage once async_hooks externs land.
-
 		@see https://nodejs.org/docs/latest-v24.x/api/diagnostics_channel.html#channelbindstorestore-transform
 	**/
-	function bindStore(store:Dynamic, ?transform:ChannelStoreTransform):Void;
+	function bindStore(store:AsyncLocalStorage<Dynamic>, ?transform:ChannelStoreTransform):Void;
 
 	/**
 		Remove a store previously bound to this channel with `channel.bindStore(store)`.
@@ -128,11 +127,9 @@ extern class Channel {
 
 		Stability: 1 - Experimental
 
-		// TODO(section-5): type `store` as AsyncLocalStorage once async_hooks externs land.
-
 		@see https://nodejs.org/docs/latest-v24.x/api/diagnostics_channel.html#channelunbindstorestore
 	**/
-	function unbindStore(store:Dynamic):Bool;
+	function unbindStore(store:AsyncLocalStorage<Dynamic>):Bool;
 
 	/**
 		Applies the given data to any AsyncLocalStorage instances bound to the channel

@@ -22,7 +22,9 @@
 
 package js.node;
 
+import haxe.Constraints.Function;
 import haxe.extern.EitherType;
+import js.node.module.SourceMap;
 import js.node.url.URL;
 
 /**
@@ -112,9 +114,10 @@ extern class Module {
 
 	/**
 		`findSourceMap` finds the corresponding source map for a given file path.
-		// TODO(section-5): refine SourceMap type when vm/module source-map types are audited.
+
+		@see https://nodejs.org/api/module.html#modulefindsourcemappath
 	**/
-	static function findSourceMap(path:String):Null<Dynamic>;
+	static function findSourceMap(path:String):Null<SourceMap>;
 
 	/**
 		Removes TypeScript type annotations from `code`.
@@ -123,9 +126,13 @@ extern class Module {
 
 	/**
 		Register synchronous customization hooks.
-		// TODO(section-5): refine hook option types when the module loader API is audited.
+
+		Hook callback signatures stay loosely typed (`Function`); full
+		`resolve`/`load` context models can be refined later.
+
+		@see https://nodejs.org/api/module.html#moduleregisterhooksoptions
 	**/
-	static function registerHooks(options:Dynamic):Void;
+	static function registerHooks(options:ModuleRegisterHooksOptions):ModuleHooks;
 
 	/**
 		Finds the closest `package.json` for the given specifier.
@@ -137,12 +144,13 @@ extern class Module {
 
 	/**
 		Register a module that exports hooks that customize Node.js module resolution and loading.
-		// TODO(section-5): refine register options / return types when the loader API is audited.
 
 		@see https://nodejs.org/api/module.html#moduleregisterspecifier-parenturl-options
 	**/
-	@:overload(function(specifier:String, parentURL:EitherType<String, URL>, ?options:Dynamic):Void {})
-	static function register(specifier:String, ?options:Dynamic):Void;
+	@:overload(function(specifier:String, parentURL:EitherType<String, URL>, ?options:ModuleRegisterOptions):Void {})
+	@:overload(function(specifier:URL, parentURL:EitherType<String, URL>, ?options:ModuleRegisterOptions):Void {})
+	@:overload(function(specifier:URL, ?options:ModuleRegisterOptions):Void {})
+	static function register(specifier:String, ?options:ModuleRegisterOptions):Void;
 
 	/**
 		Enable the module compile cache.
@@ -164,12 +172,12 @@ extern class Module {
 	/**
 		Enable or disable Source Map v3 support for stack traces.
 	**/
-	static function setSourceMapsSupport(enabled:Bool, ?options:Dynamic):Void;
+	static function setSourceMapsSupport(enabled:Bool, ?options:ModuleSetSourceMapsSupportOptions):Void;
 
 	/**
 		Return whether Source Map support is enabled and related options.
 	**/
-	static function getSourceMapsSupport():Dynamic;
+	static function getSourceMapsSupport():ModuleSourceMapsSupport;
 }
 
 /**
@@ -190,4 +198,86 @@ typedef ModuleStripTypeScriptTypesOptions = {
 		The filename used when generating source maps.
 	**/
 	@:optional var sourceUrl:String;
+}
+
+/**
+	Options for `Module.register`.
+**/
+typedef ModuleRegisterOptions = {
+	/**
+		Base URL used to resolve relative `specifier` values when `parentURL` is not
+		passed as a separate argument. Default: `'data:'`.
+	**/
+	@:optional var parentURL:EitherType<String, URL>;
+
+	/**
+		Arbitrary cloneable value passed into the initialize hook.
+	**/
+	@:optional var data:Dynamic;
+
+	/**
+		Transferable objects passed into the initialize hook.
+		// TODO(section-5): tighten once worker_threads transferable typing is settled.
+	**/
+	@:optional var transferList:Array<Dynamic>;
+}
+
+/**
+	Options for `Module.registerHooks`.
+**/
+typedef ModuleRegisterHooksOptions = {
+	/**
+		Synchronous load hook. See Node.js module customization hooks.
+	**/
+	@:optional var load:Function;
+
+	/**
+		Synchronous resolve hook. See Node.js module customization hooks.
+	**/
+	@:optional var resolve:Function;
+}
+
+/**
+	Handle returned by `Module.registerHooks`.
+**/
+typedef ModuleHooks = {
+	/**
+		Deregister the hook instance.
+	**/
+	function deregister():Void;
+}
+
+/**
+	Options for `Module.setSourceMapsSupport`.
+**/
+typedef ModuleSetSourceMapsSupportOptions = {
+	/**
+		Enable support for files in `node_modules`. Default: `false`.
+	**/
+	@:optional var nodeModules:Bool;
+
+	/**
+		Enable support for generated code from `eval` / `new Function`. Default: `false`.
+	**/
+	@:optional var generatedCode:Bool;
+}
+
+/**
+	Result of `Module.getSourceMapsSupport`.
+**/
+typedef ModuleSourceMapsSupport = {
+	/**
+		Whether Source Map v3 support is enabled.
+	**/
+	var enabled:Bool;
+
+	/**
+		Whether support is enabled for files in `node_modules`.
+	**/
+	var nodeModules:Bool;
+
+	/**
+		Whether support is enabled for generated code from `eval` / `new Function`.
+	**/
+	var generatedCode:Bool;
 }
