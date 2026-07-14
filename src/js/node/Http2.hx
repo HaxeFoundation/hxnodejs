@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -276,6 +276,13 @@ typedef Http2ClientSessionRequestOptions = {
 	@:optional var endStream:Bool;
 	@:optional var exclusive:Bool;
 	@:optional var parent:Int;
+
+	/**
+		Priority signaling is deprecated (RFC 9113). Ignored with a runtime warning since Node.js v24.2.0.
+	**/
+	@:deprecated("Priority signaling is no longer supported in Node.js")
+	@:optional var weight:Int;
+
 	@:optional var waitForTrailers:Bool;
 	@:optional var signal:AbortSignal;
 }
@@ -325,6 +332,8 @@ typedef Http2ServerStreamFileResponseOptions = {
 
 /**
 	The `node:http2` module provides an implementation of the HTTP/2 protocol.
+
+	@see https://nodejs.org/api/http2.html
 **/
 @:jsRequire("http2")
 extern class Http2 {
@@ -351,9 +360,10 @@ extern class Http2 {
 	static function getPackedSettings(settings:Http2Settings):Buffer;
 
 	/**
-		Returns an HTTP/2 settings object containing the deserialized settings from the given buffer.
+		Returns an HTTP/2 settings object containing the deserialized settings from the given buffer
+		(or `TypedArray` / `DataView`).
 	**/
-	static function getUnpackedSettings(buf:Buffer):Http2Settings;
+	static function getUnpackedSettings(buf:js.lib.ArrayBufferView):Http2Settings;
 
 	/**
 		Returns a `net.Server` instance that creates and manages `Http2Session` instances.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -42,7 +42,7 @@ enum abstract ClientHttp2StreamEvent<T:haxe.Constraints.Function>(Event<T>) to E
 	/**
 		Emitted when the server pushes a stream.
 	**/
-	var Push:ClientHttp2StreamEvent<(headers:Http2Headers, flags:Int) -> Void> = "push";
+	var Push:ClientHttp2StreamEvent<(headers:Http2Headers, flags:Int, rawHeaders:Array<String>) -> Void> = "push";
 
 	/**
 		Emitted when a response `HEADERS` frame has been received.

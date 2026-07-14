@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -61,7 +61,7 @@ enum abstract Http2StreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T
 	/**
 		Emitted when trailing headers are received.
 	**/
-	var Trailers:Http2StreamEvent<(trailers:Http2Headers, flags:Int) -> Void> = "trailers";
+	var Trailers:Http2StreamEvent<(trailers:Http2Headers, flags:Int, rawHeaders:Array<String>) -> Void> = "trailers";
 
 	/**
 		Emitted when the stream is ready for trailing headers to be sent.
@@ -144,9 +144,8 @@ extern class Http2Stream extends Duplex<Http2Stream> {
 	function close(?code:Int, ?callback:Void->Void):Void;
 
 	/**
-		Priority signaling is no longer supported in Node.js.
-
-		// TODO(section-3): remove once callers migrate off deprecated stream.priority
+		Empty method retained for compatibility. Priority signaling is no longer supported
+		(RFC 9113); calling this triggers a runtime warning since Node.js v24.2.0.
 	**/
 	@:deprecated("Priority signaling is no longer supported in Node.js")
 	function priority(options:Any):Void;

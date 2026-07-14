@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,7 @@
 package js.node.http2;
 
 /**
-	Constants exposed by the `http2` module.
+	Constants exposed by the `http2` module (`http2.constants`).
 
 	@see https://nodejs.org/api/http2.html#http2constants
 **/

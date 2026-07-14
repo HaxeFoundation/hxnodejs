@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,8 @@
 
 package js.node.http2;
 
-import haxe.extern.EitherType;
+import js.lib.ArrayBufferView;
+import js.lib.Error;
 import js.node.Buffer;
 import js.node.Http2.Http2Headers;
 import js.node.Http2.Http2SessionState;
@@ -30,7 +31,6 @@ import js.node.Http2.Http2Settings;
 import js.node.events.EventEmitter;
 import js.node.events.EventEmitter.Event;
 import js.node.net.Socket;
-import js.lib.Error;
 
 /**
 	Enumeration of events emitted by `Http2Session` in addition to its parent class events.
@@ -59,7 +59,7 @@ enum abstract Http2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 	/**
 		Emitted when a `GOAWAY` frame is received.
 	**/
-	var Goaway:Http2SessionEvent<(errorCode:Int, lastStreamID:Int, opaqueData:Buffer) -> Void> = "goaway";
+	var Goaway:Http2SessionEvent<(errorCode:Int, lastStreamID:Int, opaqueData:Null<Buffer>) -> Void> = "goaway";
 
 	/**
 		Emitted when an acknowledgment `SETTINGS` frame has been received.
@@ -170,12 +170,13 @@ extern class Http2Session extends EventEmitter<Http2Session> {
 	/**
 		Transmits a `GOAWAY` frame without shutting down the session.
 	**/
-	function goaway(?code:Int, ?lastStreamID:Int, ?opaqueData:Buffer):Void;
+	function goaway(?code:Int, ?lastStreamID:Int, ?opaqueData:ArrayBufferView):Void;
 
 	/**
 		Sends a `PING` frame to the connected HTTP/2 peer.
+		Optional `payload` must be 8 bytes (`Buffer`, `TypedArray`, or `DataView`).
 	**/
-	@:overload(function(payload:Buffer, callback:(err:Null<Error>, duration:Float, payload:Buffer) -> Void):Bool {})
+	@:overload(function(payload:ArrayBufferView, callback:(err:Null<Error>, duration:Float, payload:Buffer) -> Void):Bool {})
 	function ping(callback:(err:Null<Error>, duration:Float, payload:Buffer) -> Void):Bool;
 
 	/**

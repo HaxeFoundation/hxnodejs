@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,11 +22,13 @@
 
 package js.node.http2;
 
+import haxe.extern.EitherType;
+import js.lib.Error;
 import js.node.Http2.Http2Headers;
 import js.node.Http2.Http2PushStreamOptions;
 import js.node.Http2.Http2ServerStreamFileResponseOptions;
 import js.node.Http2.Http2ServerStreamResponseOptions;
-import js.lib.Error;
+import js.node.fs.FileHandle;
 
 /**
 	An `Http2Stream` for use on an HTTP/2 server.
@@ -70,8 +72,8 @@ extern class ServerHttp2Stream extends Http2Stream {
 	function respondWithFile(path:String, ?headers:Http2Headers, ?options:Http2ServerStreamFileResponseOptions):Void;
 
 	/**
-		Sends a regular file as the response using an open file descriptor.
+		Sends a regular file as the response using an open file descriptor or `FileHandle`.
 	**/
-	@:overload(function(fd:Int, ?options:Http2ServerStreamFileResponseOptions):Void {})
-	function respondWithFD(fd:Int, ?headers:Http2Headers, ?options:Http2ServerStreamFileResponseOptions):Void;
+	@:overload(function(fd:EitherType<Int, FileHandle>, ?options:Http2ServerStreamFileResponseOptions):Void {})
+	function respondWithFD(fd:EitherType<Int, FileHandle>, ?headers:Http2Headers, ?options:Http2ServerStreamFileResponseOptions):Void;
 }
