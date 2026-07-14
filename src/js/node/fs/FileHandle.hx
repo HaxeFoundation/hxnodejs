@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -39,13 +39,13 @@ import js.lib.Promise;
 
 	`Symbol.asyncDispose` (await using) is intentionally deferred.
 
-	@see https://nodejs.org/api/fs.html#class-filehandle
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#class-filehandle
 **/
 extern class FileHandle extends EventEmitter<FileHandle> {
 	/**
 		The numeric file descriptor managed by this `FileHandle`.
 	**/
-	var fd(default, null):Int;
+	final fd:Int;
 
 	/**
 		Alias of `writeFile()`.
@@ -118,9 +118,11 @@ extern class FileHandle extends EventEmitter<FileHandle> {
 
 	/**
 		Retrieves `fs.Stats` for the file.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#filehandlestatoptions
 	**/
 	@:overload(function():Promise<Stats> {})
-	function stat(options:{?bigint:Bool}):Promise<Stats>;
+	function stat(options:js.node.Fs.FsStatOptions):Promise<Stats>;
 
 	/**
 		Request that all data for the open file descriptor is flushed to the storage device.
@@ -168,7 +170,7 @@ enum abstract FileHandleEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T>
 	/**
 		Emitted when the `FileHandle` has been closed and can no longer be used.
 	**/
-	var Close:FileHandleEvent<Void->Void> = "close";
+	var Close:FileHandleEvent<() -> Void> = "close";
 }
 
 /**
@@ -180,6 +182,11 @@ typedef FileHandleReadableWebStreamOptions = {
 		Default: `false`.
 	**/
 	@:optional var autoClose:Bool;
+
+	/**
+		AbortSignal to abort an in-progress readable web stream.
+	**/
+	@:optional var signal:js.node.web.AbortSignal;
 }
 
 /**

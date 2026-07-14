@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@ package js.node.fs;
 /**
 	Objects returned from `Fs.watchFile` are of this type.
 
-	@see https://nodejs.org/api/fs.html#class-fsstatwatcher
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#class-fsstatwatcher
 **/
 extern class StatWatcher {
 	/**

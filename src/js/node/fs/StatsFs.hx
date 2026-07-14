@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,9 +23,9 @@
 package js.node.fs;
 
 /**
-	Provides information about a mounted file system.
+	Information about a mounted file system from `Fs.statfs` / `Fs.statfsSync`.
 
-	Objects returned from `Fs.statfs` and `Fs.statfsSync` are of this type.
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#class-fsstatsfs
 **/
 extern class StatsFs {
 	/**

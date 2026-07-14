@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,14 +28,16 @@ import js.lib.Promise;
 /**
 	A class representing a directory stream.
 
-	Created by `Fs.opendir` or `Fs.opendirSync`.
+	Created by `Fs.opendir` / `Fs.opendirSync` / `FsPromises.opendir`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#class-fsdir
 **/
 @:jsRequire("fs", "Dir")
 extern class Dir {
 	/**
 		The read-only path of this directory as was provided to `Fs.opendir` / `Fs.opendirSync`.
 	**/
-	var path(default, null):String;
+	final path:String;
 
 	/**
 		Asynchronously close the directory's underlying resource handle.
@@ -44,7 +46,7 @@ extern class Dir {
 		Without a callback, returns a `Promise` that is fulfilled after the resource has been closed.
 	**/
 	@:overload(function():Promise<Void> {})
-	function close(callback:Error->Void):Void;
+	function close(callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronously close the directory's underlying resource handle.
@@ -59,7 +61,7 @@ extern class Dir {
 		With a callback, it is called with a `Dirent`, or `null` if there are no more directory entries to read.
 	**/
 	@:overload(function():Promise<Null<Dirent>> {})
-	function read(callback:Error->Null<Dirent>->Void):Void;
+	function read(callback:(err:Error, dirent:Null<Dirent>) -> Void):Void;
 
 	/**
 		Synchronously read the next directory entry as a `Dirent`.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -41,17 +41,17 @@ typedef FsPromisesAsyncIterator<T> = {
 /**
 	The `fs/promises` API provides asynchronous file system methods that return promises.
 
-	The API is accessible via `require('fs/promises')` or `require('fs').promises`.
+	Accessible via `require('fs/promises')` or `require('fs').promises`.
 
-	@see https://nodejs.org/api/fs.html#promises-api
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#promises-api
 **/
 @:jsRequire("fs/promises")
 extern class FsPromises {
 	/**
-		An object containing commonly used constants for file system operations.
+		Commonly used constants for file system operations.
 		Same as `Fs.constants`.
 	**/
-	static var constants(default, null):FsConstants;
+	static final constants:FsConstants;
 
 	/**
 		Tests a user's permissions for the file or directory specified by `path`.
@@ -96,7 +96,7 @@ extern class FsPromises {
 	@:overload(function(pattern:EitherType<String, Array<String>>, options:FsGlobOptions):FsPromisesAsyncIterator<String> {})
 	static function glob(pattern:EitherType<String, Array<String>>, options:{
 		?cwd:haxe.extern.EitherType<String, js.node.url.URL>,
-		?exclude:EitherType<String->Bool, Array<String>>,
+		?exclude:EitherType<(path:String) -> Bool, Array<String>>,
 		?followSymlinks:Bool,
 		withFileTypes:Bool
 	}):FsPromisesAsyncIterator<Dirent>;
@@ -126,9 +126,11 @@ extern class FsPromises {
 
 	/**
 		Retrieves the `fs.Stats` for the symbolic link referred to by `path`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fspromiseslstatpath-options
 	**/
 	@:overload(function(path:FsPath):Promise<Stats> {})
-	static function lstat(path:FsPath, options:{?bigint:Bool}):Promise<Stats>;
+	static function lstat(path:FsPath, options:FsStatOptions):Promise<Stats>;
 
 	/**
 		Asynchronously creates a directory.
@@ -151,7 +153,7 @@ extern class FsPromises {
 		When the object is disposed (or `remove` is awaited), the directory and its contents are removed
 		if they still exist.
 
-		@see https://nodejs.org/api/fs.html#fspromisesmkdtempdisposableprefix-options
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fspromisesmkdtempdisposableprefix-options
 	**/
 	@:overload(function(prefix:String):Promise<FsPromisesMkdtempDisposable> {})
 	static function mkdtempDisposable(prefix:String, options:EitherType<String, {?encoding:String}>):Promise<FsPromisesMkdtempDisposable>;
@@ -181,9 +183,9 @@ extern class FsPromises {
 		If no encoding is specified, the data is returned as a `Buffer`.
 	**/
 	@:overload(function(path:EitherType<FsPath, FileHandle>):Promise<Buffer> {})
-	@:overload(function(path:EitherType<FsPath, FileHandle>, options:EitherType<String, {encoding:String, ?flag:FsOpenFlag}>):Promise<String> {})
+	@:overload(function(path:EitherType<FsPath, FileHandle>, options:EitherType<String, {encoding:String, ?flag:FsOpenFlag, ?signal:js.node.web.AbortSignal}>):Promise<String> {})
 	static function readFile(path:EitherType<FsPath, FileHandle>,
-		?options:{?encoding:String, ?flag:FsOpenFlag}):Promise<EitherType<String, Buffer>>;
+		?options:{?encoding:String, ?flag:FsOpenFlag, ?signal:js.node.web.AbortSignal}):Promise<EitherType<String, Buffer>>;
 
 	/**
 		Reads the contents of the symbolic link referred to by `path`.
@@ -216,9 +218,11 @@ extern class FsPromises {
 
 	/**
 		Retrieves the `fs.Stats` for the file referred to by `path`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fspromisesstatpath-options
 	**/
 	@:overload(function(path:FsPath):Promise<Stats> {})
-	static function stat(path:FsPath, options:{?bigint:Bool}):Promise<Stats>;
+	static function stat(path:FsPath, options:FsStatOptions):Promise<Stats>;
 
 	/**
 		Retrieves information about the file system containing the given `path`.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -39,24 +39,28 @@ import js.node.web.Blob;
 import js.node.url.URL;
 
 /**
-	Most FS functions now support passing `String` and `Buffer`.
-	This type is used for path arguments and allows passing either of those.
+	Path argument accepted by most `fs` methods: a string path, `Buffer`, or WHATWG `URL`
+	with the `file:` protocol.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#file-paths
 **/
-typedef FsPath = EitherType<String, Buffer>;
+typedef FsPath = EitherType<String, EitherType<Buffer, URL>>;
 
 /**
-	Possible options for `Fs.watchFile`.
+	Options for `Fs.watchFile`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fswatchfilefilename-options-listener
 **/
 typedef FsWatchFileOptions = {
 	/**
-		indicates whether the process should continue to run as long as files are being watched
-		default: true
+		Whether the process should continue to run as long as files are being watched.
+		Default: `true`.
 	**/
 	@:optional var persistent:Bool;
 
 	/**
-		indicates how often the target should be polled, in milliseconds
-		default: 5007
+		How often the target should be polled, in milliseconds.
+		Default: `5007`.
 	**/
 	@:optional var interval:Int;
 }
@@ -68,23 +72,26 @@ typedef FsWatchFileOptions = {
 typedef FsMode = EitherType<Int, String>;
 
 /**
-	Possible options for `Fs.writeFile` and `Fs.appendFile`.
+	Options for `Fs.writeFile` / `Fs.appendFile` and their promise / `FileHandle` counterparts.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fswritefilefile-data-options-callback
 **/
 typedef FsWriteFileOptions = {
 	/**
 		Encoding for writing strings.
-		Defaults to 'utf8'.
-		Ignored if data is a buffer
+		Default: `'utf8'`.
+		Ignored if data is a buffer.
 	**/
 	@:optional var encoding:String;
 
 	/**
-		default = 438 (aka 0666 in Octal)
+		File mode. Default: `0o666`.
 	**/
 	@:optional var mode:FsMode;
 
 	/**
-		default: 'w' for `Fs.writeFile`, 'a' for `Fs.appendFile`
+		File system flag.
+		Default: `'w'` for `writeFile`, `'a'` for `appendFile`.
 	**/
 	@:optional var flag:FsOpenFlag;
 
@@ -93,85 +100,120 @@ typedef FsWriteFileOptions = {
 		Default: `false`.
 	**/
 	@:optional var flush:Bool;
+
+	/**
+		AbortSignal to abort an in-progress write.
+	**/
+	@:optional var signal:js.node.web.AbortSignal;
 }
 
 /**
-	Defaults:
-	{ flags: 'r',
-	  encoding: null,
-	  fd: null,
-	  mode: 0666,
-	  autoClose: true
-	}
-**/
-/**
-	Options for `Fs.createReadStream`.
+	Options for `Fs.createReadStream` / `FileHandle.createReadStream`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fscreatereadstreampath-options
 **/
 typedef FsCreateReadStreamOptions = {
 	/**
-		default: 'r'
+		Default: `'r'`.
 	**/
 	@:optional var flags:FsOpenFlag;
 
 	/**
-		can be 'utf8', 'ascii', or 'base64'.
-		default: null
+		Character encoding. Default: `null`.
 	**/
 	@:optional var encoding:String;
 
 	/**
-		default: null
+		If specified, ignores `path` and uses the given file descriptor instead.
 	**/
 	@:optional var fd:Int;
 
 	/**
-		default: 0666
+		Default: `0o666`.
 	**/
 	@:optional var mode:FsMode;
 
 	/**
-		If autoClose is false, then the file descriptor won't be closed, even if there's an error.
-		It is your responsiblity to close it and make sure there's no file descriptor leak.
-
-		If autoClose is set to true (default behavior), on error or end the file
-		descriptor will be closed automatically.
+		If `false`, the file descriptor is not closed on error or end.
+		Default: `true`.
 	**/
 	@:optional var autoClose:Bool;
 
 	/**
-		Start of the range of bytes to read
+		If `false`, the stream will not emit `'close'` after it has been destroyed.
+		Default: `true`.
+	**/
+	@:optional var emitClose:Bool;
+
+	/**
+		Start of the inclusive byte range to read.
 	**/
 	@:optional var start:Int;
 
 	/**
-		End of the range of bytes to read
+		End of the inclusive byte range to read.
 	**/
 	@:optional var end:Int;
-};
+
+	/**
+		Default: `64 * 1024`.
+	**/
+	@:optional var highWaterMark:Int;
+
+	/**
+		AbortSignal to abort an in-progress read stream.
+	**/
+	@:optional var signal:js.node.web.AbortSignal;
+}
 
 /**
-	Options for `Fs.createWriteStream`.
+	Options for `Fs.createWriteStream` / `FileHandle.createWriteStream`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fscreatewritestreampath-options
 **/
 typedef FsCreateWriteStreamOptions = {
 	/**
-		default: 'w'
+		Default: `'w'`.
 	**/
 	@:optional var flags:FsOpenFlag;
 
 	/**
-		default: null
+		Default: `'utf8'`.
 	**/
 	@:optional var encoding:String;
 
 	/**
-		default: 0666
+		If specified, ignores `path` and uses the given file descriptor instead.
+	**/
+	@:optional var fd:Int;
+
+	/**
+		Default: `0o666`.
 	**/
 	@:optional var mode:FsMode;
 
 	/**
-		position to write data the beginning of the file.
+		If `false`, the file descriptor is not closed on error or finish.
+		Default: `true`.
+	**/
+	@:optional var autoClose:Bool;
+
+	/**
+		If `false`, the stream will not emit `'close'` after it has been destroyed.
+		Default: `true`.
+	**/
+	@:optional var emitClose:Bool;
+
+	/**
+		Start position for writing data past the beginning of the file.
 	**/
 	@:optional var start:Int;
+
+	/**
+		When `true`, flushes the underlying file descriptor synchronously after each write.
+		Default: `false`.
+	**/
+	@:optional var flush:Bool;
 }
 
 /**
@@ -181,6 +223,66 @@ enum abstract SymlinkType(String) from String to String {
 	var Dir = "dir";
 	var File = "file";
 	var Junction = "junction";
+}
+
+/**
+	Options for `Fs.stat` / `Fs.lstat` / `Fs.fstat` and their sync / promise counterparts.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fsstatpath-options-callback
+**/
+typedef FsStatOptions = {
+	/**
+		Whether the numeric values in the returned `Stats` object should be `bigint`.
+		Default: `false`.
+	**/
+	@:optional var bigint:Bool;
+
+	/**
+		Whether an exception is thrown if no file system entry exists (sync API).
+		Default: `true`.
+	**/
+	@:optional var throwIfNoEntry:Bool;
+
+	/**
+		AbortSignal to cancel the operation (async / promises / `FileHandle.stat`; Node.js 24+).
+	**/
+	@:optional var signal:js.node.web.AbortSignal;
+}
+
+/**
+	Options for `Fs.watch`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fswatchfilename-options-listener
+**/
+typedef FsWatchOptions = {
+	/**
+		Whether the process should continue to run as long as files are being watched.
+		Default: `true`.
+	**/
+	@:optional var persistent:Bool;
+
+	/**
+		Watch subdirectories recursively (platform-dependent).
+		Default: `false`.
+	**/
+	@:optional var recursive:Bool;
+
+	/**
+		Character encoding for the filename passed to the listener.
+		Default: `'utf8'`.
+	**/
+	@:optional var encoding:String;
+
+	/**
+		AbortSignal that closes the returned `FSWatcher` when aborted.
+	**/
+	@:optional var signal:js.node.web.AbortSignal;
+
+	/**
+		Whether an exception should be thrown when the path does not exist.
+		Default: `true`.
+	**/
+	@:optional var throwIfNoEntry:Bool;
 }
 
 /**
@@ -575,7 +677,7 @@ typedef FsCpOptions = {
 		Return `true` to copy the item, `false` to ignore it.
 		When ignoring a directory, all of its contents will be skipped as well.
 	**/
-	@:optional var filter:String->String->Bool;
+	@:optional var filter:(src:String, dest:String) -> Bool;
 
 	/**
 		Overwrite existing file or directory.
@@ -649,7 +751,7 @@ typedef FsGlobOptions = {
 		Function to filter out files/directories, or a list of glob patterns to be excluded.
 		If a function is provided, return `true` to exclude the item, `false` to include it.
 	**/
-	@:optional var exclude:EitherType<String->Bool, Array<String>>;
+	@:optional var exclude:EitherType<(path:String) -> Bool, Array<String>>;
 
 	/**
 		When `true`, symbolic links to directories are followed while expanding `**` patterns.
@@ -699,24 +801,18 @@ typedef FsOpenAsBlobOptions = {
 typedef FsVectorBuffer = Buffer;
 
 /**
-	File I/O is provided by simple wrappers around standard POSIX functions.
-	All the methods have asynchronous and synchronous forms.
+	File I/O wrappers around POSIX functions (`node:fs`).
+	Most methods have asynchronous (callback), synchronous, and promise-based forms
+	(see `FsPromises` / `Fs.promises`).
 
-	The asynchronous form always take a completion callback as its last argument.
-	The arguments passed to the completion callback depend on the method,
-	but the first argument is always reserved for an exception.
-
-	If the operation was completed successfully, then the first argument will be null.
-
-	When using the synchronous form any exceptions are immediately thrown.
-	You can use try/catch to handle exceptions or allow them to bubble up.
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html
 **/
 @:jsRequire("fs")
 extern class Fs {
 	/**
-		An object containing commonly used constants for file system operations.
+		Commonly used constants for file system operations.
 	**/
-	static var constants(default, null):FsConstants;
+	static final constants:FsConstants;
 
 	/**
 		Promise-based file system methods (`require('fs').promises`).
@@ -724,13 +820,13 @@ extern class Fs {
 
 		Prefer calling static methods on `FsPromises` for Haxe typing of overloads.
 	**/
-	// TODO(section-2): value type mirroring FsPromises static surface (static-method extern cannot be reused as value type)
-	static var promises(default, null):Dynamic;
+	// TODO: value type mirroring FsPromises static surface (static-method extern cannot be reused as value type)
+	static final promises:Dynamic;
 
 	/**
 		Asynchronous rename(2).
 	**/
-	static function rename(oldPath:FsPath, newPath:FsPath, callback:Error->Void):Void;
+	static function rename(oldPath:FsPath, newPath:FsPath, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous rename(2).
@@ -747,8 +843,8 @@ extern class Fs {
 		It is possible to create a mask consisting of the bitwise OR of two or more values
 		(e.g. `Fs.constants.COPYFILE_EXCL | Fs.constants.COPYFILE_FICLONE`).
 	**/
-	@:overload(function(src:FsPath, dest:FsPath, callback:Error->Void):Void {})
-	static function copyFile(src:FsPath, dest:FsPath, mode:Int, callback:Error->Void):Void;
+	@:overload(function(src:FsPath, dest:FsPath, callback:(err:Error) -> Void):Void {})
+	static function copyFile(src:FsPath, dest:FsPath, mode:Int, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronously copies `src` to `dest`.
@@ -767,8 +863,8 @@ extern class Fs {
 		When copying a directory to another directory, globs are not supported and
 		behavior is similar to `cp dir1/ dir2/`.
 	**/
-	@:overload(function(src:FsPath, dest:FsPath, callback:Error->Void):Void {})
-	static function cp(src:FsPath, dest:FsPath, options:FsCpOptions, callback:Error->Void):Void;
+	@:overload(function(src:FsPath, dest:FsPath, callback:(err:Error) -> Void):Void {})
+	static function cp(src:FsPath, dest:FsPath, options:FsCpOptions, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronously copies the entire directory structure from `src` to `dest`,
@@ -779,7 +875,7 @@ extern class Fs {
 	/**
 		Asynchronous ftruncate(2).
 	**/
-	static function ftruncate(fd:Int, len:Int, callback:Error->Void):Void;
+	static function ftruncate(fd:Int, len:Int, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous ftruncate(2).
@@ -789,7 +885,7 @@ extern class Fs {
 	/**
 		Asynchronous truncate(2).
 	**/
-	static function truncate(path:FsPath, len:Int, callback:Error->Void):Void;
+	static function truncate(path:FsPath, len:Int, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous truncate(2).
@@ -799,7 +895,7 @@ extern class Fs {
 	/**
 		Asynchronous chown(2).
 	**/
-	static function chown(path:FsPath, uid:Int, gid:Int, callback:Error->Void):Void;
+	static function chown(path:FsPath, uid:Int, gid:Int, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous chown(2).
@@ -809,7 +905,7 @@ extern class Fs {
 	/**
 		Asynchronous fchown(2).
 	**/
-	static function fchown(fd:Int, uid:Int, gid:Int, callback:Error->Void):Void;
+	static function fchown(fd:Int, uid:Int, gid:Int, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous fchown(2).
@@ -819,7 +915,7 @@ extern class Fs {
 	/**
 		Asynchronous lchown(2).
 	**/
-	static function lchown(path:FsPath, uid:Int, gid:Int, callback:Error->Void):Void;
+	static function lchown(path:FsPath, uid:Int, gid:Int, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous lchown(2).
@@ -829,7 +925,7 @@ extern class Fs {
 	/**
 		Asynchronous chmod(2).
 	**/
-	static function chmod(path:FsPath, mode:FsMode, callback:Error->Void):Void;
+	static function chmod(path:FsPath, mode:FsMode, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous chmod(2).
@@ -839,7 +935,7 @@ extern class Fs {
 	/**
 		Asynchronous fchmod(2).
 	**/
-	static function fchmod(fd:Int, mode:FsMode, callback:Error->Void):Void;
+	static function fchmod(fd:Int, mode:FsMode, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous fchmod(2).
@@ -850,7 +946,7 @@ extern class Fs {
 		Asynchronous lchmod(2).
 		Only available on Mac OS X.
 	**/
-	static function lchmod(path:FsPath, mode:FsMode, callback:Error->Void):Void;
+	static function lchmod(path:FsPath, mode:FsMode, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous lchmod(2).
@@ -859,58 +955,65 @@ extern class Fs {
 
 	/**
 		Asynchronous stat(2).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fsstatpath-options-callback
 	**/
-	static function stat(path:FsPath, callback:Error->Stats->Void):Void;
+	@:overload(function(path:FsPath, options:FsStatOptions, callback:(err:Error, stats:Stats) -> Void):Void {})
+	static function stat(path:FsPath, callback:(err:Error, stats:Stats) -> Void):Void;
 
 	/**
-		Asynchronous lstat(2).
+		Asynchronous lstat(2) — like `stat`, but does not follow symbolic links.
 
-		lstat() is identical to stat(), except that if path is a symbolic link,
-		then the link itself is stat-ed, not the file that it refers to.
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fslstatpath-options-callback
 	**/
-	static function lstat(path:FsPath, callback:Error->Stats->Void):Void;
+	@:overload(function(path:FsPath, options:FsStatOptions, callback:(err:Error, stats:Stats) -> Void):Void {})
+	static function lstat(path:FsPath, callback:(err:Error, stats:Stats) -> Void):Void;
 
 	/**
-		Asynchronous fstat(2).
+		Asynchronous fstat(2) — like `stat`, for an open file descriptor.
 
-		fstat() is identical to stat(), except that the file to be stat-ed
-		is specified by the file descriptor fd.
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fsfstatfd-options-callback
 	**/
-	static function fstat(fd:Int, callback:Error->Stats->Void):Void;
+	@:overload(function(fd:Int, options:FsStatOptions, callback:(err:Error, stats:Stats) -> Void):Void {})
+	static function fstat(fd:Int, callback:(err:Error, stats:Stats) -> Void):Void;
 
 	/**
 		Synchronous stat(2).
 	**/
+	@:overload(function(path:FsPath, options:FsStatOptions):Null<Stats> {})
 	static function statSync(path:FsPath):Stats;
 
 	/**
 		Synchronous lstat(2).
 	**/
+	@:overload(function(path:FsPath, options:FsStatOptions):Null<Stats> {})
 	static function lstatSync(path:FsPath):Stats;
 
 	/**
 		Synchronous fstat(2).
 	**/
+	@:overload(function(fd:Int, options:FsStatOptions):Stats {})
 	static function fstatSync(fd:Int):Stats;
 
 	/**
 		Asynchronous statfs(2).
 		Returns information about the mounted file system which contains `path`.
 
-		The callback gets two arguments `(err, stats)` where `stats` is a `StatsFs` object.
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fsstatfspath-options-callback
 	**/
-	static function statfs(path:FsPath, callback:Error->StatsFs->Void):Void;
+	@:overload(function(path:FsPath, options:{?bigint:Bool}, callback:(err:Error, stats:StatsFs) -> Void):Void {})
+	static function statfs(path:FsPath, callback:(err:Error, stats:StatsFs) -> Void):Void;
 
 	/**
 		Synchronous statfs(2).
-		Returns information about the mounted file system which contains `path`.
 	**/
+	@:overload(function(path:FsPath, options:{?bigint:Bool}):StatsFs {})
 	static function statfsSync(path:FsPath):StatsFs;
 
 	/**
 		Asynchronous link(2).
 	**/
-	static function link(srcpath:FsPath, dstpath:FsPath, callback:Error->Void):Void;
+	static function link(srcpath:FsPath, dstpath:FsPath, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous link(2).
@@ -925,8 +1028,8 @@ extern class Fs {
 		points require the destination path to be absolute. When using 'junction', the destination
 		argument will automatically be normalized to absolute path.
 	**/
-	@:overload(function(srcpath:FsPath, dstpath:FsPath, callback:Error->Void):Void {})
-	static function symlink(srcpath:FsPath, dstpath:FsPath, type:SymlinkType, callback:Error->Void):Void;
+	@:overload(function(srcpath:FsPath, dstpath:FsPath, callback:(err:Error) -> Void):Void {})
+	static function symlink(srcpath:FsPath, dstpath:FsPath, type:SymlinkType, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous symlink(2).
@@ -937,7 +1040,7 @@ extern class Fs {
 	/**
 		Asynchronous readlink(2).
 	**/
-	static function readlink(path:FsPath, callback:Error->String->Void):Void;
+	static function readlink(path:FsPath, callback:(err:Error, result:String) -> Void):Void;
 
 	/**
 		Synchronous readlink(2).
@@ -955,9 +1058,9 @@ extern class Fs {
 		`cache` is an object literal of mapped paths that can be used to force a specific path resolution
 		or avoid additional `stat` calls for known real paths.
 	**/
-	// TODO(section-2): model `realpath.native` / `realpathSync.native` function properties
-	@:overload(function(path:FsPath, callback:Error->String->Void):Void {})
-	static function realpath(path:FsPath, cache:DynamicAccess<String>, callback:Error->String->Void):Void;
+	// TODO: model `realpath.native` / `realpathSync.native` function properties
+	@:overload(function(path:FsPath, callback:(err:Error, result:String) -> Void):Void {})
+	static function realpath(path:FsPath, cache:DynamicAccess<String>, callback:(err:Error, result:String) -> Void):Void;
 
 	/**
 		Synchronous realpath(2).
@@ -969,7 +1072,7 @@ extern class Fs {
 	/**
 		Asynchronous unlink(2).
 	**/
-	static function unlink(path:FsPath, callback:Error->Void):Void;
+	static function unlink(path:FsPath, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous unlink(2).
@@ -984,8 +1087,8 @@ extern class Fs {
 		To get a behavior similar to the `rm -rf` Unix command, use `Fs.rm` with options
 		`{ recursive: true, force: true }`.
 	**/
-	@:overload(function(path:FsPath, callback:Error->Void):Void {})
-	static function rm(path:FsPath, options:FsRmOptions, callback:Error->Void):Void;
+	@:overload(function(path:FsPath, callback:(err:Error) -> Void):Void {})
+	static function rm(path:FsPath, options:FsRmOptions, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronously removes files and directories (modeled on the standard POSIX `rm` utility).
@@ -995,8 +1098,8 @@ extern class Fs {
 	/**
 		Asynchronous rmdir(2).
 	**/
-	@:overload(function(path:FsPath, callback:Error->Void):Void {})
-	static function rmdir(path:FsPath, options:FsRmdirOptions, callback:Error->Void):Void;
+	@:overload(function(path:FsPath, callback:(err:Error) -> Void):Void {})
+	static function rmdir(path:FsPath, options:FsRmdirOptions, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous rmdir(2).
@@ -1005,15 +1108,22 @@ extern class Fs {
 
 	/**
 		Asynchronous mkdir(2).
-		`mode` defaults to 0777.
+
+		When `options.recursive` is `true`, the callback may receive the first directory path created.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fsmkdirpath-options-callback
 	**/
-	@:overload(function(path:FsPath, callback:Error->Void):Void {})
-	static function mkdir(path:FsPath, mode:FsMode, callback:Error->Void):Void;
+	@:overload(function(path:FsPath, callback:(err:Error, ?path:String) -> Void):Void {})
+	@:overload(function(path:FsPath, mode:FsMode, callback:(err:Error, ?path:String) -> Void):Void {})
+	static function mkdir(path:FsPath, options:{?recursive:Bool, ?mode:FsMode}, callback:(err:Error, ?path:String) -> Void):Void;
 
 	/**
 		Synchronous mkdir(2).
+
+		When `options.recursive` is `true`, returns the first directory path created, if any.
 	**/
-	static function mkdirSync(path:FsPath, ?mode:FsMode):Void;
+	@:overload(function(path:FsPath, ?mode:FsMode):Null<String> {})
+	static function mkdirSync(path:FsPath, ?options:{?recursive:Bool, ?mode:FsMode}):Null<String>;
 
 	/**
 		Creates a unique temporary directory.
@@ -1022,8 +1132,8 @@ extern class Fs {
 
 		The created folder path is passed as a string to the `callback`'s second parameter.
 	**/
-	@:overload(function(prefix:String, options:EitherType<String, {?encoding:String}>, callback:Error->String->Void):Void {})
-	static function mkdtemp(prefix:String, callback:Error->String->Void):Void;
+	@:overload(function(prefix:String, options:EitherType<String, {?encoding:String}>, callback:(err:Error, result:String) -> Void):Void {})
+	static function mkdtemp(prefix:String, callback:(err:Error, result:String) -> Void):Void;
 
 	/**
 		The synchronous version of `mkdtemp`.
@@ -1051,7 +1161,7 @@ extern class Fs {
 		The callback gets two arguments (err, files) where files is an array of the
 		names of the files in the directory excluding '.' and '..'.
 	**/
-	static function readdir(path:FsPath, callback:Error->Array<String>->Void):Void;
+	static function readdir(path:FsPath, callback:(err:Error, files:Array<String>) -> Void):Void;
 
 	/**
 		Synchronous readdir(3).
@@ -1068,8 +1178,8 @@ extern class Fs {
 
 		The `callback` gets two arguments `(err, dir)`.
 	**/
-	@:overload(function(path:FsPath, callback:Error->Dir->Void):Void {})
-	static function opendir(path:FsPath, options:FsOpendirOptions, callback:Error->Dir->Void):Void;
+	@:overload(function(path:FsPath, callback:(err:Error, dir:Dir) -> Void):Void {})
+	static function opendir(path:FsPath, options:FsOpendirOptions, callback:(err:Error, dir:Dir) -> Void):Void;
 
 	/**
 		Synchronously open a directory.
@@ -1084,14 +1194,14 @@ extern class Fs {
 		When `options.withFileTypes` is `true`, `matches` is an array of `Dirent` objects;
 		otherwise it is an array of path strings.
 	**/
-	@:overload(function(pattern:EitherType<String, Array<String>>, callback:Error->Array<String>->Void):Void {})
-	@:overload(function(pattern:EitherType<String, Array<String>>, options:FsGlobOptions, callback:Error->Array<String>->Void):Void {})
+	@:overload(function(pattern:EitherType<String, Array<String>>, callback:(err:Error, files:Array<String>) -> Void):Void {})
+	@:overload(function(pattern:EitherType<String, Array<String>>, options:FsGlobOptions, callback:(err:Error, files:Array<String>) -> Void):Void {})
 	static function glob(pattern:EitherType<String, Array<String>>, options:{
 		?cwd:EitherType<String, URL>,
-		?exclude:EitherType<String->Bool, Array<String>>,
+		?exclude:EitherType<(path:String) -> Bool, Array<String>>,
 		?followSymlinks:Bool,
 		withFileTypes:Bool
-	}, callback:Error->Array<Dirent>->Void):Void;
+	}, callback:(err:Error, files:Array<Dirent>) -> Void):Void;
 
 	/**
 		Synchronously retrieves the files matching the specified pattern.
@@ -1103,7 +1213,7 @@ extern class Fs {
 	@:overload(function(pattern:EitherType<String, Array<String>>, options:FsGlobOptions):Array<String> {})
 	static function globSync(pattern:EitherType<String, Array<String>>, options:{
 		?cwd:EitherType<String, URL>,
-		?exclude:EitherType<String->Bool, Array<String>>,
+		?exclude:EitherType<(path:String) -> Bool, Array<String>>,
 		?followSymlinks:Bool,
 		withFileTypes:Bool
 	}):Array<Dirent>;
@@ -1111,7 +1221,7 @@ extern class Fs {
 	/**
 		Asynchronous close(2).
 	**/
-	static function close(fd:Int, callback:Error->Void):Void;
+	static function close(fd:Int, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous close(2).
@@ -1128,8 +1238,8 @@ extern class Fs {
 
 		The `callback` gets two arguments (err, fd).
 	**/
-	@:overload(function(path:FsPath, flags:FsOpenFlag, callback:Error->Int->Void):Void {})
-	static function open(path:FsPath, flags:FsOpenFlag, mode:FsMode, callback:Error->Int->Void):Void;
+	@:overload(function(path:FsPath, flags:FsOpenFlag, callback:(err:Error, result:Int) -> Void):Void {})
+	static function open(path:FsPath, flags:FsOpenFlag, mode:FsMode, callback:(err:Error, result:Int) -> Void):Void;
 
 	/**
 		Synchronous version of open().
@@ -1151,7 +1261,7 @@ extern class Fs {
 	/**
 		Change file timestamps of the file referenced by the supplied path.
 	**/
-	static function utimes(path:FsPath, atime:Date, mtime:Date, callback:Error->Void):Void;
+	static function utimes(path:FsPath, atime:Date, mtime:Date, callback:(err:Error) -> Void):Void;
 
 	/**
 		Change file timestamps of the file referenced by the supplied path.
@@ -1161,7 +1271,7 @@ extern class Fs {
 	/**
 		Change the file timestamps of a file referenced by the supplied file descriptor.
 	**/
-	static function futimes(fd:Int, atime:Date, mtime:Date, callback:Error->Void):Void;
+	static function futimes(fd:Int, atime:Date, mtime:Date, callback:(err:Error) -> Void):Void;
 
 	/**
 		Change the file timestamps of a file referenced by the supplied file descriptor.
@@ -1174,7 +1284,7 @@ extern class Fs {
 		Same as `utimes`, except that if the path refers to a symbolic link,
 		then the link is not dereferenced: instead, the timestamps of the symbolic link itself are changed.
 	**/
-	static function lutimes(path:FsPath, atime:Date, mtime:Date, callback:Error->Void):Void;
+	static function lutimes(path:FsPath, atime:Date, mtime:Date, callback:(err:Error) -> Void):Void;
 
 	/**
 		Change the file system timestamps of the symbolic link referenced by `path`.
@@ -1185,7 +1295,7 @@ extern class Fs {
 	/**
 		Asynchronous fsync(2).
 	**/
-	static function fsync(fd:Int, callback:Error->Void):Void;
+	static function fsync(fd:Int, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous fsync(2).
@@ -1201,7 +1311,7 @@ extern class Fs {
 
 		No arguments other than a possible exception are given to the completion callback.
 	**/
-	static function fdatasync(fd:Int, callback:Error->Void):Void;
+	static function fdatasync(fd:Int, callback:(err:Error) -> Void):Void;
 
 	/**
 		Synchronous fdatasync(2).
@@ -1250,11 +1360,11 @@ extern class Fs {
 		On Linux, positional writes don't work when the file is opened in append mode. The kernel ignores the position
 		argument and always appends the data to the end of the file.
 	**/
-	@:overload(function(fd:Int, data:String, position:Int, encoding:String, callback:Error->Int->String->Void):Void {})
-	@:overload(function(fd:Int, data:String, position:Int, callback:Error->Int->String->Void):Void {})
-	@:overload(function(fd:Int, data:String, callback:Error->Int->String->Void):Void {})
-	@:overload(function(fd:Int, buffer:Buffer, offset:Int, length:Int, callback:Error->Int->Buffer->Void):Void {})
-	static function write(fd:Int, buffer:Buffer, offset:Int, length:Int, position:Int, callback:Error->Int->Buffer->Void):Void;
+	@:overload(function(fd:Int, data:String, position:Int, encoding:String, callback:(err:Error, written:Int, str:String) -> Void):Void {})
+	@:overload(function(fd:Int, data:String, position:Int, callback:(err:Error, written:Int, str:String) -> Void):Void {})
+	@:overload(function(fd:Int, data:String, callback:(err:Error, written:Int, str:String) -> Void):Void {})
+	@:overload(function(fd:Int, buffer:Buffer, offset:Int, length:Int, callback:(err:Error, bytesWritten:Int, buffer:Buffer) -> Void):Void {})
+	static function write(fd:Int, buffer:Buffer, offset:Int, length:Int, position:Int, callback:(err:Error, bytesWritten:Int, buffer:Buffer) -> Void):Void;
 
 	/**
 		Synchronous version of `write`. Returns the number of bytes written.
@@ -1272,8 +1382,8 @@ extern class Fs {
 		The callback will be given three arguments: `(err, bytesWritten, buffers)`.
 		`bytesWritten` is how many bytes were written from `buffers`.
 	**/
-	@:overload(function(fd:Int, buffers:Array<FsVectorBuffer>, callback:Error->Int->Array<FsVectorBuffer>->Void):Void {})
-	static function writev(fd:Int, buffers:Array<FsVectorBuffer>, position:Int, callback:Error->Int->Array<FsVectorBuffer>->Void):Void;
+	@:overload(function(fd:Int, buffers:Array<FsVectorBuffer>, callback:(err:Error, bytesWritten:Int, buffers:Array<FsVectorBuffer>) -> Void):Void {})
+	static function writev(fd:Int, buffers:Array<FsVectorBuffer>, position:Int, callback:(err:Error, bytesWritten:Int, buffers:Array<FsVectorBuffer>) -> Void):Void;
 
 	/**
 		Synchronous version of `writev`. Returns the number of bytes written.
@@ -1294,7 +1404,7 @@ extern class Fs {
 
 		The `callback` is given the three arguments, (err, bytesRead, buffer).
 	**/
-	static function read(fd:Int, buffer:Buffer, offset:Int, length:Int, position:Null<Int>, callback:Error->Int->Buffer->Void):Void;
+	static function read(fd:Int, buffer:Buffer, offset:Int, length:Int, position:Null<Int>, callback:(err:Error, bytesWritten:Int, buffer:Buffer) -> Void):Void;
 
 	/**
 		Synchronous version of `read`. Returns the number of bytes read.
@@ -1310,8 +1420,8 @@ extern class Fs {
 		The callback will be given three arguments: `(err, bytesRead, buffers)`.
 		`bytesRead` is how many bytes were read from the file.
 	**/
-	@:overload(function(fd:Int, buffers:Array<FsVectorBuffer>, callback:Error->Int->Array<FsVectorBuffer>->Void):Void {})
-	static function readv(fd:Int, buffers:Array<FsVectorBuffer>, position:Int, callback:Error->Int->Array<FsVectorBuffer>->Void):Void;
+	@:overload(function(fd:Int, buffers:Array<FsVectorBuffer>, callback:(err:Error, bytesWritten:Int, buffers:Array<FsVectorBuffer>) -> Void):Void {})
+	static function readv(fd:Int, buffers:Array<FsVectorBuffer>, position:Int, callback:(err:Error, bytesWritten:Int, buffers:Array<FsVectorBuffer>) -> Void):Void;
 
 	/**
 		Synchronous version of `readv`. Returns the number of bytes read.
@@ -1326,10 +1436,10 @@ extern class Fs {
 
 		If `options` is a string, then it specifies the encoding.
 	**/
-	@:overload(function(filename:FsPath, callback:Error->Buffer->Void):Void {})
-	@:overload(function(filename:FsPath, options:{flag:FsOpenFlag}, callback:Error->Buffer->Void):Void {})
-	@:overload(function(filename:FsPath, options:String, callback:Error->String->Void):Void {})
-	static function readFile(filename:FsPath, options:{encoding:String, ?flag:FsOpenFlag}, callback:Error->String->Void):Void;
+	@:overload(function(filename:FsPath, callback:(err:Error, data:Buffer) -> Void):Void {})
+	@:overload(function(filename:FsPath, options:{flag:FsOpenFlag}, callback:(err:Error, data:Buffer) -> Void):Void {})
+	@:overload(function(filename:FsPath, options:String, callback:(err:Error, result:String) -> Void):Void {})
+	static function readFile(filename:FsPath, options:{encoding:String, ?flag:FsOpenFlag}, callback:(err:Error, result:String) -> Void):Void;
 
 	/**
 		Synchronous version of `readFile`. Returns the contents of the filename.
@@ -1347,10 +1457,10 @@ extern class Fs {
 
 		The encoding option is ignored if data is a buffer. It defaults to 'utf8'.
 	**/
-	@:overload(function(filename:FsPath, data:Buffer, callback:Error->Void):Void {})
-	@:overload(function(filename:FsPath, data:String, callback:Error->Void):Void {})
-	@:overload(function(filename:FsPath, data:Buffer, options:EitherType<String, FsWriteFileOptions>, callback:Error->Void):Void {})
-	static function writeFile(filename:FsPath, data:String, options:EitherType<String, FsWriteFileOptions>, callback:Error->Void):Void;
+	@:overload(function(filename:FsPath, data:Buffer, callback:(err:Error) -> Void):Void {})
+	@:overload(function(filename:FsPath, data:String, callback:(err:Error) -> Void):Void {})
+	@:overload(function(filename:FsPath, data:Buffer, options:EitherType<String, FsWriteFileOptions>, callback:(err:Error) -> Void):Void {})
+	static function writeFile(filename:FsPath, data:String, options:EitherType<String, FsWriteFileOptions>, callback:(err:Error) -> Void):Void;
 
 	/**
 		The synchronous version of `writeFile`.
@@ -1364,10 +1474,10 @@ extern class Fs {
 		Asynchronously append data to a file, creating the file if it not yet exists.
 		`data` can be a string or a buffer.
 	**/
-	@:overload(function(filename:FsPath, data:Buffer, callback:Error->Void):Void {})
-	@:overload(function(filename:FsPath, data:String, callback:Error->Void):Void {})
-	@:overload(function(filename:FsPath, data:Buffer, options:EitherType<String, FsWriteFileOptions>, callback:Error->Void):Void {})
-	static function appendFile(filename:FsPath, data:String, options:EitherType<String, FsWriteFileOptions>, callback:Error->Void):Void;
+	@:overload(function(filename:FsPath, data:Buffer, callback:(err:Error) -> Void):Void {})
+	@:overload(function(filename:FsPath, data:String, callback:(err:Error) -> Void):Void {})
+	@:overload(function(filename:FsPath, data:Buffer, options:EitherType<String, FsWriteFileOptions>, callback:(err:Error) -> Void):Void {})
+	static function appendFile(filename:FsPath, data:String, options:EitherType<String, FsWriteFileOptions>, callback:(err:Error) -> Void):Void;
 
 	/**
 		The synchronous version of `appendFile`.
@@ -1390,8 +1500,8 @@ extern class Fs {
 
 		The `listener` gets two arguments: the current stat object and the previous stat object.
 	**/
-	@:overload(function(filename:FsPath, listener:Stats->Stats->Void):StatWatcher {})
-	static function watchFile(filename:FsPath, options:FsWatchFileOptions, listener:Stats->Stats->Void):StatWatcher;
+	@:overload(function(filename:FsPath, listener:(curr:Stats, prev:Stats) -> Void):StatWatcher {})
+	static function watchFile(filename:FsPath, options:FsWatchFileOptions, listener:(curr:Stats, prev:Stats) -> Void):StatWatcher;
 
 	/**
 		Unstable. Use `watch` instead, if possible.
@@ -1401,19 +1511,17 @@ extern class Fs {
 		Otherwise, all listeners are removed and you have effectively stopped watching filename.
 		Calling `unwatchFile` with a `filename` that is not being watched is a no-op, not an error.
 	**/
-	static function unwatchFile(filename:FsPath, ?listener:Stats->Stats->Void):Void;
+	static function unwatchFile(filename:FsPath, ?listener:(curr:Stats, prev:Stats) -> Void):Void;
 
 	/**
-		Watch for changes on `filename`, where filename is either a file or a directory.
+		Watch for changes on `filename` (file or directory).
 
-		`persistent` indicates whether the process should continue to run as long as files are being watched. Default is `true`.
-
-		The `listener` callback gets two arguments (event, filename). event is either 'rename' or 'change', and filename
-		is the name of the file which triggered the event.
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fswatchfilename-options-listener
 	**/
 	@:overload(function(filename:FsPath):FSWatcher {})
-	@:overload(function(filename:FsPath, options:{persistent:Bool, ?recursive:Bool}, listener:FSWatcherChangeType->String->Void):FSWatcher {})
-	static function watch(filename:FsPath, listener:FSWatcherChangeType->FsPath->Void):FSWatcher;
+	@:overload(function(filename:FsPath, options:EitherType<String, FsWatchOptions>):FSWatcher {})
+	@:overload(function(filename:FsPath, options:EitherType<String, FsWatchOptions>, listener:(eventType:FSWatcherChangeType, filename:Null<EitherType<String, Buffer>>) -> Void):FSWatcher {})
+	static function watch(filename:FsPath, listener:(eventType:FSWatcherChangeType, filename:Null<EitherType<String, Buffer>>) -> Void):FSWatcher;
 
 	/**
 		Test whether or not the given `path` exists by checking with the file system.
@@ -1428,7 +1536,7 @@ extern class Fs {
 		Just open the file and handle the error when it's not there.
 	**/
 	@:deprecated("Use Fs.stat or Fs.access instead")
-	static function exists(path:FsPath, callback:Bool->Void):Void;
+	static function exists(path:FsPath, callback:(exists:Bool) -> Void):Void;
 
 	/**
 		Synchronous version of `exists`.
@@ -1452,8 +1560,8 @@ extern class Fs {
 		The final argument, `callback`, is a callback function that is invoked with a possible error argument.
 		If any of the accessibility checks fail, the error argument will be populated.
 	**/
-	@:overload(function(path:FsPath, callback:Error->Void):Void {})
-	static function access(path:FsPath, mode:Int, callback:Error->Void):Void;
+	@:overload(function(path:FsPath, callback:(err:Error) -> Void):Void {})
+	static function access(path:FsPath, mode:Int, callback:(err:Error) -> Void):Void;
 
 	/**
 		A mode flag for `access` and `accessSync` methods:
@@ -1462,7 +1570,7 @@ extern class Fs {
 		This is useful for determining if a file exists, but says nothing about rwx permissions.
 	**/
 	@:deprecated("Use Fs.constants.F_OK instead")
-	static var F_OK(default, null):Int;
+	static final F_OK:Int;
 
 	/**
 		A mode flag for `access` and `accessSync` methods:
@@ -1470,7 +1578,7 @@ extern class Fs {
 		File can be read by the calling process.
 	**/
 	@:deprecated("Use Fs.constants.R_OK instead")
-	static var R_OK(default, null):Int;
+	static final R_OK:Int;
 
 	/**
 		A mode flag for `access` and `accessSync` methods:
@@ -1478,7 +1586,7 @@ extern class Fs {
 		File can be written by the calling process.
 	**/
 	@:deprecated("Use Fs.constants.W_OK instead")
-	static var W_OK(default, null):Int;
+	static final W_OK:Int;
 
 	/**
 		A mode flag for `access` and `accessSync` methods:
@@ -1487,7 +1595,7 @@ extern class Fs {
 		This has no effect on Windows.
 	**/
 	@:deprecated("Use Fs.constants.X_OK instead")
-	static var X_OK(default, null):Int;
+	static final X_OK:Int;
 
 	/**
 		Synchronous version of `access`.
@@ -1496,25 +1604,16 @@ extern class Fs {
 	static function accessSync(path:FsPath, ?mode:Int):Void;
 
 	/**
-		Returns a new ReadStream object (See Readable Stream).
+		Returns a new `ReadStream` (see Readable Stream).
 
-		`options` can include `start` and `end` values to read a range of bytes from the file instead of the entire file.
-		Both `start` and `end` are inclusive and start at 0.
-
-		The encoding can be 'utf8', 'ascii', or 'base64'.
-
-		If `autoClose` is `false`, then the file descriptor won't be closed, even if there's an error.
-		It is your responsiblity to close it and make sure there's no file descriptor leak.
-		If `autoClose` is set to true (default behavior), on error or end the file descriptor will be closed automatically.
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fscreatereadstreampath-options
 	**/
 	static function createReadStream(path:FsPath, ?options:EitherType<String, FsCreateReadStreamOptions>):ReadStream;
 
 	/**
-		Returns a new WriteStream object (See Writable Stream).
+		Returns a new `WriteStream` (see Writable Stream).
 
-		`options` may also include a `start` option to allow writing data at some position past the beginning of the file.
-
-		Modifying a file rather than replacing it may require a flags mode of r+ rather than the default mode w.
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fscreatewritestreampath-options
 	**/
 	static function createWriteStream(path:FsPath, ?options:FsCreateWriteStreamOptions):WriteStream;
 }

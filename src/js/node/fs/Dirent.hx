@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,9 +26,9 @@ import haxe.extern.EitherType;
 import js.node.Buffer;
 
 /**
-	A representation of a directory entry, which can be a file or a subdirectory
-	within the directory, as returned by reading from an `Dir` or from
-	`Fs.readdir` / `Fs.glob` when `withFileTypes` is `true`.
+	A directory entry returned by `Dir.read` / `Fs.readdir` / `Fs.glob` when `withFileTypes` is `true`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#class-fsdirent
 **/
 extern class Dirent {
 	/**

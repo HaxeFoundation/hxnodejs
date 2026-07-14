@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -45,16 +45,18 @@ enum abstract FSWatcherEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> 
 			event - The type of fs change
 			filename - The filename that changed (if relevant/available)
 	**/
-	var Change:FSWatcherEvent<FSWatcherChangeType->FsPath->Void> = "change";
+	var Change:FSWatcherEvent<(eventType:FSWatcherChangeType, filename:Null<FsPath>) -> Void> = "change";
 
 	/**
 		Emitted when an error occurs.
 	**/
-	var Error:FSWatcherEvent<Error->Void> = "error";
+	var Error:FSWatcherEvent<(err:Error) -> Void> = "error";
 }
 
 /**
-	Objects returned from `Fs.watch` are of this type.
+	Objects returned from `Fs.watch`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#class-fswatcher
 **/
 extern class FSWatcher extends EventEmitter<FSWatcher> {
 	/**

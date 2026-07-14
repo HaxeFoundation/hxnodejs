@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -32,11 +32,13 @@ enum abstract WriteStreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T
 		Listener arguments:
 			fd - file descriptor used by the `WriteStream`.
 	**/
-	var Open:WriteStreamEvent<Int->Void> = "open";
+	var Open:WriteStreamEvent<(fd:Int) -> Void> = "open";
 }
 
 /**
-	Writable file stream.
+	Writable file stream returned by `Fs.createWriteStream`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#class-fswritestream
 **/
 extern class WriteStream extends js.node.stream.Writable<WriteStream> {
 	/**

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -32,11 +32,13 @@ enum abstract ReadStreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T>
 		Listener arguments:
 			fd - file descriptor used by the `ReadStream`.
 	**/
-	var Open:ReadStreamEvent<Int->Void> = "open";
+	var Open:ReadStreamEvent<(fd:Int) -> Void> = "open";
 }
 
 /**
-	Readable file stream.
+	Readable file stream returned by `Fs.createReadStream`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#class-fsreadstream
 **/
 extern class ReadStream extends js.node.stream.Readable<ReadStream> {
 	/**

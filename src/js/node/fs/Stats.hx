@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,12 @@
 package js.node.fs;
 
 /**
-	Objects returned from `Fs.stat`, `Fs.lstat` and `Fs.fstat` and their synchronous counterparts are of this type.
+	Objects returned from `Fs.stat` / `Fs.lstat` / `Fs.fstat` (and sync / promise forms).
+
+	When `{bigint: true}` is passed, numeric fields are JavaScript `bigint` values
+	(typed loosely as `Dynamic` here).
+
+	@see https://nodejs.org/docs/latest-v24.x/api/fs.html#class-fsstats
 **/
 extern class Stats {
 	var dev:Int;
@@ -57,7 +62,26 @@ extern class Stats {
 	**/
 	var birthtimeMs:Float;
 
-	// TODO(section-2): atimeNs/mtimeNs/ctimeNs/birthtimeNs (bigint when `{bigint: true}` is passed to stat)
+	/**
+		Nanoseconds since the POSIX Epoch when the file was last accessed (`bigint`).
+	**/
+	// TODO: tighten to a BigInt type when hxnodejs provides one.
+	var atimeNs:Dynamic;
+
+	/**
+		Nanoseconds since the POSIX Epoch when the file was last modified (`bigint`).
+	**/
+	var mtimeNs:Dynamic;
+
+	/**
+		Nanoseconds since the POSIX Epoch when the file status was last changed (`bigint`).
+	**/
+	var ctimeNs:Dynamic;
+
+	/**
+		Nanoseconds since the POSIX Epoch when the file was created (`bigint`).
+	**/
+	var birthtimeNs:Dynamic;
 
 	/**
 		"Access Time" - Time when file data last accessed.
