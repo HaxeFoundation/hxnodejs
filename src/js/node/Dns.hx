@@ -23,9 +23,12 @@
 package js.node;
 
 import haxe.extern.EitherType;
+import js.node.dns.Resolver as ResolverObject;
 #if haxe4
+import js.lib.ArrayBuffer;
 import js.lib.Error;
 #else
+import js.html.ArrayBuffer;
 import js.Error;
 #end
 
@@ -38,13 +41,25 @@ enum abstract DnsAddressFamily(Int) from Int to Int {
 }
 
 /**
+	Values for the `order` option of `Dns.lookup` / `DnsPromises.lookup`
+	and for `Dns.setDefaultResultOrder` / `Dns.getDefaultResultOrder`.
+**/
+enum abstract DnsResultOrder(String) from String to String {
+	var Ipv4First = "ipv4first";
+	var Ipv6First = "ipv6first";
+	var Verbatim = "verbatim";
+}
+
+/**
 	Type of the `options` argument for `Dns.lookup`.
 **/
 typedef DnsLookupOptions = {
 	/**
-		The record family. If not provided, both IP v4 and v6 addresses are accepted.
+		The record family. Must be `4`, `6`, or `0`.
+		For compatibility, `'IPv4'` and `'IPv6'` are also accepted.
+		The value `0` indicates that either an IPv4 or IPv6 address is returned.
 	**/
-	@:optional var family:DnsAddressFamily;
+	@:optional var family:EitherType<DnsAddressFamily, String>;
 
 	/**
 		If present, it should be one or more of the supported `getaddrinfo` flags.
@@ -58,6 +73,52 @@ typedef DnsLookupOptions = {
 		Defaults to false.
 	**/
 	@:optional var all:Bool;
+
+	/**
+		When `verbatim`, the resolved addresses are returned unsorted.
+		When `ipv4first` / `ipv6first`, addresses are sorted accordingly.
+		Default is configurable via `Dns.setDefaultResultOrder`.
+	**/
+	@:optional var order:DnsResultOrder;
+
+	/**
+		When `true`, the callback receives IPv4 and IPv6 addresses in the order the DNS resolver returned them.
+		When `false`, IPv4 addresses are placed before IPv6 addresses.
+
+		Deprecated in favor of `order`. When both are specified, `order` has higher precedence.
+	**/
+	@:optional var verbatim:Bool;
+}
+
+/**
+	Options for `Dns.resolve4` / `Dns.resolve6`.
+**/
+typedef DnsResolveOptions = {
+	/**
+		When `true`, each record includes its TTL (in seconds).
+	**/
+	@:optional var ttl:Bool;
+}
+
+/**
+	Options for constructing a `dns.Resolver`.
+**/
+typedef DnsResolverOptions = {
+	/**
+		Query timeout in milliseconds, or `-1` to use the default timeout.
+	**/
+	@:optional var timeout:Int;
+
+	/**
+		The number of tries the resolver will try contacting each name server before giving up.
+		Default: `4`.
+	**/
+	@:optional var tries:Int;
+
+	/**
+		The max retry timeout, in milliseconds. Default: `0` (disabled).
+	**/
+	@:optional var maxTimeout:Int;
 }
 
 /**
@@ -75,6 +136,16 @@ enum abstract DnsRrtype(String) from String to String {
 	var AAAA = "AAAA";
 
 	/**
+		any records
+	**/
+	var ANY = "ANY";
+
+	/**
+		CA authorization records
+	**/
+	var CAA = "CAA";
+
+	/**
 		mail exchange records
 	**/
 	var MX = "MX";
@@ -90,9 +161,19 @@ enum abstract DnsRrtype(String) from String to String {
 	var SRV = "SRV";
 
 	/**
+		certificate associations
+	**/
+	var TLSA = "TLSA";
+
+	/**
 		used for reverse IP lookups
 	**/
 	var PTR = "PTR";
+
+	/**
+		name authority pointer records
+	**/
+	var NAPTR = "NAPTR";
 
 	/**
 		name server records
@@ -117,7 +198,116 @@ typedef DnsResolvedAddressMX = {priority:Int, exchange:String};
 
 typedef DnsResolvedAddressSRV = {priority:Int, weight:Int, port:Int, name:String};
 typedef DnsResolvedAddressSOA = {nsname:String, hostmaster:String, serial:Int, refresh:Int, retry:Int, expire:Int, minttl:Int};
-typedef DnsResolvedAddress = EitherType<String, EitherType<DnsResolvedAddressMX, EitherType<DnsResolvedAddressSOA, DnsResolvedAddressSRV>>>;
+
+typedef DnsResolvedAddressCAA = {
+	var critical:Int;
+	@:optional var issue:String;
+	@:optional var issuewild:String;
+	@:optional var iodef:String;
+	@:optional var contactemail:String;
+	@:optional var contactphone:String;
+};
+
+typedef DnsResolvedAddressNAPTR = {
+	var flags:String;
+	var service:String;
+	var regexp:String;
+	var replacement:String;
+	var order:Int;
+	var preference:Int;
+};
+
+typedef DnsResolvedAddressTLSA = {
+	var certUsage:Int;
+	var selector:Int;
+	var match:Int;
+	var data:ArrayBuffer;
+};
+
+/**
+	Address record that includes TTL, returned by `resolve4`/`resolve6` when `ttl` is true.
+**/
+typedef DnsRecordWithTtl = {
+	var address:String;
+	var ttl:Int;
+};
+
+typedef DnsAnyARecord = {
+	> DnsRecordWithTtl,
+	var type:String;
+};
+
+typedef DnsAnyAaaaRecord = {
+	> DnsRecordWithTtl,
+	var type:String;
+};
+
+typedef DnsAnyCaaRecord = {
+	> DnsResolvedAddressCAA,
+	var type:String;
+};
+
+typedef DnsAnyMxRecord = {
+	> DnsResolvedAddressMX,
+	var type:String;
+};
+
+typedef DnsAnyNaptrRecord = {
+	> DnsResolvedAddressNAPTR,
+	var type:String;
+};
+
+typedef DnsAnySoaRecord = {
+	> DnsResolvedAddressSOA,
+	var type:String;
+};
+
+typedef DnsAnySrvRecord = {
+	> DnsResolvedAddressSRV,
+	var type:String;
+};
+
+typedef DnsAnyTlsaRecord = {
+	> DnsResolvedAddressTLSA,
+	var type:String;
+};
+
+typedef DnsAnyTxtRecord = {
+	var type:String;
+	var entries:Array<String>;
+};
+
+typedef DnsAnyNsRecord = {
+	var type:String;
+	var value:String;
+};
+
+typedef DnsAnyPtrRecord = {
+	var type:String;
+	var value:String;
+};
+
+typedef DnsAnyCnameRecord = {
+	var type:String;
+	var value:String;
+};
+
+typedef DnsAnyRecord = EitherType<DnsAnyARecord,
+	EitherType<DnsAnyAaaaRecord,
+		EitherType<DnsAnyCaaRecord,
+			EitherType<DnsAnyCnameRecord,
+				EitherType<DnsAnyMxRecord,
+					EitherType<DnsAnyNaptrRecord,
+						EitherType<DnsAnyNsRecord,
+							EitherType<DnsAnyPtrRecord,
+								EitherType<DnsAnySoaRecord,
+									EitherType<DnsAnySrvRecord, EitherType<DnsAnyTlsaRecord, DnsAnyTxtRecord>>>>>>>>>>>;
+
+typedef DnsResolvedAddress = EitherType<String,
+	EitherType<DnsResolvedAddressMX,
+		EitherType<DnsResolvedAddressSOA,
+			EitherType<DnsResolvedAddressSRV,
+				EitherType<DnsResolvedAddressCAA, EitherType<DnsResolvedAddressNAPTR, DnsResolvedAddressTLSA>>>>>>;
 
 /**
 	Error objects returned by dns lookups are of this type
@@ -276,6 +466,8 @@ typedef DnsLookupCallbackAllEntry = {address:String, family:DnsAddressFamily};
 	These functions do not use the same set of configuration files than what `lookup` uses. For instance,
 	they do not use the configuration from /etc/hosts. These functions should be used by developers who do not want
 	to use the underlying operating system's facilities for name resolution, and instead want to always perform DNS queries.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/dns.html
 **/
 @:jsRequire("dns")
 extern class Dns {
@@ -322,6 +514,13 @@ extern class Dns {
 	static var V4MAPPED(default, null):Int;
 
 	/**
+		A flag passed in the `hints` argument of `lookup` method.
+
+		If `V4MAPPED` is specified, return resolved IPv6 addresses as well as IPv4 mapped IPv6 addresses.
+	**/
+	static var ALL(default, null):Int;
+
+	/**
 		Resolves the given `address` and `port` into a hostname and service using `getnameinfo`.
 
 		The `callback` has arguments (err, hostname, service).
@@ -346,13 +545,31 @@ extern class Dns {
 	/**
 		The same as `resolve`, but only for IPv4 queries (A records).
 		`addresses` is an array of IPv4 addresses (e.g. ['74.125.79.104', '74.125.79.105', '74.125.79.106']).
+
+		When `options.ttl` is `true`, each entry is `{ address, ttl }` instead of a string.
 	**/
+	@:overload(function(hostname:String, options:DnsResolveOptions,
+		callback:DnsError->EitherType<Array<String>, Array<DnsRecordWithTtl>>->Void):Void {})
 	static function resolve4(hostname:String, callback:DnsError->Array<String>->Void):Void;
 
 	/**
 		The same as `resolve4` except for IPv6 queries (an AAAA query).
+
+		When `options.ttl` is `true`, each entry is `{ address, ttl }` instead of a string.
 	**/
+	@:overload(function(hostname:String, options:DnsResolveOptions,
+		callback:DnsError->EitherType<Array<String>, Array<DnsRecordWithTtl>>->Void):Void {})
 	static function resolve6(hostname:String, callback:DnsError->Array<String>->Void):Void;
+
+	/**
+		Uses the DNS protocol to resolve all records (also known as `ANY` or `*` query).
+	**/
+	static function resolveAny(hostname:String, callback:DnsError->Array<DnsAnyRecord>->Void):Void;
+
+	/**
+		Uses the DNS protocol to resolve `CAA` records for the `hostname`.
+	**/
+	static function resolveCaa(hostname:String, callback:DnsError->Array<DnsResolvedAddressCAA>->Void):Void;
 
 	/**
 		The same as `resolve`, but only for mail exchange queries (MX records).
@@ -360,6 +577,11 @@ extern class Dns {
 		and an exchange attribute (e.g. [{'priority': 10, 'exchange': 'mx.example.com'},...]).
 	**/
 	static function resolveMx(hostname:String, callback:DnsError->Array<DnsResolvedAddressMX>->Void):Void;
+
+	/**
+		Uses the DNS protocol to resolve regular expression-based records (`NAPTR` records) for the `hostname`.
+	**/
+	static function resolveNaptr(hostname:String, callback:DnsError->Array<DnsResolvedAddressNAPTR>->Void):Void;
 
 	/**
 		The same as `resolve`, but only for text queries (TXT records).
@@ -376,6 +598,11 @@ extern class Dns {
 		(e.g., [{'priority': 10, 'weight': 5, 'port': 21223, 'name': 'service.example.com'}, ...]).
 	**/
 	static function resolveSrv(hostname:String, callback:DnsError->Array<DnsResolvedAddressSRV>->Void):Void;
+
+	/**
+		Uses the DNS protocol to resolve certificate associations (`TLSA` records) for the `hostname`.
+	**/
+	static function resolveTlsa(hostname:String, callback:DnsError->Array<DnsResolvedAddressTLSA>->Void):Void;
 
 	/**
 		Uses the DNS protocol to resolve pointer records (PTR records) for the `hostname`.
@@ -430,4 +657,21 @@ extern class Dns {
 		This will throw if you pass invalid input.
 	**/
 	static function setServers(servers:Array<String>):Void;
+
+	/**
+		Get the default value for `order` in `Dns.lookup` and `DnsPromises.lookup`.
+	**/
+	static function getDefaultResultOrder():DnsResultOrder;
+
+	/**
+		Set the default value of `order` in `Dns.lookup` and `DnsPromises.lookup`.
+	**/
+	static function setDefaultResultOrder(order:DnsResultOrder):Void;
+
+	/**
+		`Resolver` class constructor for an independent DNS resolver.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/dns.html#class-dnsresolver
+	**/
+	static var Resolver:Class<ResolverObject>;
 }
