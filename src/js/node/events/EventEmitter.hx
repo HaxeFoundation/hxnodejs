@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,6 +27,7 @@ import haxe.extern.EitherType;
 import haxe.extern.Rest;
 import js.lib.Symbol;
 import js.node.async_hooks.AsyncResource;
+import js.node.web.EventTarget;
 
 /**
 	Enumeration of events emitted by all `EventEmitter` instances.
@@ -36,14 +37,14 @@ enum abstract EventEmitterEvent<T:Function>(Event<T>) to Event<T> {
 		The `EventEmitter` instance will emit its own `'newListener'` event before
 		a listener is added to its internal array of listeners.
 
-		@see https://nodejs.org/api/events.html#events_event_newlistener
+		@see https://nodejs.org/api/events.html#event-newlistener
 	**/
 	var NewListener:EventEmitterEvent<(eventName:EitherType<String, Symbol>, listener:Function) -> Void> = "newListener";
 
 	/**
 		The `'removeListener'` event is emitted after the `listener` is removed.
 
-		@see https://nodejs.org/api/events.html#events_event_removelistener
+		@see https://nodejs.org/api/events.html#event-removelistener
 	**/
 	var RemoveListener:EventEmitterEvent<(eventName:EitherType<String, Symbol>, listener:Function) -> Void> = "removeListener";
 }
@@ -51,7 +52,7 @@ enum abstract EventEmitterEvent<T:Function>(Event<T>) to Event<T> {
 /**
 	The `EventEmitter` class is defined and exposed by the `events` module:
 
-	@see https://nodejs.org/api/events.html#events_class_eventemitter
+	@see https://nodejs.org/api/events.html#class-eventemitter
 **/
 @:jsRequire("events", "EventEmitter")
 extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
@@ -62,10 +63,10 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 		event. This limit can be changed for individual `EventEmitter` instances
 		using the `emitter.setMaxListeners(n)` method. To change the default
 		for all `EventEmitter` instances, the `EventEmitter.defaultMaxListeners`
-		property can be used. If this value is not a positive number, a `TypeError`
+		property can be used. If this value is not a positive number, a `RangeError`
 		will be thrown.
 
-		@see https://nodejs.org/api/events.html#events_eventemitter_defaultmaxlisteners
+		@see https://nodejs.org/api/events.html#eventsdefaultmaxlisteners
 	**/
 	static var defaultMaxListeners:Int;
 
@@ -95,37 +96,41 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	/**
 		Returns a copy of the array of listeners for the event named `name`.
 
-		@see https://nodejs.org/api/events.html#eventsgeteventlistenersemitter-name
+		For `EventTarget`s this is the only way to get the event listeners for the event target.
+
+		@see https://nodejs.org/api/events.html#eventsgeteventlistenersemitterortarget-eventname
 	**/
+	@:overload(function(emitter:EventTarget, name:EitherType<String, Symbol>):Array<Function> {})
 	static function getEventListeners(emitter:IEventEmitter, name:Event<Function>):Array<Function>;
 
 	/**
-		Change the default `maxListeners` value for all `EventEmitter` instances,
-		and optionally apply that change to the given emitters.
+		Change the default `maxListeners` value for all `EventEmitter` / `EventTarget` instances,
+		and optionally apply that change to the given emitters or targets.
 
 		@see https://nodejs.org/api/events.html#eventssetmaxlistenersn-eventtargets
 	**/
-	static function setMaxListeners(n:Int, emitters:Rest<IEventEmitter>):Void;
+	static function setMaxListeners(n:Int, emitters:Rest<EitherType<IEventEmitter, EventTarget>>):Void;
 
 	/**
-		Returns the currently set max amount of listeners for the given emitter.
+		Returns the currently set max amount of listeners for the given emitter or target.
 
 		@see https://nodejs.org/api/events.html#eventsgetmaxlistenersemitterortarget
 	**/
-	static function getMaxListeners(emitter:IEventEmitter):Int;
+	static function getMaxListeners(emitter:EitherType<IEventEmitter, EventTarget>):Int;
 
 	/**
 		A class method that returns the number of listeners for the given `eventName`
-		registered on the given `emitter`.
+		registered on the given emitter or target.
 
 		@see https://nodejs.org/api/events.html#eventslistenercountemitterortarget-eventname
 	**/
+	@:overload(function(emitter:EventTarget, eventName:EitherType<String, Symbol>):Int {})
 	static function listenerCount(emitter:IEventEmitter, eventName:Event<Function>):Int;
 
 	/**
 		Alias for `emitter.on(eventName, listener)`.
 
-		@see https://nodejs.org/api/events.html#events_emitter_addlistener_eventname_listener
+		@see https://nodejs.org/api/events.html#emitteraddlistenereventname-listener
 	**/
 	function addListener<T:Function>(eventName:Event<T>, listener:T):TSelf;
 
@@ -134,15 +139,15 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 		`eventName`, in the order they were registered, passing the supplied arguments
 		to each.
 
-		@see https://nodejs.org/api/events.html#events_emitter_emit_eventname_args
+		@see https://nodejs.org/api/events.html#emitteremiteventname-args
 	**/
-	function emit<T:Function>(eventName:Event<T>, args:Rest<Dynamic>):Bool;
+	function emit<T:Function>(eventName:Event<T>, args:Rest<Any>):Bool;
 
 	/**
 		Returns an array listing the events for which the emitter has registered
 		listeners. The values in the array will be strings or `Symbol`s.
 
-		@see https://nodejs.org/api/events.html#events_emitter_eventnames
+		@see https://nodejs.org/api/events.html#emittereventnames
 	**/
 	function eventNames():Array<EitherType<String, Symbol>>;
 
@@ -151,7 +156,7 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 		set by `emitter.setMaxListeners(n)` or defaults to
 		`EventEmitter.defaultMaxListeners`.
 
-		@see https://nodejs.org/api/events.html#events_emitter_getmaxlisteners
+		@see https://nodejs.org/api/events.html#emittergetmaxlisteners
 	**/
 	function getMaxListeners():Int;
 
@@ -160,7 +165,7 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 		If `listener` is provided, it will return how many times the listener is
 		found in the list of the listeners of the event.
 
-		@see https://nodejs.org/api/events.html#events_emitter_listenercount_eventname
+		@see https://nodejs.org/api/events.html#emitterlistenercounteventname-listener
 	**/
 	@:overload(function<T:Function>(eventName:Event<T>, listener:T):Int {})
 	function listenerCount<T:Function>(eventName:Event<T>):Int;
@@ -168,14 +173,14 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	/**
 		Returns a copy of the array of listeners for the event named `eventName`.
 
-		@see https://nodejs.org/api/events.html#events_emitter_listeners_eventname
+		@see https://nodejs.org/api/events.html#emitterlistenerseventname
 	**/
 	function listeners<T:Function>(eventName:Event<T>):Array<T>;
 
 	/**
 		Alias for `emitter.removeListener()`.
 
-		@see https://nodejs.org/api/events.html#events_emitter_off_eventname_listener
+		@see https://nodejs.org/api/events.html#emitteroffeventname-listener
 	**/
 	function off<T:Function>(eventName:Event<T>, listener:T):TSelf;
 
@@ -186,7 +191,7 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 		and `listener` will result in the `listener` being added, and called, multiple
 		times.
 
-		@see https://nodejs.org/api/events.html#events_emitter_on_eventname_listener
+		@see https://nodejs.org/api/events.html#emitteroneventname-listener
 	**/
 	function on<T:Function>(eventName:Event<T>, listener:T):TSelf;
 
@@ -194,7 +199,7 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 		Adds a one-time `listener` function for the event named `eventName`. The
 		next time `eventName` is triggered, this listener is removed and then invoked.
 
-		@see https://nodejs.org/api/events.html#events_emitter_once_eventname_listener
+		@see https://nodejs.org/api/events.html#emitteronceeventname-listener
 	**/
 	function once<T:Function>(eventName:Event<T>, listener:T):TSelf;
 
@@ -205,7 +210,7 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 		and `listener` will result in the `listener` being added, and called, multiple
 		times.
 
-		@see https://nodejs.org/api/events.html#events_emitter_prependlistener_eventname_listener
+		@see https://nodejs.org/api/events.html#emitterprependlistenereventname-listener
 	**/
 	function prependListener<T:Function>(eventName:Event<T>, listener:T):TSelf;
 
@@ -214,14 +219,14 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 		beginning of the listeners array. The next time `eventName` is triggered, this
 		listener is removed, and then invoked.
 
-		@see https://nodejs.org/api/events.html#events_emitter_prependoncelistener_eventname_listener
+		@see https://nodejs.org/api/events.html#emitterprependoncelistenereventname-listener
 	**/
 	function prependOnceListener<T:Function>(eventName:Event<T>, listener:T):TSelf;
 
 	/**
 		Removes all listeners, or those of the specified `eventName`.
 
-		@see https://nodejs.org/api/events.html#events_emitter_removealllisteners_eventname
+		@see https://nodejs.org/api/events.html#emitterremovealllistenerseventname
 	**/
 	function removeAllListeners<T:Function>(?eventName:Event<T>):TSelf;
 
@@ -229,7 +234,7 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 		Removes the specified `listener` from the listener array for the event named
 		`eventName`.
 
-		@see https://nodejs.org/api/events.html#events_emitter_removelistener_eventname_listener
+		@see https://nodejs.org/api/events.html#emitterremovelistenereventname-listener
 	**/
 	function removeListener<T:Function>(eventName:Event<T>, listener:T):TSelf;
 
@@ -241,15 +246,15 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 		specific `EventEmitter` instance. The value can be set to `Infinity` (or `0`)
 		to indicate an unlimited number of listeners.
 
-		@see https://nodejs.org/api/events.html#events_emitter_setmaxlisteners_n
+		@see https://nodejs.org/api/events.html#emittersetmaxlistenersn
 	**/
-	function setMaxListeners(n:Int):Void;
+	function setMaxListeners(n:Int):TSelf;
 
 	/**
 		Returns a copy of the array of listeners for the event named `eventName`,
 		including any wrappers (such as those created by `.once()`).
 
-		@see https://nodejs.org/api/events.html#events_emitter_rawlisteners_eventname
+		@see https://nodejs.org/api/events.html#emitterrawlistenerseventname
 	**/
 	function rawListeners<T:Function>(eventName:Event<T>):Array<T>;
 }
@@ -259,7 +264,7 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 **/
 typedef EventEmitterOptions = {
 	/**
-		Enables automatic capturing of promise rejection.
+		Enables automatic capturing of promise rejection. Default: `false`.
 	**/
 	@:optional var captureRejections:Bool;
 }
@@ -294,6 +299,9 @@ extern class EventEmitterAsyncResource extends EventEmitter<EventEmitterAsyncRes
 
 	/**
 		The underlying `AsyncResource`.
+
+		The returned object has an additional `eventEmitter` property that references
+		this `EventEmitterAsyncResource`.
 	**/
 	var asyncResource(default, null):AsyncResource;
 }
@@ -305,12 +313,14 @@ typedef EventEmitterAsyncResourceOptions = {
 	> EventEmitterOptions,
 
 	/**
-		The type of async event. Default: `new.target.name` if instantiated using `new`, else `'EventEmitterAsyncResource'`.
+		The type of async event.
+		Default: `new.target.name` if instantiated using `new`, else `'EventEmitterAsyncResource'`.
 	**/
 	@:optional var name:String;
 
 	/**
-		The ID of the execution context that created this async event. Default: `executionAsyncId()`.
+		The ID of the execution context that created this async event.
+		Default: `executionAsyncId()`.
 	**/
 	@:optional var triggerAsyncId:Float;
 
@@ -330,12 +340,13 @@ typedef EventEmitterAsyncResourceOptions = {
 extern interface IEventEmitter {
 	function addListener<T:Function>(eventName:Event<T>, listener:T):IEventEmitter;
 
-	function emit<T:Function>(eventName:Event<T>, args:Rest<Dynamic>):Bool;
+	function emit<T:Function>(eventName:Event<T>, args:Rest<Any>):Bool;
 
 	function eventNames():Array<EitherType<String, Symbol>>;
 
 	function getMaxListeners():Int;
 
+	@:overload(function<T:Function>(eventName:Event<T>, listener:T):Int {})
 	function listenerCount<T:Function>(eventName:Event<T>):Int;
 
 	function listeners<T:Function>(eventName:Event<T>):Array<T>;
@@ -354,7 +365,7 @@ extern interface IEventEmitter {
 
 	function removeListener<T:Function>(eventName:Event<T>, listener:T):IEventEmitter;
 
-	function setMaxListeners(n:Int):Void;
+	function setMaxListeners(n:Int):IEventEmitter;
 
 	function rawListeners<T:Function>(eventName:Event<T>):Array<T>;
 }

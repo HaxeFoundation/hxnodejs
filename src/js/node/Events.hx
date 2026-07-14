@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,19 +23,21 @@
 package js.node;
 
 import haxe.Constraints.Function;
+import haxe.extern.EitherType;
 import haxe.extern.Rest;
 import js.lib.Promise;
 import js.lib.Symbol;
 import js.node.events.EventEmitter;
 import js.node.web.AbortSignal;
+import js.node.web.EventTarget;
 
 /**
 	Much of the Node.js core API is built around an idiomatic asynchronous event-driven architecture
 	in which certain kinds of objects (called "emitters") emit named events that cause `Function` objects
 	("listeners") to be called.
 
-	@see https://nodejs.org/api/events.html#events_events
- */
+	@see https://nodejs.org/api/events.html
+**/
 @:jsRequire("events")
 extern class Events {
 	/**
@@ -64,24 +66,29 @@ extern class Events {
 	/**
 		By default, a maximum of `10` listeners can be registered for any single event.
 		This alias mirrors `EventEmitter.defaultMaxListeners`.
+		If this value is not a positive number, a `RangeError` is thrown.
 
 		@see https://nodejs.org/api/events.html#eventsdefaultmaxlisteners
 	**/
 	static var defaultMaxListeners:Int;
 
 	/**
-		Creates a `Promise` that is fulfilled when the `EventEmitter` emits the given
-		event or that is rejected if the `EventEmitter` emits `'error'` while waiting.
+		Creates a `Promise` that is fulfilled when the emitter emits the given
+		event or that is rejected if an `EventEmitter` emits `'error'` while waiting.
 		The `Promise` will resolve with an array of all the arguments emitted to the
 		given event.
 
+		Works with both `EventEmitter` and web `EventTarget` instances.
+
 		@see https://nodejs.org/api/events.html#eventsonceemitter-name-options
 	**/
-	@:overload(function<T:Function>(emitter:IEventEmitter, name:Event<T>, options:EventsOnceOptions):Promise<Array<Dynamic>> {})
-	static function once<T:Function>(emitter:IEventEmitter, name:Event<T>):Promise<Array<Dynamic>>;
+	@:overload(function(emitter:EventTarget, name:String, options:EventsOnceOptions):Promise<Array<Any>> {})
+	@:overload(function(emitter:EventTarget, name:String):Promise<Array<Any>> {})
+	@:overload(function<T:Function>(emitter:IEventEmitter, name:Event<T>, options:EventsOnceOptions):Promise<Array<Any>> {})
+	static function once<T:Function>(emitter:IEventEmitter, name:Event<T>):Promise<Array<Any>>;
 
 	/**
-		Returns an `AsyncIterator` that iterates `eventName` events emitted by the `emitter`.
+		Returns an async iterator that iterates `eventName` events emitted by the `emitter`.
 
 		@see https://nodejs.org/api/events.html#eventsonemitter-eventname-options
 	**/
@@ -91,7 +98,8 @@ extern class Events {
 	/**
 		Listens once to the `abort` event on the provided `signal`.
 
-		Returns a disposable that removes the abort listener when disposed.
+		Returns a disposable that removes the abort listener when `[Symbol.dispose]()` is called.
+		Stable since Node.js 24.
 
 		@see https://nodejs.org/api/events.html#eventsaddabortlistenersignal-listener
 	**/
@@ -100,31 +108,39 @@ extern class Events {
 	/**
 		Returns a copy of the array of listeners for the event named `name`.
 
-		@see https://nodejs.org/api/events.html#eventsgeteventlistenersemitter-name
+		For `EventTarget`s this is the only way to get the event listeners for the event target.
+
+		@see https://nodejs.org/api/events.html#eventsgeteventlistenersemitterortarget-eventname
 	**/
+	@:overload(function(emitter:EventTarget, name:EitherType<String, Symbol>):Array<Function> {})
 	static function getEventListeners(emitter:IEventEmitter, name:Event<Function>):Array<Function>;
 
 	/**
-		Change the default `maxListeners` value for all `EventEmitter` instances,
-		and optionally apply that change to the given emitters.
+		Change the default `maxListeners` value for all `EventEmitter` / `EventTarget` instances,
+		and optionally apply that change to the given emitters or targets.
+		If none are specified, `n` is set as the default max for all newly created instances.
 
 		@see https://nodejs.org/api/events.html#eventssetmaxlistenersn-eventtargets
 	**/
-	static function setMaxListeners(n:Int, emitters:Rest<IEventEmitter>):Void;
+	static function setMaxListeners(n:Int, emitters:Rest<EitherType<IEventEmitter, EventTarget>>):Void;
 
 	/**
-		Returns the currently set max amount of listeners for the given emitter.
+		Returns the currently set max amount of listeners for the given emitter or target.
 
 		@see https://nodejs.org/api/events.html#eventsgetmaxlistenersemitterortarget
 	**/
-	static function getMaxListeners(emitter:IEventEmitter):Int;
+	static function getMaxListeners(emitter:EitherType<IEventEmitter, EventTarget>):Int;
 
 	/**
 		Returns the number of listeners for the given `eventName` registered on the
-		given `emitter`.
+		given emitter or target.
+
+		For `EventTarget`s this is the only way to obtain the listener count
+		(accepted since Node.js 24.14.0; deprecation revoked).
 
 		@see https://nodejs.org/api/events.html#eventslistenercountemitterortarget-eventname
 	**/
+	@:overload(function(emitter:EventTarget, eventName:EitherType<String, Symbol>):Int {})
 	static function listenerCount(emitter:IEventEmitter, eventName:Event<Function>):Int;
 }
 
@@ -154,13 +170,15 @@ typedef EventsOnOptions = {
 
 	/**
 		The high watermark. The emitter is paused every time the size of events
-		being buffered is higher than it.
+		being buffered is higher than it. Default: `Number.MAX_SAFE_INTEGER`.
+		Supported only on emitters implementing `pause()` and `resume()`.
 	**/
 	@:optional var highWaterMark:Int;
 
 	/**
 		The low watermark. The emitter is resumed every time the size of events
-		being buffered is lower than it.
+		being buffered is lower than it. Default: `1`.
+		Supported only on emitters implementing `pause()` and `resume()`.
 	**/
 	@:optional var lowWaterMark:Int;
 }
@@ -169,12 +187,13 @@ typedef EventsOnOptions = {
 	Minimal async iterator surface used by `Events.on` (for `for await...of`).
 **/
 typedef EventsAsyncIterator = {
-	function next():Promise<{done:Bool, ?value:Array<Dynamic>}>;
+	function next():Promise<{done:Bool, ?value:Array<Any>}>;
 }
 
 /**
 	Disposable returned by `Events.addAbortListener`.
+
+	Call `[Symbol.dispose]()` (Node.js maps this to `Symbol.for('nodejs.dispose')`)
+	to remove the abort listener. There is no named `dispose()` method.
 **/
-typedef EventsDisposable = {
-	function dispose():Void;
-}
+typedef EventsDisposable = {}
