@@ -24,12 +24,13 @@ package js.node.tls;
 
 import haxe.Constraints.Function;
 import haxe.extern.EitherType;
+import js.lib.Error;
 import js.node.Buffer;
 import js.node.Tls.TlsClientOptionsBase;
 import js.node.Tls.TlsServerOptionsBase;
+import js.node.crypto.X509Certificate;
 import js.node.events.EventEmitter.Event;
 import js.node.tls.SecureContext.SecureContextOptions;
-import js.lib.Error;
 
 /**
 	Enumeration of events emitted by `TLSSocket` objects in addition to its parent class events.
@@ -203,16 +204,16 @@ extern class TLSSocket extends js.node.net.Socket {
 	/**
 		Returns the peer certificate as an `X509Certificate` object.
 
-		// TODO(section-3): type against crypto.X509Certificate once crypto audit exposes it
+		If there is no peer certificate, or the socket has been destroyed, `null` is returned.
 	**/
-	function getPeerX509Certificate():Any;
+	function getPeerX509Certificate():Null<X509Certificate>;
 
 	/**
 		Returns the local certificate as an `X509Certificate` object.
 
-		// TODO(section-3): type against crypto.X509Certificate once crypto audit exposes it
+		If there is no local certificate, or the socket has been destroyed, `null` is returned.
 	**/
-	function getX509Certificate():Any;
+	function getX509Certificate():Null<X509Certificate>;
 
 	/**
 		Initiate TLS renegotiation process.
