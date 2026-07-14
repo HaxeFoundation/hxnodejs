@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,6 @@ package js.node.readline;
 
 import js.lib.Promise;
 import js.node.readline.Interface;
-import js.node.web.AbortSignal;
 
 /**
 	Instances of `readlinePromises.Interface` are constructed using
@@ -44,5 +43,5 @@ extern class PromisesInterface extends Interface {
 		If called after `close()`, returns a rejected promise.
 	**/
 	@:overload(function(query:String):Promise<String> {})
-	function question(query:String, options:{?signal:AbortSignal}):Promise<String>;
+	function question(query:String, options:InterfaceQuestionOptions):Promise<String>;
 }

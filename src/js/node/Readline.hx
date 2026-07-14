@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,13 +23,14 @@
 package js.node;
 
 import haxe.extern.EitherType;
+import js.lib.Error;
 import js.node.readline.*;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
 import js.node.web.AbortSignal;
 
 /**
-	The readline module provides an interface for reading data from a `Readable` stream (such as `process.stdin`) one
+	The `readline` module provides an interface for reading data from a `Readable` stream (such as `process.stdin`) one
 	line at a time.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/readline.html
@@ -37,7 +38,7 @@ import js.node.web.AbortSignal;
 @:jsRequire("readline")
 extern class Readline {
 	/**
-		The `readline.clearLine()` method Clears current line of given `TTY` stream
+		The `readline.clearLine()` method clears the current line of given `TTY` stream
 		in a specified direction identified by `dir`.
 	**/
 	static function clearLine(stream:IWritable, dir:ClearLineDirection, ?callback:Void->Void):Bool;
@@ -51,7 +52,7 @@ extern class Readline {
 	/**
 		The `readline.createInterface()` method creates a new `readline.Interface` instance.
 	**/
-	@:overload(function(input:IReadable, ?output:IWritable, ?completer:ReadlineCompleterCallback, ?terminal:Bool):Interface {})
+	@:overload(function(input:IReadable, ?output:IWritable, ?completer:ReadlineCompleter, ?terminal:Bool):Interface {})
 	static function createInterface(options:ReadlineOptions):Interface;
 
 	/**
@@ -89,23 +90,28 @@ typedef ReadlineOptions = {
 
 	/**
 		An optional function used for Tab autocompletion.
+		May be synchronous or asynchronous (two-argument callback form).
 	**/
-	@:optional var completer:ReadlineCompleterCallback;
+	@:optional var completer:ReadlineCompleter;
 
 	/**
 		`true` if the `input` and `output` streams should be treated like a TTY, and have ANSI/VT100 escape codes
 		written to it.
+		Default: checking `isTTY` on the `output` stream upon instantiation.
 	**/
 	@:optional var terminal:Bool;
 
 	/**
 		Initial list of history lines.
+		This option makes sense only if `terminal` is set to `true` by the user or by an internal `output` check.
+		Default: `[]`.
 	**/
 	@:optional var history:Array<String>;
 
 	/**
 		Maximum number of history lines retained.
 		To disable the history set this value to `0`.
+		Default: `30`.
 	**/
 	@:optional var historySize:Int;
 
@@ -117,17 +123,23 @@ typedef ReadlineOptions = {
 	/**
 		If the delay between `\r` and `\n` exceeds `crlfDelay` milliseconds, both `\r` and `\n` will be treated as
 		separate end-of-line input.
+		`crlfDelay` will be coerced to a number no less than `100`.
+		It can be set to `Math.POSITIVE_INFINITY`, in which case `\r` followed by `\n` will always be considered
+		a single newline.
+		Default: `100`.
 	**/
 	@:optional var crlfDelay:Float;
 
 	/**
 		If `true`, when a new input line added to the history list duplicates an older one, this removes the older line
 		from the list.
+		Default: `false`.
 	**/
 	@:optional var removeHistoryDuplicates:Bool;
 
 	/**
 		The duration `readline` will wait for a character (when reading an ambiguous key sequence) in milliseconds.
+		Default: `500`.
 	**/
 	@:optional var escapeCodeTimeout:Int;
 
@@ -143,7 +155,26 @@ typedef ReadlineOptions = {
 	@:optional var signal:AbortSignal;
 }
 
-typedef ReadlineCompleterCallback = (line:String) -> Array<EitherType<Array<String>, String>>;
+/**
+	Completer result: matching entries, then the substring used for matching.
+**/
+typedef ReadlineCompleterResult = Array<EitherType<Array<String>, String>>;
+
+/**
+	Synchronous Tab autocompletion callback.
+**/
+typedef ReadlineCompleterCallback = (line:String) -> ReadlineCompleterResult;
+
+/**
+	Asynchronous Tab autocompletion callback (Node two-argument form).
+**/
+typedef ReadlineAsyncCompleterCallback = (line:String, callback:(?err:Null<Error>,
+	?result:ReadlineCompleterResult) -> Void) -> Void;
+
+/**
+	Tab completer for `readline.createInterface` (sync or async).
+**/
+typedef ReadlineCompleter = EitherType<ReadlineCompleterCallback, ReadlineAsyncCompleterCallback>;
 
 /**
 	Enumeration of possible directions for `Readline.clearLine`.
