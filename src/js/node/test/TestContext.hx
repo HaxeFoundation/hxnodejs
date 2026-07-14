@@ -23,6 +23,7 @@
 package js.node.test;
 
 import haxe.extern.EitherType;
+import js.node.assert.AssertMethods;
 import js.node.web.AbortSignal;
 import js.node.Test.HookCallback;
 import js.node.Test.HookOptions;
@@ -211,15 +212,12 @@ extern class TestContext {
 /**
 	Assertion helpers on `TestContext.assert`.
 
-	Runner-specific snapshot APIs are typed here. The object also exposes the
-	usual `node:assert` methods bound to this context (see `js.node.Assert`);
-	those are intentionally not fully re-declared.
-
-	// TODO(section-4): compose with `js.node.Assert` method signatures instead of `implements Dynamic`.
+	Composes the bound `node:assert` method surface (`js.node.assert.AssertMethods`,
+	matching `js.node.Assert`) with runner-specific snapshot helpers.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/test.html#contextassert
 **/
-extern class TestContextAssert implements Dynamic {
+extern class TestContextAssert extends AssertMethods {
 	/**
 		Serialize `value` and write/compare against the snapshot file at `path`.
 

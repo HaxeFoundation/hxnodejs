@@ -26,13 +26,14 @@ import js.lib.Promise;
 import js.lib.Symbol;
 import js.node.Vm.VmContext;
 import js.node.worker_threads.MessagePort;
+import js.node.worker_threads.Transferable;
 import js.node.worker_threads.Worker;
 
 /**
 	The `node:worker_threads` module enables the use of threads that execute JavaScript in parallel.
 
-	Core surface for Node.js 24+. Transfer lists and posted values remain loosely typed
-	because structured clone accepts many object graphs.
+	Core surface for Node.js 24+. Posted message values remain loosely typed
+	because structured clone accepts many object graphs; transfer lists use `Transferable`.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/worker_threads.html
 **/
@@ -63,9 +64,9 @@ extern class WorkerThreads {
 	static function markAsUncloneable(object:Dynamic):Void;
 
 	/**
-		// TODO(section-5): transferList typing for structured clone
+		Posts a value to another thread. `transferList` uses `js.node.worker_threads.Transferable`.
 	**/
-	static function postMessageToThread(threadId:Int, value:Dynamic, ?transferList:Array<Dynamic>, ?timeout:Int):Promise<Void>;
+	static function postMessageToThread(threadId:Int, value:Dynamic, ?transferList:Array<Transferable>, ?timeout:Int):Promise<Void>;
 
 	static function receiveMessageOnPort(port:MessagePort):Null<{message:Dynamic}>;
 	static function moveMessagePortToContext(port:MessagePort, contextifiedSandbox:VmContext<Dynamic>):MessagePort;
