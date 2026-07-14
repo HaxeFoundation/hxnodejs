@@ -28,14 +28,14 @@ import js.lib.ArrayBufferView;
 	The `string_decoder` module provides an API for decoding `Buffer` objects into strings in a manner that preserves
 	encoded multi-byte UTF-8 and UTF-16 characters.
 
-	@see https://nodejs.org/api/string_decoder.html#string_decoder_string_decoder
+	@see https://nodejs.org/docs/latest-v24.x/api/string_decoder.html#string_decoder_string_decoder
 **/
 @:jsRequire("string_decoder", "StringDecoder")
 extern class StringDecoder {
 	/**
 		Creates a new `StringDecoder` instance.
 
-		@see https://nodejs.org/api/string_decoder.html#string_decoder_new_stringdecoder_encoding
+		@see https://nodejs.org/docs/latest-v24.x/api/string_decoder.html#string_decoder_new_stringdecoder_encoding
 	**/
 	function new(?encoding:String);
 
@@ -44,7 +44,7 @@ extern class StringDecoder {
 		Bytes representing incomplete UTF-8 and UTF-16 characters will be replaced
 		with substitution characters appropriate for the character encoding.
 
-		@see https://nodejs.org/api/string_decoder.html#string_decoder_stringdecoder_end_buffer
+		@see https://nodejs.org/docs/latest-v24.x/api/string_decoder.html#string_decoder_stringdecoder_end_buffer
 	**/
 	@:overload(function(buffer:Buffer):String {})
 	@:overload(function(buffer:ArrayBufferView):String {})
@@ -55,7 +55,7 @@ extern class StringDecoder {
 		`TypedArray`, or `DataView` are omitted from the returned string and stored in an internal buffer for the next
 		call to `stringDecoder.write()` or `stringDecoder.end()`.
 
-		@see https://nodejs.org/api/string_decoder.html#string_decoder_stringdecoder_write_buffer
+		@see https://nodejs.org/docs/latest-v24.x/api/string_decoder.html#string_decoder_stringdecoder_write_buffer
 	**/
 	@:overload(function(buffer:ArrayBufferView):String {})
 	function write(buffer:Buffer):String;

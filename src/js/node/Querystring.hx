@@ -29,14 +29,16 @@ import js.node.Buffer;
 /**
 	The `querystring` module provides utilities for parsing and formatting URL query strings.
 
-	@see https://nodejs.org/api/querystring.html#querystring_query_string
+	Stability: 2 - Stable. Prefer WHATWG `URLSearchParams` for new work.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/querystring.html
 **/
 @:jsRequire("querystring")
 extern class Querystring {
 	/**
 		The `querystring.decode()` function is an alias for `querystring.parse()`.
 
-		@see https://nodejs.org/api/querystring.html#querystring_querystring_decode
+		@see https://nodejs.org/docs/latest-v24.x/api/querystring.html#querystring_querystring_decode
 	**/
 	@:overload(function(str:String):QuerystringParseResult {})
 	static function decode(str:String, ?sep:String, ?eq:String, ?options:QuerystringParseOptions):QuerystringParseResult;
@@ -44,7 +46,7 @@ extern class Querystring {
 	/**
 		The `querystring.encode()` function is an alias for `querystring.stringify()`.
 
-		@see https://nodejs.org/api/querystring.html#querystring_querystring_encode
+		@see https://nodejs.org/docs/latest-v24.x/api/querystring.html#querystring_querystring_encode
 	**/
 	@:overload(function(obj:{}):String {})
 	static function encode(obj:{}, ?sep:String, ?eq:String, ?options:QuerystringStringifyOptions):String;
@@ -52,14 +54,14 @@ extern class Querystring {
 	/**
 		The `querystring.escape()` method performs URL percent-encoding on the given `str` in a manner that is optimized for the specific requirements of URL query strings.
 
-		@see https://nodejs.org/api/querystring.html#querystring_querystring_escape_str
+		@see https://nodejs.org/docs/latest-v24.x/api/querystring.html#querystring_querystring_escape_str
 	**/
 	static dynamic function escape(str:String):String;
 
 	/**
 		The `querystring.parse()` method parses a URL query string (`str`) into a collection of key and value pairs.
 
-		@see https://nodejs.org/api/querystring.html#querystring_querystring_parse_str_sep_eq_options
+		@see https://nodejs.org/docs/latest-v24.x/api/querystring.html#querystring_querystring_parse_str_sep_eq_options
 	**/
 	@:overload(function(str:String):QuerystringParseResult {})
 	static function parse(str:String, ?sep:String, ?eq:String, ?options:QuerystringParseOptions):QuerystringParseResult;
@@ -67,7 +69,7 @@ extern class Querystring {
 	/**
 		The `querystring.stringify()` method produces a URL query string from a given `obj` by iterating through the object's "own properties".
 
-		@see https://nodejs.org/api/querystring.html#querystring_querystring_stringify_obj_sep_eq_options
+		@see https://nodejs.org/docs/latest-v24.x/api/querystring.html#querystring_querystring_stringify_obj_sep_eq_options
 	**/
 	@:overload(function(obj:{}):String {})
 	static function stringify(obj:{}, ?sep:String, ?eq:String, ?options:QuerystringStringifyOptions):String;
@@ -75,7 +77,7 @@ extern class Querystring {
 	/**
 		The `querystring.unescape()` method performs decoding of URL percent-encoded characters on the given `str`.
 
-		@see https://nodejs.org/api/querystring.html#querystring_querystring_unescape_str
+		@see https://nodejs.org/docs/latest-v24.x/api/querystring.html#querystring_querystring_unescape_str
 	**/
 	static dynamic function unescape(str:String):String;
 
@@ -85,7 +87,7 @@ extern class Querystring {
 
 		Present in Node.js but not covered by the public `querystring` documentation.
 
-		@see https://nodejs.org/api/querystring.html
+		@see https://nodejs.org/docs/latest-v24.x/api/querystring.html
 	**/
 	static function unescapeBuffer(buffer:Buffer, ?decodeSpaces:Bool):Buffer;
 }
@@ -93,7 +95,7 @@ extern class Querystring {
 /**
 	Options used for `Querystring.parse` method.
 
-	@see https://nodejs.org/api/querystring.html#querystring_querystring_parse_str_sep_eq_options
+	@see https://nodejs.org/docs/latest-v24.x/api/querystring.html#querystring_querystring_parse_str_sep_eq_options
 **/
 typedef QuerystringParseOptions = {
 	/**
@@ -113,14 +115,14 @@ typedef QuerystringParseOptions = {
 	The object returned by the `querystring.parse()` method does not prototypically inherit from the JavaScript `Object`.
 	This means that typical `Object` methods such as `obj.toString()`, `obj.hasOwnProperty()`, and others are not defined and will not work.
 
-	@see https://nodejs.org/api/querystring.html#querystring_querystring_parse_str_sep_eq_options
+	@see https://nodejs.org/docs/latest-v24.x/api/querystring.html#querystring_querystring_parse_str_sep_eq_options
 **/
 typedef QuerystringParseResult = DynamicAccess<EitherType<String, Array<String>>>;
 
 /**
 	Options for `Querystring.stringify` method.
 
-	@see https://nodejs.org/api/querystring.html#querystring_querystring_stringify_obj_sep_eq_options
+	@see https://nodejs.org/docs/latest-v24.x/api/querystring.html#querystring_querystring_stringify_obj_sep_eq_options
 **/
 typedef QuerystringStringifyOptions = {
 	/**

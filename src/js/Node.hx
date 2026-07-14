@@ -119,6 +119,7 @@ extern class Node {
 
 		Stability: 3 - Legacy. Use `globalThis` instead.
 	**/
+	@:deprecated("Use globalThis instead")
 	static inline var global:Dynamic<Dynamic> = cast Node;
 
 	/**

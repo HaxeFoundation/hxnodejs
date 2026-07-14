@@ -267,6 +267,8 @@ typedef V8StartupSnapshot = {
 /**
 	Handle returned by `V8.startCpuProfile`.
 
+	Also implements `[Symbol.dispose]()` to stop and discard the profile.
+
 	@see https://nodejs.org/docs/latest-v24.x/api/v8.html#class-synccpuprofilehandle
 **/
 typedef V8SyncCpuProfileHandle = {
@@ -274,14 +276,6 @@ typedef V8SyncCpuProfileHandle = {
 		Stop collecting the profile and return the profile data.
 	**/
 	function stop():String;
-
-	/**
-		Stop collecting the profile and discard it.
-
-		Maps to `[Symbol.dispose]()`. Typed as a named method for Haxe consumption;
-		prefer `using` / explicit dispose at call sites when targeting Symbol.dispose.
-	**/
-	@:optional var dispose:() -> Void;
 }
 
 /**

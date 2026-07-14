@@ -24,6 +24,11 @@ package js.node;
 
 import haxe.DynamicAccess;
 
+/**
+	CommonJS `require` function and its helpers.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/modules.html#requireid
+**/
 @:native("require")
 extern class Require {
 	/**
