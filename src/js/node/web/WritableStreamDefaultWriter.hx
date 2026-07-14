@@ -41,5 +41,5 @@ extern class WritableStreamDefaultWriter {
 	function abort(?reason:Any):Promise<Void>;
 	function close():Promise<Void>;
 	function releaseLock():Void;
-	function write(chunk:Any):Promise<Void>;
+	function write(?chunk:Any):Promise<Void>;
 }
