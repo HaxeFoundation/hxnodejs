@@ -26,6 +26,7 @@ import haxe.extern.EitherType;
 import js.node.readline.*;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
+import js.node.web.AbortSignal;
 
 /**
 	The readline module provides an interface for reading data from a `Readable` stream (such as `process.stdin`) one
@@ -114,6 +115,15 @@ typedef ReadlineOptions = {
 	@:optional var terminal:Bool;
 
 	/**
+		Initial list of history lines.
+		This option makes sense only if `terminal` is set to `true` by the user or by an internal `output` check,
+		otherwise the history caching mechanism is not initialized at all.
+
+		Default: `[]`.
+	**/
+	@:optional var history:Array<String>;
+
+	/**
 		Maximum number of history lines retained.
 		To disable the history set this value to `0`.
 		This option makes sense only if `terminal` is set to `true` by the user or by an internal `output` check,
@@ -157,6 +167,19 @@ typedef ReadlineOptions = {
 		Default: `500`.
 	**/
 	@:optional var escapeCodeTimeout:Int;
+
+	/**
+		The number of spaces a tab is equal to (minimum 1).
+
+		Default: `8`.
+	**/
+	@:optional var tabSize:Int;
+
+	/**
+		Allows closing the interface using an `AbortSignal`.
+		Aborting the signal will internally call `close` on the interface.
+	**/
+	@:optional var signal:AbortSignal;
 }
 
 #if haxe4
