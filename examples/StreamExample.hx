@@ -31,7 +31,8 @@ class StreamExample {
 				} catch (er:Error) {
 					// uh oh!  bad json!
 					res.statusCode = 400;
-					return res.end('error: ' + er.message);
+					res.end('error: ' + er.message);
+					return;
 				}
 
 				// write back something interesting to the user:
