@@ -37,12 +37,12 @@ enum abstract Http2ServerRequestEvent<T:haxe.Constraints.Function>(Event<T>) to 
 	/**
 		Emitted whenever a `Http2ServerRequest` instance is abnormally aborted in mid-communication.
 	**/
-	var Aborted:Http2ServerRequestEvent<Void->Void> = "aborted";
+	var Aborted:Http2ServerRequestEvent<() -> Void> = "aborted";
 
 	/**
 		Indicates that the underlying `Http2Stream` was closed.
 	**/
-	var Close:Http2ServerRequestEvent<Void->Void> = "close";
+	var Close:Http2ServerRequestEvent<() -> Void> = "close";
 }
 
 /**
@@ -122,7 +122,7 @@ extern class Http2ServerRequest extends Readable<Http2ServerRequest> {
 	/**
 		Sets the `Http2Stream`'s timeout value to `msecs`.
 	**/
-	function setTimeout(msecs:Int, ?callback:Void->Void):Http2ServerRequest;
+	function setTimeout(msecs:Int, ?callback:() -> Void):Http2ServerRequest;
 
 	/**
 		Returns a `Proxy` object that acts as a `net.Socket` (or `tls.TLSSocket`)

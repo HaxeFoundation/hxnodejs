@@ -31,7 +31,7 @@ import js.node.http2.Http2Server;
 import js.node.http2.Http2ServerRequest;
 import js.node.http2.Http2ServerResponse;
 import js.node.http2.ServerHttp2Session;
-import js.node.stream.Duplex;
+import js.node.stream.Duplex.IDuplex;
 import js.node.tls.SecureContext.SecureContextOptions;
 import js.node.url.URL;
 import js.node.web.AbortSignal;

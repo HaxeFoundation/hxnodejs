@@ -40,7 +40,7 @@ enum abstract Http2ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T
 	/**
 		Emitted when a new TCP stream is established.
 	**/
-	var Connection:Http2ServerEvent<IDuplex->Void> = "connection";
+	var Connection:Http2ServerEvent<(socket:IDuplex) -> Void> = "connection";
 
 	/**
 		Emitted each time there is a request. See the Compatibility API.
@@ -50,7 +50,7 @@ enum abstract Http2ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T
 	/**
 		Emitted when a new `Http2Session` is created by the `Http2Server`.
 	**/
-	var Session:Http2ServerEvent<ServerHttp2Session->Void> = "session";
+	var Session:Http2ServerEvent<(session:ServerHttp2Session) -> Void> = "session";
 
 	/**
 		Emitted when an `'error'` event is emitted by an `Http2Session` associated with the server.
@@ -65,7 +65,7 @@ enum abstract Http2ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T
 	/**
 		Emitted when there is no activity on the Server for a given number of milliseconds.
 	**/
-	var Timeout:Http2ServerEvent<Void->Void> = "timeout";
+	var Timeout:Http2ServerEvent<() -> Void> = "timeout";
 }
 
 /**
@@ -78,8 +78,8 @@ extern class Http2Server extends js.node.net.Server {
 	/**
 		Used to set the timeout value for http2 server requests.
 	**/
-	@:overload(function(?callback:Void->Void):Http2Server {})
-	function setTimeout(?msecs:Int, ?callback:Void->Void):Http2Server;
+	@:overload(function(?callback:() -> Void):Http2Server {})
+	function setTimeout(?msecs:Int, ?callback:() -> Void):Http2Server;
 
 	/**
 		The number of milliseconds of inactivity before a socket is presumed to have timed out.

@@ -39,7 +39,7 @@ enum abstract Http2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 	/**
 		Emitted once the `Http2Session` has been destroyed.
 	**/
-	var Close:Http2SessionEvent<Void->Void> = "close";
+	var Close:Http2SessionEvent<() -> Void> = "close";
 
 	/**
 		Emitted once the `Http2Session` has been successfully connected to the remote peer.
@@ -49,7 +49,7 @@ enum abstract Http2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 	/**
 		Emitted when an error occurs during processing of an `Http2Session`.
 	**/
-	var Error:Http2SessionEvent<Error->Void> = "error";
+	var Error:Http2SessionEvent<(error:Error) -> Void> = "error";
 
 	/**
 		Emitted when an error occurs while attempting to send a frame on the session.
@@ -64,17 +64,17 @@ enum abstract Http2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 	/**
 		Emitted when an acknowledgment `SETTINGS` frame has been received.
 	**/
-	var LocalSettings:Http2SessionEvent<Http2Settings->Void> = "localSettings";
+	var LocalSettings:Http2SessionEvent<(settings:Http2Settings) -> Void> = "localSettings";
 
 	/**
 		Emitted whenever a `PING` frame is received from the connected peer.
 	**/
-	var Ping:Http2SessionEvent<Buffer->Void> = "ping";
+	var Ping:Http2SessionEvent<(payload:Buffer) -> Void> = "ping";
 
 	/**
 		Emitted when a new `SETTINGS` frame is received from the connected peer.
 	**/
-	var RemoteSettings:Http2SessionEvent<Http2Settings->Void> = "remoteSettings";
+	var RemoteSettings:Http2SessionEvent<(settings:Http2Settings) -> Void> = "remoteSettings";
 
 	/**
 		Emitted when a new `Http2Stream` is created.
@@ -84,7 +84,7 @@ enum abstract Http2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 	/**
 		Emitted after the `Http2Session` times out due to inactivity.
 	**/
-	var Timeout:Http2SessionEvent<Void->Void> = "timeout";
+	var Timeout:Http2SessionEvent<() -> Void> = "timeout";
 }
 
 /**
@@ -160,7 +160,7 @@ extern class Http2Session extends EventEmitter<Http2Session> {
 	/**
 		Gracefully closes the `Http2Session`, allowing existing streams to complete.
 	**/
-	function close(?callback:Void->Void):Void;
+	function close(?callback:() -> Void):Void;
 
 	/**
 		Immediately terminates the `Http2Session` and the associated socket.
@@ -192,7 +192,7 @@ extern class Http2Session extends EventEmitter<Http2Session> {
 	/**
 		Sets a callback invoked when there is no activity on the session after `msecs` milliseconds.
 	**/
-	function setTimeout(msecs:Int, ?callback:Void->Void):Void;
+	function setTimeout(msecs:Int, ?callback:() -> Void):Void;
 
 	/**
 		Updates the current local settings and sends a new `SETTINGS` frame.

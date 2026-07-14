@@ -32,7 +32,7 @@ enum abstract ClientHttp2StreamEvent<T:haxe.Constraints.Function>(Event<T>) to E
 	/**
 		Emitted when the server sends a `100 Continue` response.
 	**/
-	var Continue:ClientHttp2StreamEvent<Void->Void> = "continue";
+	var Continue:ClientHttp2StreamEvent<() -> Void> = "continue";
 
 	/**
 		Emitted when additional headers are received for an open stream.

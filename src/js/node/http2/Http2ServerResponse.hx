@@ -38,12 +38,12 @@ enum abstract Http2ServerResponseEvent<T:haxe.Constraints.Function>(Event<T>) to
 	/**
 		Indicates that the underlying `Http2Stream` was terminated before `response.end()` was called or able to flush.
 	**/
-	var Close:Http2ServerResponseEvent<Void->Void> = "close";
+	var Close:Http2ServerResponseEvent<() -> Void> = "close";
 
 	/**
 		Emitted when the response has been sent.
 	**/
-	var Finish:Http2ServerResponseEvent<Void->Void> = "finish";
+	var Finish:Http2ServerResponseEvent<() -> Void> = "finish";
 }
 
 /**
@@ -144,7 +144,7 @@ extern class Http2ServerResponse extends Writable<Http2ServerResponse> {
 	/**
 		Sets the `Http2Stream`'s timeout value to `msecs`.
 	**/
-	function setTimeout(msecs:Int, ?callback:Void->Void):Http2ServerResponse;
+	function setTimeout(msecs:Int, ?callback:() -> Void):Http2ServerResponse;
 
 	/**
 		Returns a `Proxy` object that acts as a `net.Socket` (or `tls.TLSSocket`)

@@ -40,7 +40,7 @@ enum abstract Http2SecureServerEvent<T:haxe.Constraints.Function>(Event<T>) to E
 	/**
 		Emitted when a new TCP stream is established, before the TLS handshake begins.
 	**/
-	var Connection:Http2SecureServerEvent<IDuplex->Void> = "connection";
+	var Connection:Http2SecureServerEvent<(socket:IDuplex) -> Void> = "connection";
 
 	/**
 		Emitted each time there is a request. See the Compatibility API.
@@ -50,7 +50,7 @@ enum abstract Http2SecureServerEvent<T:haxe.Constraints.Function>(Event<T>) to E
 	/**
 		Emitted when a new `Http2Session` is created by the `Http2SecureServer`.
 	**/
-	var Session:Http2SecureServerEvent<ServerHttp2Session->Void> = "session";
+	var Session:Http2SecureServerEvent<(session:ServerHttp2Session) -> Void> = "session";
 
 	/**
 		Emitted when an `'error'` event is emitted by an `Http2Session` associated with the server.
@@ -65,12 +65,12 @@ enum abstract Http2SecureServerEvent<T:haxe.Constraints.Function>(Event<T>) to E
 	/**
 		Emitted when there is no activity on the Server for a given number of milliseconds.
 	**/
-	var Timeout:Http2SecureServerEvent<Void->Void> = "timeout";
+	var Timeout:Http2SecureServerEvent<() -> Void> = "timeout";
 
 	/**
 		Emitted when a connecting client fails to negotiate an allowed protocol (HTTP/2 or HTTP/1.1).
 	**/
-	var UnknownProtocol:Http2SecureServerEvent<IDuplex->Void> = "unknownProtocol";
+	var UnknownProtocol:Http2SecureServerEvent<(socket:IDuplex) -> Void> = "unknownProtocol";
 }
 
 /**
@@ -83,8 +83,8 @@ extern class Http2SecureServer extends js.node.tls.Server {
 	/**
 		Used to set the timeout value for http2 secure server requests.
 	**/
-	@:overload(function(?callback:Void->Void):Http2SecureServer {})
-	function setTimeout(?msecs:Int, ?callback:Void->Void):Http2SecureServer;
+	@:overload(function(?callback:() -> Void):Http2SecureServer {})
+	function setTimeout(?msecs:Int, ?callback:() -> Void):Http2SecureServer;
 
 	/**
 		The number of milliseconds of inactivity before a socket is presumed to have timed out.

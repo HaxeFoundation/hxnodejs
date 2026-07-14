@@ -44,7 +44,7 @@ enum abstract ClientHttp2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to 
 	/**
 		Emitted when an `ORIGIN` frame is received.
 	**/
-	var Origin:ClientHttp2SessionEvent<Array<String>->Void> = "origin";
+	var Origin:ClientHttp2SessionEvent<(origins:Array<String>) -> Void> = "origin";
 
 	/**
 		Emitted when a new client stream is created.
