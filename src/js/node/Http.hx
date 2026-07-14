@@ -28,11 +28,8 @@ import js.node.http.*;
 import js.node.net.Socket;
 import js.node.stream.Duplex;
 import js.node.url.URL;
-#if haxe4
+import js.node.web.AbortSignal;
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	The HTTP interfaces in Node are designed to support many features of the protocol
@@ -67,13 +64,8 @@ extern class Http {
 
 		The `requestListener` is a function which is automatically added to the `'request'` event.
 	**/
-	#if haxe4
 	@:overload(function(options:HttpCreateServerOptions, ?requestListener:(request:IncomingMessage, response:ServerResponse) -> Void):Server {})
 	static function createServer(?requestListener:(request:IncomingMessage, response:ServerResponse) -> Void):Server;
-	#else
-	@:overload(function(options:HttpCreateServerOptions, ?requestListener:IncomingMessage->ServerResponse->Void):Server {})
-	static function createServer(?requestListener:IncomingMessage->ServerResponse->Void):Server;
-	#end
 
 	/**
 		Since most requests are GET requests without bodies, Node.js provides this convenience method.
@@ -110,6 +102,50 @@ extern class Http {
 	@:overload(function(url:URL, ?options:HttpRequestOptions, ?callback:IncomingMessage->Void):ClientRequest {})
 	@:overload(function(url:String, ?options:HttpRequestOptions, ?callback:IncomingMessage->Void):ClientRequest {})
 	static function request(options:HttpRequestOptions, ?callback:IncomingMessage->Void):ClientRequest;
+
+	/**
+		Performs the low-level validations on the provided `name` that are done when `res.setHeader(name, value)` is called.
+		@throws `TypeError` if the `name` is invalid.
+	**/
+	static function validateHeaderName(name:String, ?label:String):Void;
+
+	/**
+		Performs the low-level validations on the provided `value` that are done when `res.setHeader(name, value)` is called.
+		@throws `TypeError` if the `value` is invalid.
+	**/
+	static function validateHeaderValue(name:String, value:EitherType<String, Array<String>>):Void;
+
+	/**
+		Set the maximum number of idle HTTP parsers that can stay around for reuse.
+		Default: `1000`.
+	**/
+	static function setMaxIdleHTTPParsers(max:Int):Void;
+
+	/**
+		Undici `WebSocket` constructor exposed via `node:http`.
+
+		// TODO(section-6): prefer `js.node.web` WebSocket typing once section 6 lands
+	**/
+	static var WebSocket:Class<Any>;
+
+	/**
+		Parent class of `http.ClientRequest` and `http.ServerResponse`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/http.html#class-httpoutgoingmessage
+	**/
+	static var OutgoingMessage:Class<OutgoingMessage>;
+
+	/**
+		Dynamically resets the global configurations to enable built-in proxy support for
+		`fetch()` and `http.request()` / `https.request()` at runtime.
+
+		Returns a restore function for the previous agent/dispatcher settings.
+
+		Added in: v24.14.0.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/http.html#httpsetglobalproxyfromenvproxyenv
+	**/
+	static function setGlobalProxyFromEnv(?proxyEnv:DynamicAccess<String>):() -> Void;
 }
 
 typedef HttpCreateServerOptions = {
@@ -118,14 +154,81 @@ typedef HttpCreateServerOptions = {
 
 		Default: `js.node.http.IncomingMessage`.
 	**/
-	@:optional var IncomingMessage:Class<Dynamic>;
+	@:optional var IncomingMessage:Class<IncomingMessage>;
 
 	/**
 		Specifies the `ServerResponse` class to be used. Useful for extending the original `ServerResponse`.
 
 		Default: `ServerResponse`.
 	**/
-	@:optional var ServerResponse:Class<Dynamic>;
+	@:optional var ServerResponse:Class<ServerResponse>;
+
+	/**
+		Sets the timeout value in milliseconds for receiving the entire request from the client.
+		See `server.requestTimeout`.
+	**/
+	@:optional var requestTimeout:Int;
+
+	/**
+		Sets the timeout value in milliseconds for receiving the complete HTTP headers from the client.
+		See `server.headersTimeout`.
+	**/
+	@:optional var headersTimeout:Int;
+
+	/**
+		The number of milliseconds of inactivity a server needs to wait for additional incoming data,
+		after it has finished writing the last response, before a socket will be destroyed.
+	**/
+	@:optional var keepAliveTimeout:Int;
+
+	/**
+		Additional milliseconds of inactivity to allow before destroying a keep-alive socket
+		after `keepAliveTimeout` elapses. Default: `1000`.
+	**/
+	@:optional var keepAliveTimeoutBuffer:Int;
+
+	/**
+		Sets the interval value in milliseconds to check for request and headers timeout in incomplete requests.
+	**/
+	@:optional var connectionsCheckingInterval:Int;
+
+	/**
+		Sets the maximum number of requests that may be made on a single socket before it is closed.
+		Default: `0` (no limit).
+	**/
+	@:optional var maxRequestsPerSocket:Int;
+
+	/**
+		Whether or not to enable keep-alive on incoming connections.
+	**/
+	@:optional var keepAlive:Bool;
+
+	/**
+		Initial delay for keep-alive in milliseconds.
+	**/
+	@:optional var keepAliveInitialDelay:Int;
+
+	/**
+		Optionally overrides all `net.Socket`s' `readableHighWaterMark` and `writableHighWaterMark`.
+	**/
+	@:optional var highWaterMark:Int;
+
+	/**
+		If set to `true`, it disables the use of Nagle's algorithm immediately after a new incoming connection is received.
+	**/
+	@:optional var noDelay:Bool;
+
+	/**
+		Sets the maximum number of unique header names allowed per request. Default: `2000`.
+	**/
+	@:optional var joinDuplicateHeaders:Bool;
+
+	/**
+		`uniqueHeaders` is an optional configuration specific to HTTP servers.
+
+		@see https://nodejs.org/api/http.html#httpcreateserveroptions-requestlistener
+	**/
+	@:optional var uniqueHeaders:Array<EitherType<String, Array<String>>>;
 }
 
 /**
@@ -154,11 +257,7 @@ typedef HttpRequestOptions = {
 		See [agent.createConnection()](https://nodejs.org/api/http.html#http_agent_createconnection_options_callback) for more details.
 		Any `Duplex` stream is a valid return value.
 	**/
-	#if haxe4
 	@:optional var createConnection:(options:SocketConnectOptionsTcp, ?callabck:(err:Error, stream:IDuplex) -> Void) -> IDuplex;
-	#else
-	@:optional var createConnection:SocketConnectOptionsTcp->?(Error->IDuplex->Void)->IDuplex;
-	#end
 
 	/**
 		Default port for the protocol.
@@ -242,4 +341,39 @@ typedef HttpRequestOptions = {
 		This will set the timeout before the socket is connected.
 	**/
 	@:optional var timeout:Int;
+
+	/**
+		Local port to bind to for network connections.
+	**/
+	@:optional var localPort:Int;
+
+	/**
+		Optional dns.lookup() hints.
+	**/
+	@:optional var hints:Int;
+
+	/**
+		An AbortSignal that may be used to abort an ongoing request.
+	**/
+	@:optional var signal:AbortSignal;
+
+	/**
+		Headers names which values are treated as arrays of values.
+	**/
+	@:optional var uniqueHeaders:Array<EitherType<String, Array<String>>>;
+
+	/**
+		Join duplicate headers into a comma-separated string for select headers.
+	**/
+	@:optional var joinDuplicateHeaders:Bool;
+
+	/**
+		Optionally overrides the value of `--max-http-header-size` for request parsing.
+	**/
+	@:optional var maxHeaderSize:Int;
+
+	/**
+		If `true`, use an insecure HTTP parser that accepts invalid HTTP headers.
+	**/
+	@:optional var insecureHTTPParser:Bool;
 }

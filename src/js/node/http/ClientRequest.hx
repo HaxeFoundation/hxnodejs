@@ -39,14 +39,20 @@ enum abstract ClientRequestEvent<T:haxe.Constraints.Function>(Event<T>) to Event
 	var Abort:ClientRequestEvent<Void->Void> = "abort";
 
 	/**
+		Emitted when the request has been closed / completed.
+	**/
+	var Close:ClientRequestEvent<Void->Void> = "close";
+
+	/**
+		Emitted when the request has been sent / finished writing.
+	**/
+	var Finish:ClientRequestEvent<Void->Void> = "finish";
+
+	/**
 		Emitted each time a server responds to a request with a `CONNECT` method.
 		If this event is not being listened for, clients receiving a `CONNECT` method will have their connections closed.
 	**/
-	#if haxe4
 	var Connect:ClientRequestEvent<(response:IncomingMessage, socket:Socket, head:Buffer) -> Void> = "connect";
-	#else
-	var Connect:ClientRequestEvent<IncomingMessage->Socket->Buffer->Void> = "connect";
-	#end
 
 	/**
 		Emitted when the server sends a '100 Continue' HTTP response,
@@ -85,12 +91,8 @@ enum abstract ClientRequestEvent<T:haxe.Constraints.Function>(Event<T>) to Event
 		If this event is not being listened for and the response status code is 101 Switching Protocols,
 		clients receiving an upgrade header will have their connections closed.
 	**/
-	#if haxe4
 	var Upgrade:ClientRequestEvent<(response:IncomingMessage, socket:Socket, head:Buffer) -> Void> = "upgrade";
-	#else
-	var Upgrade:ClientRequestEvent<IncomingMessage->Socket->Buffer->Void> = "upgrade";
-	#end
-}
+	}
 
 /**
 	This object is created internally and returned from http.request().
@@ -156,6 +158,27 @@ extern class ClientRequest extends Writable<ClientRequest> {
 	function getHeader(name:String):haxe.extern.EitherType<String, Array<String>>;
 
 	/**
+		Returns an array containing the unique names of the current outgoing headers.
+	**/
+	function getHeaderNames():Array<String>;
+
+	/**
+		Returns a shallow copy of the current outgoing headers.
+	**/
+	function getHeaders():DynamicAccess<haxe.extern.EitherType<String, Array<String>>>;
+
+	/**
+		Returns an array containing the unique names of the current outgoing raw headers.
+		Header names are returned with their exact casing.
+	**/
+	function getRawHeaderNames():Array<String>;
+
+	/**
+		Returns `true` if the header identified by `name` is currently set in the outgoing headers.
+	**/
+	function hasHeader(name:String):Bool;
+
+	/**
 		Limits maximum response headers count. If set to 0, no limit will be applied.
 
 		Default: `2000`
@@ -165,7 +188,27 @@ extern class ClientRequest extends Writable<ClientRequest> {
 	/**
 		The request path.
 	**/
-	var path(default, null):String;
+	var path:String;
+
+	/**
+		The HTTP request method.
+	**/
+	var method:Method;
+
+	/**
+		The request host header value.
+	**/
+	var host(default, null):String;
+
+	/**
+		The request protocol (`http:` / `https:`).
+	**/
+	var protocol(default, null):String;
+
+	/**
+		Whether the request reused an existing socket.
+	**/
+	var reusedSocket(default, null):Bool;
 
 	/**
 		Removes a header that's already defined into headers object.
@@ -181,6 +224,22 @@ extern class ClientRequest extends Writable<ClientRequest> {
 	**/
 	@:overload(function(name:String, value:Array<String>):Void {})
 	function setHeader(name:String, value:String):Void;
+
+	/**
+		Append a single header value for the header object.
+
+		@see https://nodejs.org/api/http.html#outgoingmessageappendheadername-value
+	**/
+	@:overload(function(name:String, value:Array<String>):ClientRequest {})
+	function appendHeader(name:String, value:String):ClientRequest;
+
+	/**
+		Sets multiple header values for implicit headers.
+
+		@see https://nodejs.org/api/http.html#outgoingmessagesetheadersheaders
+	**/
+	@:overload(function(headers:DynamicAccess<haxe.extern.EitherType<String, Array<String>>>):Void {})
+	function setHeaders(headers:js.node.web.Headers):Void;
 
 	/**
 		Once a socket is assigned to this request and is connected

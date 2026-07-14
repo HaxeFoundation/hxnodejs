@@ -24,13 +24,8 @@ package js.node;
 
 import haxe.extern.EitherType;
 import js.node.dns.Resolver as ResolverObject;
-#if haxe4
 import js.lib.ArrayBuffer;
 import js.lib.Error;
-#else
-import js.html.ArrayBuffer;
-import js.Error;
-#end
 
 /**
 	Enumeration of possible Int `options` values for `Dns.lookup`.
@@ -445,11 +440,11 @@ extern enum abstract DnsErrorCode(String) {
 	var CANCELLED;
 }
 
-typedef DnsLookupCallbackSingle = #if (haxe_ver >= 4) (err:DnsError, address:String,
-		family:DnsAddressFamily) -> Void; #else DnsError->String->DnsAddressFamily->Void #end
+typedef DnsLookupCallbackSingle = (err:DnsError, address:String,
+		family:DnsAddressFamily) -> Void;
 
-typedef DnsLookupCallbackAll = #if (haxe_ver >= 4) (err:DnsError,
-		addresses:Array<DnsLookupCallbackAllEntry>) -> Void; #else DnsError->Array<DnsLookupCallbackAllEntry>->Void; #end
+typedef DnsLookupCallbackAll = (err:DnsError,
+		addresses:Array<DnsLookupCallbackAllEntry>) -> Void;
 
 typedef DnsLookupCallbackAllEntry = {address:String, family:DnsAddressFamily};
 

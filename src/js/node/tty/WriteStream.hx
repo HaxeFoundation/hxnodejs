@@ -22,6 +22,8 @@
 
 package js.node.tty;
 
+import haxe.DynamicAccess;
+import haxe.extern.EitherType;
 import js.node.events.EventEmitter;
 
 /**
@@ -35,12 +37,23 @@ enum abstract WriteStreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T
 }
 
 /**
+	Direction for `WriteStream.clearLine`.
+**/
+enum abstract WriteStreamClearLineDirection(Int) from Int to Int {
+	var Left = -1;
+	var Right = 1;
+	var EntireLine = 0;
+}
+
+/**
 	A net.Socket subclass that represents the writable portion of a tty.
 	In normal circumstances, process.stdout will be the only tty.WriteStream instance
 	ever created (and only when isatty(1) is true).
 **/
 @:jsRequire("tty", "WriteStream")
 extern class WriteStream extends js.node.net.Socket {
+	function new(fd:Int);
+
 	/**
 		The number of columns the TTY currently has.
 		This property gets updated on "resize" events.
@@ -52,4 +65,47 @@ extern class WriteStream extends js.node.net.Socket {
 		This property gets updated on "resize" events.
 	**/
 	var rows(default, null):Int;
+
+	/**
+		`writeStream.clearLine()` clears the current line of this `WriteStream` in a direction identified by `dir`.
+	**/
+	function clearLine(dir:WriteStreamClearLineDirection, ?callback:Void->Void):Bool;
+
+	/**
+		`writeStream.clearScreenDown()` clears this `WriteStream` from the current cursor down.
+	**/
+	function clearScreenDown(?callback:Void->Void):Bool;
+
+	/**
+		`writeStream.cursorTo()` moves this `WriteStream`'s cursor to the specified position.
+	**/
+	@:overload(function(x:Int, callback:Void->Void):Bool {})
+	function cursorTo(x:Int, ?y:Int, ?callback:Void->Void):Bool;
+
+	/**
+		`writeStream.moveCursor()` moves this `WriteStream`'s cursor relative to its current position.
+	**/
+	function moveCursor(dx:Int, dy:Int, ?callback:Void->Void):Bool;
+
+	/**
+		Returns:
+		- `1` for 2,
+		- `4` for 16,
+		- `8` for 256,
+		- `24` for 16,777,216 colors supported.
+	**/
+	function getColorDepth(?env:DynamicAccess<String>):Int;
+
+	/**
+		`writeStream.getWindowSize()` returns the size of the TTY corresponding to this `WriteStream`
+		as `[numColumns, numRows]`.
+	**/
+	function getWindowSize():Array<Int>;
+
+	/**
+		Returns `true` if the `writeStream` supports at least as many colors as provided in `count`.
+	**/
+	@:overload(function(env:DynamicAccess<String>):Bool {})
+	@:overload(function(count:Int, ?env:DynamicAccess<String>):Bool {})
+	function hasColors(?count:EitherType<Int, DynamicAccess<String>>, ?env:DynamicAccess<String>):Bool;
 }

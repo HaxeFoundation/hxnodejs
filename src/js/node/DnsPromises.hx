@@ -25,11 +25,7 @@ package js.node;
 import haxe.extern.EitherType;
 import js.node.Dns;
 import js.node.dns.PromisesResolver as PromisesResolverObject;
-#if haxe4
 import js.lib.Promise;
-#else
-import js.Promise;
-#end
 
 /**
 	The `dns/promises` API provides an alternative set of asynchronous DNS methods

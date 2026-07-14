@@ -26,11 +26,7 @@ import haxe.DynamicAccess;
 import js.node.events.EventEmitter.Event;
 import js.node.net.Socket;
 import js.node.stream.Readable;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Enumeration of events emitted by the `IncomingMessage` objects in addition to its parent class events.
@@ -85,6 +81,11 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 		- For all other headers, the values are joined together with ', '.
 	**/
 	var headers(default, null):DynamicAccess<haxe.extern.EitherType<String, Array<String>>>;
+
+	/**
+		Similar to `headers`, but with header values as arrays of values, without joining.
+	**/
+	var headersDistinct(default, null):DynamicAccess<Array<String>>;
 
 	/**
 		In case of server request, the HTTP version sent by the client.
@@ -161,6 +162,11 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 		Only populated after the `'end'` event.
 	**/
 	var trailers(default, null):DynamicAccess<String>;
+
+	/**
+		Similar to `trailers`, but with values as arrays of strings.
+	**/
+	var trailersDistinct(default, null):DynamicAccess<Array<String>>;
 
 	/**
 		*Only valid for request obtained from* `Server`.

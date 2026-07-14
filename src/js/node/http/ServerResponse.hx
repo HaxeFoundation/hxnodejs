@@ -125,6 +125,17 @@ extern class ServerResponse extends Writable<ServerResponse> {
 	var sendDate:Bool;
 
 	/**
+		A reference to the original HTTP `request` object.
+	**/
+	var req(default, null):IncomingMessage;
+
+	/**
+		If set to `true`, Node.js checks that `Content-Length` and the length of the body being transmitted are equal.
+		Default: `false`.
+	**/
+	var strictContentLength:Bool;
+
+	/**
 		Sets a single header value for implicit headers.
 		If this header already exists in the to-be-sent headers, its value will be replaced.
 		Use an array of strings here to send multiple headers with the same name.
@@ -134,6 +145,27 @@ extern class ServerResponse extends Writable<ServerResponse> {
 	**/
 	@:overload(function(name:String, value:Array<String>):Void {})
 	function setHeader(name:String, value:String):Void;
+
+	/**
+		Append a single header value to the header object.
+
+		@see https://nodejs.org/api/http.html#outgoingmessageappendheadername-value
+	**/
+	@:overload(function(name:String, value:Array<String>):ServerResponse {})
+	function appendHeader(name:String, value:String):ServerResponse;
+
+	/**
+		Sets multiple header values for implicit headers.
+
+		@see https://nodejs.org/api/http.html#outgoingmessagesetheadersheaders
+	**/
+	@:overload(function(headers:DynamicAccess<haxe.extern.EitherType<String, Array<String>>>):Void {})
+	function setHeaders(headers:js.node.web.Headers):Void;
+
+	/**
+		Returns an array containing the unique names of the current outgoing raw headers.
+	**/
+	function getRawHeaderNames():Array<String>;
 
 	/**
 		Sets the Socket's timeout value to `msecs`.
@@ -173,6 +205,21 @@ extern class ServerResponse extends Writable<ServerResponse> {
 		See the `'checkContinue'` event on `Server`.
 	 */
 	function writeContinue():Void;
+
+	/**
+		Sends an HTTP/1.1 103 Early Hints message to the client with a Link header,
+		used to allow the user agent to preload/preconnect to resources while the full response is prepared.
+
+		@see https://nodejs.org/api/http.html#responsewriteearlyhintshints-callback
+	**/
+	function writeEarlyHints(hints:DynamicAccess<haxe.extern.EitherType<String, Array<String>>>, ?callback:Void->Void):Void;
+
+	/**
+		Sends an informational 1xx response to the client.
+
+		@see https://nodejs.org/api/http.html#responsewriteinformationstatuscode-headers-callback
+	**/
+	function writeInformation(statusCode:Int, ?headers:DynamicAccess<String>, ?callback:Void->Void):Void;
 
 	/**
 		Sends a response header to the request.

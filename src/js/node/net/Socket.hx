@@ -25,11 +25,7 @@ package js.node.net;
 import haxe.extern.EitherType;
 import js.node.Dns;
 import js.node.events.EventEmitter.Event;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Enumeration of events for `Socket` objects.
@@ -92,6 +88,37 @@ enum abstract SocketEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 			had_error - true if the socket had a transmission error
 	**/
 	var Close:SocketEvent<Bool->Void> = "close";
+
+	/**
+		Emitted when a socket is ready to be used.
+
+		Triggered immediately after `'connect'`.
+	**/
+	var Ready:SocketEvent<Void->Void> = "ready";
+
+	/**
+		Emitted when a new connection attempt is started.
+		Only emitted for family-agnostic (`family: 0` / autoSelectFamily) connects.
+
+		@see https://nodejs.org/api/net.html#event-connectionattempt
+	**/
+	var ConnectionAttempt:SocketEvent<(ip:String, port:Int, family:Int) -> Void> = "connectionAttempt";
+
+	/**
+		Emitted when a connection attempt fails.
+		Only emitted for family-agnostic connects.
+
+		@see https://nodejs.org/api/net.html#event-connectionattemptfailed
+	**/
+	var ConnectionAttemptFailed:SocketEvent<(ip:String, port:Int, family:Int, error:Error) -> Void> = "connectionAttemptFailed";
+
+	/**
+		Emitted when a connection attempt times out.
+		Only emitted for family-agnostic connects.
+
+		@see https://nodejs.org/api/net.html#event-connectionattempttimeout
+	**/
+	var ConnectionAttemptTimeout:SocketEvent<(ip:String, port:Int, family:Int) -> Void> = "connectionAttemptTimeout";
 }
 
 typedef SocketOptionsBase = {
@@ -127,6 +154,25 @@ typedef SocketOptions = {
 		allow writes on this socket (NOTE: Works only when `fd` is passed)
 	**/
 	@:optional var writable:Bool;
+
+	/**
+		If set to `false`, then the socket will automatically end the stream when the other end of the socket sends a FIN packet.
+		See `allowHalfOpen` for more information. Default: `false`.
+	**/
+	@:optional var onread:SocketOnReadOptions;
+
+	/**
+		AbortSignal used to abort an ongoing connect / read.
+	**/
+	@:optional var signal:js.node.web.AbortSignal;
+}
+
+/**
+	Optional `onread` callback options for `Socket`.
+**/
+typedef SocketOnReadOptions = {
+	var buffer:EitherType<js.node.Buffer, () -> js.node.Buffer>;
+	var callback:(bytesWritten:Int, buffer:js.node.Buffer) -> Bool;
 }
 
 /**
@@ -156,6 +202,7 @@ typedef SocketConnectOptionsTcp = {
 
 	/**
 		Version of IP stack. Defaults to 4.
+		Use `0` for dual-stack / auto family selection.
 	**/
 	@:optional var family:DnsAddressFamily;
 
@@ -163,6 +210,46 @@ typedef SocketConnectOptionsTcp = {
 		Custom lookup function. Defaults to `Dns.lookup`.
 	**/
 	@:optional var lookup:String->DnsLookupOptions->DnsLookupCallbackSingle->Void;
+
+	/**
+		Optional dns.lookup() hints.
+	**/
+	@:optional var hints:Int;
+
+	/**
+		If true, connecting sockets enable TCP keep-alive (SO_KEEPALIVE).
+	**/
+	@:optional var keepAlive:Bool;
+
+	/**
+		Initial TCP keep-alive delay in milliseconds, when `keepAlive` is enabled.
+	**/
+	@:optional var keepAliveInitialDelay:Int;
+
+	/**
+		If set to `true`, disables the Nagle algorithm.
+	**/
+	@:optional var noDelay:Bool;
+
+	/**
+		If set to `true`, enables TCP_KEEPALIVE on the connection.
+	**/
+	@:optional var autoSelectFamily:Bool;
+
+	/**
+		Timeout in milliseconds for autoSelectFamily connection attempts.
+	**/
+	@:optional var autoSelectFamilyAttemptTimeout:Int;
+
+	/**
+		Connection timeout in milliseconds. Defaults to no timeout.
+	**/
+	@:optional var timeout:Int;
+
+	/**
+		AbortSignal used to abort an ongoing connect.
+	**/
+	@:optional var signal:js.node.web.AbortSignal;
 }
 
 /**
@@ -173,6 +260,21 @@ typedef SocketConnectOptionsUnix = {
 		Path the client should connect to
 	**/
 	var path:String;
+
+	/**
+		AbortSignal used to abort an ongoing connect.
+	**/
+	@:optional var signal:js.node.web.AbortSignal;
+}
+
+/**
+	Possible values of `socket.readyState`.
+**/
+enum abstract SocketReadyState(String) from String to String {
+	var Opening = "opening";
+	var Open = "open";
+	var ReadOnly = "readOnly";
+	var WriteOnly = "writeOnly";
 }
 
 /**
@@ -254,7 +356,6 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 	**/
 	// var destroyed(default, null):Bool;
 
-	#if haxe4
 	/**
 		Ensures that no more I/O activity happens on this socket.
 		Only necessary in case of errors (parse error or so).
@@ -263,7 +364,18 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 		any listeners for that event will receive exception as an argument.
 	**/
 	function destroy(?exception:Error):Void;
-	#end
+
+	/**
+		Destroys the socket after all data has been written.
+		If there is remaining data in the write buffer, it will wait until that data has been flushed.
+	**/
+	function destroySoon():Void;
+
+	/**
+		Half-closes the socket by sending a FIN packet, then destroys it upon error / when fully closed.
+		Useful for HTTP/1 agents that need to reset a pooled connection.
+	**/
+	function resetAndDestroy():Socket;
 
 	/**
 		Sets the socket to timeout after `timeout` milliseconds of inactivity on the socket.
@@ -347,6 +459,42 @@ extern class Socket extends js.node.stream.Duplex<Socket> {
 		The numeric representation of the local port. For example, 80 or 21.
 	**/
 	var localPort(default, null):Int;
+
+	/**
+		The string representation of the local IP family. `'IPv4'` or `'IPv6'`.
+	**/
+	var localFamily(default, null):SocketAdressFamily;
+
+	/**
+		This property is only present when using `autoSelectFamily` and represents attempted addresses.
+
+		@see https://nodejs.org/api/net.html#socketautoselectfamilyattemptedaddresses
+	**/
+	var autoSelectFamilyAttemptedAddresses(default, null):Array<String>;
+
+	/**
+		If `true`, `socket.connect(options[, connectListener])` was called and has not yet finished.
+	**/
+	var connecting(default, null):Bool;
+
+	/**
+		This is `true` if the socket is not connected yet, either because `.connect()` has not yet been called
+		or because it is still in the process of connecting (see `connecting`).
+	**/
+	var pending(default, null):Bool;
+
+	/**
+		The socket timeout in milliseconds as set by `socket.setTimeout()`.
+		`undefined` if a timeout has not been set.
+	**/
+	var timeout(default, null):Null<Int>;
+
+	/**
+		This property represents the state of the connection as a string.
+
+		@see https://nodejs.org/api/net.html#socketreadystate
+	**/
+	var readyState(default, null):SocketReadyState;
 
 	/**
 		The amount of received bytes.

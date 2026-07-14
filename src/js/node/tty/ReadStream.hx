@@ -29,6 +29,8 @@ package js.node.tty;
 **/
 @:jsRequire("tty", "ReadStream")
 extern class ReadStream extends js.node.net.Socket {
+	function new(fd:Int, ?options:js.node.net.Socket.SocketOptions);
+
 	/**
 		A boolean that is initialized to false.
 		It represents the current "raw" state of the tty.ReadStream instance.
@@ -40,5 +42,5 @@ extern class ReadStream extends js.node.net.Socket {
 		This sets the properties of the tty.ReadStream to act either as a raw device or default.
 		`isRaw` will be set to the resulting mode.
 	**/
-	function setRawMode(mode:Bool):Void;
+	function setRawMode(mode:Bool):ReadStream;
 }

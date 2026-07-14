@@ -22,17 +22,14 @@
 
 package js.node;
 
+import haxe.DynamicAccess;
 import haxe.extern.EitherType;
 import js.node.Buffer;
 import js.node.tls.SecureContext;
 import js.node.tls.SecurePair;
 import js.node.tls.Server;
 import js.node.tls.TLSSocket;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 typedef TlsOptionsBase = {
 	/**
@@ -44,8 +41,17 @@ typedef TlsOptionsBase = {
 
 	/**
 		possible NPN protocols. (Protocols should be ordered by their priority).
+
+		@deprecated Use `ALPNProtocols` instead.
 	**/
+	@:deprecated("Use ALPNProtocols instead")
 	@:optional var NPNProtocols:EitherType<Array<String>, Buffer>;
+
+	/**
+		An array of strings or a Buffer naming possible ALPN protocols.
+		(Protocols should be ordered by their priority.)
+	**/
+	@:optional var ALPNProtocols:EitherType<Array<EitherType<String, Buffer>>, Buffer>;
 }
 
 typedef TlsServerOptionsBase = {
@@ -65,7 +71,7 @@ typedef TlsServerOptionsBase = {
 		(You can use tls.createSecureContext(...) to get proper `SecureContext`).
 		If `SNICallback` wasn't provided - default callback with high-level API will be used.
 	**/
-	@:optional var SNICallback:#if (haxe_ver >= 4)(servername:String, cb:(Error->SecureContext)) -> Void #else String->(Error->SecureContext)->Void #end;
+	@:optional var SNICallback:(servername:String, cb:(Null<Error>, SecureContext) -> Void) -> Void;
 }
 
 typedef TlsClientOptionsBase = {
@@ -111,6 +117,21 @@ typedef TlsCreateServerOptions = {
 		NOTE: Automatically shared between cluster module workers.
 	**/
 	@:optional var ticketKeys:Buffer;
+
+	/**
+		If true, `tls.TLSSocket.enableTrace()` is called on new connections.
+
+		@see https://nodejs.org/api/tls.html#tlscreateserveroptions-secureconnectionlistener
+	**/
+	@:optional var enableTrace:Bool;
+
+	/**
+		If set, called when a client opens a connection using the ALPN extension.
+		Return one of the client's protocols, or `undefined` to reject.
+
+		@see https://nodejs.org/api/tls.html#tlscreateserveroptions-secureconnectionlistener
+	**/
+	@:optional var ALPNCallback:(arg:{servername:String, protocols:Array<String>}) -> Null<String>;
 }
 
 typedef TlsConnectOptions = {
@@ -149,8 +170,39 @@ typedef TlsConnectOptions = {
 		An override for checking server's hostname against the certificate.
 		Should return an error if verification fails. Return `js.Lib.undefined` if passing.
 	**/
-	@:optional var checkServerIdentity:String -> {}->Dynamic; // TODO: peer cerficicate structure
+	@:optional var checkServerIdentity:(servername:String, cert:PeerCertificate) -> Null<Error>;
+}
 
+/**
+	Common fields of the certificate object returned by `TLSSocket.getPeerCertificate`.
+
+	// TODO(section-3): expand full PeerCertificate / DetailedPeerCertificate field set from OpenSSL
+**/
+typedef PeerCertificate = {
+	@:optional var subject:CertificateSubject;
+	@:optional var issuer:CertificateSubject;
+	@:optional var subjectaltname:String;
+	@:optional var infoAccess:haxe.DynamicAccess<Array<String>>;
+	@:optional var modulus:String;
+	@:optional var exponent:String;
+	@:optional var valid_from:String;
+	@:optional var valid_to:String;
+	@:optional var fingerprint:String;
+	@:optional var fingerprint256:String;
+	@:optional var fingerprint512:String;
+	@:optional var serialNumber:String;
+	@:optional var raw:Buffer;
+	// present when detailed=true
+	@:optional var issuerCertificate:PeerCertificate;
+}
+
+typedef CertificateSubject = {
+	@:optional var C:String;
+	@:optional var ST:String;
+	@:optional var L:String;
+	@:optional var O:String;
+	@:optional var OU:String;
+	@:optional var CN:String;
 }
 
 /**
@@ -234,6 +286,20 @@ extern class Tls {
 	static function getCiphers():Array<String>;
 
 	/**
+		Verifies the certificate `cert` is issued to `hostname`.
+
+		Returns an `Error` object on failure, or `undefined` on success.
+	**/
+	static function checkServerIdentity(hostname:String, cert:PeerCertificate):Null<Error>;
+
+	/**
+		Converts the given ALPN protocols list into wire-format expected by OpenSSL.
+
+		@see https://nodejs.org/api/tls.html#tlsconvertalpnprotocolsprotocols-out
+	**/
+	static function convertALPNProtocols(protocols:EitherType<Array<EitherType<String, Buffer>>, Buffer>, out:{}):Void;
+
+	/**
 		Creates a new `Server`.
 		The `connectionListener` argument is automatically set as a listener for the 'secureConnection' event.
 	**/
@@ -247,6 +313,7 @@ extern class Tls {
 	@:overload(function(port:Int, options:TlsConnectOptions, ?callback:Void->Void):TLSSocket {})
 	@:overload(function(port:Int, host:String, ?callback:Void->Void):TLSSocket {})
 	@:overload(function(port:Int, host:String, options:TlsConnectOptions, ?callback:Void->Void):TLSSocket {})
+	@:overload(function(path:String, ?options:TlsConnectOptions, ?callback:Void->Void):TLSSocket {})
 	static function connect(options:TlsConnectOptions, ?callback:Void->Void):TLSSocket;
 
 	/**
@@ -260,5 +327,6 @@ extern class Tls {
 		Generally the encrypted one is piped to/from an incoming encrypted data stream,
 		and the cleartext one is used as a replacement for the initial encrypted stream.
 	**/
+	@:deprecated("Use Tls.TLSSocket instead")
 	static function createSecurePair(?context:SecureContext, ?isServer:Bool, ?requestCert:Bool, ?rejectUnauthorized:Bool):SecurePair;
 }

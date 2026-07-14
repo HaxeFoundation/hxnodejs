@@ -37,7 +37,7 @@ extern class BlockList {
 
 		@see https://nodejs.org/api/net.html#blocklistisblocklistvalue
 	**/
-	static function isBlockList(value:Dynamic):Bool;
+	static function isBlockList(value:Any):Bool;
 
 	/**
 		Adds a rule to block the given IP address.

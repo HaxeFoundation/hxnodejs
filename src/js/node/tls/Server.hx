@@ -22,15 +22,13 @@
 
 package js.node.tls;
 
+import haxe.extern.EitherType;
 import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
+import js.node.tls.SecureContext;
 import js.node.tls.SecureContext.SecureContextOptions;
 import js.node.tls.TLSSocket;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Enumeration of events emitted by `Server` in addition to its parent classes.
@@ -49,7 +47,18 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 			exception - error object
 			securePair - the `TLSSocket` that the error originated from
 	**/
+	var TlsClientError:ServerEvent<(exception:Error, tlsSocket:TLSSocket) -> Void> = "tlsClientError";
+
+	/**
+		@deprecated Use `TlsClientError` (`tlsClientError`) instead.
+	**/
+	@:deprecated("Use ServerEvent.TlsClientError / 'tlsClientError'")
 	var ClientError:ServerEvent<Error->TLSSocket->Void> = "clientError";
+
+	/**
+		Emitted when key material is generated or received from a client for generating TLS session tickets.
+	**/
+	var Keylog:ServerEvent<(line:Buffer, tlsSocket:TLSSocket) -> Void> = "keylog";
 
 	/**
 		Emitted on creation of TLS session.
@@ -62,7 +71,7 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 			sessionData
 			callback
 	**/
-	var NewSession:ServerEvent<Buffer->Buffer->(Void->Void)->Void> = "newSession";
+	var NewSession:ServerEvent<(sessionId:Buffer, sessionData:Buffer, callback:Void->Void) -> Void> = "newSession";
 
 	/**
 		Emitted when client wants to resume previous TLS session.
@@ -78,7 +87,7 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 			sessionId
 			callback
 	**/
-	var ResumeSession:ServerEvent<Buffer->(Error->?Buffer->Void)->Void> = "resumeSession";
+	var ResumeSession:ServerEvent<(sessionId:Buffer, callback:(Null<Error>, Null<Buffer>) -> Void) -> Void> = "resumeSession";
 
 	/**
 		Emitted when the client sends a certificate status request.
@@ -91,7 +100,7 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 
 		Calling `callback(err)` will result in a `socket.destroy(err)` call.
 	**/
-	var OCSPRequest:ServerEvent<Buffer->Buffer->(Error->?Buffer->Void)->Void> = "OCSPRequest";
+	var OCSPRequest:ServerEvent<(certificate:Buffer, issuer:Buffer, callback:(Null<Error>, Null<Buffer>) -> Void) -> Void> = "OCSPRequest";
 }
 
 /**
@@ -120,5 +129,11 @@ extern class Server extends js.node.net.Server {
 		Add secure context that will be used if client request's SNI hostname
 		is matching passed hostname (wildcards can be used).
 	**/
-	function addContext(hostname:String, credentials:SecureContextOptions):Void;
+	function addContext(hostname:String, credentials:EitherType<SecureContext, SecureContextOptions>):Void;
+
+	/**
+		The `server.setSecureContext()` method replaces the secure context of an existing server.
+		Existing connections to the server are not interrupted.
+	**/
+	function setSecureContext(options:SecureContextOptions):Void;
 }
