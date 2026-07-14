@@ -23,35 +23,9 @@
 package js.node.zlib;
 
 /**
-	Not exported by the zlib module.
-	It is documented here because it is the base class of the compressor/decompressor classes.
+	Compress data using the Zstandard (zstd) algorithm.
+
+	Stability: 1 - Experimental
 **/
-extern class Zlib extends js.node.stream.Transform<Zlib> {
-	/**
-		The number of bytes written to the engine before the bytes are processed
-		(compressed or decompressed, as appropriate for the derived class).
-	**/
-	var bytesWritten(default, null):Float;
-
-	/**
-		Flush pending data.
-
-		`kind` defaults to `Zlib.Z_FULL_FLUSH`.
-
-		Don't call this frivolously, premature flushes negatively impact the effectiveness of the compression algorithm.
-	**/
-	@:overload(function(kind:Int, callback:Void->Void):Void {})
-	function flush(callback:Void->Void):Void;
-
-	/**
-		Dynamically update the compression level and compression strategy.
-		Only applicable to deflate algorithm.
-	**/
-	function params(level:Int, strategy:Int, callback:Void->Void):Void;
-
-	/**
-		Reset the compressor/decompressor to factory defaults.
-		Only applicable to the inflate and deflate algorithms.
-	**/
-	function reset():Void;
-}
+@:jsRequire("zlib", "ZstdCompress")
+extern class ZstdCompress extends Zlib {}

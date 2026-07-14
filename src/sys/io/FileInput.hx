@@ -26,6 +26,7 @@ class FileInput extends haxe.io.Input {
 
 	override public function readByte():Int {
 		var buf = Buffer.alloc(1);
+		// TODO(section-2): typed Node ErrnoException instead of Dynamic catch
 		var bytesRead = try {
 			Fs.readSync(fd, buf, 0, 1, pos);
 		} catch (e:Dynamic) {
@@ -44,6 +45,7 @@ class FileInput extends haxe.io.Input {
 		var bytesRead = try {
 			Fs.readSync(fd, buf, pos, len, this.pos);
 		} catch (e:Dynamic) {
+			// TODO(section-2): typed Node ErrnoException instead of Dynamic catch
 			if (e.code == "EOF")
 				throwEof();
 			throw Error.Custom(e);

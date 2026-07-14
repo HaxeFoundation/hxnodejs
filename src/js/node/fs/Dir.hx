@@ -22,11 +22,8 @@
 
 package js.node.fs;
 
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
+import js.lib.Promise;
 
 /**
 	A class representing a directory stream.
@@ -43,7 +40,10 @@ extern class Dir {
 	/**
 		Asynchronously close the directory's underlying resource handle.
 		Subsequent reads will result in errors.
+
+		Without a callback, returns a `Promise` that is fulfilled after the resource has been closed.
 	**/
+	@:overload(function():Promise<Void> {})
 	function close(callback:Error->Void):Void;
 
 	/**
@@ -55,8 +55,10 @@ extern class Dir {
 	/**
 		Asynchronously read the next directory entry via readdir(3) as a `Dirent`.
 
-		The callback is called with a `Dirent`, or `null` if there are no more directory entries to read.
+		Without a callback, returns a `Promise` fulfilled with a `Dirent`, or `null` if there are no more entries.
+		With a callback, it is called with a `Dirent`, or `null` if there are no more directory entries to read.
 	**/
+	@:overload(function():Promise<Null<Dirent>> {})
 	function read(callback:Error->Null<Dirent>->Void):Void;
 
 	/**

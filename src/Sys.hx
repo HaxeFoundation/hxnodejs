@@ -82,18 +82,14 @@ class Sys {
 		return process.uptime();
 	}
 
-	#if (haxe_ver >= 3.3)
 	@:deprecated("Use programPath instead")
-	#end
 	public static inline function executablePath():String {
 		return process.argv[0];
 	}
 
-	#if (haxe_ver >= 3.3)
 	public static inline function programPath():String {
 		return js.Node.__filename;
 	}
-	#end
 
 	public static function getChar(echo:Bool):Int {
 		throw "Sys.getChar is currently not implemented on node.js";
@@ -132,7 +128,7 @@ private class FileOutput extends haxe.io.Output {
 		return Fs.writeSync(fd, Buffer.hxFromBytes(s), pos, len);
 	}
 
-	override public function writeString(s:String #if (haxe_ver >= 4), ?encoding:haxe.io.Encoding #end) {
+	override public function writeString(s:String, ?encoding:haxe.io.Encoding) {
 		Fs.writeSync(fd, s);
 	}
 
@@ -154,6 +150,7 @@ private class FileInput extends haxe.io.Input {
 
 	override public function readByte():Int {
 		var buf = Buffer.alloc(1);
+		// TODO(section-2): typed Node ErrnoException instead of Dynamic catch
 		try {
 			Fs.readSync(fd, buf, 0, 1, null);
 		} catch (e:Dynamic) {
@@ -167,6 +164,7 @@ private class FileInput extends haxe.io.Input {
 
 	override public function readBytes(s:Bytes, pos:Int, len:Int):Int {
 		var buf = Buffer.hxFromBytes(s);
+		// TODO(section-2): typed Node ErrnoException instead of Dynamic catch
 		try {
 			return Fs.readSync(fd, buf, pos, len, null);
 		} catch (e:Dynamic) {

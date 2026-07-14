@@ -31,12 +31,12 @@ import js.node.fs.FSWatcher;
 import js.node.fs.ReadStream;
 import js.node.fs.Stats;
 import js.node.fs.StatsFs;
+import js.node.fs.StatWatcher;
 import js.node.fs.WriteStream;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
+import js.lib.Promise;
+import js.node.web.Blob;
+import js.node.url.URL;
 
 /**
 	Most FS functions now support passing `String` and `Buffer`.
@@ -87,6 +87,12 @@ typedef FsWriteFileOptions = {
 		default: 'w' for `Fs.writeFile`, 'a' for `Fs.appendFile`
 	**/
 	@:optional var flag:FsOpenFlag;
+
+	/**
+		If `true`, the underlying file descriptor is flushed prior to closing it.
+		Default: `false`.
+	**/
+	@:optional var flush:Bool;
 }
 
 /**
@@ -637,7 +643,7 @@ typedef FsGlobOptions = {
 		Current working directory.
 		Default: `process.cwd()`.
 	**/
-	@:optional var cwd:String;
+	@:optional var cwd:EitherType<String, URL>;
 
 	/**
 		Function to filter out files/directories, or a list of glob patterns to be excluded.
@@ -656,6 +662,32 @@ typedef FsGlobOptions = {
 		Default: `false`.
 	**/
 	@:optional var withFileTypes:Bool;
+}
+
+/**
+	Disposable temporary directory returned by `Fs.mkdtempDisposableSync`.
+**/
+typedef FsMkdtempDisposable = {
+	/**
+		The path of the created directory.
+	**/
+	var path:String;
+
+	/**
+		Removes the created directory and its contents.
+		Same as the `[Symbol.dispose]` method on the returned object.
+	**/
+	function remove():Void;
+}
+
+/**
+	Options for `Fs.openAsBlob`.
+**/
+typedef FsOpenAsBlobOptions = {
+	/**
+		An optional MIME type for the blob.
+	**/
+	@:optional var type:String;
 }
 
 /**
@@ -685,6 +717,15 @@ extern class Fs {
 		An object containing commonly used constants for file system operations.
 	**/
 	static var constants(default, null):FsConstants;
+
+	/**
+		Promise-based file system methods (`require('fs').promises`).
+		Same module object as `js.node.FsPromises`.
+
+		Prefer calling static methods on `FsPromises` for Haxe typing of overloads.
+	**/
+	// TODO(section-2): value type mirroring FsPromises static surface (static-method extern cannot be reused as value type)
+	static var promises(default, null):Dynamic;
 
 	/**
 		Asynchronous rename(2).
@@ -914,6 +955,7 @@ extern class Fs {
 		`cache` is an object literal of mapped paths that can be used to force a specific path resolution
 		or avoid additional `stat` calls for known real paths.
 	**/
+	// TODO(section-2): model `realpath.native` / `realpathSync.native` function properties
 	@:overload(function(path:FsPath, callback:Error->String->Void):Void {})
 	static function realpath(path:FsPath, cache:DynamicAccess<String>, callback:Error->String->Void):Void;
 
@@ -980,6 +1022,7 @@ extern class Fs {
 
 		The created folder path is passed as a string to the `callback`'s second parameter.
 	**/
+	@:overload(function(prefix:String, options:EitherType<String, {?encoding:String}>, callback:Error->String->Void):Void {})
 	static function mkdtemp(prefix:String, callback:Error->String->Void):Void;
 
 	/**
@@ -987,7 +1030,19 @@ extern class Fs {
 
 		Returns the created folder path.
 	**/
-	static function mkdtempSync(template:String):String;
+	@:overload(function(prefix:String, options:EitherType<String, {?encoding:String}>):String {})
+	static function mkdtempSync(prefix:String):String;
+
+	/**
+		Synchronously creates a unique temporary directory and returns a disposable object.
+
+		When the object is disposed (or `remove` is called), the directory and its contents are removed
+		if they still exist.
+
+		@see https://nodejs.org/api/fs.html#fsmkdtempdisposablesyncprefix-options
+	**/
+	@:overload(function(prefix:String, options:EitherType<String, {?encoding:String}>):FsMkdtempDisposable {})
+	static function mkdtempDisposableSync(prefix:String):FsMkdtempDisposable;
 
 	/**
 		Asynchronous readdir(3).
@@ -1032,7 +1087,7 @@ extern class Fs {
 	@:overload(function(pattern:EitherType<String, Array<String>>, callback:Error->Array<String>->Void):Void {})
 	@:overload(function(pattern:EitherType<String, Array<String>>, options:FsGlobOptions, callback:Error->Array<String>->Void):Void {})
 	static function glob(pattern:EitherType<String, Array<String>>, options:{
-		?cwd:String,
+		?cwd:EitherType<String, URL>,
 		?exclude:EitherType<String->Bool, Array<String>>,
 		?followSymlinks:Bool,
 		withFileTypes:Bool
@@ -1047,7 +1102,7 @@ extern class Fs {
 	@:overload(function(pattern:EitherType<String, Array<String>>):Array<String> {})
 	@:overload(function(pattern:EitherType<String, Array<String>>, options:FsGlobOptions):Array<String> {})
 	static function globSync(pattern:EitherType<String, Array<String>>, options:{
-		?cwd:String,
+		?cwd:EitherType<String, URL>,
 		?exclude:EitherType<String->Bool, Array<String>>,
 		?followSymlinks:Bool,
 		withFileTypes:Bool
@@ -1081,6 +1136,17 @@ extern class Fs {
 	**/
 	@:overload(function(path:FsPath, flags:FsOpenFlag):Int {})
 	static function openSync(path:FsPath, flags:FsOpenFlag, mode:FsMode):Int;
+
+	/**
+		Returns a `Blob` whose data is backed by the given file.
+
+		The file must not be modified after the `Blob` is created.
+		Any modifications will cause reading the `Blob` data to fail with a `DOMException` error.
+
+		@see https://nodejs.org/api/fs.html#fsopenasblobpath-options
+	**/
+	@:overload(function(path:FsPath):Promise<Blob> {})
+	static function openAsBlob(path:FsPath, options:FsOpenAsBlobOptions):Promise<Blob>;
 
 	/**
 		Change file timestamps of the file referenced by the supplied path.
@@ -1184,17 +1250,17 @@ extern class Fs {
 		On Linux, positional writes don't work when the file is opened in append mode. The kernel ignores the position
 		argument and always appends the data to the end of the file.
 	**/
-	@:overload(function(fd:Int, data:Dynamic, position:Int, encoding:String, callback:Error->Int->String->Void):Void {})
-	@:overload(function(fd:Int, data:Dynamic, position:Int, callback:Error->Int->String->Void):Void {})
-	@:overload(function(fd:Int, data:Dynamic, callback:Error->Int->String->Void):Void {})
+	@:overload(function(fd:Int, data:String, position:Int, encoding:String, callback:Error->Int->String->Void):Void {})
+	@:overload(function(fd:Int, data:String, position:Int, callback:Error->Int->String->Void):Void {})
+	@:overload(function(fd:Int, data:String, callback:Error->Int->String->Void):Void {})
 	@:overload(function(fd:Int, buffer:Buffer, offset:Int, length:Int, callback:Error->Int->Buffer->Void):Void {})
 	static function write(fd:Int, buffer:Buffer, offset:Int, length:Int, position:Int, callback:Error->Int->Buffer->Void):Void;
 
 	/**
 		Synchronous version of `write`. Returns the number of bytes written.
 	**/
-	@:overload(function(fd:Int, data:Dynamic, position:Int, encoding:String):Int {})
-	@:overload(function(fd:Int, data:Dynamic, ?position:Int):Int {})
+	@:overload(function(fd:Int, data:String, position:Int, encoding:String):Int {})
+	@:overload(function(fd:Int, data:String, ?position:Int):Int {})
 	static function writeSync(fd:Int, buffer:Buffer, offset:Int, length:Int, ?position:Int):Int;
 
 	/**
@@ -1324,8 +1390,8 @@ extern class Fs {
 
 		The `listener` gets two arguments: the current stat object and the previous stat object.
 	**/
-	@:overload(function(filename:FsPath, listener:Stats->Stats->Void):Void {})
-	static function watchFile(filename:FsPath, options:FsWatchFileOptions, listener:Stats->Stats->Void):Void;
+	@:overload(function(filename:FsPath, listener:Stats->Stats->Void):StatWatcher {})
+	static function watchFile(filename:FsPath, options:FsWatchFileOptions, listener:Stats->Stats->Void):StatWatcher;
 
 	/**
 		Unstable. Use `watch` instead, if possible.
@@ -1395,6 +1461,7 @@ extern class Fs {
 		File is visible to the calling process.
 		This is useful for determining if a file exists, but says nothing about rwx permissions.
 	**/
+	@:deprecated("Use Fs.constants.F_OK instead")
 	static var F_OK(default, null):Int;
 
 	/**
@@ -1402,6 +1469,7 @@ extern class Fs {
 
 		File can be read by the calling process.
 	**/
+	@:deprecated("Use Fs.constants.R_OK instead")
 	static var R_OK(default, null):Int;
 
 	/**
@@ -1409,6 +1477,7 @@ extern class Fs {
 
 		File can be written by the calling process.
 	**/
+	@:deprecated("Use Fs.constants.W_OK instead")
 	static var W_OK(default, null):Int;
 
 	/**
@@ -1417,6 +1486,7 @@ extern class Fs {
 		File can be executed by the calling process.
 		This has no effect on Windows.
 	**/
+	@:deprecated("Use Fs.constants.X_OK instead")
 	static var X_OK(default, null):Int;
 
 	/**

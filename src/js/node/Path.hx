@@ -201,4 +201,5 @@ private typedef PathModule = {
 	var delimiter(default, null):String;
 	function parse(pathString:String):PathObject;
 	function format(pathObject:PathObject):String;
+	function toNamespacedPath(path:String):String;
 }
