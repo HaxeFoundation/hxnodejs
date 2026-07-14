@@ -305,10 +305,25 @@ typedef DnsAnyRecord = EitherType<DnsAnyARecord,
 									EitherType<DnsAnySrvRecord, EitherType<DnsAnyTlsaRecord, DnsAnyTxtRecord>>>>>>>>>>>;
 
 typedef DnsResolvedAddress = EitherType<String,
-	EitherType<DnsResolvedAddressMX,
-		EitherType<DnsResolvedAddressSOA,
-			EitherType<DnsResolvedAddressSRV,
-				EitherType<DnsResolvedAddressCAA, EitherType<DnsResolvedAddressNAPTR, DnsResolvedAddressTLSA>>>>>>;
+	EitherType<Array<String>,
+		EitherType<DnsResolvedAddressMX,
+			EitherType<DnsResolvedAddressSOA,
+				EitherType<DnsResolvedAddressSRV,
+					EitherType<DnsResolvedAddressCAA, EitherType<DnsResolvedAddressNAPTR, DnsResolvedAddressTLSA>>>>>>>;
+
+/**
+	Records returned by `Dns.resolve` / `DnsPromises.resolve`, depending on `rrtype`.
+	Note: `SOA` resolves to a single object (not an array); `TXT` resolves to `Array<Array<String>>`.
+**/
+typedef DnsResolveRecords = EitherType<Array<String>,
+	EitherType<Array<DnsAnyRecord>,
+		EitherType<Array<DnsResolvedAddressCAA>,
+			EitherType<Array<DnsResolvedAddressMX>,
+				EitherType<Array<DnsResolvedAddressNAPTR>,
+					EitherType<DnsResolvedAddressSOA,
+						EitherType<Array<DnsResolvedAddressSRV>,
+							EitherType<Array<DnsResolvedAddressTLSA>,
+								EitherType<Array<Array<String>>, Array<DnsResolvedAddress>>>>>>>>>>;
 
 /**
 	Error objects returned by dns lookups are of this type
@@ -507,6 +522,7 @@ extern class Dns {
 		`lookup` doesn't necessarily have anything to do with the DNS protocol. It's only an operating system facility
 		that can associate name with addresses, and vice versa.
 	**/
+	@:overload(function(hostname:String, options:DnsLookupAllOptions, callback:DnsLookupCallbackAll):Void {})
 	@:overload(function(hostname:String, options:EitherType<DnsAddressFamily, DnsLookupOptions>,
 		callback:EitherType<DnsLookupCallbackSingle, DnsLookupCallbackAll>):Void {})
 	static function lookup(hostname:String, callback:DnsLookupCallbackSingle):Void;
@@ -546,16 +562,17 @@ extern class Dns {
 	static function lookupService(address:String, port:Int, callback:DnsLookupServiceCallback):Void;
 
 	/**
-		Resolves a `hostname` (e.g. `'google.com'`) into an array of the record types specified by `rrtype`.
+		Resolves a `hostname` (e.g. `'google.com'`) into the record types specified by `rrtype` (default `'A'`).
 
-		The `callback` has arguments `(err, addresses)`.
-		The type of each item in `addresses` is determined by the record type,
+		The `callback` has arguments `(err, records)`.
+		The type of `records` is determined by the record type,
 		and described in the documentation for the corresponding lookup methods below.
+		In particular, `SOA` yields a single object and `TXT` yields `Array<Array<String>>`.
 
 		On error, `err` is an `Error` object, where `err.code` is the error code.
 	**/
-	@:overload(function(hostname:String, callback:DnsResolveCallback<Array<DnsResolvedAddress>>):Void {})
-	static function resolve(hostname:String, rrtype:DnsRrtype, callback:DnsResolveCallback<Array<DnsResolvedAddress>>):Void;
+	@:overload(function(hostname:String, callback:DnsResolveCallback<Array<String>>):Void {})
+	static function resolve(hostname:String, rrtype:DnsRrtype, callback:DnsResolveCallback<DnsResolveRecords>):Void;
 
 	/**
 		The same as `resolve`, but only for IPv4 queries (A records).

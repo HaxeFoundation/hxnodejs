@@ -67,10 +67,11 @@ extern class DnsPromises {
 	static function lookupService(address:String, port:Int):Promise<DnsPromisesLookupServiceResult>;
 
 	/**
-		Uses the DNS protocol to resolve a hostname into an array of the record types specified by `rrtype`.
+		Uses the DNS protocol to resolve a hostname into the record types specified by `rrtype` (default `'A'`).
+		`SOA` fulfills with a single object; `TXT` with `Array<Array<String>>`.
 	**/
-	@:overload(function(hostname:String):Promise<Array<DnsResolvedAddress>> {})
-	static function resolve(hostname:String, rrtype:DnsRrtype):Promise<Array<DnsResolvedAddress>>;
+	@:overload(function(hostname:String):Promise<Array<String>> {})
+	static function resolve(hostname:String, rrtype:DnsRrtype):Promise<DnsResolveRecords>;
 
 	/**
 		Uses the DNS protocol to resolve IPv4 addresses (`A` records) for the `hostname`.

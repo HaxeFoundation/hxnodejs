@@ -64,8 +64,8 @@ extern class Resolver {
 	**/
 	function setServers(servers:Array<String>):Void;
 
-	@:overload(function(hostname:String, callback:DnsResolveCallback<Array<DnsResolvedAddress>>):Void {})
-	function resolve(hostname:String, rrtype:DnsRrtype, callback:DnsResolveCallback<Array<DnsResolvedAddress>>):Void;
+	@:overload(function(hostname:String, callback:DnsResolveCallback<Array<String>>):Void {})
+	function resolve(hostname:String, rrtype:DnsRrtype, callback:DnsResolveCallback<DnsResolveRecords>):Void;
 
 	@:overload(function(hostname:String, options:DnsResolveOptions,
 		callback:DnsResolveCallback<EitherType<Array<String>, Array<DnsRecordWithTtl>>>):Void {})

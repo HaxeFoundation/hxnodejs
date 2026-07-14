@@ -62,8 +62,8 @@ extern class PromisesResolver {
 	**/
 	function setServers(servers:Array<String>):Void;
 
-	@:overload(function(hostname:String):Promise<Array<DnsResolvedAddress>> {})
-	function resolve(hostname:String, rrtype:DnsRrtype):Promise<Array<DnsResolvedAddress>>;
+	@:overload(function(hostname:String):Promise<Array<String>> {})
+	function resolve(hostname:String, rrtype:DnsRrtype):Promise<DnsResolveRecords>;
 
 	@:overload(function(hostname:String, options:DnsResolveOptions):Promise<EitherType<Array<String>, Array<DnsRecordWithTtl>>> {})
 	function resolve4(hostname:String):Promise<Array<String>>;
