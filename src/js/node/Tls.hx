@@ -32,14 +32,17 @@ import js.node.Dns.DnsLookupOptions;
 import js.node.stream.Duplex.IDuplex;
 import js.node.tls.SecureContext;
 import js.node.tls.SecureContext.SecureContextOptions;
+import js.node.tls.SecureContext.SecureContextPemArray;
 import js.node.tls.SecurePair;
 import js.node.tls.Server;
 import js.node.tls.TLSSocket;
 
 /**
 	ALPN protocol list accepted by several TLS option bags.
+
+	Array forms include homogeneous `Array<String>` / `Array<Buffer>` for Haxe 4.0.5.
 **/
-typedef TlsAlpnProtocols = EitherType<Array<EitherType<String, Buffer>>, EitherType<Buffer, ArrayBufferView>>;
+typedef TlsAlpnProtocols = EitherType<SecureContextPemArray, EitherType<Buffer, ArrayBufferView>>;
 
 /**
 	Shared TLS option fields for clients and servers.

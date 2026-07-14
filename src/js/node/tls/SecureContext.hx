@@ -43,6 +43,62 @@ typedef SecureContextPfxObject = {
 }
 
 /**
+	Array forms of PEM / ALPN protocol lists.
+
+	Logically: `Array<String | Buffer> | Array<String> | Array<Buffer>`.
+
+	Abstract + `@:from` so Haxe 4.0.5 can unify homogeneous array literals into
+	option bags (plain `EitherType` fails because arrays are invariant).
+**/
+@:forward
+abstract SecureContextPemArray(Dynamic)
+	from Array<String>
+	from Array<Buffer>
+	from Array<EitherType<String, Buffer>> {}
+
+/**
+	PEM material for SecureContext options.
+
+	Logically: `String | Buffer | Array<String | Buffer> | Array<String> | Array<Buffer>`.
+**/
+@:forward
+abstract SecureContextPemData(Dynamic)
+	from String
+	from Buffer
+	from Array<String>
+	from Array<Buffer>
+	from Array<EitherType<String, Buffer>>
+	from SecureContextPemArray {}
+
+/**
+	`key` option: PEM data or arrays including `{ pem, passphrase? }` objects.
+**/
+@:forward
+abstract SecureContextKeyData(Dynamic)
+	from String
+	from Buffer
+	from Array<String>
+	from Array<Buffer>
+	from Array<EitherType<String, Buffer>>
+	from Array<SecureContextKeyObject>
+	from Array<EitherType<EitherType<String, Buffer>, SecureContextKeyObject>>
+	from SecureContextPemData {}
+
+/**
+	`pfx` option: PFX value or arrays including `{ buf, passphrase? }` objects.
+**/
+@:forward
+abstract SecureContextPfxData(Dynamic)
+	from String
+	from Buffer
+	from Array<String>
+	from Array<Buffer>
+	from Array<EitherType<String, Buffer>>
+	from Array<SecureContextPfxObject>
+	from Array<EitherType<EitherType<String, Buffer>, SecureContextPfxObject>>
+	from SecureContextPemData {}
+
+/**
 	Options for `Tls.createSecureContext`.
 
 	@see https://nodejs.org/api/tls.html#tlscreatesecurecontextoptions
@@ -52,7 +108,7 @@ typedef SecureContextOptions = {
 		PFX or PKCS12 encoded private key and certificate chain.
 		Alternative to providing `key` and `cert` individually.
 	**/
-	@:optional var pfx:EitherType<EitherType<String, Buffer>, Array<EitherType<EitherType<String, Buffer>, SecureContextPfxObject>>>;
+	@:optional var pfx:SecureContextPfxData;
 
 	/**
 		Shared passphrase used for a single private key and/or a PFX.
@@ -63,23 +119,23 @@ typedef SecureContextOptions = {
 		Private keys in PEM format. Multiple keys may be provided as an array of
 		buffers/strings or `{ pem, passphrase? }` objects.
 	**/
-	@:optional var key:EitherType<EitherType<String, Buffer>, Array<EitherType<EitherType<String, Buffer>, SecureContextKeyObject>>>;
+	@:optional var key:SecureContextKeyData;
 
 	/**
 		Cert chains in PEM format. One cert chain should be provided per private key.
 	**/
-	@:optional var cert:EitherType<EitherType<String, Buffer>, Array<EitherType<String, Buffer>>>;
+	@:optional var cert:SecureContextPemData;
 
 	/**
 		Optionally override the trusted CA certificates.
 		Default is the same as `Tls.getCACertificates('default')`.
 	**/
-	@:optional var ca:EitherType<EitherType<String, Buffer>, Array<EitherType<String, Buffer>>>;
+	@:optional var ca:SecureContextPemData;
 
 	/**
 		PEM encoded CRLs (Certificate Revocation Lists).
 	**/
-	@:optional var crl:EitherType<EitherType<String, Buffer>, Array<EitherType<String, Buffer>>>;
+	@:optional var crl:SecureContextPemData;
 
 	/**
 		Cipher suite specification, replacing the default.
@@ -136,7 +192,7 @@ typedef SecureContextOptions = {
 	/**
 		An array of strings, or a Buffer / TypedArray / DataView, naming possible ALPN protocols.
 	**/
-	@:optional var ALPNProtocols:EitherType<Array<EitherType<String, Buffer>>, EitherType<Buffer, ArrayBufferView>>;
+	@:optional var ALPNProtocols:EitherType<SecureContextPemArray, EitherType<Buffer, ArrayBufferView>>;
 
 	/**
 		Name of an OpenSSL engine to get a private key from.
