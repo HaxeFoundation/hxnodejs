@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -73,4 +73,14 @@ extern class MIMEParams {
 		Returns an iterator over the values of each name-value pair.
 	**/
 	function values():Iterator<String>;
+
+	/**
+		Returns the serialized parameters.
+	**/
+	function toString():String;
+
+	/**
+		Alias for `toString()`.
+	**/
+	function toJSON():String;
 }

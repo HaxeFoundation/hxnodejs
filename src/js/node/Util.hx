@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -54,17 +54,26 @@ extern class Util {
 		The `util.debuglog()` method is used to create a function that conditionally writes debug messages to `stderr`
 		based on the existence of the `NODE_DEBUG` environment variable.
 
-		@see https://nodejs.org/api/util.html#util_util_debuglog_section
+		The optional `callback` is invoked the first time the logger is called with a more optimized logging function.
+
+		@see https://nodejs.org/api/util.html#utildebuglogsection-callback
 	**/
-	static function debuglog(section:String):Rest<Any>->Void;
+	static function debuglog(section:String, ?callback:(Rest<Any>->Void)->Void):DebugLogger;
+
+	/**
+		Alias for `Util.debuglog`.
+
+		@see https://nodejs.org/api/util.html#utildebugsection
+	**/
+	static function debug(section:String, ?callback:(Rest<Any>->Void)->Void):DebugLogger;
 
 	/**
 		The `util.deprecate()` method wraps `fn` (which may be a function or class) in such a way that it is marked
 		as deprecated.
 
-		@see https://nodejs.org/api/util.html#util_util_deprecate_fn_msg_code
+		@see https://nodejs.org/api/util.html#utildeprecatefn-msg-code-options
 	**/
-	static function deprecate<T:Function>(fun:T, msg:String, ?code:String):T;
+	static function deprecate<T:Function>(fun:T, msg:String, ?code:String, ?options:DeprecateOptions):T;
 
 	/**
 		The `util.format()` method returns a formatted string using the first argument as a `printf`-like format string
@@ -125,9 +134,11 @@ extern class Util {
 	/**
 		Returns `true` if there is deep strict equality between `val1` and `val2`.
 
-		@see https://nodejs.org/api/util.html#util_util_isdeepstrictequal_val1_val2
+		When `skipPrototype` is `true`, prototype and constructor comparison is skipped.
+
+		@see https://nodejs.org/api/util.html#utilisdeepstrictequalval1-val2-options
 	**/
-	static function isDeepStrictEqual(val1:Any, val2:Any):Bool;
+	static function isDeepStrictEqual(val1:Any, val2:Any, ?skipPrototype:Bool):Bool;
 
 	/**
 		Takes a function following the common error-first callback style, i.e. taking an `(err, value) => ...` callback
@@ -221,23 +232,23 @@ extern class Util {
 	static function getCallSite(?frameCount:Int, ?options:GetCallSitesOptions):Array<CallSiteObject>;
 
 	/**
-		Converts a POSIX signal name (e.g. `'SIGTERM'`) to the corresponding process exit code.
+		Converts a POSIX signal name (e.g. `'SIGTERM'`) to the corresponding process exit code
+		(`128 + signal number`).
+
+		@see https://nodejs.org/api/util.html#utilconvertprocesssignaltoexitcodesignal
 	**/
 	static function convertProcessSignalToExitCode(signal:String):Int;
 
 	/**
 		Enables or disables printing a stack trace when Node.js receives `SIGINT`.
+		Only available on the main thread.
+
+		@see https://nodejs.org/api/util.html#utilsettracesigtintenable
 	**/
 	static function setTraceSigInt(enable:Bool):Void;
 
 	/**
-		Deprecated predecessor of `Console.error`.
-	**/
-	@:deprecated("Use js.Node.console.error instead")
-	static function debug(string:String):Void;
-
-	/**
-		Deprecated predecessor of console.error.
+		Deprecated predecessor of `console.error` (removed; different from `Util.debug` / `debuglog`).
 	**/
 	@:deprecated("Use js.Node.console.error instead")
 	static function error(args:Rest<Any>):Void;
@@ -419,6 +430,15 @@ typedef InspectOptions = {
 	@:optional var maxArrayLength:Null<Int>;
 
 	/**
+		Specifies the maximum number of characters to include when formatting strings.
+		Set to `null` or `Infinity` to show all characters.
+		Set to `0` or negative to show no characters.
+
+		Default: `10000`.
+	**/
+	@:optional var maxStringLength:Null<Int>;
+
+	/**
 		The length at which input values are split across multiple lines.
 		Set to `Infinity` to format the input as a single line (in combination with `compact` set to `true` or any
 		number >= `1`).
@@ -457,6 +477,13 @@ typedef InspectOptions = {
 		Default: `false`.
 	**/
 	@:optional var getters:EitherType<Bool, String>;
+
+	/**
+		If set to `true`, an underscore separates every three digits in all bigints and numbers.
+
+		Default: `false`.
+	**/
+	@:optional var numericSeparator:Bool;
 }
 
 /**
@@ -468,7 +495,7 @@ typedef StyleTextOptions = {
 
 		Default: `process.stdout`.
 	**/
-	@:optional var stream:Any;
+	@:optional var stream:IWritable;
 
 	/**
 		Value indicating whether `stream` is checked to see if it can handle colors.
@@ -476,6 +503,34 @@ typedef StyleTextOptions = {
 		Default: `true`.
 	**/
 	@:optional var validateStream:Bool;
+}
+
+/**
+	Options for `Util.deprecate`.
+**/
+typedef DeprecateOptions = {
+	/**
+		When `false`, do not change the prototype of the deprecated object while emitting the warning.
+
+		Default: `true`.
+	**/
+	@:optional var modifyPrototype:Bool;
+}
+
+/**
+	Logger returned by `Util.debuglog` / `Util.debug`.
+**/
+extern class DebugLogger {
+	/**
+		Writes a debug message when this logger is enabled.
+	**/
+	@:selfCall
+	function call(args:Rest<Any>):Void;
+
+	/**
+		`true` when `NODE_DEBUG` enables this logger's section.
+	**/
+	var enabled(default, null):Bool;
 }
 
 /**
@@ -527,6 +582,10 @@ typedef GetCallSitesOptions = {
 typedef CallSiteObject = {
 	var functionName:String;
 	var scriptName:String;
+	/**
+		Unique script id (Chrome DevTools protocol `Runtime.ScriptId`).
+	**/
+	var scriptId:String;
 	var lineNumber:Int;
 	var columnNumber:Int;
 }

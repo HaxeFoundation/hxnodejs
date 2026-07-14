@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -31,7 +31,7 @@ extern class Inspect {
 	/**
 		The `util.inspect()` method returns a string representation of `object` that is intended for debugging.
 
-		@see https://nodejs.org/api/util.html#util_util_inspect_object_options
+		@see https://nodejs.org/api/util.html#utilinspectobject-options
 	**/
 	@:selfCall
 	@:overload(function(object:Any, ?showHidden:Bool, ?depth:Int, ?colors:Bool):String {})
@@ -40,7 +40,7 @@ extern class Inspect {
 	/**
 		`util.inspect.styles` is a map associating a style name to a color from `util.inspect.colors` properties.
 
-		@see https://nodejs.org/api/util.html#util_customizing_util_inspect_colors
+		@see https://nodejs.org/api/util.html#customizing-utilinspect-colors
 	**/
 	static var styles:DynamicAccess<String>;
 
@@ -54,14 +54,14 @@ extern class Inspect {
 		In addition to being accessible through `util.inspect.custom`, this symbol is registered globally and can be
 		accessed in any environment as `Symbol.for('nodejs.util.inspect.custom')`.
 
-		@see https://nodejs.org/api/util.html#util_util_inspect_custom
+		@see https://nodejs.org/api/util.html#utilinspectcustom
 	**/
 	static final custom:Symbol;
 
 	/**
 		The `defaultOptions` value allows customization of the default options used by `util.inspect`.
 
-		@see https://nodejs.org/api/util.html#util_util_inspect_defaultoptions
+		@see https://nodejs.org/api/util.html#utilinspectdefaultoptions
 	**/
 	static var defaultOptions:InspectOptions;
 }

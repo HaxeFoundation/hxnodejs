@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -306,27 +306,38 @@ extern class Types {
 	/**
 		Returns `true` if the value is a built-in `WebAssembly.Module` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_iswebassemblycompiledmodule_value
+		Removed in Node.js (EOL). Use `value instanceof WebAssembly.Module` instead.
+
+		@see https://nodejs.org/api/deprecations.html#dep0177-utiltypesiswebassemblycompiledmodule
 	**/
+	@:deprecated("Use value instanceof WebAssembly.Module instead")
 	static function isWebAssemblyCompiledModule(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a `BigInt` object boxed wrapper (not a primitive BigInt).
+
+		@see https://nodejs.org/api/util.html#utiltypesisbigintobjectvalue
 	**/
 	static function isBigIntObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a `Float16Array` instance.
+
+		@see https://nodejs.org/api/util.html#utiltypesisfloat16arrayvalue
 	**/
 	static function isFloat16Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a `KeyObject` from the `crypto` module.
+
+		@see https://nodejs.org/api/util.html#utiltypesiskeyobjectvalue
 	**/
 	static function isKeyObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a Web Crypto `CryptoKey` instance.
+
+		@see https://nodejs.org/api/util.html#utiltypesiscryptokeyvalue
 	**/
 	static function isCryptoKey(value:Any):Bool;
 }

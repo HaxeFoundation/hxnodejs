@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -33,16 +33,16 @@ extern class Promisify {
 		Takes a function following the common error-first callback style, i.e. taking an `(err, value) => ...` callback
 		as the last argument, and returns a version that returns promises.
 
-		@see https://nodejs.org/api/util.html#util_util_promisify_original
+		@see https://nodejs.org/api/util.html#utilpromisifyoriginal
 	**/
 	@:selfCall
 	// TODO(section-4): tighten promisify generic result typing
 	static function promisify(original:Function):Rest<Any>->Promise<Any>;
 
 	/**
-		That can be used to declare custom promisified variants of functions, see Custom promisified functions.
+		Symbol used to declare custom promisified variants of functions.
 
-		@see https://nodejs.org/api/util.html#util_util_promisify_custom
+		@see https://nodejs.org/api/util.html#utilpromisifycustom
 	**/
 	static final custom:Symbol;
 }
