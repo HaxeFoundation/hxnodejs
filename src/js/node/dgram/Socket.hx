@@ -235,7 +235,7 @@ extern class Socket extends EventEmitter<Socket> {
 
 	/**
 		A synchronous function that disassociates a connected `dgram.Socket` from its remote address.
-		Throws `ERR_SOCKET_DGRAM_NOT_CONNECTED` if the socket is not connected.
+		Throws `ERR_SOCKET_DGRAM_NOT_CONNECTED` if the socket is unbound or already disconnected.
 	**/
 	function disconnect():Void;
 
@@ -255,18 +255,21 @@ extern class Socket extends EventEmitter<Socket> {
 
 		If binding fails, an `'error'` event is generated. In rare cases (e.g. binding a closed socket),
 		an `Error` may be thrown.
+
+		Returns a reference to the socket so calls can be chained.
 	**/
-	@:overload(function(options:SocketBindOptions, ?callback:() -> Void):Void {})
-	@:overload(function(port:Int, address:String, ?callback:() -> Void):Void {})
-	@:overload(function(port:Int, ?callback:() -> Void):Void {})
-	function bind(?callback:() -> Void):Void;
+	@:overload(function(options:SocketBindOptions, ?callback:() -> Void):Socket {})
+	@:overload(function(port:Int, address:String, ?callback:() -> Void):Socket {})
+	@:overload(function(port:Int, ?callback:() -> Void):Socket {})
+	function bind(?callback:() -> Void):Socket;
 
 	/**
 		Close the underlying socket and stop listening for data on it.
 
 		If a `callback` is provided, it is added as a listener for the `'close'` event.
+		Returns a reference to the socket so calls can be chained.
 	**/
-	function close(?callback:() -> Void):Void;
+	function close(?callback:() -> Void):Socket;
 
 	/**
 		Returns an object containing the address information for a socket (`address`, `family`, `port`).
@@ -290,7 +293,7 @@ extern class Socket extends EventEmitter<Socket> {
 		The argument to `setTTL` is a number of hops between 1 and 255. The default on most systems is 64.
 		Throws `EBADF` if called on an unbound socket.
 	**/
-	function setTTL(ttl:Int):Void;
+	function setTTL(ttl:Int):Int;
 
 	/**
 		Sets the `IP_MULTICAST_TTL` socket option. TTL stands for "Time to Live," but in this context it specifies
@@ -301,14 +304,14 @@ extern class Socket extends EventEmitter<Socket> {
 		The argument to `setMulticastTTL` is a number of hops between 0 and 255. The default on most systems is 1.
 		Throws `EBADF` if called on an unbound socket.
 	**/
-	function setMulticastTTL(ttl:Int):Void;
+	function setMulticastTTL(ttl:Int):Int;
 
 	/**
 		Sets or clears the `IP_MULTICAST_LOOP` socket option.
 		When this option is set, multicast packets will also be received on the local interface.
 		Throws `EBADF` if called on an unbound socket.
 	**/
-	function setMulticastLoopback(flag:Bool):Void;
+	function setMulticastLoopback(flag:Bool):Bool;
 
 	/**
 		Tells the kernel to join a multicast group with the `IP_ADD_MEMBERSHIP` socket option.

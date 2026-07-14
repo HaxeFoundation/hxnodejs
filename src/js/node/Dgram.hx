@@ -26,6 +26,8 @@ import js.node.dgram.Socket;
 
 /**
 	The `node:dgram` module provides an implementation of UDP datagram sockets.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/dgram.html
 **/
 @:jsRequire("dgram")
 extern class Dgram {
