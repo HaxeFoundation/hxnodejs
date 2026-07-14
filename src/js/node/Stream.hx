@@ -155,6 +155,21 @@ typedef StreamFinishedOptions = {
 }
 
 /**
+	Options for `Stream.pipeline` / `StreamPromises.pipeline`.
+**/
+typedef StreamPipelineOptions = {
+	/**
+		If specified, the pipeline will abort when the signal is aborted.
+	**/
+	@:optional var signal:AbortSignal;
+
+	/**
+		End the destination stream when the source stream ends. Default: `true`.
+	**/
+	@:optional var end:Bool;
+}
+
+/**
 	`IStream` interface is used as "any Stream".
 
 	See `Stream` for actual class.
