@@ -25,12 +25,19 @@ package js;
 import haxe.Constraints.Function;
 import haxe.extern.Rest;
 import js.Syntax.code;
+import js.lib.Promise;
 import js.node.Module;
 import js.node.Process;
 import js.node.Timers.Immediate;
 import js.node.Timers.Timeout;
 import js.node.console.Console;
 import js.node.perf_hooks.Performance;
+import js.node.url.URL;
+import js.node.web.Navigator as WebNavigator;
+import js.node.web.Request;
+import js.node.web.Request.RequestInit;
+import js.node.web.Response;
+import js.node.web.Storage as WebStorage;
 
 /**
 	Node.js globals
@@ -89,6 +96,15 @@ extern class Node {
 	}
 
 	/**
+		Browser-compatible `fetch()` (undici).
+
+		@see https://nodejs.org/api/globals.html#fetch
+	**/
+	@:overload(function(input:Request, ?init:RequestInit):Promise<Response> {})
+	@:overload(function(input:URL, ?init:RequestInit):Promise<Response> {})
+	static function fetch(input:String, ?init:RequestInit):Promise<Response>;
+
+	/**
 		In browsers, the top-level scope is the global scope.
 		This means that within the browser `var something` will define a new global variable.
 		In Node.js this is different. The top-level scope is not the global scope; `var something` inside a Node.js module
@@ -110,6 +126,20 @@ extern class Node {
 	}
 
 	/**
+		Web Storage API `localStorage`.
+
+		Stability: 1.2 - Release candidate. Enable with `--experimental-webstorage`.
+		Persists to the file given by `--localstorage-file`.
+
+		@see https://nodejs.org/api/globals.html#localstorage
+	**/
+	static var localStorage(get, never):WebStorage;
+
+	private static inline function get_localStorage():WebStorage {
+		return code("localStorage");
+	}
+
+	/**
 		This variable may appear to be global but is not. See [module](https://nodejs.org/api/modules.html#modules_module).
 	**/
 	static var module(get, never):Module;
@@ -119,12 +149,14 @@ extern class Node {
 	}
 
 	/**
-		The process object. See the [process object](https://nodejs.org/api/process.html#process_process) section.
-	**/
-	static var process(get, never):Process;
+		A partial browser-compatible `Navigator` implementation.
 
-	private static inline function get_process():Process {
-		return code("process");
+		@see https://nodejs.org/api/globals.html#navigator
+	**/
+	static var navigator(get, never):WebNavigator;
+
+	private static inline function get_navigator():WebNavigator {
+		return code("navigator");
 	}
 
 	/**
@@ -138,6 +170,15 @@ extern class Node {
 
 	private static inline function get_performance():Performance {
 		return code("performance");
+	}
+
+	/**
+		The process object. See the [process object](https://nodejs.org/api/process.html#process_process) section.
+	**/
+	static var process(get, never):Process;
+
+	private static inline function get_process():Process {
+		return code("process");
 	}
 
 	/**
@@ -155,6 +196,19 @@ extern class Node {
 	**/
 	static inline function require(module:String):Dynamic {
 		return code("require({0})", module);
+	}
+
+	/**
+		Web Storage API `sessionStorage`.
+
+		Stability: 1.2 - Release candidate. Enable with `--experimental-webstorage`.
+
+		@see https://nodejs.org/api/globals.html#sessionstorage
+	**/
+	static var sessionStorage(get, never):WebStorage;
+
+	private static inline function get_sessionStorage():WebStorage {
+		return code("sessionStorage");
 	}
 
 	/**

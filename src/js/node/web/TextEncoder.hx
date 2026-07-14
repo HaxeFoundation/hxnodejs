@@ -30,8 +30,6 @@ import js.lib.Uint8Array;
 	Also available via `js.node.util.TextEncoder` (`require("util").TextEncoder`),
 	which mirrors this `encode` / `encodeInto` surface.
 
-	// TODO(section-1): wire on `js.Node` / `globalThis` facade if desired.
-
 	@see https://nodejs.org/api/globals.html#class-textencoder
 **/
 @:native("TextEncoder")

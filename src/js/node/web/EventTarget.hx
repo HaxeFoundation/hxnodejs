@@ -28,8 +28,6 @@ import haxe.extern.EitherType;
 /**
 	A browser-compatible implementation of the `EventTarget` class.
 
-	// TODO(section-1): wire `EventTarget` on `js.Node` / `globalThis` facade if desired.
-
 	@see https://nodejs.org/api/events.html#class-eventtarget
 	@see https://nodejs.org/api/globals.html#class-eventtarget
 **/

@@ -27,9 +27,7 @@ import js.node.web.Blob.BlobPart;
 /**
 	Provides information about files. Extends `Blob`.
 
-	Available as a global and via `require('node:buffer').File`.
-
-	// TODO(section-1): wire `File` on `js.Node` / `globalThis` facade if desired.
+	Also available via `require('node:buffer').File`.
 
 	@see https://nodejs.org/api/buffer.html#class-file
 	@see https://nodejs.org/api/globals.html#class-file

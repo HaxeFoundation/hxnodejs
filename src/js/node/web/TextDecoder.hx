@@ -31,8 +31,6 @@ import js.lib.ArrayBufferView;
 
 	Also available via `js.node.util.TextDecoder`.
 
-	// TODO(section-1): wire on `js.Node` / `globalThis` facade if desired.
-
 	@see https://nodejs.org/api/globals.html#class-textdecoder
 **/
 @:native("TextDecoder")

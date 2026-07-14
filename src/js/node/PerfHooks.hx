@@ -40,8 +40,7 @@ extern class PerfHooks {
 		An object that can be used to collect performance metrics from the current Node.js instance.
 		It is similar to `window.performance` in browsers.
 
-		// TODO(section-1): `Node.performance` in `src/js/Node.hx` still has a Haxe 3
-		// `untyped __js__` fallback; drop that when section-1 audits globals.
+		Also available as `js.Node.performance`.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/perf_hooks.html#perf_hooksperformance
 	**/

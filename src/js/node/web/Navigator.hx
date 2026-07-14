@@ -26,7 +26,7 @@ package js.node.web;
 	A partial browser-compatible `Navigator` implementation exposed as the
 	`navigator` global in Node.js.
 
-	TODO(section-1): expose `Node.navigator` alias in `js.Node` if desired.
+	Also available as `js.Node.navigator`.
 
 	@see https://nodejs.org/api/globals.html#class-navigator
 	@see https://nodejs.org/api/globals.html#navigator

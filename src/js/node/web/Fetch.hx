@@ -29,9 +29,7 @@ import js.node.web.Request.RequestInit;
 /**
 	Browser-compatible `fetch()` (undici), exposed as a static on `globalThis`.
 
-	Usage: `Fetch.fetch(url)` / `Fetch.fetch(url, init)`.
-
-	TODO(section-1): wire `Node.fetch` / global aliases in `js.Node` if desired.
+	Usage: `Fetch.fetch(url)` / `Fetch.fetch(url, init)`, or `js.Node.fetch(url)`.
 
 	@see https://nodejs.org/api/globals.html#fetch
 **/
