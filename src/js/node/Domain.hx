@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,10 +27,13 @@ import js.node.domain.Domain as DomainObject;
 /**
 	Domains provide a way to handle multiple different IO operations as a single group.
 
-	Stability: 0 - Deprecated. Prefer `js.node.AsyncHooks` / `AsyncLocalStorage` for async context tracking.
+	Stability: 0 - Deprecated (documentation-only / pending full deprecation).
+	Prefer `js.node.async_hooks.AsyncLocalStorage` / `js.node.AsyncHooks` for async
+	context tracking. Most applications should not use this module.
 
-	If any of the event emitters or callbacks registered to a domain emit an error event, or throw an error,
-	then the domain object will be notified, rather than losing the context of the error in the process.on('uncaughtException') handler,
+	If any of the event emitters or callbacks registered to a domain emit an `'error'`
+	event, or throw an error, then the domain object will be notified, rather than
+	losing the context of the error in the `process.on('uncaughtException')` handler,
 	or causing the program to exit immediately with an error code.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/domain.html
@@ -39,7 +42,7 @@ import js.node.domain.Domain as DomainObject;
 @:jsRequire("domain")
 extern class Domain {
 	/**
-		Returns a new Domain object.
+		Returns a new `Domain` object.
 	**/
 	static function create():DomainObject;
 }

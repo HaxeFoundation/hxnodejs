@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,20 +23,26 @@
 package js.node.domain;
 
 import haxe.Constraints.Function;
-import js.node.Timers.Timeout;
+import haxe.extern.Rest;
 import js.node.events.EventEmitter;
 
 /**
 	Enumeration of events emitted by `Domain` objects.
+
+	Stability: 0 - Deprecated. Prefer `AsyncLocalStorage` / `async_hooks`.
 **/
 @:deprecated("The domain module is deprecated. Use AsyncLocalStorage / async_hooks instead.")
 enum abstract DomainEvent<T:Function>(Event<T>) to Event<T> {
+	/**
+		Emitted when an error is routed to this domain.
+	**/
 	var Error:DomainEvent<DomainError->Void> = "error";
-	var Dispose:DomainEvent<Void->Void> = "dispose";
 }
 
 /**
-	Any time an Error object is routed through a domain, a few extra fields are added to it.
+	Extra fields added to an `Error` when it is routed through a domain.
+
+	These properties are set on the error object itself (typically a `js.lib.Error`).
 **/
 @:deprecated("The domain module is deprecated. Use AsyncLocalStorage / async_hooks instead.")
 typedef DomainError = {
@@ -46,7 +52,7 @@ typedef DomainError = {
 	var domain:Domain;
 
 	/**
-		The event emitter that emitted an 'error' event with the error object.
+		The event emitter that emitted an `'error'` event with the error object.
 	**/
 	var domainEmitter:IEventEmitter;
 
@@ -62,48 +68,63 @@ typedef DomainError = {
 }
 
 /**
-	The Domain class encapsulates the functionality of routing errors
-	and uncaught exceptions to the active Domain object.
+	The `Domain` class encapsulates the functionality of routing errors
+	and uncaught exceptions to the active `Domain` object.
+
+	Listen to its `'error'` event to handle caught errors.
+
+	Stability: 0 - Deprecated. Prefer `AsyncLocalStorage` / `async_hooks`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/domain.html#class-domain
 **/
 @:deprecated("The domain module is deprecated. Use AsyncLocalStorage / async_hooks instead.")
 extern class Domain extends EventEmitter<Domain> {
 	/**
 		Run the supplied function in the context of the domain, implicitly binding all event emitters, timers,
-		and lowlevel requests that are created in that context.
+		and low-level requests that are created in that context.
+
+		Optionally, arguments can be passed to the function.
 
 		This is the most basic way to use a domain.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/domain.html#domainrunfn-args
 	**/
-	function run(fn:Void->Void):Void;
+	function run(fn:Function, args:Rest<Dynamic>):Dynamic;
 
 	/**
-		An array of timers and event emitters that have been explicitly added to the domain.
+		An array of event emitters that have been explicitly added to the domain.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/domain.html#domainmembers
 	**/
-	var members(default, null):Array<haxe.extern.EitherType<IEventEmitter, Timeout>>;
+	var members(default, null):Array<IEventEmitter>;
 
 	/**
 		Explicitly adds an `emitter` to the domain.
 
-		If any event handlers called by the emitter throw an error, or if the emitter emits an error event,
-		it will be routed to the domain's error event, just like with implicit binding.
+		If any event handlers called by the emitter throw an error, or if the emitter emits an `'error'` event,
+		it will be routed to the domain's `'error'` event, just like with implicit binding.
 
-		This also works with timers that are returned from `setInterval` and `setTimeout`.
-		If their callback function throws, it will be caught by the domain 'error' handler.
-
-		If the Timer or EventEmitter was already bound to a domain, it is removed from that one,
+		If the `EventEmitter` was already bound to a domain, it is removed from that one,
 		and bound to this one instead.
+
+		As of Node.js 9.3.0, this method no longer accepts timer objects.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/domain.html#domainaddemitter
 	**/
-	@:overload(function(emitter:Timeout):Void {})
 	function add(emitter:IEventEmitter):Void;
 
 	/**
 		The opposite of `add`. Removes domain handling from the specified emitter.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/domain.html#domainremoveemitter
 	**/
-	@:overload(function(emitter:Timeout):Void {})
 	function remove(emitter:IEventEmitter):Void;
 
 	/**
 		The returned function will be a wrapper around the supplied `callback` function.
-		When the returned function is called, any errors that are thrown will be routed to the domain's error event.
+		When the returned function is called, any errors that are thrown will be routed to the domain's `'error'` event.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/domain.html#domainbindcallback
 	**/
 	function bind<T:Function>(callback:T):T;
 
@@ -111,8 +132,10 @@ extern class Domain extends EventEmitter<Domain> {
 		This method is almost identical to `bind`. However, in addition to catching thrown errors, it will also
 		intercept `Error` objects sent as the first argument to the function.
 
-		In this way, the common if (er != null) return callback(er); pattern
+		In this way, the common `if (err != null) return callback(err);` pattern
 		can be replaced with a single error handler in a single place.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/domain.html#domaininterceptcallback
 	**/
 	function intercept<T:Function>(callback:T):T;
 
@@ -125,9 +148,9 @@ extern class Domain extends EventEmitter<Domain> {
 		The call to `enter` delimits the beginning of a chain of asynchronous calls and I/O operations bound to a domain.
 
 		Calling `enter` changes only the active domain, and does not alter the domain itself.
-		Enter and exit can be called an arbitrary number of times on a single domain.
+		`enter` and `exit` can be called an arbitrary number of times on a single domain.
 
-		If the domain on which `enter` is called has been disposed, `enter` will return without setting the domain.
+		@see https://nodejs.org/docs/latest-v24.x/api/domain.html#domainenter
 	**/
 	function enter():Void;
 
@@ -142,29 +165,9 @@ extern class Domain extends EventEmitter<Domain> {
 		`exit` will exit any domains nested within this domain.
 
 		Calling `exit` changes only the active domain, and does not alter the domain itself.
-		Enter and exit can be called an arbitrary number of times on a single domain.
+		`enter` and `exit` can be called an arbitrary number of times on a single domain.
 
-		If the domain on which `exit` is called has been disposed, `exit` will return without exiting the domain.
+		@see https://nodejs.org/docs/latest-v24.x/api/domain.html#domainexit
 	**/
 	function exit():Void;
-
-	/**
-		The `dispose` method destroys a domain, and makes a best effort attempt
-		to clean up any and all IO that is associated with the domain.
-
-		Streams are aborted, ended, closed, and/or destroyed. Timers are cleared.
-		Explicitly bound callbacks are no longer called.
-
-		Any error events that are raised as a result of this are ignored.
-
-		The intention of calling `dispose` is generally to prevent cascading errors when a critical part of
-		the Domain context is found to be in an error state.
-
-		Once the domain is disposed the 'dispose' event will emit.
-
-		Note that IO might still be performed. However, to the highest degree possible, once a domain is disposed,
-		further errors from the emitters in that set will be ignored. So, even if some remaining actions are still
-		in flight, Node.js will not communicate further about them.
-	**/
-	function dispose():Void;
 }
