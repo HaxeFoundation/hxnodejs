@@ -29,9 +29,7 @@ import js.lib.ArrayBufferView;
 /**
 	WHATWG Encoding Standard `TextDecoder` (global).
 
-	Also available via `js.node.util.TextDecoder`.
-
-	// TODO(section-1): wire on `js.Node` / `globalThis` facade if desired.
+	Also available as `js.Node.TextDecoder` and via `js.node.util.TextDecoder`.
 
 	@see https://nodejs.org/api/globals.html#class-textdecoder
 **/

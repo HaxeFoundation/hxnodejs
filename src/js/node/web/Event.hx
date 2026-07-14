@@ -25,7 +25,7 @@ package js.node.web;
 /**
 	A browser-compatible implementation of the `Event` class.
 
-	// TODO(section-1): wire `Event` on `js.Node` / `globalThis` facade if desired.
+	Also available as `js.Node.Event`.
 
 	@see https://nodejs.org/api/events.html#class-event
 	@see https://nodejs.org/api/globals.html#class-event

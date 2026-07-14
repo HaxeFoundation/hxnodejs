@@ -25,7 +25,7 @@ package js.node.web;
 /**
 	A browser-compatible implementation of `CustomEvent`.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
+	Also available as `js.Node.CustomEvent`.
 
 	@see https://nodejs.org/api/events.html#class-customevent
 	@see https://nodejs.org/api/globals.html#class-customevent

@@ -26,7 +26,7 @@ package js.node.web;
 	A utility class used to signal cancelation in selected `Promise`-based APIs.
 	The API is based on the Web API `AbortController`.
 
-	// TODO(section-1): wire `AbortController` on `js.Node` / `globalThis` facade if desired.
+	Also available as `js.Node.AbortController`.
 
 	@see https://nodejs.org/api/globals.html#class-abortcontroller
 **/

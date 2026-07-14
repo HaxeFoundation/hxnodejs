@@ -25,12 +25,27 @@ package js;
 import haxe.Constraints.Function;
 import haxe.extern.Rest;
 import js.Syntax.code;
+import js.lib.Promise;
 import js.node.Module;
 import js.node.Process;
 import js.node.Timers.Immediate;
 import js.node.Timers.Timeout;
 import js.node.console.Console;
 import js.node.perf_hooks.Performance;
+import js.node.url.URL;
+import js.node.web.AbortController as WebAbortController;
+import js.node.web.CustomEvent as WebCustomEvent;
+import js.node.web.DOMException as WebDOMException;
+import js.node.web.Event as WebEvent;
+import js.node.web.EventTarget as WebEventTarget;
+import js.node.web.File as WebFile;
+import js.node.web.Navigator as WebNavigator;
+import js.node.web.Request;
+import js.node.web.Request.RequestInit;
+import js.node.web.Response;
+import js.node.web.Storage as WebStorage;
+import js.node.web.TextDecoder as WebTextDecoder;
+import js.node.web.TextEncoder as WebTextEncoder;
 
 /**
 	Node.js globals
@@ -53,6 +68,17 @@ extern class Node {
 
 	private static inline function get___filename():String {
 		return code("__filename");
+	}
+
+	/**
+		The WHATWG `AbortController` constructor.
+
+		@see https://nodejs.org/api/globals.html#class-abortcontroller
+	**/
+	static var AbortController(get, never):Class<WebAbortController>;
+
+	private static inline function get_AbortController():Class<WebAbortController> {
+		return code("AbortController");
 	}
 
 	/**
@@ -80,12 +106,76 @@ extern class Node {
 	}
 
 	/**
+		The WHATWG `CustomEvent` constructor.
+
+		@see https://nodejs.org/api/globals.html#class-customevent
+	**/
+	static var CustomEvent(get, never):Class<WebCustomEvent>;
+
+	private static inline function get_CustomEvent():Class<WebCustomEvent> {
+		return code("CustomEvent");
+	}
+
+	/**
+		The WHATWG `DOMException` constructor.
+
+		@see https://nodejs.org/api/globals.html#class-domexception
+	**/
+	static var DOMException(get, never):Class<WebDOMException>;
+
+	private static inline function get_DOMException():Class<WebDOMException> {
+		return code("DOMException");
+	}
+
+	/**
+		The WHATWG `Event` constructor.
+
+		@see https://nodejs.org/api/globals.html#class-event
+	**/
+	static var Event(get, never):Class<WebEvent>;
+
+	private static inline function get_Event():Class<WebEvent> {
+		return code("Event");
+	}
+
+	/**
+		The WHATWG `EventTarget` constructor.
+
+		@see https://nodejs.org/api/globals.html#class-eventtarget
+	**/
+	static var EventTarget(get, never):Class<WebEventTarget>;
+
+	private static inline function get_EventTarget():Class<WebEventTarget> {
+		return code("EventTarget");
+	}
+
+	/**
 		This variable may appear to be global but is not. See [exports](https://nodejs.org/api/modules.html#modules_exports).
 	**/
 	static var exports(get, never):Dynamic<Dynamic>;
 
 	private static inline function get_exports():Dynamic<Dynamic> {
 		return code("exports");
+	}
+
+	/**
+		Browser-compatible `fetch()` (undici).
+
+		@see https://nodejs.org/api/globals.html#fetch
+	**/
+	@:overload(function(input:Request, ?init:RequestInit):Promise<Response> {})
+	@:overload(function(input:URL, ?init:RequestInit):Promise<Response> {})
+	static function fetch(input:String, ?init:RequestInit):Promise<Response>;
+
+	/**
+		The WHATWG `File` constructor.
+
+		@see https://nodejs.org/api/globals.html#class-file
+	**/
+	static var File(get, never):Class<WebFile>;
+
+	private static inline function get_File():Class<WebFile> {
+		return code("File");
 	}
 
 	/**
@@ -110,6 +200,20 @@ extern class Node {
 	}
 
 	/**
+		Web Storage API `localStorage`.
+
+		Stability: 1.2 - Release candidate. Enable with `--experimental-webstorage`.
+		Persists to the file given by `--localstorage-file`.
+
+		@see https://nodejs.org/api/globals.html#localstorage
+	**/
+	static var localStorage(get, never):WebStorage;
+
+	private static inline function get_localStorage():WebStorage {
+		return code("localStorage");
+	}
+
+	/**
 		This variable may appear to be global but is not. See [module](https://nodejs.org/api/modules.html#modules_module).
 	**/
 	static var module(get, never):Module;
@@ -119,12 +223,14 @@ extern class Node {
 	}
 
 	/**
-		The process object. See the [process object](https://nodejs.org/api/process.html#process_process) section.
-	**/
-	static var process(get, never):Process;
+		A partial browser-compatible `Navigator` implementation.
 
-	private static inline function get_process():Process {
-		return code("process");
+		@see https://nodejs.org/api/globals.html#navigator
+	**/
+	static var navigator(get, never):WebNavigator;
+
+	private static inline function get_navigator():WebNavigator {
+		return code("navigator");
 	}
 
 	/**
@@ -138,6 +244,15 @@ extern class Node {
 
 	private static inline function get_performance():Performance {
 		return code("performance");
+	}
+
+	/**
+		The process object. See the [process object](https://nodejs.org/api/process.html#process_process) section.
+	**/
+	static var process(get, never):Process;
+
+	private static inline function get_process():Process {
+		return code("process");
 	}
 
 	/**
@@ -158,6 +273,19 @@ extern class Node {
 	}
 
 	/**
+		Web Storage API `sessionStorage`.
+
+		Stability: 1.2 - Release candidate. Enable with `--experimental-webstorage`.
+
+		@see https://nodejs.org/api/globals.html#sessionstorage
+	**/
+	static var sessionStorage(get, never):WebStorage;
+
+	private static inline function get_sessionStorage():WebStorage {
+		return code("sessionStorage");
+	}
+
+	/**
 		`setImmediate` is described in the [timers](https://nodejs.org/api/timers.html) section.
 	**/
 	static function setImmediate(callback:Function, args:Rest<Dynamic>):Immediate;
@@ -173,11 +301,46 @@ extern class Node {
 	static function setTimeout(callback:Function, delay:Int, args:Rest<Dynamic>):Timeout;
 
 	/**
+		The WHATWG `Storage` constructor (used by `localStorage` / `sessionStorage`).
+
+		Stability: 1.2 - Release candidate. Enable with `--experimental-webstorage`.
+
+		@see https://nodejs.org/api/globals.html#class-storage
+	**/
+	static var Storage(get, never):Class<WebStorage>;
+
+	private static inline function get_Storage():Class<WebStorage> {
+		return code("Storage");
+	}
+
+	/**
 		The WHATWG [`structuredClone`](https://developer.mozilla.org/en-US/docs/Web/API/structuredClone) method.
 
 		@see https://nodejs.org/api/globals.html#structuredclonevalue-options
 	**/
 	static function structuredClone(value:Dynamic, ?options:StructuredCloneOptions):Dynamic;
+
+	/**
+		The WHATWG `TextDecoder` constructor.
+
+		@see https://nodejs.org/api/globals.html#class-textdecoder
+	**/
+	static var TextDecoder(get, never):Class<WebTextDecoder>;
+
+	private static inline function get_TextDecoder():Class<WebTextDecoder> {
+		return code("TextDecoder");
+	}
+
+	/**
+		The WHATWG `TextEncoder` constructor.
+
+		@see https://nodejs.org/api/globals.html#class-textencoder
+	**/
+	static var TextEncoder(get, never):Class<WebTextEncoder>;
+
+	private static inline function get_TextEncoder():Class<WebTextEncoder> {
+		return code("TextEncoder");
+	}
 }
 
 /**

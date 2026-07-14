@@ -27,7 +27,7 @@ import js.lib.Error;
 /**
 	The WHATWG `DOMException` class.
 
-	// TODO(section-1): wire `DOMException` on `js.Node` / `globalThis` facade if desired.
+	Also available as `js.Node.DOMException`.
 
 	@see https://nodejs.org/api/globals.html#class-domexception
 **/
