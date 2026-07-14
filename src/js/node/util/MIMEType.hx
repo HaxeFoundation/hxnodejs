@@ -22,27 +22,47 @@
 
 package js.node.util;
 
-import haxe.Constraints.Function;
-import haxe.extern.Rest;
-import js.lib.Promise;
-import js.lib.Symbol;
+import haxe.extern.EitherType;
 
-@:jsRequire("util", "promisify")
-extern class Promisify {
+/**
+	An implementation of the MIMEType class.
+
+	@see https://nodejs.org/api/util.html#class-utilmimetype
+**/
+@:jsRequire("util", "MIMEType")
+extern class MIMEType {
 	/**
-		Takes a function following the common error-first callback style, i.e. taking an `(err, value) => ...` callback
-		as the last argument, and returns a version that returns promises.
-
-		@see https://nodejs.org/api/util.html#util_util_promisify_original
+		Gets the essence of the MIME.
 	**/
-	@:selfCall
-	// TODO(section-4): tighten promisify generic result typing
-	static function promisify(original:Function):Rest<Any>->Promise<Any>;
+	final essence:String;
 
 	/**
-		That can be used to declare custom promisified variants of functions, see Custom promisified functions.
-
-		@see https://nodejs.org/api/util.html#util_util_promisify_custom
+		Gets the `MIMEParams` object representing the parameters of the MIME.
 	**/
-	static final custom:Symbol;
+	final params:MIMEParams;
+
+	/**
+		Gets and sets the subtype portion of the MIME.
+	**/
+	var subtype:String;
+
+	/**
+		Gets and sets the type portion of the MIME.
+	**/
+	var type:String;
+
+	/**
+		Creates a new `MIMEType` object by parsing the `input`.
+	**/
+	function new(input:EitherType<String, {toString:() -> String}>);
+
+	/**
+		Alias for `toString()`.
+	**/
+	function toJSON():String;
+
+	/**
+		Returns the serialized MIME.
+	**/
+	function toString():String;
 }

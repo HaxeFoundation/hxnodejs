@@ -22,15 +22,10 @@
 
 package js.node;
 
-#if haxe4
+import haxe.Constraints.Function;
 import js.lib.Error;
 import js.lib.Promise;
 import js.lib.RegExp;
-#else
-import js.Error;
-import js.Promise;
-import js.RegExp;
-#end
 
 /**
 	The `assert module` provides a set of assertion functions for verifying invariants.
@@ -54,8 +49,8 @@ extern class Assert {
 		@see https://nodejs.org/api/assert.html#assert_assert_value_message
 	**/
 	@:selfCall
-	@:overload(function(value:Dynamic, ?message:Error):Void {})
-	static function assert(value:Dynamic, ?message:String):Void;
+	@:overload(function(value:Any, ?message:Error):Void {})
+	static function assert(value:Any, ?message:String):Void;
 
 	/**
 		An alias of `Assert.deepStrictEqual()`.
@@ -91,12 +86,12 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_doesnotreject_asyncfn_error_message
 	**/
-	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Class<Dynamic>, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Dynamic>, ?error:Class<Dynamic>, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
-	static function doesNotReject(asyncFn:Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void;
+	@:overload(function(asyncFn:Void->Promise<Any>, ?error:Class<Any>, ?message:String):Void {})
+	@:overload(function(asyncFn:Void->Promise<Any>, ?error:RegExp, ?message:String):Void {})
+	@:overload(function(asyncFn:Void->Promise<Any>, ?error:Any->Bool, ?message:String):Void {})
+	@:overload(function(asyncFn:Promise<Any>, ?error:Class<Any>, ?message:String):Void {})
+	@:overload(function(asyncFn:Promise<Any>, ?error:RegExp, ?message:String):Void {})
+	static function doesNotReject(asyncFn:Promise<Any>, ?error:Any->Bool, ?message:String):Void;
 
 	/**
 		Asserts that the function `fn` does not throw an error.
@@ -108,9 +103,9 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_doesnotthrow_fn_error_message
 	**/
-	@:overload(function(fn:Void->Void, ?error:Class<Dynamic>, ?message:String):Void {})
+	@:overload(function(fn:Void->Void, ?error:Class<Any>, ?message:String):Void {})
 	@:overload(function(fn:Void->Void, ?error:RegExp, ?message:String):Void {})
-	static function doesNotThrow(fn:Void->Void, ?error:Dynamic->Bool, ?message:String):Void;
+	static function doesNotThrow(fn:Void->Void, ?error:Any->Bool, ?message:String):Void;
 
 	/**
 		An alias of `strictEqual`.
@@ -138,8 +133,8 @@ extern class Assert {
 	**/
 	@:deprecated
 	@:native("fail")
-	@:overload(function<T>(actual:T, expected:T, ?message:String, ?operator_:String, ?stackStartFn:haxe.Constraints.Function):Void {})
-	static function fail_<T>(actual:T, expected:T, ?message:Error, ?operator_:String, ?stackStartFn:haxe.Constraints.Function):Void;
+	@:overload(function<T>(actual:T, expected:T, ?message:String, ?operator_:String, ?stackStartFn:Function):Void {})
+	static function fail_<T>(actual:T, expected:T, ?message:Error, ?operator_:String, ?stackStartFn:Function):Void;
 
 	/**
 		Throws `value` if `value` is not `undefined` or `null`.
@@ -148,7 +143,7 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_iferror_value
 	**/
-	static function ifError(value:Dynamic):Void;
+	static function ifError(value:Any):Void;
 
 	/**
 		Expects the `string` input to match the regular expression.
@@ -198,8 +193,8 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_ok_value_message
 	**/
-	@:overload(function(value:Dynamic, ?message:Error):Void {})
-	static function ok(value:Dynamic, ?message:String):Void;
+	@:overload(function(value:Any, ?message:Error):Void {})
+	static function ok(value:Any, ?message:String):Void;
 
 	/**
 		Tests for partial deep equality between the `actual` and `expected` parameters.
@@ -218,16 +213,16 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_assert_rejects_asyncfn_error_message
 	**/
-	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Class<Dynamic>, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Dynamic, ?message:String):Void {})
-	@:overload(function(asyncFn:Void->Promise<Dynamic>, ?error:Error, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Dynamic>, ?error:Class<Dynamic>, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Dynamic>, ?error:RegExp, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Dynamic>, ?error:Dynamic->Bool, ?message:String):Void {})
-	@:overload(function(asyncFn:Promise<Dynamic>, ?error:Dynamic, ?message:String):Void {})
-	static function rejects(asyncFn:Promise<Dynamic>, ?error:Error, ?message:String):Void;
+	@:overload(function(asyncFn:Void->Promise<Any>, ?error:Class<Any>, ?message:String):Void {})
+	@:overload(function(asyncFn:Void->Promise<Any>, ?error:RegExp, ?message:String):Void {})
+	@:overload(function(asyncFn:Void->Promise<Any>, ?error:Any->Bool, ?message:String):Void {})
+	@:overload(function(asyncFn:Void->Promise<Any>, ?error:Any, ?message:String):Void {})
+	@:overload(function(asyncFn:Void->Promise<Any>, ?error:Error, ?message:String):Void {})
+	@:overload(function(asyncFn:Promise<Any>, ?error:Class<Any>, ?message:String):Void {})
+	@:overload(function(asyncFn:Promise<Any>, ?error:RegExp, ?message:String):Void {})
+	@:overload(function(asyncFn:Promise<Any>, ?error:Any->Bool, ?message:String):Void {})
+	@:overload(function(asyncFn:Promise<Any>, ?error:Any, ?message:String):Void {})
+	static function rejects(asyncFn:Promise<Any>, ?error:Error, ?message:String):Void;
 
 	/**
 		Tests strict equality between the `actual` and `expected` parameter as
@@ -244,7 +239,7 @@ extern class Assert {
 		@see https://nodejs.org/api/assert.html#assert_assert_throws_fn_error_message
 	**/
 	@:overload(function(fn:Void->Void, ?error:RegExp, ?message:String):Void {})
-	@:overload(function(fn:Void->Void, ?error:Dynamic->Bool, ?message:String):Void {})
-	@:overload(function(fn:Void->Void, ?error:Dynamic, ?message:String):Void {})
+	@:overload(function(fn:Void->Void, ?error:Any->Bool, ?message:String):Void {})
+	@:overload(function(fn:Void->Void, ?error:Any, ?message:String):Void {})
 	static function throws(fn:Void->Void, ?error:Error, ?message:String):Void;
 }

@@ -24,6 +24,7 @@ package js.node;
 
 import haxe.DynamicAccess;
 import haxe.extern.EitherType;
+import js.node.Buffer;
 
 /**
 	The `querystring` module provides utilities for parsing and formatting URL query strings.
@@ -76,7 +77,15 @@ extern class Querystring {
 
 		@see https://nodejs.org/api/querystring.html#querystring_querystring_unescape_str
 	**/
-	static dynamic function unescape(str:String):Dynamic;
+	static dynamic function unescape(str:String):String;
+
+	/**
+		The `querystring.unescapeBuffer()` method performs decoding of URL percent-encoded characters
+		on a `Buffer` of bytes, returning a new `Buffer`.
+
+		@see https://nodejs.org/api/querystring.html
+	**/
+	static function unescapeBuffer(buffer:Buffer, ?decodeSpaces:Bool):Buffer;
 }
 
 /**

@@ -20,29 +20,34 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package js.node.util;
+package js.node.crypto;
 
-import haxe.Constraints.Function;
-import haxe.extern.Rest;
-import js.lib.Promise;
-import js.lib.Symbol;
+import js.node.Buffer;
 
-@:jsRequire("util", "promisify")
-extern class Promisify {
-	/**
-		Takes a function following the common error-first callback style, i.e. taking an `(err, value) => ...` callback
-		as the last argument, and returns a version that returns promises.
+/**
+	Predefined Diffie-Hellman group object returned by
+	`Crypto.getDiffieHellman` / `Crypto.createDiffieHellmanGroup`.
 
-		@see https://nodejs.org/api/util.html#util_util_promisify_original
-	**/
-	@:selfCall
-	// TODO(section-4): tighten promisify generic result typing
-	static function promisify(original:Function):Rest<Any>->Promise<Any>;
+	Unlike `DiffieHellman`, keys cannot be set with `setPublicKey` / `setPrivateKey`.
+**/
+@:jsRequire("crypto", "DiffieHellmanGroup")
+extern class DiffieHellmanGroup {
+	@:overload(function():Buffer {})
+	function generateKeys(encoding:String):String;
 
-	/**
-		That can be used to declare custom promisified variants of functions, see Custom promisified functions.
+	@:overload(function(other_public_key:Buffer):Buffer {})
+	@:overload(function(other_public_key:String, input_encoding:String):Buffer {})
+	function computeSecret(other_public_key:String, input_encoding:String, output_encoding:String):String;
 
-		@see https://nodejs.org/api/util.html#util_util_promisify_custom
-	**/
-	static final custom:Symbol;
+	@:overload(function():Buffer {})
+	function getPrime(encoding:String):String;
+
+	@:overload(function():Buffer {})
+	function getGenerator(encoding:String):String;
+
+	@:overload(function():Buffer {})
+	function getPublicKey(encoding:String):String;
+
+	@:overload(function():Buffer {})
+	function getPrivateKey(encoding:String):String;
 }

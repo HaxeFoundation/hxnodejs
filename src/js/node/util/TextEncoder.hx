@@ -22,11 +22,7 @@
 
 package js.node.util;
 
-#if haxe4
 import js.lib.Uint8Array;
-#else
-import js.html.Uint8Array;
-#end
 
 /**
 	An implementation of the WHATWG Encoding Standard `TextEncoder` API.

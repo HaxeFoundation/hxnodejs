@@ -22,11 +22,8 @@
 
 package js.node.assert;
 
-#if haxe4
+import haxe.Constraints.Function;
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Indicates the failure of an assertion. All errors thrown by the `Assert` module will be instances of the `AssertionError` class.
@@ -43,12 +40,12 @@ extern class AssertionError extends Error {
 	/**
 		Set to the `actual` argument for methods such as `Assert.strictEqual()`.
 	**/
-	var actual:Dynamic;
+	var actual:Any;
 
 	/**
 		Set to the `expected` value for methods such as `Assert.strictEqual()`.
 	**/
-	var expected:Dynamic;
+	var expected:Any;
 
 	/**
 		Indicates if the message was auto-generated (`true`) or not.
@@ -78,22 +75,20 @@ typedef AssertionErrorOptions = {
 	/**
 		The `actual` property on the error instance.
 	**/
-	@:optional var actual:Dynamic;
+	@:optional var actual:Any;
 
 	/**
 		The `expected` property on the error instance.
 	**/
-	@:optional var expected:Dynamic;
+	@:optional var expected:Any;
 
-	#if (haxe_ver < 4)
 	/**
 		The `operator` property on the error instance.
 	**/
-	@:optional var operator:String;
-	#end
+	@:optional @:native("operator") var operator_:String;
 
 	/**
 		If provided, the generated stack trace omits frames before this function.
 	**/
-	@:optional var stackStartFunction:Dynamic;
+	@:optional var stackStartFunction:Function;
 }

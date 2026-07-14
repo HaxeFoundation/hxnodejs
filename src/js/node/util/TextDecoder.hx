@@ -23,13 +23,8 @@
 package js.node.util;
 
 import haxe.extern.EitherType;
-#if haxe4
 import js.lib.ArrayBuffer;
 import js.lib.ArrayBufferView;
-#else
-import js.html.ArrayBuffer;
-import js.html.ArrayBufferView;
-#end
 
 /**
 	An implementation of the WHATWG Encoding Standard `TextDecoder` API.

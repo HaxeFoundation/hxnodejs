@@ -36,6 +36,18 @@ extern class URL {
 	function new(input:String, ?base:String):Void;
 
 	/**
+		Checks whether `input` can be successfully parsed as a URL relative to `base`.
+	**/
+	@:overload(function(input:String, ?base:URL):Bool {})
+	static function canParse(input:String, ?base:String):Bool;
+
+	/**
+		Parses `input` relative to `base` into a `URL` object, or returns `null` on failure.
+	**/
+	@:overload(function(input:String, ?base:URL):Null<URL> {})
+	static function parse(input:String, ?base:String):Null<URL>;
+
+	/**
 		Gets and sets the fragment portion of the URL.
 	**/
 	var hash:String;

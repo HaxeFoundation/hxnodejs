@@ -20,29 +20,11 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package js.node.util;
+package js.node.crypto;
 
-import haxe.Constraints.Function;
-import haxe.extern.Rest;
-import js.lib.Promise;
-import js.lib.Symbol;
-
-@:jsRequire("util", "promisify")
-extern class Promisify {
-	/**
-		Takes a function following the common error-first callback style, i.e. taking an `(err, value) => ...` callback
-		as the last argument, and returns a version that returns promises.
-
-		@see https://nodejs.org/api/util.html#util_util_promisify_original
-	**/
-	@:selfCall
-	// TODO(section-4): tighten promisify generic result typing
-	static function promisify(original:Function):Rest<Any>->Promise<Any>;
-
-	/**
-		That can be used to declare custom promisified variants of functions, see Custom promisified functions.
-
-		@see https://nodejs.org/api/util.html#util_util_promisify_custom
-	**/
-	static final custom:Symbol;
-}
+/**
+	Constructor export for decipher instances created via `Crypto.createDecipheriv`.
+	Prefer `Crypto.createDecipheriv` over constructing this class directly.
+**/
+@:jsRequire("crypto", "Decipheriv")
+extern class Decipheriv extends Decipher {}
