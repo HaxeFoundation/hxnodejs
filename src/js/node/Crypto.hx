@@ -469,7 +469,7 @@ extern class Crypto {
 		Generates a pseudorandom prime of `size` bits.
 	**/
 	@:overload(function(size:Int, options:GeneratePrimeOptions, callback:(err:Null<Error>, prime:EitherType<ArrayBuffer, Any>)->Void):Void {})
-	static function generatePrime(size:Int, callback:(err:Null<Error>, derivedKey:ArrayBuffer)->Void):Void;
+	static function generatePrime(size:Int, callback:(err:Null<Error>, prime:ArrayBuffer)->Void):Void;
 
 	/**
 		Generates a pseudorandom prime of `size` bits (synchronous).
