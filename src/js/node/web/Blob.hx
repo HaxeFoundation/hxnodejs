@@ -23,17 +23,10 @@
 package js.node.web;
 
 import haxe.extern.EitherType;
-#if haxe4
 import js.lib.ArrayBuffer;
 import js.lib.ArrayBufferView;
 import js.lib.Promise;
 import js.lib.Uint8Array;
-#else
-import js.html.ArrayBuffer;
-import js.html.ArrayBufferView;
-import js.Promise;
-import js.html.Uint8Array;
-#end
 
 /**
 	Encapsulates immutable, raw data that can be safely shared across workers.
@@ -74,10 +67,8 @@ extern class Blob {
 
 	/**
 		Returns a new `ReadableStream` that allows the content of the `Blob` to be read.
-
-		Typed as `Dynamic` until web streams externs are added.
 	**/
-	function stream():Dynamic;
+	function stream():ReadableStream;
 
 	/**
 		Returns a promise that fulfills with the contents of the `Blob` decoded as a UTF-8 string.

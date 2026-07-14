@@ -23,44 +23,42 @@
 package js.node.web;
 
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	A channel for broadcasting messages to other contexts listening on the same name.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
+	Also available via `worker_threads` (see section 5); this is the web global form.
 
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	@see https://nodejs.org/api/globals.html#class-broadcastchannel
+	@see https://nodejs.org/api/worker_threads.html#class-broadcastchannel
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
+@:native("BroadcastChannel")
+extern class BroadcastChannel extends EventTarget {
 	/**
-		Custom data passed when initializing the event.
+		The channel name.
 	**/
-	var detail(default, null):Any;
+	var name(default, null):String;
 
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
+	var onmessage:Null<MessageEvent->Void>;
+	var onmessageerror:Null<MessageEvent->Void>;
 
-/**
-	Options passed to the `CustomEvent` constructor.
-**/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
+	function new(name:String):Void;
 
 	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
+		Closes the channel.
 	**/
-	@:optional var cancelable:Bool;
+	function close():Void;
 
 	/**
-		Not used in Node.js. Default: `false`.
+		Posts a message that will be delivered to all other `BroadcastChannel` objects listening on the same name.
 	**/
-	@:optional var composed:Bool;
+	function postMessage(message:Any):Void;
 
 	/**
-		Custom data exposed as `detail`.
+		Increases the Node.js event-loop reference count for this channel. Returns `this`.
 	**/
-	@:optional var detail:Any;
+	function ref():BroadcastChannel;
+
+	/**
+		Decreases the Node.js event-loop reference count for this channel. Returns `this`.
+	**/
+	function unref():BroadcastChannel;
 }

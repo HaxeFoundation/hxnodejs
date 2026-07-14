@@ -22,45 +22,32 @@
 
 package js.node.web;
 
+import js.lib.Promise;
+
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	A browser-compatible implementation of `WritableStream`.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
-
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	@see https://nodejs.org/api/globals.html#class-writablestream
+	@see https://nodejs.org/api/webstreams.html#class-writablestream
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
+@:native("WritableStream")
+extern class WritableStream {
+	var locked(default, null):Bool;
 
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
+	function new(?underlyingSink:WritableStreamUnderlyingSink, ?strategy:QueuingStrategy):Void;
+
+	function abort(?reason:Any):Promise<Void>;
+	function close():Promise<Void>;
+	function getWriter():WritableStreamDefaultWriter;
 }
 
 /**
-	Options passed to the `CustomEvent` constructor.
+	Underlying sink for `WritableStream` construction.
 **/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
-
-	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
-	**/
-	@:optional var cancelable:Bool;
-
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+typedef WritableStreamUnderlyingSink = {
+	@:optional var type:Any;
+	@:optional var start:WritableStreamDefaultController->Any;
+	@:optional var write:Any->WritableStreamDefaultController->Any;
+	@:optional var close:Void->Any;
+	@:optional var abort:Any->Any;
 }

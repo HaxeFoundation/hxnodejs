@@ -23,44 +23,27 @@
 package js.node.web;
 
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	A transform stream that decodes bytes into strings.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
-
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	@see https://nodejs.org/api/globals.html#class-textdecoderstream
+	@see https://nodejs.org/api/webstreams.html#class-textdecoderstream
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
+@:native("TextDecoderStream")
+extern class TextDecoderStream {
+	var encoding(default, null):String;
+	var fatal(default, null):Bool;
+	var ignoreBOM(default, null):Bool;
 
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
+	var readable(default, null):ReadableStream;
+	var writable(default, null):WritableStream;
+
+	function new(?label:String, ?options:TextDecoderStreamOptions):Void;
 }
 
 /**
-	Options passed to the `CustomEvent` constructor.
+	Options for `TextDecoderStream`.
 **/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
-
-	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
-	**/
-	@:optional var cancelable:Bool;
-
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+typedef TextDecoderStreamOptions = {
+	@:optional var fatal:Bool;
+	@:optional var ignoreBOM:Bool;
 }

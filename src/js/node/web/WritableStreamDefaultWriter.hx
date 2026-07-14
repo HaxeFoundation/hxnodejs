@@ -22,45 +22,24 @@
 
 package js.node.web;
 
-/**
-	A browser-compatible implementation of `CustomEvent`.
-
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
-
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
-**/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
-
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
+import js.lib.Promise;
 
 /**
-	Options passed to the `CustomEvent` constructor.
+	Default writer for a `WritableStream`.
+
+	@see https://nodejs.org/api/globals.html#class-writablestreamdefaultwriter
+	@see https://nodejs.org/api/webstreams.html#class-writablestreamdefaultwriter
 **/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
+@:native("WritableStreamDefaultWriter")
+extern class WritableStreamDefaultWriter {
+	function new(stream:WritableStream):Void;
 
-	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
-	**/
-	@:optional var cancelable:Bool;
+	var closed(default, null):Promise<Void>;
+	var ready(default, null):Promise<Void>;
+	var desiredSize(default, null):Null<Float>;
 
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+	function abort(?reason:Any):Promise<Void>;
+	function close():Promise<Void>;
+	function releaseLock():Void;
+	function write(chunk:Any):Promise<Void>;
 }

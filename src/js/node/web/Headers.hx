@@ -23,7 +23,6 @@
 package js.node.web;
 
 import haxe.DynamicAccess;
-import haxe.extern.EitherType;
 import js.node.Iterator;
 import js.node.KeyValue;
 
@@ -71,5 +70,5 @@ extern class Headers {
 	function entries():Iterator<KeyValue<String, String>>;
 	function keys():Iterator<String>;
 	function values():Iterator<String>;
-	function forEach(callback:String->String->Headers->Void, ?thisArg:Dynamic):Void;
+	function forEach(callback:String->String->Headers->Void, ?thisArg:Any):Void;
 }

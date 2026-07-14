@@ -24,18 +24,12 @@ package js.node.web;
 
 import haxe.DynamicAccess;
 import haxe.extern.EitherType;
-import js.node.url.URLSearchParams;
-#if haxe4
 import js.lib.ArrayBuffer;
 import js.lib.ArrayBufferView;
 import js.lib.Promise;
 import js.lib.Uint8Array;
-#else
-import js.html.ArrayBuffer;
-import js.html.ArrayBufferView;
-import js.Promise;
-import js.html.Uint8Array;
-#end
+import js.node.url.URL;
+import js.node.url.URLSearchParams;
 
 /**
 	The Fetch API `Request` interface (undici).
@@ -60,14 +54,24 @@ extern class Request {
 	var duplex(default, null):String;
 
 	/**
-		A `ReadableStream` of the body contents, or `null`.
-		Typed as `Dynamic` until web streams externs are added.
+		Always `false` in Node.js (undici); provided for browser API completeness.
 	**/
-	var body(default, null):Dynamic;
+	var isHistoryNavigation(default, null):Bool;
+
+	/**
+		Always `false` in Node.js (undici); provided for browser API completeness.
+	**/
+	var isReloadNavigation(default, null):Bool;
+
+	/**
+		A `ReadableStream` of the body contents, or `null`.
+	**/
+	var body(default, null):Null<ReadableStream>;
 
 	var bodyUsed(default, null):Bool;
 
 	@:overload(function(input:Request, ?init:RequestInit):Void {})
+	@:overload(function(input:URL, ?init:RequestInit):Void {})
 	function new(input:String, ?init:RequestInit):Void;
 
 	function clone():Request;
@@ -75,7 +79,7 @@ extern class Request {
 	function blob():Promise<Blob>;
 	function bytes():Promise<Uint8Array>;
 	function formData():Promise<FormData>;
-	function json():Promise<Dynamic>;
+	function json():Promise<Any>;
 	function text():Promise<String>;
 }
 
@@ -99,12 +103,16 @@ typedef RequestInit = {
 
 	/**
 		Undici-specific: custom dispatcher for the request.
+
+		TODO(section-6): type as undici `Dispatcher` if a module extern is added.
 	**/
-	@:optional var dispatcher:Dynamic;
+	@:optional var dispatcher:Any;
 }
 
 /**
 	Values accepted as request/response bodies.
 **/
 typedef BodyInit = EitherType<Blob,
-	EitherType<FormData, EitherType<URLSearchParams, EitherType<ArrayBuffer, EitherType<ArrayBufferView, EitherType<String, Dynamic>>>>>>;
+	EitherType<FormData,
+		EitherType<URLSearchParams,
+			EitherType<ArrayBuffer, EitherType<ArrayBufferView, EitherType<String, EitherType<ReadableStream, Any>>>>>>>;

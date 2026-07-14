@@ -22,45 +22,26 @@
 
 package js.node.web;
 
-/**
-	A browser-compatible implementation of `CustomEvent`.
-
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
-
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
-**/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
-
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
+import js.lib.ArrayBufferView;
+import js.lib.Promise;
 
 /**
-	Options passed to the `CustomEvent` constructor.
+	BYOB reader for a byte-oriented `ReadableStream`.
+
+	@see https://nodejs.org/api/globals.html#class-readablestreambyobreader
+	@see https://nodejs.org/api/webstreams.html#class-readablestreambyobreader
 **/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
+@:native("ReadableStreamBYOBReader")
+extern class ReadableStreamBYOBReader {
+	function new(stream:ReadableStream):Void;
+
+	var closed(default, null):Promise<Void>;
 
 	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
+		Reads into the provided view.
 	**/
-	@:optional var cancelable:Bool;
+	function read(view:ArrayBufferView, ?options:{@:optional var min:Int;}):Promise<ReadableStreamReadResult>;
 
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+	function releaseLock():Void;
+	function cancel(?reason:Any):Promise<Void>;
 }

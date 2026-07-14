@@ -22,45 +22,40 @@
 
 package js.node.web;
 
+import js.node.url.URL;
+
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	A browser-compatible `EventSource` (Server-Sent Events) implementation.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
+	Stability: 1 - Experimental. May require `--experimental-eventsource` depending on Node version.
 
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	@see https://nodejs.org/api/globals.html#class-eventsource
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
+@:native("EventSource")
+extern class EventSource extends EventTarget {
+	static inline var CONNECTING:Int = 0;
+	static inline var OPEN:Int = 1;
+	static inline var CLOSED:Int = 2;
 
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
+	var readyState(default, null):Int;
+	var url(default, null):String;
+	var withCredentials(default, null):Bool;
+
+	var onopen:Null<Event->Void>;
+	var onmessage:Null<MessageEvent->Void>;
+	var onerror:Null<Event->Void>;
+
+	@:overload(function(url:URL, ?eventSourceInitDict:EventSourceInit):Void {})
+	function new(url:String, ?eventSourceInitDict:EventSourceInit):Void;
+
+	function close():Void;
 }
 
 /**
-	Options passed to the `CustomEvent` constructor.
+	Options for the `EventSource` constructor.
 **/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
-
-	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
-	**/
-	@:optional var cancelable:Bool;
-
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+typedef EventSourceInit = {
+	@:optional var withCredentials:Bool;
+	// TODO(section-6): type undici dispatcher options when available.
+	@:optional var dispatcher:Any;
 }

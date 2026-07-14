@@ -23,44 +23,19 @@
 package js.node.web;
 
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	A queuing strategy that counts the number of chunks.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
-
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	@see https://nodejs.org/api/globals.html#class-countqueuingstrategy
+	@see https://nodejs.org/api/webstreams.html#class-countqueuingstrategy
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
+@:native("CountQueuingStrategy")
+extern class CountQueuingStrategy {
+	function new(init:{var highWaterMark:Float;}):Void;
 
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
-
-/**
-	Options passed to the `CustomEvent` constructor.
-**/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
+	var highWaterMark(default, null):Float;
 
 	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
+		Always returns `1`.
 	**/
-	@:optional var cancelable:Bool;
-
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+	function size(chunk:Any):Float;
 }

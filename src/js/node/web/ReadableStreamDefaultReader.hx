@@ -22,45 +22,35 @@
 
 package js.node.web;
 
-/**
-	A browser-compatible implementation of `CustomEvent`.
-
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
-
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
-**/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
-
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
+import js.lib.Promise;
 
 /**
-	Options passed to the `CustomEvent` constructor.
+	Default reader for a `ReadableStream`.
+
+	@see https://nodejs.org/api/globals.html#class-readablestreamdefaultreader
+	@see https://nodejs.org/api/webstreams.html#class-readablestreamdefaultreader
 **/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
+@:native("ReadableStreamDefaultReader")
+extern class ReadableStreamDefaultReader {
+	function new(stream:ReadableStream):Void;
 
 	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
+		A promise that fulfills when the stream closes, or rejects on error.
 	**/
-	@:optional var cancelable:Bool;
+	var closed(default, null):Promise<Void>;
 
 	/**
-		Not used in Node.js. Default: `false`.
+		Returns a promise for the next chunk.
 	**/
-	@:optional var composed:Bool;
+	function read():Promise<ReadableStreamReadResult>;
 
 	/**
-		Custom data exposed as `detail`.
+		Releases the lock on the stream.
 	**/
-	@:optional var detail:Any;
+	function releaseLock():Void;
+
+	/**
+		Cancels the stream.
+	**/
+	function cancel(?reason:Any):Promise<Void>;
 }

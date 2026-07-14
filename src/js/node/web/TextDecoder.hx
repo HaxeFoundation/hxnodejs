@@ -22,45 +22,38 @@
 
 package js.node.web;
 
+import haxe.extern.EitherType;
+import js.lib.ArrayBuffer;
+import js.lib.ArrayBufferView;
+
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	WHATWG Encoding Standard `TextDecoder` (global).
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
+	Also available via `js.node.util.TextDecoder`.
 
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	// TODO(section-1): wire on `js.Node` / `globalThis` facade if desired.
+
+	@see https://nodejs.org/api/globals.html#class-textdecoder
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
+@:native("TextDecoder")
+extern class TextDecoder {
+	var encoding(default, null):String;
+	var fatal(default, null):Bool;
+	var ignoreBOM(default, null):Bool;
 
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
+	function new(?label:String, ?options:TextDecoderOptions):Void;
+
+	/**
+		Decodes `input` and returns a string. When `stream` is true, incomplete
+		byte sequences may be buffered until a subsequent `decode` call.
+	**/
+	function decode(?input:EitherType<ArrayBuffer, ArrayBufferView>, ?options:{@:optional var stream:Bool;}):String;
 }
 
 /**
-	Options passed to the `CustomEvent` constructor.
+	Options for the `TextDecoder` constructor.
 **/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
-
-	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
-	**/
-	@:optional var cancelable:Bool;
-
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+typedef TextDecoderOptions = {
+	@:optional var fatal:Bool;
+	@:optional var ignoreBOM:Bool;
 }
