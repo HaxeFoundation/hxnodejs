@@ -120,7 +120,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#static-method-buffercopybytesfromview-offset-length
 	**/
-	static function copyBytesFrom(view:js.lib.ArrayBufferView, ?offset:Int, ?length:Int):Buffer;
+	static function copyBytesFrom(view:ArrayBufferView, ?offset:Int, ?length:Int):Buffer;
 
 	/**
 		Allocates a new `Buffer`.
@@ -635,6 +635,7 @@ extern class Buffer extends Uint8Array {
 		Writes `value` to `buf` at the specified `offset` with specified endian format
 		(`writeDoubleBE()` writes big endian, `writeDoubleLE()` writes little endian).
 		`value` should be a valid 64-bit double. Behavior is undefined when `value` is anything other than a 64-bit double.
+		Returns `offset` plus the number of bytes written.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writedoublele_value_offset
 	**/
@@ -644,6 +645,7 @@ extern class Buffer extends Uint8Array {
 		Writes `value` to `buf` at the specified `offset` with specified endian format
 		(`writeFloatBE()` writes big endian, `writeFloatLE()` writes little endian).
 		`value` should be a valid 32-bit float. Behavior is undefined when `value` is anything other than a 32-bit float.
+		Returns `offset` plus the number of bytes written.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writefloatbe_value_offset
 	**/
@@ -653,6 +655,7 @@ extern class Buffer extends Uint8Array {
 		Writes `value` to `buf` at the specified `offset` with specified endian format
 		(`writeFloatBE()` writes big endian, `writeFloatLE()` writes little endian).
 		`value` should be a valid 32-bit float. Behavior is undefined when `value` is anything other than a 32-bit float.
+		Returns `offset` plus the number of bytes written.
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_writefloatle_value_offset
 	**/
@@ -995,8 +998,22 @@ private extern class BufferModule {
 	static function atob(data:String):String;
 	static function btoa(data:String):String;
 	static function resolveObjectURL(id:String):Null<js.node.web.Blob>;
-	static var constants(get, never):BufferConstants;
+	static var constants(default, never):BufferConstants;
 }
+
+/**
+	Also available as `require('node:buffer').Blob`.
+
+	@see https://nodejs.org/api/buffer.html#class-blob
+**/
+typedef Blob = js.node.web.Blob;
+
+/**
+	Also available as `require('node:buffer').File`.
+
+	@see https://nodejs.org/api/buffer.html#class-file
+**/
+typedef File = js.node.web.File;
 
 typedef BufferConstants = {
 	/**
