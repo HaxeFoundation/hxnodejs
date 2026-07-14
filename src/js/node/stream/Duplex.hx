@@ -193,6 +193,14 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 	var writable(default, null):Bool;
 
 	/**
+		If `false`, then the stream will automatically end the writable side when the readable side ends.
+		Set initially by the `allowHalfOpen` constructor option, which defaults to `true`.
+
+		@see https://nodejs.org/api/stream.html#duplexallowhalfopen
+	**/
+	var allowHalfOpen:Bool;
+
+	/**
 		Is `true` after `writable.end()` has been called. This property
 		does not indicate whether the data has been flushed, for this use
 		`writable.writableFinished` instead.

@@ -219,13 +219,6 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 	var writableNeedDrain(default, null):Bool;
 
 	/**
-		Returns the error if the stream has been destroyed with an error.
-
-		@see https://nodejs.org/api/stream.html#writableerrored
-	**/
-	var errored(default, null):Null<Error>;
-
-	/**
 		The `writable.write()` method writes some data to the stream, and calls the supplied `callback` once the data has been fully handled.
 		If an error occurs, the `callback` may or may not be called with the error as its first argument.
 		To reliably detect write errors, add a listener for the `'error'` event.

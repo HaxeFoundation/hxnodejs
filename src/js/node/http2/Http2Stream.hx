@@ -88,8 +88,9 @@ extern class Http2Stream extends Duplex<Http2Stream> {
 
 	/**
 		`true` if the `Http2Stream` instance has been closed.
+		Inherited from `stream.Duplex` / `stream.Readable` as `closed`.
 	**/
-	var closed(default, null):Bool;
+	// var closed(default, null):Bool; — inherited from Stream
 
 	// `destroyed` is inherited from Readable/Duplex.
 

@@ -42,6 +42,22 @@ extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements 
 	private function new();
 
 	/**
+		Is `true` after `'close'` has been emitted.
+
+		@see https://nodejs.org/api/stream.html#readableclosed
+		@see https://nodejs.org/api/stream.html#writableclosed
+	**/
+	var closed(default, null):Bool;
+
+	/**
+		Returns the error if the stream has been destroyed with an error.
+
+		@see https://nodejs.org/api/stream.html#readableerrored
+		@see https://nodejs.org/api/stream.html#writableerrored
+	**/
+	var errored(default, null):Null<Error>;
+
+	/**
 		Promise-based stream helpers (`stream/promises`).
 
 		@see https://nodejs.org/api/stream.html#streams-promises-api
@@ -238,4 +254,14 @@ typedef StreamComposeOptions = {
 	See `Stream` for actual class.
 **/
 @:remove
-extern interface IStream extends IEventEmitter {}
+extern interface IStream extends IEventEmitter {
+	/**
+		Is `true` after `'close'` has been emitted.
+	**/
+	var closed(default, null):Bool;
+
+	/**
+		Returns the error if the stream has been destroyed with an error.
+	**/
+	var errored(default, null):Null<Error>;
+}

@@ -224,13 +224,6 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 	var readableFlowing(default, null):Null<Bool>;
 
 	/**
-		Returns the error if the stream has been destroyed with an error.
-
-		@see https://nodejs.org/api/stream.html#readableerrored
-	**/
-	var errored(default, null):Null<Error>;
-
-	/**
 		The `readable.resume()` method causes an explicitly paused `Readable` stream to resume emitting `'data'` events,
 		switching the stream into flowing mode.
 
@@ -279,7 +272,7 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 
 		@see https://nodejs.org/api/stream.html#readableiteratoroptions
 	**/
-	function iterator(?options:ReadableIteratorOptions):js.lib.Iterator<Dynamic>;
+	function iterator(?options:ReadableIteratorOptions):ReadableAsyncIterator;
 
 	/**
 		This method allows mapping over the stream. For each chunk, `fn` is called and
@@ -377,6 +370,16 @@ extern class Readable<TSelf:Readable<TSelf>> extends Stream<TSelf> implements IR
 		@see https://nodejs.org/api/stream.html#readabletakelimit-options
 	**/
 	function take(limit:Int, ?options:ReadableSignalOptions):IReadable;
+
+	/**
+		This method returns a new stream with chunks of the underlying stream paired with a counter
+		in the form `[index, chunk]`.
+
+		Stability: 1 - Experimental
+
+		@see https://nodejs.org/api/stream.html#readableasindexedpairsoptions
+	**/
+	function asIndexedPairs(?options:ReadableSignalOptions):IReadable;
 
 	/**
 		This method calls `fn` on each chunk of the stream to reduce to a single value.
@@ -578,6 +581,13 @@ typedef ReadableForEachOptions = {
 }
 
 /**
+	Minimal async iterator surface used by `readable.iterator` (for `for await...of`).
+**/
+typedef ReadableAsyncIterator = {
+	function next():js.lib.Promise<{done:Bool, ?value:Dynamic}>;
+}
+
+/**
 	Options for `Readable.fromWeb`.
 **/
 typedef ReadableWebOptions = {
@@ -635,8 +645,6 @@ extern interface IReadable extends IStream {
 
 	var readableFlowing(default, null):Null<Bool>;
 
-	var errored(default, null):Null<Error>;
-
 	function resume():IReadable;
 
 	function setEncoding(encoding:String):IReadable;
@@ -649,7 +657,7 @@ extern interface IReadable extends IStream {
 
 	function compose(stream:Any, ?options:StreamComposeOptions):IReadable;
 
-	function iterator(?options:ReadableIteratorOptions):js.lib.Iterator<Dynamic>;
+	function iterator(?options:ReadableIteratorOptions):ReadableAsyncIterator;
 
 	function map(fn:Dynamic->Dynamic, ?options:ReadableMapOptions):IReadable;
 
@@ -670,6 +678,8 @@ extern interface IReadable extends IStream {
 	function drop(limit:Int, ?options:ReadableSignalOptions):IReadable;
 
 	function take(limit:Int, ?options:ReadableSignalOptions):IReadable;
+
+	function asIndexedPairs(?options:ReadableSignalOptions):IReadable;
 
 	@:overload(function(fn:(previous:Dynamic, data:Dynamic) -> Dynamic, ?options:ReadableSignalOptions):js.lib.Promise<Dynamic> {})
 	function reduce(fn:(previous:Dynamic, data:Dynamic) -> Dynamic, initial:Dynamic, ?options:ReadableSignalOptions):js.lib.Promise<Dynamic>;
