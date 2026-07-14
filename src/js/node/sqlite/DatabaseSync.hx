@@ -23,8 +23,6 @@
 package js.node.sqlite;
 
 import haxe.Constraints.Function;
-import haxe.extern.EitherType;
-import js.lib.ArrayBuffer;
 import js.lib.Uint8Array;
 import js.node.Sqlite.SqlitePath;
 import js.node.sqlite.SQLTagStore;
@@ -80,9 +78,11 @@ extern class DatabaseSync {
 	/**
 		Applies a binary changeset or patchset.
 
+		`changeset` must be a `Uint8Array` (Node `Buffer` is accepted).
+
 		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databaseapplychangesetchangeset-options
 	**/
-	function applyChangeset(changeset:EitherType<ArrayBuffer, Uint8Array>, ?options:ApplyChangesetOptions):Bool;
+	function applyChangeset(changeset:Uint8Array, ?options:ApplyChangesetOptions):Bool;
 
 	/**
 		Closes the database connection.
@@ -108,11 +108,14 @@ extern class DatabaseSync {
 	/**
 		Replaces database contents with a serialized buffer.
 
+		`buffer` must be a `Uint8Array` (Node `Buffer` is accepted).
+		The deserialized database is writable.
+
 		Added in: v24.16.0
 
 		@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#databasedeserializebuffer-options
 	**/
-	function deserialize(buffer:EitherType<ArrayBuffer, Uint8Array>, ?options:DatabaseDeserializeOptions):Void;
+	function deserialize(buffer:Uint8Array, ?options:DatabaseDeserializeOptions):Void;
 
 	/**
 		Enables or disables defensive mode.

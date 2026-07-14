@@ -30,13 +30,13 @@ import js.node.sqlite.StatementSync.StatementResult;
 	LRU cache of prepared statements created via `DatabaseSync.createTagStore()`.
 
 	Tagged-template call sites pass a `string[]` of template elements followed by
-	bound values (Node's template-tag convention). Not constructible directly.
+	bound values (Node's template-tag convention). Not constructible directly;
+	not exported from `node:sqlite` (created only via `DatabaseSync.createTagStore()`).
 
 	Added in: v24.9.0
 
 	@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#class-sqltagstore
 **/
-@:jsRequire("node:sqlite", "SQLTagStore")
 extern class SQLTagStore {
 	/**
 		Number of prepared statements currently in the cache.
