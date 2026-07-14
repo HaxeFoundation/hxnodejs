@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -67,21 +67,6 @@ private typedef ChildProcessCommonOptions = {
 	@:optional var gid:Int;
 
 	/**
-		Shell to execute the command with.
-		Default: `'/bin/sh'` on UNIX, `'cmd.exe'` on Windows.
-
-		The shell should understand the `-c` switch on UNIX or `/s /c` on Windows.
-		On Windows, command line parsing should be compatible with `cmd.exe`.
-	**/
-	@:optional var shell:EitherType<Bool, String>;
-
-	/**
-		Hide the subprocess console window that would normally be created on Windows.
-		Default: `false`.
-	**/
-	@:optional var windowsHide:Bool;
-
-	/**
 		No quoting or escaping of arguments is done on Windows.
 		Ignored on Unix. Default: `false`.
 	**/
@@ -120,13 +105,20 @@ private typedef ChildProcessSpawnOptionsBase = {
 		Possible values are `'json'` and `'advanced'`. Default: `'json'`.
 	**/
 	@:optional var serialization:ChildProcessSerialization;
-}
 
-/**
-	Options for the `spawn` method.
-**/
-typedef ChildProcessSpawnOptions = {
-	> ChildProcessSpawnOptionsBase,
+	/**
+		If `true`, runs `command` inside a shell.
+		Uses `'/bin/sh'` on Unix and `process.env.ComSpec` on Windows.
+		A different shell can be specified as a string.
+		Default: `false` (no shell).
+	**/
+	@:optional var shell:EitherType<Bool, String>;
+
+	/**
+		Hide the subprocess console window that would normally be created on Windows.
+		Default: `false`.
+	**/
+	@:optional var windowsHide:Bool;
 
 	/**
 		The child will be a process group leader / can keep running after parent exits.
@@ -141,13 +133,25 @@ typedef ChildProcessSpawnOptions = {
 }
 
 /**
+	Options for the `spawn` method.
+**/
+typedef ChildProcessSpawnOptions = {
+	> ChildProcessSpawnOptionsBase,
+}
+
+/**
 	Options for the `spawnSync` method.
 **/
 typedef ChildProcessSpawnSyncOptions = {
 	> ChildProcessSpawnOptionsBase,
 	> ChildProcessExecOptionsBase,
 
-	@:optional var input:EitherType<String, Buffer>;
+	/**
+		The value passed as stdin to the spawned process.
+		Supplying this value overrides `stdio[0]`.
+		Accepts a string or `ArrayBufferView` (Buffer, TypedArray, or DataView).
+	**/
+	@:optional var input:EitherType<String, js.lib.ArrayBufferView>;
 }
 
 /**
@@ -165,6 +169,7 @@ typedef ChildProcessSpawnSyncOptions = {
 	 As a shorthand, the stdio argument may also be one of the following strings:
 		ignore - ['ignore', 'ignore', 'ignore']
 		pipe - ['pipe', 'pipe', 'pipe']
+		overlapped - ['overlapped', 'overlapped', 'overlapped']
 		inherit - [process.stdin, process.stdout, process.stderr] or [0,1,2]
 **/
 typedef ChildProcessSpawnOptionsStdio = EitherType<ChildProcessSpawnOptionsStdioSimple, ChildProcessSpawnOptionsStdioFull>;
@@ -246,6 +251,22 @@ private typedef ChildProcessExecOptionsBase = {
 		Default: `1024 * 1024`
 	**/
 	@:optional var maxBuffer:Int;
+
+	/**
+		If `true`, runs the command inside a shell.
+		Uses `'/bin/sh'` on Unix and `process.env.ComSpec` on Windows.
+		A different shell can be specified as a string.
+
+		For `exec`, a shell is always used (default `'/bin/sh'` / `ComSpec`).
+		For `execFile`, default is `false` (no shell).
+	**/
+	@:optional var shell:EitherType<Bool, String>;
+
+	/**
+		Hide the subprocess console window that would normally be created on Windows.
+		Default: `false`.
+	**/
+	@:optional var windowsHide:Bool;
 }
 
 /**
@@ -294,6 +315,12 @@ typedef ChildProcessForkOptions = {
 		Specify the kind of serialization used for sending messages between processes.
 	**/
 	@:optional var serialization:ChildProcessSerialization;
+
+	/**
+		Prepare the child to run independently of its parent process.
+		Platform-specific; see Node.js `options.detached` docs.
+	**/
+	@:optional var detached:Bool;
 }
 
 /**
@@ -360,7 +387,7 @@ typedef ChildProcessSpawnSyncResult = {
 	/**
 		The error object if the child process failed or timed out
 	**/
-	var error:Error;
+	var error:Null<Error>;
 }
 
 /**
@@ -373,6 +400,8 @@ extern class ChildProcess {
 	/**
 		Launches a new process with the given `command`, with command line arguments in `args`.
 		If omitted, `args` defaults to an empty `Array`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#child_processspawncommand-args-options
 	**/
 	@:overload(function(command:String, ?options:ChildProcessSpawnOptions):ChildProcessObject {})
 	@:overload(function(command:String, args:Array<String>, ?options:ChildProcessSpawnOptions):ChildProcessObject {})
@@ -380,12 +409,16 @@ extern class ChildProcess {
 
 	/**
 		Runs a command in a shell and buffers the output.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#child_processexeccommand-options-callback
 	**/
-	@:overload(function(command:String, options:ChildProcessExecOptions, callback:ChildProcessExecCallback):ChildProcessObject {})
-	static function exec(command:String, callback:ChildProcessExecCallback):ChildProcessObject;
+	@:overload(function(command:String, options:ChildProcessExecOptions, ?callback:ChildProcessExecCallback):ChildProcessObject {})
+	static function exec(command:String, ?callback:ChildProcessExecCallback):ChildProcessObject;
 
 	/**
 		Similar to `exec` except it does not execute a subshell but rather the specified file directly.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#child_processexecfilefile-args-options-callback
 	**/
 	@:overload(function(file:String, args:Array<String>, options:ChildProcessExecFileOptions, ?callback:ChildProcessExecCallback):ChildProcessObject {})
 	@:overload(function(file:String, options:ChildProcessExecFileOptions, ?callback:ChildProcessExecCallback):ChildProcessObject {})
@@ -394,6 +427,8 @@ extern class ChildProcess {
 
 	/**
 		Special case of `spawn` for spawning Node.js processes with an IPC channel.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#child_processforkmodulepath-args-options
 	**/
 	@:overload(function(modulePath:EitherType<String, URL>, args:Array<String>, options:ChildProcessForkOptions):ChildProcessObject {})
 	@:overload(function(modulePath:EitherType<String, URL>, options:ChildProcessForkOptions):ChildProcessObject {})
@@ -401,6 +436,8 @@ extern class ChildProcess {
 
 	/**
 		Synchronous version of `spawn`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#child_processspawnsynccommand-args-options
 	**/
 	@:overload(function(command:String, args:Array<String>, ?options:ChildProcessSpawnSyncOptions):ChildProcessSpawnSyncResult {})
 	static function spawnSync(command:String, ?options:ChildProcessSpawnSyncOptions):ChildProcessSpawnSyncResult;
@@ -408,14 +445,18 @@ extern class ChildProcess {
 	/**
 		Synchronous version of `execFile`.
 		If the process times out, or has a non-zero exit code, this method will throw.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#child_processexecfilesyncfile-args-options
 	**/
-	@:overload(function(command:String, ?options:ChildProcessSpawnSyncOptions):EitherType<String, Buffer> {})
-	@:overload(function(command:String, args:Array<String>, ?options:ChildProcessSpawnSyncOptions):EitherType<String, Buffer> {})
-	static function execFileSync(command:String, ?args:Array<String>):EitherType<String, Buffer>;
+	@:overload(function(file:String, ?options:ChildProcessSpawnSyncOptions):EitherType<String, Buffer> {})
+	@:overload(function(file:String, args:Array<String>, ?options:ChildProcessSpawnSyncOptions):EitherType<String, Buffer> {})
+	static function execFileSync(file:String, ?args:Array<String>):EitherType<String, Buffer>;
 
 	/**
 		Synchronous version of `exec`.
 		If the process times out, or has a non-zero exit code, this method will throw.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#child_processexecsynccommand-options
 	**/
 	static function execSync(command:String, ?options:ChildProcessSpawnSyncOptions):EitherType<String, Buffer>;
 }

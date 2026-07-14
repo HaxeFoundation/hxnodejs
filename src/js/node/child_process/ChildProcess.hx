@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -88,15 +88,13 @@ enum abstract ChildProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 	var Disconnect:ChildProcessEvent<Void->Void> = "disconnect";
 
 	/**
-		Messages send by `send` are obtained using the message event.
+		Messages sent by `send` are obtained using the `'message'` event.
 
 		Listener arguments:
 			message - a parsed JSON object or primitive value
-			sendHandle - a Socket or Server object
-
-		// TODO(section-5): tighten message/sendHandle typing beyond Dynamic once IPC handle unions are modeled
+			sendHandle - a `net.Socket`, `net.Server`, or `dgram.Socket` when one was sent
 	**/
-	var Message:ChildProcessEvent<Dynamic->Dynamic->Void> = "message";
+	var Message:ChildProcessEvent<(message:Dynamic, sendHandle:Null<ChildProcessSendHandle>) -> Void> = "message";
 
 	/**
 		The `'spawn'` event is emitted once the child process has spawned successfully.
@@ -201,10 +199,11 @@ extern class ChildProcess extends EventEmitter<ChildProcess> {
 
 	/**
 		While the IPC channel established by `fork` is open, this is a reference to that channel.
-		Otherwise `null`.
+		Otherwise `null` / `undefined`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#subprocesschannel
 	**/
-	// TODO(section-5): type IPC channel pipe more precisely than Null<Dynamic>
-	var channel(default, null):Null<Dynamic>;
+	var channel(default, null):Null<ChildProcessChannel>;
 
 	/**
 		Send a signal to the child process.
@@ -213,35 +212,52 @@ extern class ChildProcess extends EventEmitter<ChildProcess> {
 		See signal(7) for a list of available signals.
 
 		Returns `true` if `kill()` succeeded, else `false`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#subprocesskillsignal
 	**/
 	function kill(?signal:EitherType<String, Int>):Bool;
 
 	/**
-		When using `fork` you can write to the child using `send`
-		and messages are received by a `'message'` event on the child.
+		Calls `kill('SIGTERM')`. Available as `subprocess[Symbol.dispose]()`
+		(stable since Node.js 24.2).
 
-		// TODO(section-5): replace Dynamic message/sendHandle with structured IPC types
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#subprocesssymboldispose
 	**/
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, options:ChildProcessSendOptions, ?callback:Null<Error>->Void):Bool {})
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:Null<Error>->Void):Bool {})
+	@:native("Symbol.dispose")
+	function dispose():Void;
+
+	/**
+		When using `fork`, write to the child using `send`;
+		messages are received via the `'message'` event on the child.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#subprocesssendmessage-sendhandle-options-callback
+	**/
+	@:overload(function(message:Dynamic, sendHandle:ChildProcessSendHandle, options:ChildProcessSendOptions, ?callback:Null<Error>->Void):Bool {})
+	@:overload(function(message:Dynamic, sendHandle:ChildProcessSendHandle, ?callback:Null<Error>->Void):Bool {})
 	function send(message:Dynamic, ?callback:Null<Error>->Void):Bool;
 
 	/**
 		Close the IPC channel between parent and child, allowing the child to exit gracefully once there are no other
 		connections keeping it alive.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#subprocessdisconnect
 	**/
 	function disconnect():Void;
 
 	/**
 		By default, the parent will wait for the detached child to exit.
 		To prevent the parent from waiting for a given child, use the `unref` method.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#subprocessunref
 	**/
 	function unref():Void;
 
 	/**
-		Opposite of `unref()`. Calls reference the child from the parent's event loop so that
+		Opposite of `unref()`. References the child from the parent's event loop so that
 		the parent will wait for the child to exit before exiting itself
 		(unless there are other references keeping the parent alive).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/child_process.html#subprocessref
 	**/
 	function ref():Void;
 }
