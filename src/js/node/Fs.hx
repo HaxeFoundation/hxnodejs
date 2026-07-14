@@ -1051,16 +1051,27 @@ extern class Fs {
 	/**
 		Asynchronous realpath(2).
 
-		The callback gets two arguments (err, resolvedPath).
+		The callback gets two arguments `(err, resolvedPath)`.
 
-		May use process.cwd to resolve relative paths.
+		May use `process.cwd` to resolve relative paths.
 
 		`cache` is an object literal of mapped paths that can be used to force a specific path resolution
 		or avoid additional `stat` calls for known real paths.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fsrealpathpath-options-callback
 	**/
-	// TODO: model `realpath.native` / `realpathSync.native` function properties
 	@:overload(function(path:FsPath, callback:(err:Error, result:String) -> Void):Void {})
 	static function realpath(path:FsPath, cache:DynamicAccess<String>, callback:(err:Error, result:String) -> Void):Void;
+
+	/**
+		Asynchronous realpath(3) using the native binding (`fs.realpath.native`).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fsrealpathnativepath-options-callback
+	**/
+	@:native("realpath.native")
+	@:overload(function(path:FsPath, options:EitherType<String, {?encoding:String}>,
+		callback:(err:Error, result:EitherType<String, Buffer>) -> Void):Void {})
+	static function realpathNative(path:FsPath, callback:(err:Error, result:String) -> Void):Void;
 
 	/**
 		Synchronous realpath(2).
@@ -1068,6 +1079,15 @@ extern class Fs {
 	**/
 	@:overload(function(path:FsPath):String {})
 	static function realpathSync(path:FsPath, cache:DynamicAccess<String>):String;
+
+	/**
+		Synchronous realpath(3) using the native binding (`fs.realpathSync.native`).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/fs.html#fsrealpathsyncnativepath-options
+	**/
+	@:native("realpathSync.native")
+	@:overload(function(path:FsPath, options:EitherType<String, {?encoding:String}>):EitherType<String, Buffer> {})
+	static function realpathSyncNative(path:FsPath):String;
 
 	/**
 		Asynchronous unlink(2).

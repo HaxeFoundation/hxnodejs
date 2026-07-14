@@ -42,62 +42,62 @@ extern class Utf8Stream extends EventEmitter<Utf8Stream> {
 	/**
 		Whether the stream is appending to the file or truncating it.
 	**/
-	var append(default, null):Bool;
+	final append:Bool;
 
 	/**
 		The type of data that can be written: `'utf8'` or `'buffer'`.
 	**/
-	var contentMode(default, null):String;
+	final contentMode:String;
 
 	/**
 		The file descriptor being written to.
 	**/
-	var fd(default, null):Null<Int>;
+	final fd:Null<Int>;
 
 	/**
 		The file being written to.
 	**/
-	var file(default, null):Null<FsPath>;
+	final file:Null<FsPath>;
 
 	/**
 		Whether `fs.fsyncSync()` is performed after every write.
 	**/
-	var fsync(default, null):Bool;
+	final fsync:Bool;
 
 	/**
 		Maximum length of the internal buffer.
 	**/
-	var maxLength(default, null):Null<Int>;
+	final maxLength:Null<Int>;
 
 	/**
 		Minimum length of the internal buffer required before flushing.
 	**/
-	var minLength(default, null):Null<Int>;
+	final minLength:Null<Int>;
 
 	/**
 		Whether the stream ensures the destination directory exists.
 	**/
-	var mkdir(default, null):Bool;
+	final mkdir:Bool;
 
 	/**
 		Mode of the file being written to.
 	**/
-	var mode(default, null):Null<FsMode>;
+	final mode:Null<FsMode>;
 
 	/**
 		Milliseconds between periodic flushes (`0` disables).
 	**/
-	var periodicFlush(default, null):Int;
+	final periodicFlush:Int;
 
 	/**
 		Whether the stream writes synchronously.
 	**/
-	var sync(default, null):Bool;
+	final sync:Bool;
 
 	/**
 		Whether the stream is currently writing.
 	**/
-	var writing(default, null):Bool;
+	final writing:Bool;
 
 	function new(?options:Utf8StreamOptions);
 
@@ -150,9 +150,9 @@ enum abstract Utf8StreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T>
 	var Ready:Utf8StreamEvent<() -> Void> = "ready";
 
 	/**
-		Emitted when a write completes; argument is bytes written.
+		Emitted when a write completes; argument is the number of bytes written.
 	**/
-	var Write:Utf8StreamEvent<(fd:Int) -> Void> = "write";
+	var Write:Utf8StreamEvent<(bytesWritten:Int) -> Void> = "write";
 }
 
 /**
