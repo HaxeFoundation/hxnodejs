@@ -145,9 +145,11 @@ extern class Http2Stream extends Duplex<Http2Stream> {
 
 	/**
 		Priority signaling is no longer supported in Node.js.
+
+		// TODO(section-3): remove once callers migrate off deprecated stream.priority
 	**/
 	@:deprecated("Priority signaling is no longer supported in Node.js")
-	function priority(options:Dynamic):Void;
+	function priority(options:Any):Void;
 
 	/**
 		Sets the stream timeout value.

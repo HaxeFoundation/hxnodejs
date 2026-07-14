@@ -106,6 +106,36 @@ typedef SecureContextOptions = {
 		Default: true.
 	**/
 	@:optional var honorCipherOrder:Bool;
+
+	/**
+		Optionally set the minimum TLS version to allow. One of `'TLSv1.3'`, `'TLSv1.2'`, `'TLSv1.1'`, or `'TLSv1'`.
+	**/
+	@:optional var minVersion:String;
+
+	/**
+		Optionally set the maximum TLS version to allow. One of `'TLSv1.3'`, `'TLSv1.2'`, `'TLSv1.1'`, or `'TLSv1'`.
+	**/
+	@:optional var maxVersion:String;
+
+	/**
+		An array of strings or a Buffer naming possible ALPN protocols.
+	**/
+	@:optional var ALPNProtocols:EitherType<Array<EitherType<String, Buffer>>, Buffer>;
+
+	/**
+		Name of an OpenSSL engine to get private key from.
+	**/
+	@:optional var privateKeyEngine:String;
+
+	/**
+		Identifier of a private key to get from an OpenSSL engine.
+	**/
+	@:optional var privateKeyIdentifier:String;
+
+	/**
+		Colon-separated list of supported signature algorithms.
+	**/
+	@:optional var sigalgs:String;
 }
 
 extern class SecureContext {}

@@ -25,11 +25,7 @@ package js.node.http;
 import js.node.Buffer;
 import js.node.events.EventEmitter.Event;
 import js.node.net.Socket;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Enumeration of events emitted by `http.Server` class in addition to
@@ -46,11 +42,7 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 
 		When this event is emitted and handled, the 'request' event will not be emitted.
 	**/
-	#if haxe4
 	var CheckContinue:ServerEvent<(request:IncomingMessage, response:ServerResponse) -> Void> = "checkContinue";
-	#else
-	var CheckContinue:ServerEvent<IncomingMessage->ServerResponse->Void> = "checkContinue";
-	#end
 
 	/**
 		Emitted each time a request with an HTTP `Expect` header is received, where the value is not `100-continue`.
@@ -58,11 +50,7 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 
 		When this event is emitted and handled, the `'request'` event will not be emitted.
 	**/
-	#if haxe4
 	var CheckExpectation:ServerEvent<(request:IncomingMessage, response:ServerResponse) -> Void> = "checkExpectation";
-	#else
-	var CheckExpectation:ServerEvent<IncomingMessage->ServerResponse->Void> = "checkExpectation";
-	#end
 
 	/**
 		If a client connection emits an `'error'` event, it will be forwarded here.
@@ -72,11 +60,7 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 		Default behavior is to try close the socket with a HTTP '400 Bad Request', or a HTTP '431 Request Header Fields Too Large'
 		in the case of a `HPE_HEADER_OVERFLOW` error. If the socket is not writable it is immediately destroyed.
 	**/
-	#if haxe4
 	var ClientError:ServerEvent<(exception:Error, socket:Socket) -> Void> = "clientError";
-	#else
-	var ClientError:ServerEvent<Error->Socket->Void> = "clientError";
-	#end
 
 	/**
 		Emitted when the server closes.
@@ -90,11 +74,7 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 		After this event is emitted, the request's socket will not have a `'data'` event listener,
 		meaning it will need to be bound in order to handle data sent to the server on that socket.
 	**/
-	#if haxe4
 	var Connect:ServerEvent<(request:IncomingMessage, socekt:Socket, head:Buffer) -> Void> = "connect";
-	#else
-	var Connect:ServerEvent<IncomingMessage->Socket->Buffer->Void> = "connect";
-	#end
 
 	/**
 		This event is emitted when a new TCP stream is established.
@@ -114,11 +94,7 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 		Emitted each time there is a request.
 		There may be multiple requests per connection (in the case of HTTP Keep-Alive connections).
 	**/
-	#if haxe4
 	var Request:ServerEvent<(request:IncomingMessage, response:ServerResponse) -> Void> = "request";
-	#else
-	var Request:ServerEvent<IncomingMessage->ServerResponse->Void> = "request";
-	#end
 
 	/**
 		Emitted each time a client requests an HTTP upgrade.
@@ -127,11 +103,14 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 		After this event is emitted, the request's socket will not have a `'data'` event listener,
 		meaning it will need to be bound in order to handle data sent to the server on that socket.
 	**/
-	#if haxe4
 	var Upgrade:ServerEvent<(request:IncomingMessage, socket:Socket, buffer:Buffer) -> Void> = "upgrade";
-	#else
-	var Upgrade:ServerEvent<IncomingMessage->Socket->Buffer->Void> = "upgrade";
-	#end
+
+	/**
+		Emitted when a request could not be completed due to exceeding `server.maxRequestsPerSocket`.
+
+		@see https://nodejs.org/api/http.html#event-droprequest
+	**/
+	var DropRequest:ServerEvent<(request:IncomingMessage, socket:Socket) -> Void> = "dropRequest";
 }
 
 /**
@@ -155,11 +134,23 @@ extern class Server extends js.node.net.Server {
 	var headersTimeout:Int;
 
 	/**
+		Sets the timeout value in milliseconds for receiving the entire request from the client.
+		Default: `300000`.
+	**/
+	var requestTimeout:Int;
+
+	/**
 		Limits maximum incoming headers count. If set to 0, no limit will be applied.
 
 		Default: `2000`
 	**/
 	var maxHeadersCount:Null<Int>;
+
+	/**
+		The maximum number of requests socket can handle before closing keep alive connection.
+		Default: `0` (no limit).
+	**/
+	var maxRequestsPerSocket:Int;
 
 	/**
 		Sets the timeout value for sockets, and emits a `'timeout'` event on the Server object,
@@ -172,6 +163,7 @@ extern class Server extends js.node.net.Server {
 
 		To change the default timeout use the `--http-server-default-timeout` flag.
 	**/
+	@:overload(function(?callback:js.node.net.Socket->Void):Void {})
 	function setTimeout(msecs:Int, ?callback:js.node.net.Socket->Void):Void;
 
 	/**
@@ -201,4 +193,20 @@ extern class Server extends js.node.net.Server {
 		Default: `5000` (5 seconds).
 	**/
 	var keepAliveTimeout:Int;
+
+	/**
+		Additional buffer of inactivity after `keepAliveTimeout` before destroying a keep-alive socket.
+		Default: `1000`.
+	**/
+	var keepAliveTimeoutBuffer:Int;
+
+	/**
+		Closes all connections connected to this server.
+	**/
+	function closeAllConnections():Void;
+
+	/**
+		Closes all connections connected to this server which are not sending a request or waiting for a response.
+	**/
+	function closeIdleConnections():Void;
 }

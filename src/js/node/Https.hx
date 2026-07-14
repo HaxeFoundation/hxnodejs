@@ -37,13 +37,8 @@ extern class Https {
 	/**
 		Returns a new HTTPS web server object.
 	**/
-	#if haxe4
 	@:overload(function(options:HttpsCreateServerOptions, ?requestListener:(request:IncomingMessage, response:ServerResponse) -> Void):Server {})
 	static function createServer(?requestListener:(request:IncomingMessage, response:ServerResponse) -> Void):Server;
-	#else
-	@:overload(function(options:HttpsCreateServerOptions, ?requestListener:IncomingMessage->ServerResponse->Void):Server {})
-	static function createServer(?requestListener:IncomingMessage->ServerResponse->Void):Server;
-	#end
 
 	/**
 		Like `Http.get` but for HTTPS.
@@ -90,5 +85,4 @@ typedef HttpsCreateServerOptions = {
 typedef HttpsRequestOptions = {
 	> js.node.Http.HttpRequestOptions,
 	> js.node.Tls.TlsConnectOptions,
-	// TODO: clean those options up
 }

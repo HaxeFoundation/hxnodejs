@@ -22,13 +22,10 @@
 
 package js.node.dgram;
 
+import haxe.extern.EitherType;
 import js.node.events.EventEmitter;
 import js.node.net.Socket.SocketAdress;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Enumeration of events for the `Socket` object.
@@ -58,6 +55,11 @@ enum abstract SocketEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 		Emitted when an error occurs.
 	**/
 	var Error:SocketEvent<Error->Void> = "error";
+
+	/**
+		Emitted when a socket has been connected with `socket.connect()`.
+	**/
+	var Connect:SocketEvent<Void->Void> = "connect";
 }
 
 /**
@@ -83,7 +85,7 @@ enum abstract SocketType(String) from String to String {
 }
 
 /**
-	Options passed to the Socket consturctor.
+	Options passed to the Socket constructor.
 **/
 typedef SocketOptions = {
 	/**
@@ -96,6 +98,49 @@ typedef SocketOptions = {
 		Defaults to false.
 	**/
 	@:optional var reuseAddr:Bool;
+
+	/**
+		When `true`, enables `SO_REUSEPORT` so multiple processes can bind to the same address/port.
+	**/
+	@:optional var reusePort:Bool;
+
+	/**
+		Used to set the `IPV6_V6ONLY` socket option.
+	**/
+	@:optional var ipv6Only:Bool;
+
+	/**
+		Sets the `SO_RCVBUF` socket value.
+	**/
+	@:optional var recvBufferSize:Int;
+
+	/**
+		Sets the `SO_SNDBUF` socket value.
+	**/
+	@:optional var sendBufferSize:Int;
+
+	/**
+		Custom lookup function. Defaults to `Dns.lookup`.
+	**/
+	@:optional var lookup:String->js.node.Dns.DnsLookupOptions->js.node.Dns.DnsLookupCallbackSingle->Void;
+
+	/**
+		AbortSignal that can be used to close the socket.
+	**/
+	@:optional var signal:js.node.web.AbortSignal;
+
+	/**
+		When `true`, the receive buffer receives a cloned, shared `ArrayBuffer`.
+		Default: `false`.
+		Stability: 1 - Experimental.
+	**/
+	@:optional var receiveBlockList:js.node.net.BlockList;
+
+	/**
+		When `true`, messages to blocked destinations are dropped.
+		Stability: 1 - Experimental.
+	**/
+	@:optional var sendBlockList:js.node.net.BlockList;
 }
 
 /**
@@ -136,7 +181,32 @@ extern class Socket extends EventEmitter<Socket> {
 		to reuse the buf object. Note that DNS lookups delay the time to send for at least one tick.
 		The only way to know for sure that the datagram has been sent is by using a `callback`.
 	**/
+	@:overload(function(msg:EitherType<Buffer, EitherType<String, Array<EitherType<Buffer, String>>>>, ?callback:Error->Int->Void):Void {})
+	@:overload(function(msg:EitherType<Buffer, EitherType<String, Array<EitherType<Buffer, String>>>>, port:Int, ?callback:Error->Int->Void):Void {})
+	@:overload(function(msg:EitherType<Buffer, EitherType<String, Array<EitherType<Buffer, String>>>>, port:Int, address:String,
+		?callback:Error->Int->Void):Void {})
+	@:overload(function(msg:Buffer, offset:Int, length:Int, ?callback:Error->Int->Void):Void {})
+	@:overload(function(msg:Buffer, offset:Int, length:Int, port:Int, ?callback:Error->Int->Void):Void {})
 	function send(buf:Buffer, offset:Int, length:Int, port:Int, address:String, ?callback:Error->Int->Void):Void;
+
+	/**
+		Associates the `dgram.Socket` to a remote address and port. Subsequent messages will be sent to that
+		destination. Calling `connect()` on an already-connected socket regenerates an `ERR_SOCKET_DGRAM_IS_CONNECTED` error.
+	**/
+	@:overload(function(port:Int, callback:Void->Void):Void {})
+	@:overload(function(port:Int, address:String, ?callback:Void->Void):Void {})
+	function connect(port:Int, ?callback:Void->Void):Void;
+
+	/**
+		A synchronous function that disassociates a connected `dgram.Socket` from its remote address.
+	**/
+	function disconnect():Void;
+
+	/**
+		Returns an object containing the `address`, `family`, and `port` of the remote endpoint.
+		Throws `ERR_SOCKET_DGRAM_NOT_CONNECTED` if the socket is not connected.
+	**/
+	function remoteAddress():SocketAdress;
 
 	/**
 		Listen for datagrams on a named `port` and optional `address`.
@@ -214,6 +284,51 @@ extern class Socket extends EventEmitter<Socket> {
 		If `multicastInterface` is not specified, the OS will try to drop membership to all valid interfaces.
 	**/
 	function dropMembership(multicastAddress:String, ?multicastInterface:String):Void;
+
+	/**
+		Instructs the kernel to join a source-specific multicast channel with the `IP_ADD_SOURCE_MEMBERSHIP` socket option.
+	**/
+	function addSourceSpecificMembership(sourceAddress:String, groupAddress:String, ?multicastInterface:String):Void;
+
+	/**
+		Instructs the kernel to leave a source-specific multicast channel with the `IP_DROP_SOURCE_MEMBERSHIP` socket option.
+	**/
+	function dropSourceSpecificMembership(sourceAddress:String, groupAddress:String, ?multicastInterface:String):Void;
+
+	/**
+		Sets the default outgoing multicast interface of the socket to a chosen interface or back to system interface selection.
+	**/
+	function setMulticastInterface(multicastInterface:String):Void;
+
+	/**
+		Sets the `SO_RCVBUF` socket option.
+	**/
+	function setRecvBufferSize(size:Int):Void;
+
+	/**
+		Sets the `SO_SNDBUF` socket option.
+	**/
+	function setSendBufferSize(size:Int):Void;
+
+	/**
+		Gets the current value of the `SO_RCVBUF` socket option.
+	**/
+	function getRecvBufferSize():Int;
+
+	/**
+		Gets the current value of the `SO_SNDBUF` socket option.
+	**/
+	function getSendBufferSize():Int;
+
+	/**
+		Number of bytes queued for sending.
+	**/
+	function getSendQueueSize():Int;
+
+	/**
+		Number of send requests currently in the queue awaiting to be processed.
+	**/
+	function getSendQueueCount():Int;
 
 	/**
 		Calling `unref` on a socket will allow the program to exit if this is the only active socket in the event system.

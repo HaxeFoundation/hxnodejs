@@ -24,11 +24,7 @@ package js.node.dns;
 
 import haxe.extern.EitherType;
 import js.node.Dns;
-#if haxe4
 import js.lib.Promise;
-#else
-import js.Promise;
-#end
 
 /**
 	Promise-based independent resolver for DNS requests (`dns/promises.Resolver`).

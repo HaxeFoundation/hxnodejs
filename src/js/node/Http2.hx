@@ -34,6 +34,7 @@ import js.node.http2.ServerHttp2Session;
 import js.node.stream.Duplex;
 import js.node.tls.SecureContext.SecureContextOptions;
 import js.node.url.URL;
+import js.node.web.AbortSignal;
 import js.lib.Symbol;
 
 /**
@@ -201,8 +202,8 @@ typedef Http2SecureClientSessionOptions = {
 	Options for HTTP/1 fallback classes used by HTTP/2 servers.
 **/
 typedef Http2Http1Options = {
-	@:optional var IncomingMessage:Class<Dynamic>;
-	@:optional var ServerResponse:Class<Dynamic>;
+	@:optional var IncomingMessage:Class<js.node.http.IncomingMessage>;
+	@:optional var ServerResponse:Class<js.node.http.ServerResponse>;
 	@:optional var keepAliveTimeout:Int;
 }
 
@@ -222,14 +223,14 @@ typedef Http2ServerOptions = {
 		See DEP0202.
 	**/
 	@:deprecated("Use http1Options.IncomingMessage instead")
-	@:optional var Http1IncomingMessage:Class<Dynamic>;
+	@:optional var Http1IncomingMessage:Class<js.node.http.IncomingMessage>;
 
 	/**
 		Deprecated. Use `http1Options.ServerResponse` instead.
 		See DEP0202.
 	**/
 	@:deprecated("Use http1Options.ServerResponse instead")
-	@:optional var Http1ServerResponse:Class<Dynamic>;
+	@:optional var Http1ServerResponse:Class<js.node.http.ServerResponse>;
 
 	/**
 		Options for configuring the HTTP/1 fallback when `allowHTTP1` is `true`.
@@ -237,8 +238,8 @@ typedef Http2ServerOptions = {
 	**/
 	@:optional var http1Options:Http2Http1Options;
 
-	@:optional var Http2ServerRequest:Class<Dynamic>;
-	@:optional var Http2ServerResponse:Class<Dynamic>;
+	@:optional var Http2ServerRequest:Class<Http2ServerRequest>;
+	@:optional var Http2ServerResponse:Class<Http2ServerResponse>;
 
 	/**
 		If `true`, strict validation is used for headers and trailers defined as
@@ -276,7 +277,7 @@ typedef Http2ClientSessionRequestOptions = {
 	@:optional var exclusive:Bool;
 	@:optional var parent:Int;
 	@:optional var waitForTrailers:Bool;
-	@:optional var signal:js.html.AbortSignal;
+	@:optional var signal:AbortSignal;
 }
 
 /**

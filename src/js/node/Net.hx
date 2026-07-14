@@ -41,6 +41,31 @@ typedef NetCreateServerOptions = {
 		Default: false
 	**/
 	@:optional var pauseOnConnect:Bool;
+
+	/**
+		If set to `true`, it enables keep-alive functionality on the socket immediately after the connection is established.
+	**/
+	@:optional var keepAlive:Bool;
+
+	/**
+		If set to a positive number, it sets the initial delay before the first keepalive probe is sent on an idle socket.
+	**/
+	@:optional var keepAliveInitialDelay:Int;
+
+	/**
+		If set to `true`, it disables the use of Nagle's algorithm immediately after a connection is established.
+	**/
+	@:optional var noDelay:Bool;
+
+	/**
+		Optionally overrides all `net.Socket`s' `readableHighWaterMark` and `writableHighWaterMark`.
+	**/
+	@:optional var highWaterMark:Int;
+
+	/**
+		`net.BlockList` used as an IP allow/deny list for incoming connections.
+	**/
+	@:optional var blockList:BlockListObject;
 }
 
 /**

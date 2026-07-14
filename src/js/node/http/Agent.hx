@@ -24,11 +24,7 @@ package js.node.http;
 
 import haxe.DynamicAccess;
 import js.node.net.Socket;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	An `Agent` is responsible for managing connection persistence and reuse for HTTP clients.
@@ -76,11 +72,7 @@ extern class Agent {
 
 		`callback` has a signature of `(err, stream)`.
 	**/
-	#if haxe4
 	function createConnection(options:SocketConnectOptionsTcp, ?callback:(err:Error, stream:Socket) -> Void):Socket;
-	#else
-	function createConnection(options:SocketConnectOptionsTcp, ?callback:Error->Socket->Void):Socket;
-	#end
 
 	/**
 		Called when `socket` is detached from a request and could be persisted by the `Agent`.
@@ -130,6 +122,12 @@ extern class Agent {
 		Determines how many concurrent sockets the agent can have open per origin. Origin is the returned value of `getName()`.
 	**/
 	var maxSockets:Float;
+
+	/**
+		By default set to `Infinity`.
+		Determines how many concurrent sockets the agent can have open across all hosts in total.
+	**/
+	var maxTotalSockets:Float;
 
 	/**
 		An object which contains queues of requests that have not yet been assigned to sockets.
@@ -183,7 +181,17 @@ typedef HttpAgentOptions = {
 	@:optional var maxFreeSockets:Int;
 
 	/**
+		Maximum total number of sockets allowed across all hosts. Default: `Infinity`.
+	**/
+	@:optional var maxTotalSockets:Int;
+
+	/**
 		Socket timeout in milliseconds. This will set the timeout when the socket is created.
 	**/
 	@:optional var timeout:Int;
+
+	/**
+		Scheduling strategy when picking an idle socket. One of `'fifo'` or `'lifo'`. Default: `'lifo'`.
+	**/
+	@:optional var scheduling:String;
 }

@@ -25,11 +25,7 @@ package js.node.net;
 import haxe.extern.EitherType;
 import js.node.events.EventEmitter;
 import js.node.net.Socket.SocketAdress;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Enumeration of events emitted by the `Server` objects
@@ -56,6 +52,13 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 		The 'close' event will be called directly following this event. See example in discussion of server.listen.
 	**/
 	var Error:ServerEvent<Error->Void> = "error";
+
+	/**
+		Emitted when a connection is dropped because of `maxConnections` being reached.
+
+		@see https://nodejs.org/api/net.html#event-drop
+	**/
+	var Drop:ServerEvent<Null<Socket>->Void> = "drop";
 }
 
 private typedef ServerListenOptionsBase = {
@@ -107,7 +110,7 @@ extern class Server extends EventEmitter<Server> {
 		The last parameter `callback` will be added as an listener for the 'listening' event.
 	**/
 	@:overload(function(path:String, ?callback:Void->Void):Void {})
-	@:overload(function(handle:EitherType<Dynamic, {fd:Int}>, ?callback:Void->Void):Void {})
+	@:overload(function(handle:EitherType<Server, EitherType<Socket, {fd:Int}>>, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, backlog:Int, ?callback:Void->Void):Void {})
 	@:overload(function(port:Int, hostname:String, ?callback:Void->Void):Void {})
@@ -155,6 +158,14 @@ extern class Server extends EventEmitter<Server> {
 		It is not recommended to use this option once a socket has been sent to a child with child_process.fork().
 	**/
 	var maxConnections:Int;
+
+	/**
+		If `true`, when the connection count reaches `maxConnections`, Node.js drops the connection
+		instead of handing it to another cluster worker.
+
+		@see https://nodejs.org/api/net.html#serverdropmaxconnection
+	**/
+	var dropMaxConnection:Bool;
 
 	/**
 		The number of concurrent connections on the server.
