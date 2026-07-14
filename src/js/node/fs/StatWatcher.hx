@@ -22,55 +22,21 @@
 
 package js.node.fs;
 
-import js.node.Fs.FsPath;
-import js.node.events.EventEmitter;
-import js.lib.Error;
-
 /**
-	Enumeration of possible types of changes for 'change' event.
+	Objects returned from `Fs.watchFile` are of this type.
+
+	@see https://nodejs.org/api/fs.html#class-fsstatwatcher
 **/
-enum abstract FSWatcherChangeType(String) from String to String {
-	var Change = "change";
-	var Rename = "rename";
-}
-
-/**
-	Enumeration of the events emitted by `FSWatcher`.
-**/
-enum abstract FSWatcherEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
+extern class StatWatcher {
 	/**
-		Emitted when something changes in a watched directory or file. See more details in `Fs.watch`.
-
-		Listener arguments:
-			event - The type of fs change
-			filename - The filename that changed (if relevant/available)
-	**/
-	var Change:FSWatcherEvent<FSWatcherChangeType->FsPath->Void> = "change";
-
-	/**
-		Emitted when an error occurs.
-	**/
-	var Error:FSWatcherEvent<Error->Void> = "error";
-}
-
-/**
-	Objects returned from `Fs.watch` are of this type.
-**/
-extern class FSWatcher extends EventEmitter<FSWatcher> {
-	/**
-		Stop watching for changes on the given `FSWatcher`.
-	**/
-	function close():Void;
-
-	/**
-		When called, requests that the Node.js event loop not exit so long as the `FSWatcher` is active.
+		When called, requests that the Node.js event loop not exit so long as the `StatWatcher` is active.
 		Calling `ref()` multiple times has no effect.
 	**/
-	function ref():FSWatcher;
+	function ref():StatWatcher;
 
 	/**
-		When called, the active `FSWatcher` will not require the Node.js event loop to remain active.
+		When called, the active `StatWatcher` will not require the Node.js event loop to remain active.
 		Calling `unref()` multiple times has no effect.
 	**/
-	function unref():FSWatcher;
+	function unref():StatWatcher;
 }

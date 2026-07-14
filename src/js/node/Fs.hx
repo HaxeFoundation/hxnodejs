@@ -31,10 +31,12 @@ import js.node.fs.FSWatcher;
 import js.node.fs.ReadStream;
 import js.node.fs.Stats;
 import js.node.fs.StatsFs;
+import js.node.fs.StatWatcher;
 import js.node.fs.WriteStream;
 import js.lib.Error;
 import js.lib.Promise;
 import js.node.web.Blob;
+import js.node.url.URL;
 
 /**
 	Most FS functions now support passing `String` and `Buffer`.
@@ -85,6 +87,12 @@ typedef FsWriteFileOptions = {
 		default: 'w' for `Fs.writeFile`, 'a' for `Fs.appendFile`
 	**/
 	@:optional var flag:FsOpenFlag;
+
+	/**
+		If `true`, the underlying file descriptor is flushed prior to closing it.
+		Default: `false`.
+	**/
+	@:optional var flush:Bool;
 }
 
 /**
@@ -635,7 +643,7 @@ typedef FsGlobOptions = {
 		Current working directory.
 		Default: `process.cwd()`.
 	**/
-	@:optional var cwd:String;
+	@:optional var cwd:EitherType<String, URL>;
 
 	/**
 		Function to filter out files/directories, or a list of glob patterns to be excluded.
@@ -709,6 +717,15 @@ extern class Fs {
 		An object containing commonly used constants for file system operations.
 	**/
 	static var constants(default, null):FsConstants;
+
+	/**
+		Promise-based file system methods (`require('fs').promises`).
+		Same module object as `js.node.FsPromises`.
+
+		Prefer calling static methods on `FsPromises` for Haxe typing of overloads.
+	**/
+	// TODO(section-2): value type mirroring FsPromises static surface (static-method extern cannot be reused as value type)
+	static var promises(default, null):Dynamic;
 
 	/**
 		Asynchronous rename(2).
@@ -1070,7 +1087,7 @@ extern class Fs {
 	@:overload(function(pattern:EitherType<String, Array<String>>, callback:Error->Array<String>->Void):Void {})
 	@:overload(function(pattern:EitherType<String, Array<String>>, options:FsGlobOptions, callback:Error->Array<String>->Void):Void {})
 	static function glob(pattern:EitherType<String, Array<String>>, options:{
-		?cwd:String,
+		?cwd:EitherType<String, URL>,
 		?exclude:EitherType<String->Bool, Array<String>>,
 		?followSymlinks:Bool,
 		withFileTypes:Bool
@@ -1085,7 +1102,7 @@ extern class Fs {
 	@:overload(function(pattern:EitherType<String, Array<String>>):Array<String> {})
 	@:overload(function(pattern:EitherType<String, Array<String>>, options:FsGlobOptions):Array<String> {})
 	static function globSync(pattern:EitherType<String, Array<String>>, options:{
-		?cwd:String,
+		?cwd:EitherType<String, URL>,
 		?exclude:EitherType<String->Bool, Array<String>>,
 		?followSymlinks:Bool,
 		withFileTypes:Bool
@@ -1373,8 +1390,8 @@ extern class Fs {
 
 		The `listener` gets two arguments: the current stat object and the previous stat object.
 	**/
-	@:overload(function(filename:FsPath, listener:Stats->Stats->Void):Void {})
-	static function watchFile(filename:FsPath, options:FsWatchFileOptions, listener:Stats->Stats->Void):Void;
+	@:overload(function(filename:FsPath, listener:Stats->Stats->Void):StatWatcher {})
+	static function watchFile(filename:FsPath, options:FsWatchFileOptions, listener:Stats->Stats->Void):StatWatcher;
 
 	/**
 		Unstable. Use `watch` instead, if possible.
@@ -1444,6 +1461,7 @@ extern class Fs {
 		File is visible to the calling process.
 		This is useful for determining if a file exists, but says nothing about rwx permissions.
 	**/
+	@:deprecated("Use Fs.constants.F_OK instead")
 	static var F_OK(default, null):Int;
 
 	/**
@@ -1451,6 +1469,7 @@ extern class Fs {
 
 		File can be read by the calling process.
 	**/
+	@:deprecated("Use Fs.constants.R_OK instead")
 	static var R_OK(default, null):Int;
 
 	/**
@@ -1458,6 +1477,7 @@ extern class Fs {
 
 		File can be written by the calling process.
 	**/
+	@:deprecated("Use Fs.constants.W_OK instead")
 	static var W_OK(default, null):Int;
 
 	/**
@@ -1466,6 +1486,7 @@ extern class Fs {
 		File can be executed by the calling process.
 		This has no effect on Windows.
 	**/
+	@:deprecated("Use Fs.constants.X_OK instead")
 	static var X_OK(default, null):Int;
 
 	/**

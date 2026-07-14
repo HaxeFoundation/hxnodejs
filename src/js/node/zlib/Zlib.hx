@@ -28,6 +28,12 @@ package js.node.zlib;
 **/
 extern class Zlib extends js.node.stream.Transform<Zlib> {
 	/**
+		The number of bytes written to the engine before the bytes are processed
+		(compressed or decompressed, as appropriate for the derived class).
+	**/
+	var bytesWritten(default, null):Float;
+
+	/**
 		Flush pending data.
 
 		`kind` defaults to `Zlib.Z_FULL_FLUSH`.

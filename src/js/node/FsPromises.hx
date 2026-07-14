@@ -95,7 +95,7 @@ extern class FsPromises {
 	@:overload(function(pattern:EitherType<String, Array<String>>):FsPromisesAsyncIterator<String> {})
 	@:overload(function(pattern:EitherType<String, Array<String>>, options:FsGlobOptions):FsPromisesAsyncIterator<String> {})
 	static function glob(pattern:EitherType<String, Array<String>>, options:{
-		?cwd:String,
+		?cwd:haxe.extern.EitherType<String, js.node.url.URL>,
 		?exclude:EitherType<String->Bool, Array<String>>,
 		?followSymlinks:Bool,
 		withFileTypes:Bool

@@ -35,6 +35,11 @@ typedef ZlibOptions = {
 	@:optional var flush:Int;
 
 	/**
+		default: `Zlib.Z_FINISH`
+	**/
+	@:optional var finishFlush:Int;
+
+	/**
 		default: 16*1024
 	**/
 	@:optional var chunkSize:Int;
@@ -60,6 +65,18 @@ typedef ZlibOptions = {
 		deflate/inflate only, empty dictionary by default
 	**/
 	@:optional var dictionary:Buffer;
+
+	/**
+		Limits output size when using convenience methods.
+		Default: `buffer.kMaxLength`
+	**/
+	@:optional var maxOutputLength:Int;
+
+	/**
+		If `true`, returns an object with `buffer` and `engine`.
+		Default: `false`
+	**/
+	@:optional var info:Bool;
 }
 
 /**
