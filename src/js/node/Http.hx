@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -81,7 +81,13 @@ extern class Http {
 	**/
 	static var globalAgent:Agent;
 
-	static var maxHeaderSize:Int;
+	/**
+		Read-only maximum allowed size of HTTP headers in bytes.
+		Defaults to 16 KiB. Configurable via `--max-http-header-size`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/http.html#httpmaxheadersize
+	**/
+	static var maxHeaderSize(default, null):Int;
 
 	/**
 		Node.js maintains several connections per server to make HTTP requests.
@@ -125,6 +131,16 @@ extern class Http {
 		Undici `WebSocket` constructor exposed via `node:http`.
 	**/
 	static var WebSocket:Class<js.node.web.WebSocket>;
+
+	/**
+		Undici `CloseEvent` constructor exposed via `node:http`.
+	**/
+	static var CloseEvent:Class<js.node.web.CloseEvent>;
+
+	/**
+		Undici `MessageEvent` constructor exposed via `node:http`.
+	**/
+	static var MessageEvent:Class<js.node.web.MessageEvent>;
 
 	/**
 		Parent class of `http.ClientRequest` and `http.ServerResponse`.
@@ -217,16 +233,53 @@ typedef HttpCreateServerOptions = {
 	@:optional var noDelay:Bool;
 
 	/**
-		Sets the maximum number of unique header names allowed per request. Default: `2000`.
+		Optionally overrides the value of `--max-http-header-size` for requests
+		received by this server. Default: `16384` (16 KiB).
+	**/
+	@:optional var maxHeaderSize:Int;
+
+	/**
+		If set to `true`, use an HTTP parser with leniency flags enabled.
+		Default: `false`.
+	**/
+	@:optional var insecureHTTPParser:Bool;
+
+	/**
+		If set to `true`, join duplicate header field values with `, ` instead of discarding.
+		Default: `false`.
 	**/
 	@:optional var joinDuplicateHeaders:Bool;
 
 	/**
+		If set to `true`, respond with `400 Bad Request` when an HTTP/1.1 request lacks a `Host` header.
+		Default: `true`.
+	**/
+	@:optional var requireHostHeader:Bool;
+
+	/**
+		Callback that receives an incoming request and returns whether an upgrade should be accepted.
+		Default: accept upgrades when a `'upgrade'` listener is registered.
+	**/
+	@:optional var shouldUpgradeCallback:(request:IncomingMessage) -> Bool;
+
+	/**
 		`uniqueHeaders` is an optional configuration specific to HTTP servers.
 
-		@see https://nodejs.org/api/http.html#httpcreateserveroptions-requestlistener
+		@see https://nodejs.org/docs/latest-v24.x/api/http.html#httpcreateserveroptions-requestlistener
 	**/
 	@:optional var uniqueHeaders:Array<EitherType<String, Array<String>>>;
+
+	/**
+		If set to `true`, writing a body for methods/statuses that do not allow one throws.
+		Default: `false`.
+	**/
+	@:optional var rejectNonStandardBodyWrites:Bool;
+
+	/**
+		If set to `true`, requests without a body are initialized as already-ended readable streams.
+		Default: `false`.
+	**/
+	@:optional var optimizeEmptyRequests:Bool;
 }
 
 /**
@@ -252,10 +305,10 @@ typedef HttpRequestOptions = {
 	/**
 		A function that produces a socket/stream to use for the request when the `agent` option is not used.
 		This can be used to avoid creating a custom `Agent` class just to override the default `createConnection` function.
-		See [agent.createConnection()](https://nodejs.org/api/http.html#http_agent_createconnection_options_callback) for more details.
+		See [agent.createConnection()](https://nodejs.org/docs/latest-v24.x/api/http.html#agentcreateconnectionoptions-callback) for more details.
 		Any `Duplex` stream is a valid return value.
 	**/
-	@:optional var createConnection:(options:SocketConnectOptionsTcp, ?callabck:(err:Error, stream:IDuplex) -> Void) -> IDuplex;
+	@:optional var createConnection:(options:SocketConnectOptionsTcp, ?callback:(err:Error, stream:IDuplex) -> Void) -> IDuplex;
 
 	/**
 		Default port for the protocol.
@@ -271,9 +324,9 @@ typedef HttpRequestOptions = {
 	@:optional var family:js.node.Dns.DnsAddressFamily;
 
 	/**
-		An object containing request headers.
+		An object or raw-headers array containing request headers.
 	**/
-	@:optional var headers:DynamicAccess<EitherType<String, Array<String>>>;
+	@:optional var headers:EitherType<DynamicAccess<EitherType<String, Array<String>>>, Array<String>>;
 
 	/**
 		A domain name or IP address of the server to issue the request to.
@@ -324,7 +377,15 @@ typedef HttpRequestOptions = {
 	@:optional var protocol:String;
 
 	/**
+		Specifies whether or not to automatically add default headers such as
+		`Connection`, `Content-Length`, `Transfer-Encoding`, and `Host`.
+		Defaults to `true`.
+	**/
+	@:optional var setDefaultHeaders:Bool;
+
+	/**
 		Specifies whether or not to automatically add the Host header.
+		If provided, this overrides `setDefaultHeaders`.
 		Defaults to `true`.
 	**/
 	@:optional var setHost:Bool;
@@ -349,6 +410,12 @@ typedef HttpRequestOptions = {
 		Optional dns.lookup() hints.
 	**/
 	@:optional var hints:Int;
+
+	/**
+		Custom lookup function. Default: `Dns.lookup`.
+	**/
+	@:optional var lookup:(hostname:String, options:Null<js.node.Dns.DnsLookupOptions>,
+		callback:js.node.Dns.DnsLookupCallbackSingle) -> Void;
 
 	/**
 		An AbortSignal that may be used to abort an ongoing request.

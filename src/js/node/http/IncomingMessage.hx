@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,21 +26,25 @@ import haxe.DynamicAccess;
 import js.node.events.EventEmitter.Event;
 import js.node.net.Socket;
 import js.node.stream.Readable;
+import js.node.web.AbortSignal;
 import js.lib.Error;
 
 /**
 	Enumeration of events emitted by the `IncomingMessage` objects in addition to its parent class events.
 **/
-enum abstract IncomingMessageeEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
+enum abstract IncomingMessageEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when the request has been aborted.
+
+		@deprecated Listen for the `'close'` event instead.
 	**/
-	var Aborted:IncomingMessageeEvent<Void->Void> = "aborted";
+	@:deprecated("Listen for close instead")
+	var Aborted:IncomingMessageEvent<Void->Void> = "aborted";
 
 	/**
-		Indicates that the underlying connection was closed.
+		Indicates that the underlying connection was closed / the request has been completed.
 	**/
-	var Close:IncomingMessageeEvent<Void->Void> = "close";
+	var Close:IncomingMessageEvent<Void->Void> = "close";
 }
 
 /**
@@ -48,12 +52,15 @@ enum abstract IncomingMessageeEvent<T:haxe.Constraints.Function>(Event<T>) to Ev
 	It may be used to access response status, headers and data.
 
 	It implements the `Readable Stream` interface, as well as the following additional events, methods, and properties.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/http.html#class-httpincomingmessage
 **/
 @:jsRequire("http", "IncomingMessage")
 extern class IncomingMessage extends Readable<IncomingMessage> {
 	/**
 		The `aborted` property will be `true` if the request has been aborted.
 	**/
+	@:deprecated("Use destroyed instead")
 	var aborted(default, null):Bool;
 
 	/**
@@ -75,7 +82,7 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 		Duplicates in raw headers are handled in the following ways, depending on the header name:
 
 		- Duplicates of `age`, `authorization`, `content-length`, `content-type`, `etag`, `expires`, `from`, `host`, `if-modified-since`, `if-unmodified-since`,
-		  `last-modified`, `location`, `max-forwards`, `proxy-authorization`, `referer`, `retry-after`, or `user-agent` are discarded.
+		  `last-modified`, `location`, `max-forwards`, `proxy-authorization`, `referer`, `retry-after`, `server`, or `user-agent` are discarded.
 		- `set-cookie` is always an array. Duplicates are added to the array.
 		- For duplicate `cookie` headers, the values are joined together with '; '.
 		- For all other headers, the values are joined together with ', '.
@@ -129,9 +136,19 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 	var rawTrailers(default, null):Array<String>;
 
 	/**
-		Calls `connection.setTimeout(msecs, callback)`.
+		Calls `message.socket.setTimeout(msecs, callback)`.
 	**/
-	function setTimeout(msecs:Int, ?callback:Void->Void):Void;
+	function setTimeout(msecs:Int, ?callback:Void->Void):IncomingMessage;
+
+	/**
+		An `AbortSignal` aborted when the underlying socket closes or the request is destroyed.
+		Created lazily on first access.
+
+		Added in: v24.16.0.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/http.html#messagesignal
+	**/
+	var signal(default, null):AbortSignal;
 
 	/**
 		The `Socket` object associated with the connection.
@@ -143,6 +160,7 @@ extern class IncomingMessage extends Readable<IncomingMessage> {
 	/**
 		Alias for `socket`.
 	**/
+	@:deprecated("Use socket instead")
 	var connection(default, null):Socket;
 
 	/**

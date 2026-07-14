@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -35,7 +35,10 @@ enum abstract ClientRequestEvent<T:haxe.Constraints.Function>(Event<T>) to Event
 	/**
 		Emitted when the request has been aborted by the client.
 		This event is only emitted on the first call to `abort()`.
+
+		Deprecated since Node.js v17.0.0. Listen for `'close'` instead.
 	**/
+	@:deprecated("Listen for ClientRequestEvent.Close / 'close' instead")
 	var Abort:ClientRequestEvent<Void->Void> = "abort";
 
 	/**
@@ -80,9 +83,9 @@ enum abstract ClientRequestEvent<T:haxe.Constraints.Function>(Event<T>) to Event
 
 	/**
 		Emitted when the underlying socket times out from inactivity.
-		This only notifies that the socket has been idle. The request must be aborted manually.
+		This only notifies that the socket has been idle. The request must be destroyed manually.
 
-		See also: [request.setTimeout()](https://nodejs.org/api/http.html#http_request_settimeout_timeout_callback).
+		See also: [request.setTimeout()](https://nodejs.org/docs/latest-v24.x/api/http.html#requestsettimeouttimeout-callback).
 	**/
 	var Timeout:ClientRequestEvent<Socket->Void> = "timeout";
 
@@ -92,10 +95,10 @@ enum abstract ClientRequestEvent<T:haxe.Constraints.Function>(Event<T>) to Event
 		clients receiving an upgrade header will have their connections closed.
 	**/
 	var Upgrade:ClientRequestEvent<(response:IncomingMessage, socket:Socket, head:Buffer) -> Void> = "upgrade";
-	}
+}
 
 /**
-	This object is created internally and returned from http.request().
+	This object is created internally and returned from `http.request()`.
 	It represents an in-progress request whose header has already been queued.
 	The header is still mutable using the `setHeader(name, value)`, `getHeader(name)`, `removeHeader(name)` API.
 	The actual header will be sent along with the first data chunk or when calling `request.end()`.
@@ -116,27 +119,41 @@ enum abstract ClientRequestEvent<T:haxe.Constraints.Function>(Event<T>) to Event
 	but instead emits the `'aborted'` event.
 
 	Node.js does not check whether Content-Length and the length of the body which has been transmitted are equal or not.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/http.html#class-httpclientrequest
 **/
 @:jsRequire("http", "ClientRequest")
 extern class ClientRequest extends Writable<ClientRequest> {
 	/**
 		Marks the request as aborting. Calling this will cause remaining data in the response to be dropped and the socket to be destroyed.
+
+		Deprecated since Node.js v14.1.0 / v13.14.0. Use `destroy()` instead.
 	**/
+	@:deprecated("Use destroy() instead")
 	function abort():Void;
 
 	/**
-		The request.aborted property will be true if the request has been aborted.
+		The `request.aborted` property will be `true` if the request has been aborted.
+
+		Deprecated since Node.js v17.0.0. Check `destroyed` instead.
 	**/
+	@:deprecated("Use destroyed instead")
 	var aborted(default, null):Bool;
 
 	/**
 		See `request.socket`.
+
+		Deprecated since Node.js v16.0.0.
 	**/
+	@:deprecated("Use socket instead")
 	var connection(default, null):Socket;
 
 	/**
-		The `response.finished` property will be true if `response.end()` has been called.
+		The `request.finished` property will be true if `request.end()` has been called.
+
+		Deprecated since Node.js v13.4.0 / v12.16.0. Use `writableEnded` instead.
 	**/
+	@:deprecated("Use writableEnded instead")
 	var finished(default, null):Bool;
 
 	/**
@@ -260,10 +277,15 @@ extern class ClientRequest extends Writable<ClientRequest> {
 	function setTimeout(timeout:Int, ?callback:Socket->Void):ClientRequest;
 
 	/**
+		Clears the timeout set by `request.setTimeout()`.
+	**/
+	function clearTimeout():Void;
+
+	/**
 		Reference to the underlying socket. Usually users will not want to access this property.
 		In particular, the socket will not emit `'readable'` events because of how the protocol parser attaches to the socket.
 		The `socket` may also be accessed via `request.connection`.
-	 */
+	**/
 	var socket(default, null):Socket;
 
 	// This field is defined in super class.

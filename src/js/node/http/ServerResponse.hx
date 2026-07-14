@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -65,12 +65,18 @@ extern class ServerResponse extends Writable<ServerResponse> {
 
 	/**
 		See `socket`.
+
+		Deprecated since Node.js v16.0.0.
 	**/
+	@:deprecated("Use socket instead")
 	var connection(default, null):Socket;
 
 	/**
 		The `finished` property will be true if `end()` has been called.
+
+		Deprecated since Node.js v13.4.0 / v12.16.0. Use `writableEnded` instead.
 	**/
+	@:deprecated("Use writableEnded instead")
 	var finished(default, null):Bool;
 
 	/**
@@ -232,19 +238,15 @@ extern class ServerResponse extends Writable<ServerResponse> {
 
 		When headers have been set with `setHeader()`, they will be merged with any headers passed to `writeHead()`, with the headers passed to `writeHead()` given precedence.
 
-		If this method is called and `setHeader()` has not been called, it will directly write the supplied header values onto the network channel without caching internally,
-		and the `getHeader()` on the header will not yield the expected result.
-		If progressive population of headers is desired with potential future retrieval and modification, use `setHeader()` instead.
-
 		`Content-Length` is given in bytes not characters.
-		The above example works because the string `'hello world'` contains only single byte characters.
-		If the body contains higher coded characters then `Buffer.byteLength()` should be used to determine the number of bytes in a given encoding.
-		And Node.js does not check whether `Content-Length` and the length of the body which has been transmitted are equal or not.
 
 		Attempting to set a header field name or value that contains invalid characters will result in a `TypeError` being thrown.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/http.html#responsewriteheadstatuscode-statusmessage-headers
 	**/
-	@:overload(function(statusCode:Int, ?headers:DynamicAccess<String>):Void {})
-	function writeHead(statusCode:Int, reasonPhrase:String, ?headers:DynamicAccess<String>):Void;
+	@:overload(function(statusCode:Int, ?headers:DynamicAccess<String>):ServerResponse {})
+	@:overload(function(statusCode:Int, ?headers:Array<String>):ServerResponse {})
+	function writeHead(statusCode:Int, reasonPhrase:String, ?headers:DynamicAccess<String>):ServerResponse;
 
 	/**
 		Sends a HTTP/1.1 102 Processing message to the client, indicating that the request body should be sent.

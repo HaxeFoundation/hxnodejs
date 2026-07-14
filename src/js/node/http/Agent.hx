@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -80,7 +80,7 @@ extern class Agent {
 		This method can be overridden by a particular `Agent` subclass.
 		If this method returns a falsy value, the socket will be destroyed instead of persisting it for use with the next request.
 	**/
-	function keepSocketAlive(socket:Socket):Void;
+	function keepSocketAlive(socket:Socket):Any;
 
 	/**
 		Called when `socket` is attached to `request` after being persisted because of the keep-alive options.
@@ -101,7 +101,7 @@ extern class Agent {
 	/**
 		An object which contains arrays of sockets currently awaiting use by the agent when keepAlive is enabled.
 		Do not modify.
-	 */
+	**/
 	var freeSockets(default, null):DynamicAccess<Array<Socket>>;
 
 	/**
@@ -140,6 +140,25 @@ extern class Agent {
 		Do not modify.
 	**/
 	var sockets(default, null):DynamicAccess<Array<Socket>>;
+
+	/**
+		Default port to use when the port is not specified in requests.
+
+		Default: `80`.
+	**/
+	var defaultPort:Int;
+
+	/**
+		The protocol to use for the agent.
+
+		Default: `'http:'`.
+	**/
+	var protocol:String;
+
+	/**
+		The set of options used when creating the agent. Read-only.
+	**/
+	var options(default, null):HttpAgentOptions;
 }
 
 /**
@@ -194,4 +213,31 @@ typedef HttpAgentOptions = {
 		Scheduling strategy when picking an idle socket. One of `'fifo'` or `'lifo'`. Default: `'lifo'`.
 	**/
 	@:optional var scheduling:String;
+
+	/**
+		Environment variables for built-in proxy configuration.
+
+		See Built-in Proxy Support for details. Default: `undefined`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/http.html#built-in-proxy-support
+	**/
+	@:optional var proxyEnv:DynamicAccess<String>;
+
+	/**
+		Default port to use when the port is not specified in requests. Default: `80`.
+	**/
+	@:optional var defaultPort:Int;
+
+	/**
+		The protocol to use for the agent. Default: `'http:'`.
+	**/
+	@:optional var protocol:String;
+
+	/**
+		Milliseconds to subtract from the server-provided `keep-alive: timeout=...` hint
+		when determining socket expiration time. Default: `1000`.
+
+		Added in: v24.7.0.
+	**/
+	@:optional var agentKeepAliveTimeoutBuffer:Int;
 }

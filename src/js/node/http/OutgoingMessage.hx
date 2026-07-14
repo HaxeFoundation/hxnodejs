@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -36,6 +36,14 @@ import js.node.web.Headers;
 **/
 @:jsRequire("http", "OutgoingMessage")
 extern class OutgoingMessage extends Writable<OutgoingMessage> {
+	/**
+		Adds HTTP trailers (headers at the end of the message) to the message.
+
+		Trailers will only be emitted if the message is chunked encoded.
+	**/
+	@:overload(function(headers:Array<Array<String>>):Void {})
+	function addTrailers(headers:DynamicAccess<String>):Void;
+
 	/**
 		Append a single header value for the header object.
 
@@ -114,6 +122,9 @@ extern class OutgoingMessage extends Writable<OutgoingMessage> {
 
 	/**
 		Alias of `socket`.
+
+		Deprecated since Node.js v16.0.0.
 	**/
+	@:deprecated("Use socket instead")
 	var connection(default, null):Socket;
 }

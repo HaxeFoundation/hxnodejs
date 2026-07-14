@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -74,13 +74,13 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 		After this event is emitted, the request's socket will not have a `'data'` event listener,
 		meaning it will need to be bound in order to handle data sent to the server on that socket.
 	**/
-	var Connect:ServerEvent<(request:IncomingMessage, socekt:Socket, head:Buffer) -> Void> = "connect";
+	var Connect:ServerEvent<(request:IncomingMessage, socket:Socket, head:Buffer) -> Void> = "connect";
 
 	/**
 		This event is emitted when a new TCP stream is established.
 		`socket` is typically an object of type net.Socket. Usually users will not want to access this event.
 		In particular, the socket will not emit `'readable'` events because of how the protocol parser attaches to the socket.
-		The `socket` can also be accessed at `request.connection`.
+		The `socket` can also be accessed at `request.socket`.
 
 		This event can also be explicitly emitted by users to inject connections into the HTTP server. In that case,
 		any `Duplex` stream can be passed.
@@ -108,13 +108,15 @@ enum abstract ServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when a request could not be completed due to exceeding `server.maxRequestsPerSocket`.
 
-		@see https://nodejs.org/api/http.html#event-droprequest
+		@see https://nodejs.org/docs/latest-v24.x/api/http.html#event-droprequest
 	**/
 	var DropRequest:ServerEvent<(request:IncomingMessage, socket:Socket) -> Void> = "dropRequest";
 }
 
 /**
-	This class inherits `from net.Server`.
+	An HTTP server that inherits from `net.Server`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/http.html#class-httpserver
 **/
 @:jsRequire("http", "Server")
 extern class Server extends js.node.net.Server {
@@ -129,7 +131,7 @@ extern class Server extends js.node.net.Server {
 		If the check fails, a `'timeout'` event is emitted on the server object, and (by default) the socket is destroyed.
 		See [server.timeout](https://nodejs.org/api/http.html#http_server_timeout) for more information on how timeout behavior can be customized.
 
-		Default: `40000`
+		Default: The minimum between `server.requestTimeout` or `60000`.
 	**/
 	var headersTimeout:Int;
 
@@ -158,13 +160,12 @@ extern class Server extends js.node.net.Server {
 
 		If there is a `'timeout'` event listener on the Server object, then it will be called with the timed-out socket as an argument.
 
-		By default, the Server's timeout value is 2 minutes, and sockets are destroyed automatically if they time out.
-		However, if a callback is assigned to the Server's `'timeout'` event, timeouts must be handled explicitly.
+		By default, the Server's timeout value is 0 (no timeout).
 
-		To change the default timeout use the `--http-server-default-timeout` flag.
+		@see https://nodejs.org/docs/latest-v24.x/api/http.html#serversettimeoutmsecs-callback
 	**/
-	@:overload(function(?callback:js.node.net.Socket->Void):Void {})
-	function setTimeout(msecs:Int, ?callback:js.node.net.Socket->Void):Void;
+	@:overload(function(?callback:js.node.net.Socket->Void):Server {})
+	function setTimeout(msecs:Int, ?callback:js.node.net.Socket->Void):Server;
 
 	/**
 		The number of milliseconds of inactivity before a socket is presumed to have timed out.
@@ -174,9 +175,7 @@ extern class Server extends js.node.net.Server {
 		The socket timeout logic is set up on connection, so changing this value only affects new connections to the server,
 		not any existing connections.
 
-		To change the default timeout use the `--http-server-default-timeout` flag.
-
-		Default: `120000` (2 minutes)
+		Default: `0` (no timeout).
 	**/
 	var timeout:Int;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,8 +23,9 @@
 package js.node.http;
 
 /**
-	Enumeration of possible HTTP methods as described in
-	http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
+	HTTP methods supported by the Node.js HTTP parser (`http.METHODS`).
+
+	@see https://nodejs.org/docs/latest-v24.x/api/http.html#httpmethods
 **/
 enum abstract Method(String) from String to String {
 	var Acl = "ACL";
@@ -35,15 +36,15 @@ enum abstract Method(String) from String to String {
 	var Delete = "DELETE";
 	var Get = "GET";
 	var Head = "HEAD";
-	var Link = "LINK'";
-	var Lock = "LOCK'";
-	var MSearch = "M-SEARCH'";
-	var Merge = "MERGE'";
-	var Mkactivity = "MKACTIVITY'";
-	var Mkcalendar = "MKCALENDAR'";
-	var Mkcol = "MKCOL'";
-	var Move = "MOVE'";
-	var Notify = "NOTIFY'";
+	var Link = "LINK";
+	var Lock = "LOCK";
+	var MSearch = "M-SEARCH";
+	var Merge = "MERGE";
+	var Mkactivity = "MKACTIVITY";
+	var Mkcalendar = "MKCALENDAR";
+	var Mkcol = "MKCOL";
+	var Move = "MOVE";
+	var Notify = "NOTIFY";
 	var Options = "OPTIONS";
 	var Patch = "PATCH";
 	var Post = "POST";
@@ -51,9 +52,11 @@ enum abstract Method(String) from String to String {
 	var Proppatch = "PROPPATCH";
 	var Purge = "PURGE";
 	var Put = "PUT";
+	var Query = "QUERY";
 	var Rebind = "REBIND";
 	var Report = "REPORT";
 	var Search = "SEARCH";
+	var Source = "SOURCE";
 	var Subscribe = "SUBSCRIBE";
 	var Trace = "TRACE";
 	var Unbind = "UNBIND";
