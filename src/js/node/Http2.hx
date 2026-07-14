@@ -179,11 +179,7 @@ typedef Http2ClientSessionOptions = {
 	/**
 		Optional callback that returns a `Duplex` stream to use as the connection.
 	**/
-	#if haxe4
 	@:optional var createConnection:(authority:URL, options:Http2SessionOptions) -> IDuplex;
-	#else
-	@:optional var createConnection:URL->Http2SessionOptions->IDuplex;
-	#end
 
 	/**
 		The protocol to connect with if not set in the authority.
@@ -319,19 +315,11 @@ typedef Http2StatOptions = {
 	Options for `ServerHttp2Stream.respondWithFile` / `respondWithFD`.
 **/
 typedef Http2ServerStreamFileResponseOptions = {
-	#if haxe4
 	@:optional var statCheck:(stats:js.node.fs.Stats, headers:Http2Headers, statOptions:Http2StatOptions) -> EitherType<Void, Bool>;
-	#else
-	@:optional var statCheck:js.node.fs.Stats->Http2Headers->Http2StatOptions->EitherType<Void, Bool>;
-	#end
 	@:optional var waitForTrailers:Bool;
 	@:optional var offset:Int;
 	@:optional var length:Int;
-	#if haxe4
 	@:optional var onError:(err:js.lib.Error) -> Void;
-	#else
-	@:optional var onError:js.Error->Void;
-	#end
 }
 
 /**
@@ -369,43 +357,24 @@ extern class Http2 {
 	/**
 		Returns a `net.Server` instance that creates and manages `Http2Session` instances.
 	**/
-	#if haxe4
 	@:overload(function(options:Http2ServerOptions, ?onRequestHandler:(request:Http2ServerRequest, response:Http2ServerResponse) -> Void):Http2Server {})
 	static function createServer(?onRequestHandler:(request:Http2ServerRequest, response:Http2ServerResponse) -> Void):Http2Server;
-	#else
-	@:overload(function(options:Http2ServerOptions, ?onRequestHandler:Http2ServerRequest->Http2ServerResponse->Void):Http2Server {})
-	static function createServer(?onRequestHandler:Http2ServerRequest->Http2ServerResponse->Void):Http2Server;
-	#end
 
 	/**
 		Returns a `tls.Server` instance that creates and manages `Http2Session` instances.
 	**/
-	#if haxe4
 	@:overload(function(options:Http2SecureServerOptions, ?onRequestHandler:(request:Http2ServerRequest, response:Http2ServerResponse) -> Void):Http2SecureServer {})
 	static function createSecureServer(?onRequestHandler:(request:Http2ServerRequest, response:Http2ServerResponse) -> Void):Http2SecureServer;
-	#else
-	@:overload(function(options:Http2SecureServerOptions, ?onRequestHandler:Http2ServerRequest->Http2ServerResponse->Void):Http2SecureServer {})
-	static function createSecureServer(?onRequestHandler:Http2ServerRequest->Http2ServerResponse->Void):Http2SecureServer;
-	#end
 
 	/**
 		Returns a `ClientHttp2Session` instance.
 	**/
-	#if haxe4
 	@:overload(function(authority:URL, listener:(session:ClientHttp2Session, socket:js.node.net.Socket) -> Void):ClientHttp2Session {})
 	@:overload(function(authority:String, listener:(session:ClientHttp2Session, socket:js.node.net.Socket) -> Void):ClientHttp2Session {})
 	@:overload(function(authority:URL, ?options:EitherType<Http2ClientSessionOptions, Http2SecureClientSessionOptions>,
 		?listener:(session:ClientHttp2Session, socket:js.node.net.Socket) -> Void):ClientHttp2Session {})
 	static function connect(authority:String, ?options:EitherType<Http2ClientSessionOptions, Http2SecureClientSessionOptions>,
 		?listener:(session:ClientHttp2Session, socket:js.node.net.Socket) -> Void):ClientHttp2Session;
-	#else
-	@:overload(function(authority:URL, listener:ClientHttp2Session->js.node.net.Socket->Void):ClientHttp2Session {})
-	@:overload(function(authority:String, listener:ClientHttp2Session->js.node.net.Socket->Void):ClientHttp2Session {})
-	@:overload(function(authority:URL, ?options:EitherType<Http2ClientSessionOptions, Http2SecureClientSessionOptions>,
-		?listener:ClientHttp2Session->js.node.net.Socket->Void):ClientHttp2Session {})
-	static function connect(authority:String, ?options:EitherType<Http2ClientSessionOptions, Http2SecureClientSessionOptions>,
-		?listener:ClientHttp2Session->js.node.net.Socket->Void):ClientHttp2Session;
-	#end
 
 	/**
 		Create an HTTP/2 server session from an existing duplex socket.

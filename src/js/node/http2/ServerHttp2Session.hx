@@ -43,20 +43,12 @@ enum abstract ServerHttp2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to 
 	/**
 		Emitted once the server session has been successfully connected.
 	**/
-	#if haxe4
 	var Connect:ServerHttp2SessionEvent<(session:ServerHttp2Session, socket:Socket) -> Void> = "connect";
-	#else
-	var Connect:ServerHttp2SessionEvent<ServerHttp2Session->Socket->Void> = "connect";
-	#end
 
 	/**
 		Emitted when a new server stream is created.
 	**/
-	#if haxe4
 	var Stream:ServerHttp2SessionEvent<(stream:ServerHttp2Stream, headers:Http2Headers, flags:Int, rawHeaders:Array<String>) -> Void> = "stream";
-	#else
-	var Stream:ServerHttp2SessionEvent<ServerHttp2Stream->Http2Headers->Int->Array<String>->Void> = "stream";
-	#end
 }
 
 /**

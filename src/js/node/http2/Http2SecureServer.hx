@@ -26,11 +26,7 @@ import js.node.Http2.Http2Headers;
 import js.node.Http2.Http2Settings;
 import js.node.events.EventEmitter.Event;
 import js.node.stream.Duplex.IDuplex;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Events emitted by `Http2SecureServer` in addition to its parent `tls.Server` events.
@@ -39,11 +35,7 @@ enum abstract Http2SecureServerEvent<T:haxe.Constraints.Function>(Event<T>) to E
 	/**
 		Emitted each time a request with an HTTP `Expect: 100-continue` is received.
 	**/
-	#if haxe4
 	var CheckContinue:Http2SecureServerEvent<(request:Http2ServerRequest, response:Http2ServerResponse) -> Void> = "checkContinue";
-	#else
-	var CheckContinue:Http2SecureServerEvent<Http2ServerRequest->Http2ServerResponse->Void> = "checkContinue";
-	#end
 
 	/**
 		Emitted when a new TCP stream is established, before the TLS handshake begins.
@@ -53,11 +45,7 @@ enum abstract Http2SecureServerEvent<T:haxe.Constraints.Function>(Event<T>) to E
 	/**
 		Emitted each time there is a request. See the Compatibility API.
 	**/
-	#if haxe4
 	var Request:Http2SecureServerEvent<(request:Http2ServerRequest, response:Http2ServerResponse) -> Void> = "request";
-	#else
-	var Request:Http2SecureServerEvent<Http2ServerRequest->Http2ServerResponse->Void> = "request";
-	#end
 
 	/**
 		Emitted when a new `Http2Session` is created by the `Http2SecureServer`.
@@ -67,20 +55,12 @@ enum abstract Http2SecureServerEvent<T:haxe.Constraints.Function>(Event<T>) to E
 	/**
 		Emitted when an `'error'` event is emitted by an `Http2Session` associated with the server.
 	**/
-	#if haxe4
 	var SessionError:Http2SecureServerEvent<(error:Error, session:ServerHttp2Session) -> Void> = "sessionError";
-	#else
-	var SessionError:Http2SecureServerEvent<Error->ServerHttp2Session->Void> = "sessionError";
-	#end
 
 	/**
 		Emitted when a `'stream'` event has been emitted by an `Http2Session` associated with the server.
 	**/
-	#if haxe4
 	var Stream:Http2SecureServerEvent<(stream:ServerHttp2Stream, headers:Http2Headers, flags:Int, rawHeaders:Array<String>) -> Void> = "stream";
-	#else
-	var Stream:Http2SecureServerEvent<ServerHttp2Stream->Http2Headers->Int->Array<String>->Void> = "stream";
-	#end
 
 	/**
 		Emitted when there is no activity on the Server for a given number of milliseconds.

@@ -39,11 +39,7 @@ enum abstract Http2StreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T
 	/**
 		Emitted when an error occurs while attempting to send a frame.
 	**/
-	#if haxe4
 	var FrameError:Http2StreamEvent<(type:Int, code:Int, id:Int) -> Void> = "frameError";
-	#else
-	var FrameError:Http2StreamEvent<Int->Int->Int->Void> = "frameError";
-	#end
 
 	/**
 		Emitted when the `Http2Stream` has been opened and is ready for use.
@@ -65,11 +61,7 @@ enum abstract Http2StreamEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T
 	/**
 		Emitted when trailing headers are received.
 	**/
-	#if haxe4
 	var Trailers:Http2StreamEvent<(trailers:Http2Headers, flags:Int) -> Void> = "trailers";
-	#else
-	var Trailers:Http2StreamEvent<Http2Headers->Int->Void> = "trailers";
-	#end
 
 	/**
 		Emitted when the stream is ready for trailing headers to be sent.

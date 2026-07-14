@@ -29,11 +29,7 @@ import js.node.Http2.Http2Headers;
 import js.node.events.EventEmitter.Event;
 import js.node.net.Socket;
 import js.node.stream.Writable;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Events emitted by `Http2ServerResponse` in addition to its parent class events.
@@ -84,11 +80,7 @@ extern class Http2ServerResponse extends Writable<Http2ServerResponse> {
 		Call `http2stream.pushStream()` with the given headers, and wrap the given `Http2Stream`
 		on a newly created `Http2ServerResponse` as the callback parameter if successful.
 	**/
-	#if haxe4
 	function createPushResponse(headers:Http2Headers, callback:(err:Null<Error>, res:Http2ServerResponse) -> Void):Void;
-	#else
-	function createPushResponse(headers:Http2Headers, callback:Null<Error>->Http2ServerResponse->Void):Void;
-	#end
 
 	/**
 		Boolean value that indicates whether the response has completed.

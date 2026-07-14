@@ -28,11 +28,7 @@ import js.node.Http2.Http2Headers;
 import js.node.events.EventEmitter.Event;
 import js.node.net.Socket;
 import js.node.stream.Readable;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Events emitted by `Http2ServerRequest` in addition to its parent class events.

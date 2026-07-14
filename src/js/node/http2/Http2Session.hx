@@ -30,11 +30,7 @@ import js.node.Http2.Http2Settings;
 import js.node.events.EventEmitter;
 import js.node.events.EventEmitter.Event;
 import js.node.net.Socket;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Enumeration of events emitted by `Http2Session` in addition to its parent class events.
@@ -48,11 +44,7 @@ enum abstract Http2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 	/**
 		Emitted once the `Http2Session` has been successfully connected to the remote peer.
 	**/
-	#if haxe4
 	var Connect:Http2SessionEvent<(session:Http2Session, socket:Socket) -> Void> = "connect";
-	#else
-	var Connect:Http2SessionEvent<Http2Session->Socket->Void> = "connect";
-	#end
 
 	/**
 		Emitted when an error occurs during processing of an `Http2Session`.
@@ -62,20 +54,12 @@ enum abstract Http2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 	/**
 		Emitted when an error occurs while attempting to send a frame on the session.
 	**/
-	#if haxe4
 	var FrameError:Http2SessionEvent<(type:Int, code:Int, id:Int) -> Void> = "frameError";
-	#else
-	var FrameError:Http2SessionEvent<Int->Int->Int->Void> = "frameError";
-	#end
 
 	/**
 		Emitted when a `GOAWAY` frame is received.
 	**/
-	#if haxe4
 	var Goaway:Http2SessionEvent<(errorCode:Int, lastStreamID:Int, opaqueData:Buffer) -> Void> = "goaway";
-	#else
-	var Goaway:Http2SessionEvent<Int->Int->Buffer->Void> = "goaway";
-	#end
 
 	/**
 		Emitted when an acknowledgment `SETTINGS` frame has been received.
@@ -95,11 +79,7 @@ enum abstract Http2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to Event<
 	/**
 		Emitted when a new `Http2Stream` is created.
 	**/
-	#if haxe4
 	var Stream:Http2SessionEvent<(stream:Http2Stream, headers:Http2Headers, flags:Int, rawHeaders:Array<String>) -> Void> = "stream";
-	#else
-	var Stream:Http2SessionEvent<Http2Stream->Http2Headers->Int->Array<String>->Void> = "stream";
-	#end
 
 	/**
 		Emitted after the `Http2Session` times out due to inactivity.
@@ -195,13 +175,8 @@ extern class Http2Session extends EventEmitter<Http2Session> {
 	/**
 		Sends a `PING` frame to the connected HTTP/2 peer.
 	**/
-	#if haxe4
 	@:overload(function(payload:Buffer, callback:(err:Null<Error>, duration:Float, payload:Buffer) -> Void):Bool {})
 	function ping(callback:(err:Null<Error>, duration:Float, payload:Buffer) -> Void):Bool;
-	#else
-	@:overload(function(payload:Buffer, callback:Null<Error>->Float->Buffer->Void):Bool {})
-	function ping(callback:Null<Error>->Float->Buffer->Void):Bool;
-	#end
 
 	/**
 		Calls `ref()` on this session's underlying socket.
@@ -221,11 +196,7 @@ extern class Http2Session extends EventEmitter<Http2Session> {
 	/**
 		Updates the current local settings and sends a new `SETTINGS` frame.
 	**/
-	#if haxe4
 	function settings(settings:Http2Settings, ?callback:(err:Null<Error>, settings:Http2Settings, duration:Float) -> Void):Void;
-	#else
-	function settings(settings:Http2Settings, ?callback:Null<Error>->Http2Settings->Float->Void):Void;
-	#end
 
 	/**
 		Calls `unref()` on this session's underlying socket.

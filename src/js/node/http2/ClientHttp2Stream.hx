@@ -37,29 +37,17 @@ enum abstract ClientHttp2StreamEvent<T:haxe.Constraints.Function>(Event<T>) to E
 	/**
 		Emitted when additional headers are received for an open stream.
 	**/
-	#if haxe4
 	var Headers:ClientHttp2StreamEvent<(headers:Http2Headers, flags:Int, rawHeaders:Array<String>) -> Void> = "headers";
-	#else
-	var Headers:ClientHttp2StreamEvent<Http2Headers->Int->Array<String>->Void> = "headers";
-	#end
 
 	/**
 		Emitted when the server pushes a stream.
 	**/
-	#if haxe4
 	var Push:ClientHttp2StreamEvent<(headers:Http2Headers, flags:Int) -> Void> = "push";
-	#else
-	var Push:ClientHttp2StreamEvent<Http2Headers->Int->Void> = "push";
-	#end
 
 	/**
 		Emitted when a response `HEADERS` frame has been received.
 	**/
-	#if haxe4
 	var Response:ClientHttp2StreamEvent<(headers:Http2Headers, flags:Int, rawHeaders:Array<String>) -> Void> = "response";
-	#else
-	var Response:ClientHttp2StreamEvent<Http2Headers->Int->Array<String>->Void> = "response";
-	#end
 }
 
 /**

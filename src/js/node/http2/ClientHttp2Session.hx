@@ -34,20 +34,12 @@ enum abstract ClientHttp2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to 
 	/**
 		Emitted when an `ALTSVC` frame is received.
 	**/
-	#if haxe4
 	var Altsvc:ClientHttp2SessionEvent<(alt:String, origin:String, streamId:Int) -> Void> = "altsvc";
-	#else
-	var Altsvc:ClientHttp2SessionEvent<String->String->Int->Void> = "altsvc";
-	#end
 
 	/**
 		Emitted once the client session has been successfully connected.
 	**/
-	#if haxe4
 	var Connect:ClientHttp2SessionEvent<(session:ClientHttp2Session, socket:Socket) -> Void> = "connect";
-	#else
-	var Connect:ClientHttp2SessionEvent<ClientHttp2Session->Socket->Void> = "connect";
-	#end
 
 	/**
 		Emitted when an `ORIGIN` frame is received.
@@ -57,11 +49,7 @@ enum abstract ClientHttp2SessionEvent<T:haxe.Constraints.Function>(Event<T>) to 
 	/**
 		Emitted when a new client stream is created.
 	**/
-	#if haxe4
 	var Stream:ClientHttp2SessionEvent<(stream:ClientHttp2Stream, headers:Http2Headers, flags:Int, rawHeaders:Array<String>) -> Void> = "stream";
-	#else
-	var Stream:ClientHttp2SessionEvent<ClientHttp2Stream->Http2Headers->Int->Array<String>->Void> = "stream";
-	#end
 }
 
 /**

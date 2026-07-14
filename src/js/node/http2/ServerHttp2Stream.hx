@@ -26,11 +26,7 @@ import js.node.Http2.Http2Headers;
 import js.node.Http2.Http2PushStreamOptions;
 import js.node.Http2.Http2ServerStreamFileResponseOptions;
 import js.node.Http2.Http2ServerStreamResponseOptions;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	An `Http2Stream` for use on an HTTP/2 server.
@@ -57,14 +53,9 @@ extern class ServerHttp2Stream extends Http2Stream {
 	/**
 		Initiates a push stream.
 	**/
-	#if haxe4
 	@:overload(function(headers:Http2Headers, options:Http2PushStreamOptions,
 		?callback:(err:Null<Error>, pushStream:ServerHttp2Stream, headers:Http2Headers) -> Void):Void {})
 	function pushStream(headers:Http2Headers, ?callback:(err:Null<Error>, pushStream:ServerHttp2Stream, headers:Http2Headers) -> Void):Void;
-	#else
-	@:overload(function(headers:Http2Headers, options:Http2PushStreamOptions, ?callback:Null<Error>->ServerHttp2Stream->Http2Headers->Void):Void {})
-	function pushStream(headers:Http2Headers, ?callback:Null<Error>->ServerHttp2Stream->Http2Headers->Void):Void;
-	#end
 
 	/**
 		Sends an HTTP/2 response header to the connected client.
