@@ -40,7 +40,7 @@ import js.Promise;
 	`ADDRCONFIG`, `V4MAPPED`, and `ALL` are not exported by `dns/promises` (they are `undefined`
 	there). For lookup `hints`, use `Dns.ADDRCONFIG`, `Dns.V4MAPPED`, and `Dns.ALL`.
 
-	@see https://nodejs.org/docs/latest-v22.x/api/dns.html#dns-promises-api
+	@see https://nodejs.org/docs/latest-v24.x/api/dns.html#dns-promises-api
 **/
 @:jsRequire("dns/promises")
 extern class DnsPromises {
@@ -166,7 +166,7 @@ extern class DnsPromises {
 	/**
 		`Resolver` class constructor for an independent promise-based DNS resolver.
 
-		@see https://nodejs.org/docs/latest-v22.x/api/dns.html#class-dnspromisesresolver
+		@see https://nodejs.org/docs/latest-v24.x/api/dns.html#class-dnspromisesresolver
 	**/
 	static var Resolver:Class<PromisesResolverObject>;
 }

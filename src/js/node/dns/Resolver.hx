@@ -31,7 +31,7 @@ import js.node.Dns;
 	Creating a new resolver uses the default server settings.
 	Setting the servers used for a resolver using `setServers()` does not affect other resolvers.
 
-	@see https://nodejs.org/docs/latest-v22.x/api/dns.html#class-dnsresolver
+	@see https://nodejs.org/docs/latest-v24.x/api/dns.html#class-dnsresolver
 **/
 @:jsRequire("dns", "Resolver")
 extern class Resolver {

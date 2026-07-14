@@ -467,7 +467,7 @@ typedef DnsLookupCallbackAllEntry = {address:String, family:DnsAddressFamily};
 	they do not use the configuration from /etc/hosts. These functions should be used by developers who do not want
 	to use the underlying operating system's facilities for name resolution, and instead want to always perform DNS queries.
 
-	@see https://nodejs.org/docs/latest-v22.x/api/dns.html
+	@see https://nodejs.org/docs/latest-v24.x/api/dns.html
 **/
 @:jsRequire("dns")
 extern class Dns {
@@ -671,7 +671,7 @@ extern class Dns {
 	/**
 		`Resolver` class constructor for an independent DNS resolver.
 
-		@see https://nodejs.org/docs/latest-v22.x/api/dns.html#class-dnsresolver
+		@see https://nodejs.org/docs/latest-v24.x/api/dns.html#class-dnsresolver
 	**/
 	static var Resolver:Class<ResolverObject>;
 }

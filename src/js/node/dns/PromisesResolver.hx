@@ -33,7 +33,7 @@ import js.Promise;
 /**
 	Promise-based independent resolver for DNS requests (`dns/promises.Resolver`).
 
-	@see https://nodejs.org/docs/latest-v22.x/api/dns.html#class-dnspromisesresolver
+	@see https://nodejs.org/docs/latest-v24.x/api/dns.html#class-dnspromisesresolver
 **/
 @:jsRequire("dns/promises", "Resolver")
 extern class PromisesResolver {
