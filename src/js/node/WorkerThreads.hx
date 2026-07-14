@@ -28,10 +28,8 @@ import js.lib.Symbol;
 import js.node.Vm.VmContext;
 import js.node.web.LockManager;
 import js.node.worker_threads.BroadcastChannel;
-import js.node.worker_threads.MessageChannel;
 import js.node.worker_threads.MessagePort;
 import js.node.worker_threads.Transferable;
-import js.node.worker_threads.Worker;
 
 /**
 	The `node:worker_threads` module enables the use of threads that execute JavaScript in parallel.
