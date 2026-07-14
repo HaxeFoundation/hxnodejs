@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -41,9 +41,16 @@ import js.lib.RegExp;
 
 	This module is only available under the `node:` scheme.
 
-	These externs target **Node.js 24+ Active LTS**. Dual-LTS APIs such as
-	`expectFailure`, `run({ randomize })`, and `TestContext.workerId` are typed
-	without version gates; older LTS releases may not provide them at runtime.
+	These externs target **Node.js 24+ Active LTS**. Newer APIs such as
+	`expectFailure` (v24.14+), `run({ randomize })`, `TestContext.workerId`
+	(v24.15+), `SuiteContext.passed` / `attempt` / `diagnostic` (v24.16+), and
+	`TestContext.attempt` (v25+) are typed without version gates; older LTS
+	releases may not provide them at runtime.
+
+	`tags` / `context.tags` / `run({ testTagFilters })` are Node.js 26+ and are
+	intentionally omitted.
+
+	Built-in reporters live in `js.node.test.Reporters` (`node:test/reporters`).
 
 	@see https://nodejs.org/docs/latest-v24.x/api/test.html
 **/
@@ -56,16 +63,18 @@ extern class Test {
 		Returns a `Promise` that fulfills once the test completes (or immediately if
 		called within a suite).
 
+		Supports `.skip`, `.todo`, `.only`, and `.expectFailure` shorthands
+		(same callables as the module-level helpers below; the module export is
+		the `test` function).
+
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#testname-options-fn
 	**/
-	@:selfCall
-	@:overload(function(fn:TestCallback):Promise<Void> {})
-	@:overload(function(name:String, fn:TestCallback):Promise<Void> {})
-	@:overload(function(options:TestOptions, fn:TestCallback):Promise<Void> {})
-	static function test(?name:String, ?options:TestOptions, ?fn:TestCallback):Promise<Void>;
+	static var test(default, never):ItFunction;
 
 	/**
 		Shorthand for skipping a test: `test(name, { skip: true }[, fn])`.
+
+		Same function as `test.skip` / `it.skip`.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#testskipname-options-fn
 	**/
@@ -77,6 +86,8 @@ extern class Test {
 	/**
 		Shorthand for marking a test as `TODO`: `test(name, { todo: true }[, fn])`.
 
+		Same function as `test.todo` / `it.todo`.
+
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#testtodoname-options-fn
 	**/
 	@:overload(function(fn:TestCallback):Promise<Void> {})
@@ -86,6 +97,8 @@ extern class Test {
 
 	/**
 		Shorthand for marking a test as `only`: `test(name, { only: true }[, fn])`.
+
+		Same function as `test.only` / `it.only`.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#testonlyname-options-fn
 	**/
@@ -382,9 +395,9 @@ typedef RunOptions = {
 	@:optional var inspectPort:EitherType<Int, Void->Int>;
 
 	/**
-		Test isolation: `'process'` (default) or `'none'`.
+		Test isolation. Default: `Process`.
 	**/
-	@:optional var isolation:String;
+	@:optional var isolation:RunIsolation;
 
 	/**
 		If truthy, only run tests with the `only` option set.
@@ -486,6 +499,23 @@ typedef RunOptions = {
 		Incompatible with `isolation: 'none'`.
 	**/
 	@:optional var env:DynamicAccess<String>;
+}
+
+/**
+	Process isolation mode for `RunOptions.isolation`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/test.html#runoptions
+**/
+enum abstract RunIsolation(String) from String to String {
+	/**
+		Each test file runs in a separate child process (default).
+	**/
+	var Process = "process";
+
+	/**
+		All test files run in the current process.
+	**/
+	var None = "none";
 }
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -69,7 +69,11 @@ extern class MockTimers {
 	/**
 		Restore default behavior of all mocks created by this instance.
 
+		Also available as `Symbol.dispose` (aliases this method). Disposable
+		typing is not modeled yet; call `reset()` explicitly in Haxe.
+
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#timersreset
+		@see https://nodejs.org/docs/latest-v24.x/api/test.html#timerssymboldispose
 	**/
 	function reset():Void;
 
