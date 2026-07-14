@@ -25,3 +25,75 @@ jobs:
         haxe doc.hxml
       name: Build
 
+    - name: Upload artifact
+      if: matrix.haxe_ver == 'latest'
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./bin/api
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        haxe_ver: [4.3.7, latest]
+        runner: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.runner }}
+    steps:
+    - uses: actions/checkout@v7
+
+    - uses: krdlab/setup-haxe@v2
+      with:
+        haxe-version: ${{ matrix.haxe_ver }}
+
+    - uses: actions/setup-node@v4
+      if: matrix.runner == 'windows-latest'
+      with:
+        node-version: 24
+
+    - run: haxelib dev hxnodejs .
+      name: Set haxelib dev path
+
+    - name: Get Haxe commit SHA
+      id: haxe_sha
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        version=$(haxe --version)
+        echo "Haxe version: $version"
+        short_sha=${version##*+}
+        full_sha=$(gh api repos/HaxeFoundation/haxe/commits/$short_sha --jq '.sha')
+        echo "Commit SHA: $short_sha, Full SHA: $full_sha"
+        echo "sha=$full_sha" >> "$GITHUB_OUTPUT"
+
+    - uses: actions/checkout@v7
+      with:
+        repository: HaxeFoundation/haxe
+        path: haxe
+        ref: ${{ steps.haxe_sha.outputs.sha }}
+
+    - name: Test
+      shell: bash
+      run: |
+        if [[ "${{ matrix.runner }}" == "macos-latest" ]]; then
+          echo "" > sys/compile-fs.hxml
+        fi
+        haxe --run RunCi js
+      working-directory: haxe/tests
+
+  deploy:
+    needs: [build, test]
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
+    steps:
+      - name: Deploy artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
