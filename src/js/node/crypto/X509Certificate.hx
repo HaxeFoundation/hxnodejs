@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,7 @@ import js.node.Buffer;
 /**
 	Encapsulates an X509 certificate and provides read-only access to its information.
 
-	@see https://nodejs.org/api/crypto.html#class-x509certificate
+	@see https://nodejs.org/docs/latest-v24.x/api/crypto.html#class-x509certificate
 **/
 @:jsRequire("crypto", "X509Certificate")
 extern class X509Certificate {
@@ -40,87 +40,97 @@ extern class X509Certificate {
 	/**
 		The SHA-1 fingerprint of this certificate.
 	**/
-	var fingerprint(default, never):String;
+	final fingerprint:String;
 
 	/**
 		The SHA-256 fingerprint of this certificate.
 	**/
-	var fingerprint256(default, never):String;
+	final fingerprint256:String;
 
 	/**
 		The SHA-512 fingerprint of this certificate.
 	**/
-	var fingerprint512(default, never):String;
+	final fingerprint512:String;
 
 	/**
 		The issuer identification included in this certificate.
 	**/
-	var issuer(default, never):String;
+	final issuer:String;
+
+	/**
+		The issuer certificate corresponding to this certificate, if available.
+	**/
+	@:optional final issuerCertificate:X509Certificate;
 
 	/**
 		The subject identification included in this certificate.
 	**/
-	var subject(default, never):String;
+	final subject:String;
 
 	/**
 		The subject alternative names included in this certificate.
 	**/
-	@:optional var subjectAltName(default, never):String;
+	@:optional final subjectAltName:String;
 
 	/**
 		Information access information for this certificate.
 	**/
-	@:optional var infoAccess(default, never):String;
+	@:optional final infoAccess:String;
 
 	/**
 		The date/time from which this certificate is valid (ISO string).
 	**/
-	var validFrom(default, never):String;
+	final validFrom:String;
 
 	/**
 		The date/time until which this certificate is valid (ISO string).
 	**/
-	var validTo(default, never):String;
+	final validTo:String;
 
 	/**
 		The date from which this certificate is valid.
 	**/
-	var validFromDate(default, never):js.lib.Date;
+	final validFromDate:js.lib.Date;
 
 	/**
 		The date until which this certificate is valid.
 	**/
-	var validToDate(default, never):js.lib.Date;
+	final validToDate:js.lib.Date;
 
 	/**
 		The serial number of this certificate.
 	**/
-	var serialNumber(default, never):String;
+	final serialNumber:String;
 
 	/**
 		The algorithm used to sign this certificate.
 	**/
-	var signatureAlgorithm(default, never):String;
+	final signatureAlgorithm:String;
+
+	/**
+		The OID of the algorithm used to sign this certificate.
+	**/
+	final signatureAlgorithmOid:String;
 
 	/**
 		The raw DER bytes of this certificate.
 	**/
-	var raw(default, never):Buffer;
+	final raw:Buffer;
 
 	/**
 		The public key of this certificate.
 	**/
-	var publicKey(default, never):KeyObject;
+	final publicKey:KeyObject;
 
 	/**
 		`true` if this is a Certificate Authority (CA) certificate.
 	**/
-	var ca(default, never):Bool;
+	final ca:Bool;
 
 	/**
 		Key usages for this certificate, if any.
 	**/
-	var keyUsage(default, never):Array<String>;
+	final keyUsage:Array<String>;
 
 	/**
 		Checks whether the certificate matches the given host name.
@@ -148,6 +158,11 @@ extern class X509Certificate {
 	function checkPrivateKey(privateKey:KeyObject):Bool;
 
 	/**
+		Verifies that this certificate was signed by the given public key.
+	**/
+	function verify(publicKey:KeyObject):Bool;
+
+	/**
 		PEM encoding of this certificate.
 	**/
 	function toString():String;
@@ -156,15 +171,20 @@ extern class X509Certificate {
 		Legacy encoding used by older Node.js versions / JSON serialization helper.
 	**/
 	function toJSON():String;
+
+	/**
+		Returns an information object representing this certificate for compatibility with legacy APIs.
+	**/
+	function toLegacyObject():Any;
 }
 
 /**
 	Options for `X509Certificate` host/email checks.
 **/
 typedef X509CheckOptions = {
-	@:optional var subject:String;
-	@:optional var wildcards:Bool;
-	@:optional var partialWildcards:Bool;
-	@:optional var multiLabelWildcards:Bool;
-	@:optional var singleLabelSubdomains:Bool;
+	@:optional final subject:String;
+	@:optional final wildcards:Bool;
+	@:optional final partialWildcards:Bool;
+	@:optional final multiLabelWildcards:Bool;
+	@:optional final singleLabelSubdomains:Bool;
 }

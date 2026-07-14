@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,6 +25,8 @@ package js.node.crypto;
 /**
 	Constructor export for decipher instances created via `Crypto.createDecipheriv`.
 	Prefer `Crypto.createDecipheriv` over constructing this class directly.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/crypto.html#class-decipheriv
 **/
 @:jsRequire("crypto", "Decipheriv")
 extern class Decipheriv extends Decipher {}

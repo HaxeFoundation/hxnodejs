@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -30,7 +30,7 @@ import js.node.Buffer;
 	Node.js representation of a key for use by crypto APIs.
 	Instances are created via `Crypto.create*Key` / `generateKey*` helpers.
 
-	@see https://nodejs.org/api/crypto.html#class-keyobject
+	@see https://nodejs.org/docs/latest-v24.x/api/crypto.html#class-keyobject
 **/
 @:jsRequire("crypto", "KeyObject")
 extern class KeyObject {
@@ -43,25 +43,23 @@ extern class KeyObject {
 		Depending on the type of this `KeyObject`, this property is either
 		`'secret'`, `'public'`, or `'private'`.
 	**/
-	var type(default, never):KeyObjectType;
+	final type:KeyObjectType;
 
 	/**
 		For asymmetric keys, the type of the key (e.g. `'rsa'`, `'ec'`, `'ed25519'`).
 		`undefined` for secret keys.
 	**/
-	@:optional var asymmetricKeyType(default, never):String;
+	@:optional final asymmetricKeyType:String;
 
 	/**
 		Details about an asymmetric key. `undefined` for secret keys.
-
-		// TODO(section-4): finer-grained AsymmetricKeyDetails fields
 	**/
-	@:optional var asymmetricKeyDetails(default, never):Any;
+	@:optional final asymmetricKeyDetails:AsymmetricKeyDetails;
 
 	/**
 		For secret keys, the size of the key in bytes. `undefined` for asymmetric keys.
 	**/
-	@:optional var symmetricKeySize(default, never):Int;
+	@:optional final symmetricKeySize:Int;
 
 	/**
 		Returns `true` if the keys have exactly the same type, value, and parameters.
@@ -73,6 +71,11 @@ extern class KeyObject {
 		Result type depends on `format` (`'pem'` → String, `'der'` → Buffer, `'jwk'` → object).
 	**/
 	function export(?options:KeyExportOptions):EitherType<String, EitherType<Buffer, Any>>;
+
+	/**
+		Converts this `KeyObject` instance to a Web Crypto `CryptoKey`.
+	**/
+	function toCryptoKey(algorithm:Any, extractable:Bool, keyUsages:Array<String>):CryptoKey;
 }
 
 /**
@@ -85,11 +88,31 @@ enum abstract KeyObjectType(String) from String to String {
 }
 
 /**
+	Details about an asymmetric key from `KeyObject.asymmetricKeyDetails`.
+**/
+typedef AsymmetricKeyDetails = {
+	/** Key size in bits (RSA, DSA). **/
+	@:optional final modulusLength:Int;
+	/** Public exponent (RSA). Number or BigInt depending on key material. **/
+	@:optional final publicExponent:Any;
+	/** Name of the message digest (RSA-PSS). **/
+	@:optional final hashAlgorithm:String;
+	/** Name of the message digest used by MGF1 (RSA-PSS). **/
+	@:optional final mgf1HashAlgorithm:String;
+	/** Minimal salt length in bytes (RSA-PSS). **/
+	@:optional final saltLength:Int;
+	/** Size of `q` in bits (DSA). **/
+	@:optional final divisorLength:Int;
+	/** Name of the curve (EC). **/
+	@:optional final namedCurve:String;
+}
+
+/**
 	Options for `KeyObject.export`.
 **/
 typedef KeyExportOptions = {
-	@:optional var type:String;
-	@:optional var format:String;
-	@:optional var cipher:String;
-	@:optional var passphrase:EitherType<String, Buffer>;
+	@:optional final type:String;
+	@:optional final format:String;
+	@:optional final cipher:String;
+	@:optional final passphrase:EitherType<String, Buffer>;
 }

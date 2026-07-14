@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,6 +24,7 @@ package js.node.crypto;
 
 import haxe.extern.EitherType;
 import js.node.Buffer;
+import js.node.Crypto.CryptoKeyInput;
 import js.node.stream.Writable;
 
 /**
@@ -32,26 +33,29 @@ import js.node.stream.Writable;
 	Returned by `Crypto.createSign`.
 
 	Sign objects are writable streams. The written data is used to generate the signature.
-	Once all of the data has been written, the sign method will return the signature.
+	Once all of the data has been written, the `sign` method will return the signature.
 
 	The legacy `update` method is also supported.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/crypto.html#class-sign
 **/
 extern class Sign extends Writable<Sign> {
 	/**
 		Updates the sign object with data.
 		This can be called many times with new data as it is streamed.
 	**/
-	@:overload(function(data:Buffer):Void {})
-	function update(data:String, ?encoding:String):Void;
+	@:overload(function(data:Buffer):Sign {})
+	function update(data:String, ?encoding:String):Sign;
 
 	/**
 		Calculates the signature on all the updated data passed through the sign.
-		`private_key` is a string containing the PEM encoded private key for signing.
-		Returns the signature in `output_format` which can be 'binary', 'hex' or 'base64'.
+
+		`private_key` can be a PEM string, a `KeyObject`, or a key object descriptor.
+		Returns the signature in `output_format` which can be `'binary'`, `'hex'` or `'base64'`.
 		If no encoding is provided, then a buffer is returned.
 
 		Note: sign object can not be used after `sign` method has been called.
 	**/
-	@:overload(function(private_key:EitherType<String, {key:String, passphrase:String}>):Buffer {})
-	function sign(private_key:EitherType<String, {key:String, passphrase:String}>, output_format:String):String;
+	@:overload(function(private_key:EitherType<String, EitherType<Buffer, EitherType<KeyObject, CryptoKeyInput>>>):Buffer {})
+	function sign(private_key:EitherType<String, EitherType<Buffer, EitherType<KeyObject, CryptoKeyInput>>>, output_format:String):String;
 }

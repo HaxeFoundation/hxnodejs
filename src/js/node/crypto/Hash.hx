@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -34,14 +34,23 @@ import js.node.Buffer;
 	The legacy `update` and `digest` methods are also supported.
 
 	Returned by `Crypto.createHash`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/crypto.html#class-hash
 **/
 extern class Hash extends js.node.stream.Transform<Hash> {
 	/**
-		Updates the hash content with the given `data`,
+		Creates a new `Hash` object that contains a deep copy of the internal state of this `Hash` object.
+		Throws if called after `digest`.
 
-		the `encoding` of which is given in `input_encoding` and can be 'utf8', 'ascii' or 'binary'.
-		If no `encoding` is provided and the input is a string an encoding of 'binary' is enforced.
-		If `data` is a `Buffer` then `input_encoding` is ignored.
+		For XOF hash functions such as `'shake256'`, `options.outputLength` may specify the desired output length in bytes.
+	**/
+	function copy(?options:HashCopyOptions):Hash;
+
+	/**
+		Updates the hash content with the given `data`.
+
+		If `data` is a string and `input_encoding` is omitted, `'utf8'` is used.
+		If `data` is a `Buffer`, `TypedArray`, or `DataView`, `input_encoding` is ignored.
 
 		This can be called many times with new data as it is streamed.
 	**/
@@ -50,11 +59,19 @@ extern class Hash extends js.node.stream.Transform<Hash> {
 
 	/**
 		Calculates the digest of all of the passed data to be hashed.
-		The `encoding` can be 'hex', 'binary' or 'base64'.
+		The `encoding` can be `'hex'`, `'base64'`, `'base64url'`, or `'binary'`.
 		If no `encoding` is provided, then a buffer is returned.
 
 		Note: hash object can not be used after `digest` method has been called.
 	**/
 	@:overload(function():Buffer {})
 	function digest(encoding:String):String;
+}
+
+/**
+	Options for `Hash.copy`.
+**/
+typedef HashCopyOptions = {
+	> js.node.stream.Transform.TransformNewOptions,
+	@:optional var outputLength:Int;
 }

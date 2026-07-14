@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -29,9 +29,17 @@ import js.node.Buffer;
 	`Crypto.getDiffieHellman` / `Crypto.createDiffieHellmanGroup`.
 
 	Unlike `DiffieHellman`, keys cannot be set with `setPublicKey` / `setPrivateKey`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/crypto.html#class-diffiehellmangroup
 **/
 @:jsRequire("crypto", "DiffieHellmanGroup")
 extern class DiffieHellmanGroup {
+	/**
+		A bit field containing any warnings and/or errors resulting from a check
+		performed during initialization.
+	**/
+	final verifyError:Int;
+
 	@:overload(function():Buffer {})
 	function generateKeys(encoding:String):String;
 

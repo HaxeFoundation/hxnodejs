@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -33,6 +33,8 @@ import js.node.Buffer;
 	The legacy `update` and `digest` methods are also supported.
 
 	Returned by `Crypto.createHmac`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/crypto.html#class-hmac
 **/
 extern class Hmac extends js.node.stream.Transform<Hmac> {
 	/**
@@ -45,7 +47,7 @@ extern class Hmac extends js.node.stream.Transform<Hmac> {
 
 	/**
 		Calculates the digest of all of the passed data to the hmac.
-		The `encoding` can be 'hex', 'binary' or 'base64'.
+		The `encoding` can be `'hex'`, `'binary'` or `'base64'`.
 		If no `encoding` is provided, then a buffer is returned.
 
 		Note: hmac object can not be used after `digest` method has been called.

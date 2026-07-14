@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,34 +22,42 @@
 
 package js.node.crypto;
 
+import haxe.extern.EitherType;
+import js.lib.ArrayBuffer;
+import js.lib.ArrayBufferView;
 import js.node.Buffer;
 
 /**
 	SPKAC is a Certificate Signing Request mechanism originally implemented by Netscape
-	and now specified formally as part of HTML5's keygen element.
+	and formerly specified as part of HTML5's `keygen` element.
+
+	Prefer the static methods. The instance API is a deprecated legacy interface.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/crypto.html#class-certificate
 **/
 @:jsRequire("crypto", "Certificate")
 extern class Certificate {
+	/**
+		Legacy constructor. Prefer static `Certificate` methods.
+	**/
+	@:deprecated("Use Certificate static methods instead")
 	function new();
 
 	/**
-		Returns the challenge component in the form of a Node.js `Buffer`.
-
-		The `spkac` data structure includes a public key and a challenge.
+		Returns the challenge component of the `spkac` data structure.
 	**/
-	@:overload(function(spkac:String):Buffer {})
-	function exportChallenge(spkac:Buffer):Buffer;
+	@:overload(function(spkac:EitherType<String, EitherType<ArrayBuffer, ArrayBufferView>>, ?encoding:String):Buffer {})
+	static function exportChallenge(spkac:Buffer):Buffer;
 
 	/**
-		Returns the public key component in the form of a Node.js `Buffer`.
-
-		The `spkac` data structure includes a public key and a challenge.
+		Returns the public key component of the `spkac` data structure.
 	**/
-	@:overload(function(spkac:String):Buffer {})
-	function exportPublicKey(spkac:Buffer):Buffer;
+	@:overload(function(spkac:EitherType<String, EitherType<ArrayBuffer, ArrayBufferView>>, ?encoding:String):Buffer {})
+	static function exportPublicKey(spkac:Buffer):Buffer;
 
 	/**
-		Returns true if the given `spkac` data structure is valid, false otherwise.
+		Returns `true` if the given `spkac` data structure is valid.
 	**/
-	function verifySpkac(spkac:Buffer):Bool;
+	@:overload(function(spkac:EitherType<String, EitherType<ArrayBuffer, ArrayBufferView>>, ?encoding:String):Bool {})
+	static function verifySpkac(spkac:Buffer):Bool;
 }

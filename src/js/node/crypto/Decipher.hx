@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,23 +23,26 @@
 package js.node.crypto;
 
 import js.node.Buffer;
+import js.node.crypto.Cipher.CipherAADOptions;
 
 /**
 	Class for decrypting data.
 
-	Returned by `Crypto.createDecipher` and `Crypto.createDecipheriv`.
+	Returned by `Crypto.createDecipheriv` (and the removed legacy `Crypto.createDecipher`).
 
 	Decipher objects are streams that are both readable and writable.
-	The written enciphered data is used to produce the plain-text data on the the readable side.
+	The written enciphered data is used to produce the plain-text data on the readable side.
 
 	The legacy `update` and `final` methods are also supported.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/crypto.html#class-decipheriv
 **/
 extern class Decipher extends js.node.stream.Transform<Decipher> {
 	/**
-		Updates the decipher with `data`, which is encoded in 'binary', 'base64' or 'hex'.
+		Updates the decipher with `data`, which is encoded in `'binary'`, `'base64'` or `'hex'`.
 		If no encoding is provided, then a buffer is expected.
 
-		The `output_decoding` specifies in what format to return the deciphered plaintext: 'binary', 'ascii' or 'utf8'.
+		The `output_encoding` specifies in what format to return the deciphered plaintext: `'binary'`, `'ascii'` or `'utf8'`.
 		If no encoding is provided, then a buffer is returned.
 	**/
 	@:overload(function(data:Buffer):Buffer {})
@@ -48,7 +51,7 @@ extern class Decipher extends js.node.stream.Transform<Decipher> {
 
 	/**
 		Returns any remaining plaintext which is deciphered,
-		with `output_encoding` being one of: 'binary', 'ascii' or 'utf8'.
+		with `output_encoding` being one of: `'binary'`, `'ascii'` or `'utf8'`.
 		If no encoding is provided, then a buffer is returned.
 
 		Note: decipher object can not be used after `final` method has been called.
@@ -60,24 +63,26 @@ extern class Decipher extends js.node.stream.Transform<Decipher> {
 		You can disable auto padding if the data has been encrypted without standard block padding
 		to prevent `final` from checking and removing it.
 
-		Can only work if the input data's length is a multiple of the ciphers block size.
+		Can only work if the input data's length is a multiple of the cipher's block size.
 
 		You must call this before streaming data to `update`.
 	**/
-	@:overload(function():Void {})
-	function setAutoPadding(auto_padding:Bool):Void;
+	@:overload(function():Decipher {})
+	function setAutoPadding(auto_padding:Bool):Decipher;
 
 	/**
-		For authenticated encryption modes (currently supported: GCM), this method must be used
-		to pass in the received authentication tag. If no tag is provided or if the ciphertext
-		has been tampered with, `final` will throw, thus indicating that the ciphertext should be
-		discarded due to failed authentication.
+		For authenticated encryption modes (GCM, CCM, OCB, chacha20-poly1305),
+		this method must be used to pass in the received authentication tag.
+		If no tag is provided or if the ciphertext has been tampered with, `final` will throw.
 	**/
-	function setAuthTag(buffer:Buffer):Void;
+	function setAuthTag(buffer:Buffer):Decipher;
 
 	/**
-		For authenticated encryption modes (currently supported: GCM), this method sets the value
-		used for the additional authenticated data (AAD) input parameter.
+		For authenticated encryption modes (GCM, CCM, OCB, chacha20-poly1305),
+		sets the value used for the additional authenticated data (AAD) input parameter.
+
+		Must be called before `update`. When using CCM, `options.plaintextLength` is required.
 	**/
-	function setAAD(buffer:Buffer):Void;
+	@:overload(function(buffer:Buffer, ?options:CipherAADOptions):Decipher {})
+	function setAAD(buffer:Buffer):Decipher;
 }
