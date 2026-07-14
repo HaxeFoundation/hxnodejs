@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -57,8 +57,11 @@ extern class MessageEvent extends Event {
 	function new(type:String, ?eventInitDict:MessageEventInit):Void;
 
 	/**
-		Stability: 3 - Legacy. Initializes a `MessageEvent`. Prefer the constructor.
+		Initializes a `MessageEvent`.
+
+		Stability: 3 - Legacy.
 	**/
+	@:deprecated("Use the MessageEvent constructor instead")
 	function initMessageEvent(type:String, ?bubbles:Bool, ?cancelable:Bool, ?data:Any, ?origin:String, ?lastEventId:String,
 		?source:Null<MessagePort>, ?ports:Array<MessagePort>):Void;
 }

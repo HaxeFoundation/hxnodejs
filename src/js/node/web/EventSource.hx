@@ -27,7 +27,7 @@ import js.node.url.URL;
 /**
 	A browser-compatible `EventSource` (Server-Sent Events) implementation.
 
-	Stability: 1 - Experimental. May require `--experimental-eventsource` depending on Node version.
+	Stability: 1 - Experimental. Enable with the `--experimental-eventsource` CLI flag.
 
 	@see https://nodejs.org/api/globals.html#class-eventsource
 **/
@@ -56,6 +56,8 @@ extern class EventSource extends EventTarget {
 **/
 typedef EventSourceInit = {
 	@:optional var withCredentials:Bool;
-	// TODO(section-6): type undici dispatcher options when available.
+	/**
+		Undici-specific custom dispatcher. Left as `Any` until an undici `Dispatcher` extern exists.
+	**/
 	@:optional var dispatcher:Any;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,7 @@
 package js.node.web;
 
 /**
-	A transform stream that performs compression (`gzip`, `deflate`, or `deflate-raw`).
+	A transform stream that performs compression (`deflate`, `deflate-raw`, `gzip`, or `brotli`).
 
 	@see https://nodejs.org/api/globals.html#class-compressionstream
 	@see https://nodejs.org/api/webstreams.html#class-compressionstream
@@ -34,7 +34,7 @@ extern class CompressionStream {
 	var writable(default, null):WritableStream;
 
 	/**
-		@param format One of `'gzip'`, `'deflate'`, or `'deflate-raw'`.
+		@param format One of `'deflate'`, `'deflate-raw'`, `'gzip'`, or `'brotli'`.
 	**/
 	function new(format:String):Void;
 }

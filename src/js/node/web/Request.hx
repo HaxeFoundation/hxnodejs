@@ -102,9 +102,8 @@ typedef RequestInit = {
 	@:optional var duplex:String;
 
 	/**
-		Undici-specific: custom dispatcher for the request.
-
-		TODO(section-6): type as undici `Dispatcher` if a module extern is added.
+		Undici-specific custom dispatcher for the request.
+		Left as `Any` until an undici `Dispatcher` extern exists.
 	**/
 	@:optional var dispatcher:Any;
 }

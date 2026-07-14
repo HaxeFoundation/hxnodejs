@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -67,10 +67,11 @@ extern class Event {
 	var cancelable(default, null):Bool;
 
 	/**
-		Stability: 3 - Legacy: Use `defaultPrevented` instead.
-
 		True if the event has not been canceled.
+
+		Stability: 3 - Legacy.
 	**/
+	@:deprecated("Use defaultPrevented instead")
 	var returnValue:Bool;
 
 	/**
@@ -95,17 +96,19 @@ extern class Event {
 	var timeStamp(default, null):Float;
 
 	/**
-		Stability: 3 - Legacy: Use `stopPropagation()` instead.
-
 		Alias for `stopPropagation()` if set to `true`.
+
+		Stability: 3 - Legacy.
 	**/
+	@:deprecated("Use stopPropagation() instead")
 	var cancelBubble:Bool;
 
 	/**
-		Stability: 3 - Legacy: Use `target` instead.
-
 		Alias for `target`.
+
+		Stability: 3 - Legacy.
 	**/
+	@:deprecated("Use target instead")
 	var srcElement(default, null):EventTarget;
 
 	function new(type:String, ?eventInitDict:EventInit):Void;
@@ -133,10 +136,11 @@ extern class Event {
 	function stopPropagation():Void;
 
 	/**
-		Stability: 3 - Legacy: The WHATWG spec considers it deprecated.
-
 		Redundant with event constructors and incapable of setting `composed`.
+
+		Stability: 3 - Legacy. The WHATWG spec considers it deprecated.
 	**/
+	@:deprecated("Use the Event constructor instead")
 	function initEvent(type:String, ?bubbles:Bool, ?cancelable:Bool):Void;
 }
 
