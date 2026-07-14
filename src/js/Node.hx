@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,6 +23,7 @@
 package js;
 
 import haxe.Constraints.Function;
+import haxe.extern.EitherType;
 import haxe.extern.Rest;
 import js.Syntax.code;
 import js.lib.Promise;
@@ -40,7 +41,9 @@ import js.node.web.Response;
 import js.node.web.Storage as WebStorage;
 
 /**
-	Node.js globals
+	Node.js globals for the current process.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/globals.html
 **/
 @:native("global")
 extern class Node {
@@ -69,13 +72,17 @@ extern class Node {
 
 	/**
 		`clearInterval` is described in the [timers](https://nodejs.org/api/timers.html) section.
+
+		Accepts a `Timeout` or its primitive coercion value.
 	**/
-	static function clearInterval(timeout:Timeout):Void;
+	static function clearInterval(timeout:EitherType<Timeout, EitherType<Float, String>>):Void;
 
 	/**
 		`clearTimeout` is described in the [timers](https://nodejs.org/api/timers.html) section.
+
+		Accepts a `Timeout` or its primitive coercion value.
 	**/
-	static function clearTimeout(timeout:Timeout):Void;
+	static function clearTimeout(timeout:EitherType<Timeout, EitherType<Float, String>>):Void;
 
 	/**
 		Used to print to stdout and stderr. See the [console](https://nodejs.org/api/console.html) section.
@@ -189,7 +196,7 @@ extern class Node {
 		which is managed by Node.js.
 		The `Process.nextTick()` queue is always processed before the microtask queue within each turn of the Node.js event loop.
 	**/
-	static function queueMicrotask(callback:Void->Void):Void;
+	static function queueMicrotask(callback:() -> Void):Void;
 
 	/**
 		This variable may appear to be global but is not. See [require()](https://nodejs.org/api/modules.html#modules_require_id).

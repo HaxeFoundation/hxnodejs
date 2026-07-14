@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,15 +23,14 @@
 package js.node;
 
 import haxe.Constraints.Function;
+import js.lib.Promise;
 import js.node.Buffer;
 import js.node.stream.Readable.IReadable;
 
 /**
-	The v8 module exposes APIs that are specific to the version of V8 built into the Node.js binary.
+	The `v8` module exposes APIs that are specific to the version of V8 built into the Node.js binary.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/v8.html
-
-	// TODO(section-5): expand Serializer/Deserializer/DefaultSerializer subclasses and CPU/Heap profile handles
 **/
 @:jsRequire("v8")
 extern class V8 {
@@ -39,39 +38,60 @@ extern class V8 {
 		Returns an integer representing a version tag derived from the V8 version, command-line flags,
 		and detected CPU features. This is useful for determining whether a `vm.Script` `cachedData` buffer
 		is compatible with this instance of V8.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8cacheddataversiontag
 	**/
 	static function cachedDataVersionTag():Int;
 
 	/**
-		Returns an object with statistics about the V8 heap spaces.
+		Returns an object with statistics about the V8 heap.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8getheapstatistics
 	**/
 	static function getHeapStatistics():V8HeapStatistics;
 
 	/**
 		Returns statistics about the V8 heap spaces, i.e. the segments which make up the V8 heap.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8getheapspacestatistics
 	**/
 	static function getHeapSpaceStatistics():Array<V8HeapSpaceStatistics>;
 
 	/**
 		Get statistics about code and its metadata in the heap, see V8 `GetHeapCodeAndMetadataStatistics`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8getheapcodestatistics
 	**/
 	static function getHeapCodeStatistics():V8HeapCodeStatistics;
 
 	/**
+		Retrieves CppHeap statistics regarding memory consumption and utilization.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8getcppheapstatisticsdetaillevel
+	**/
+	static function getCppHeapStatistics(?detailLevel:V8CppHeapStatisticsDetailLevel):Dynamic;
+
+	/**
 		Generates a snapshot of the current V8 heap and returns a Readable stream that may be used to
 		read the JSON serialized representation.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8getheapsnapshotoptions
 	**/
 	static function getHeapSnapshot(?options:V8HeapSnapshotOptions):IReadable;
 
 	/**
 		Generates a snapshot of the current V8 heap and writes it to a JSON file.
 		Returns the filename where the snapshot was saved.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8writeheapsnapshotfilename-options
 	**/
 	@:overload(function(?options:V8HeapSnapshotOptions):String {})
 	static function writeHeapSnapshot(?filename:String, ?options:V8HeapSnapshotOptions):String;
 
 	/**
 		This method can be used to programmatically set V8 command line flags.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8setflagsfromstringflags
 	**/
 	static function setFlagsFromString(string:String):Void;
 
@@ -80,60 +100,84 @@ extern class V8 {
 		`NODE_V8_COVERAGE`. While `NODE_V8_COVERAGE` can be used for collecting coverage for both
 		tests (via `node:test`) and application code, this method can be used to stop collecting coverage
 		on either side of that boundary.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8stopcoverage
 	**/
 	static function stopCoverage():Void;
 
 	/**
 		The `v8.takeCoverage()` method allows the user to write the coverage started by `NODE_V8_COVERAGE`
 		to disk on demand.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8takecoverage
 	**/
 	static function takeCoverage():Void;
 
 	/**
 		This API sets a limit for near-heap-limit callback invocations.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8setheapsnapshotnearheaplimitlimit
 	**/
 	static function setHeapSnapshotNearHeapLimit(limit:Int):Void;
 
 	/**
 		Uses a `DefaultSerializer` to serialize `value` into a buffer.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8serializevalue
 	**/
 	static function serialize(value:Dynamic):Buffer;
 
 	/**
 		Uses a `DefaultDeserializer` with default options to read a JS value from a buffer.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8deserializebuffer
 	**/
 	static function deserialize(buffer:Buffer):Dynamic;
 
 	/**
 		This API will find all objects corresponding to the constructor `ctor`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8queryobjectsctor-options
 	**/
-	static function queryObjects(ctor:Function, ?options:{format:String}):Dynamic;
+	static function queryObjects(ctor:Function, ?options:V8QueryObjectsOptions):Dynamic;
 
 	/**
 		Tracks `Promise` lifecycle callbacks. Prefer `async_hooks` / `diagnostics_channel` for most apps.
 
-		// TODO(section-5): fully type promiseHooks createHook callbacks
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#promise-hooks
 	**/
-	static var promiseHooks(default, null):V8PromiseHooks;
+	static final promiseHooks:V8PromiseHooks;
 
 	/**
 		Startup snapshot builder API (only meaningful when building a snapshot).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#startup-snapshot-api
 	**/
-	static var startupSnapshot(default, null):V8StartupSnapshot;
+	static final startupSnapshot:V8StartupSnapshot;
 
 	/**
-		Starts a CPU profile and returns a handle that can be used to stop it.
-		// TODO(section-5): type CPUProfileHandle / SyncCPUProfileHandle / HeapProfileHandle
+		Starts a CPU profile then returns a `SyncCPUProfileHandle`.
+		Supports `using` / `[Symbol.dispose]` syntax.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8startcpuprofile
 	**/
-	static function startCpuProfile():V8CpuProfileHandle;
+	static function startCpuProfile():V8SyncCpuProfileHandle;
 
 	/**
 		Returns whether the string is stored in one-byte (Latin-1) representation in V8.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/v8.html#v8isstringonebyterepresentationcontent
 	**/
 	static function isStringOneByteRepresentation(content:String):Bool;
 }
 
-// TODO(section-5): v8.Serializer / Deserializer / DefaultSerializer / DefaultDeserializer / GCProfiler / getCppHeapStatistics
+/**
+	Detail level for `V8.getCppHeapStatistics`.
+**/
+enum abstract V8CppHeapStatisticsDetailLevel(String) from String to String {
+	var Brief = "brief";
+	var Detailed = "detailed";
+}
 
 /**
 	Object returned by `V8.getHeapStatistics` method.
@@ -188,25 +232,91 @@ typedef V8HeapSnapshotOptions = {
 	@:optional var exposeNumericValues:Bool;
 }
 
+/**
+	Options for `V8.queryObjects`.
+**/
+typedef V8QueryObjectsOptions = {
+	/**
+		If `"count"`, return only the number of matching objects; otherwise return the objects themselves.
+	**/
+	@:optional var format:String;
+}
+
 typedef V8PromiseHooks = {
-	function onInit(init:Function):Function;
-	function onSettled(settled:Function):Function;
-	function onBefore(before:Function):Function;
-	function onAfter(after:Function):Function;
-	function createHook(callbacks:{?init:Function, ?before:Function, ?after:Function, ?settled:Function}):Function;
+	function onInit(init:(promise:Dynamic, parent:Dynamic) -> Void):() -> Void;
+	function onSettled(settled:(promise:Dynamic) -> Void):() -> Void;
+	function onBefore(before:(promise:Dynamic) -> Void):() -> Void;
+	function onAfter(after:(promise:Dynamic) -> Void):() -> Void;
+	function createHook(callbacks:V8PromiseHookCallbacks):() -> Void;
+}
+
+typedef V8PromiseHookCallbacks = {
+	@:optional var init:(promise:Dynamic, parent:Dynamic) -> Void;
+	@:optional var before:(promise:Dynamic) -> Void;
+	@:optional var after:(promise:Dynamic) -> Void;
+	@:optional var settled:(promise:Dynamic) -> Void;
 }
 
 typedef V8StartupSnapshot = {
-	function addSerializeCallback(callback:Function, ?data:Dynamic):Void;
-	function addDeserializeCallback(callback:Function, ?data:Dynamic):Void;
-	function setDeserializeMainFunction(callback:Function, ?data:Dynamic):Void;
+	function addSerializeCallback(callback:(data:Dynamic) -> Void, ?data:Dynamic):Void;
+	function addDeserializeCallback(callback:(data:Dynamic) -> Void, ?data:Dynamic):Void;
+	function setDeserializeMainFunction(callback:(data:Dynamic) -> Void, ?data:Dynamic):Void;
 	function isBuildingSnapshot():Bool;
 }
 
 /**
-	Minimal handle returned by `V8.startCpuProfile`.
+	Handle returned by `V8.startCpuProfile`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/v8.html#class-synccpuprofilehandle
 **/
-typedef V8CpuProfileHandle = {
+typedef V8SyncCpuProfileHandle = {
+	/**
+		Stop collecting the profile and return the profile data.
+	**/
 	function stop():String;
+
+	/**
+		Stop collecting the profile and discard it.
+
+		Maps to `[Symbol.dispose]()`. Typed as a named method for Haxe consumption;
+		prefer `using` / explicit dispose at call sites when targeting Symbol.dispose.
+	**/
+	@:optional var dispose:() -> Void;
 }
 
+/**
+	Collects GC profile data. Supports `using` / `[Symbol.dispose]` syntax.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/v8.html#class-v8gcprofiler
+**/
+@:jsRequire("v8", "GCProfiler")
+extern class V8GCProfiler {
+	function new();
+
+	/**
+		Start collecting GC profile data.
+	**/
+	function start():Void;
+
+	/**
+		Stop collecting GC profile data and return the profile.
+	**/
+	function stop():Dynamic;
+
+	/**
+		Stop collecting GC data and discard the profile.
+
+		Maps to `[Symbol.dispose]()`.
+	**/
+	@:native("@@dispose")
+	function dispose():Void;
+}
+
+/**
+	Compatibility alias for `V8SyncCpuProfileHandle`.
+**/
+@:deprecated("Use V8SyncCpuProfileHandle instead")
+typedef V8CpuProfileHandle = V8SyncCpuProfileHandle;
+
+// Serializer / Deserializer hierarchy: prefer `V8.serialize` / `V8.deserialize` for common cases.
+// Full custom subclass hooks can be added when a caller needs them.

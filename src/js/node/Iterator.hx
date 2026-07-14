@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,5 +22,10 @@
 
 package js.node;
 
+/**
+	Compatibility aliases for `js.lib.Iterator` / `IteratorStep`.
+
+	Prefer importing `js.lib.Iterator` directly in new code.
+**/
 typedef Iterator<T> = js.lib.Iterator<T>;
 typedef IteratorStep<T> = js.lib.Iterator.IteratorStep<T>;

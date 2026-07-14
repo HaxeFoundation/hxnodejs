@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,25 +23,26 @@
 package js.node;
 
 import haxe.extern.EitherType;
+import js.node.Buffer;
 
 /**
 	The `os` module provides a number of operating system-related utility methods.
 
-	@see https://nodejs.org/api/os.html#os_os
+	@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os
 **/
 @:jsRequire("os")
 extern class Os {
 	/**
 		A string constant defining the operating system-specific end-of-line marker:
 
-		@see https://nodejs.org/api/os.html#os_os_eol
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_eol
 	**/
-	static var EOL(default, null):String;
+	static final EOL:String;
 
 	/**
 		The `os.arch()` method returns a string identifying the operating system CPU architecture for which the Node.js binary was compiled.
 
-		@see https://nodejs.org/api/os.html#os_os_arch
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_arch
 	**/
 	static function arch():String;
 
@@ -49,21 +50,21 @@ extern class Os {
 		Returns an estimate of the default amount of parallelism a program should use.
 		Always returns a value greater than zero.
 
-		@see https://nodejs.org/api/os.html#osavailableparallelism
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#osavailableparallelism
 	**/
 	static function availableParallelism():Int;
 
 	/**
 		Returns an object containing commonly used operating system specific constants for error codes, process signals, and so on. The specific constants currently defined are described in OS Constants.
 
-		@see https://nodejs.org/api/os.html#os_os_constants
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_constants
 	**/
-	static var constants(default, null):OsConstants;
+	static final constants:OsConstants;
 
 	/**
 		The `os.cpus()` method returns an array of objects containing information about each logical CPU core.
 
-		@see https://nodejs.org/api/os.html#os_os_cpus
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_cpus
 	**/
 	static function cpus():Array<CPU>;
 
@@ -71,130 +72,148 @@ extern class Os {
 		The platform-specific file path of the null device.
 		`'\\.\nul'` on Windows and `'/dev/null'` on POSIX.
 
-		@see https://nodejs.org/api/os.html#osdevnull
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#osdevnull
 	**/
-	static var devNull(default, null):String;
+	static final devNull:String;
 
 	/**
 		The `os.endianness()` method returns a string identifying the endianness of the CPU for which the Node.js binary was compiled.
 
-		@see https://nodejs.org/api/os.html#os_os_endianness
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_endianness
 	**/
 	static function endianness():Endianness;
 
 	/**
-		The `os.freemem()` method returns the amount of free system memory in bytes as an integer.
+		The `os.freemem()` method returns the amount of free system memory in bytes.
 
-		@see https://nodejs.org/api/os.html#os_os_freemem
+		Typed as `Float` because values commonly exceed signed 32-bit range.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_freemem
 	**/
-	static function freemem():Int;
+	static function freemem():Float;
 
 	/**
 		The `os.getPriority()` method returns the scheduling priority for the process specified by `pid`. If `pid` is not provided, or is `0`, the priority of the current process is returned.
 
-		@see https://nodejs.org/api/os.html#os_os_getpriority_pid
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_getpriority_pid
 	**/
 	static function getPriority(?pid:Int):Int;
 
 	/**
 		The `os.homedir()` method returns the home directory of the current user as a string.
 
-		@see https://nodejs.org/api/os.html#os_os_homedir
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_homedir
 	**/
 	static function homedir():String;
 
 	/**
 		The `os.hostname()` method returns the hostname of the operating system as a string.
 
-		@see https://nodejs.org/api/os.html#os_os_hostname
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_hostname
 	**/
 	static function hostname():String;
 
 	/**
 		The `os.loadavg()` method returns an array containing the 1, 5, and 15 minute load averages.
 
-		@see https://nodejs.org/api/os.html#os_os_loadavg
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_loadavg
 	**/
 	static function loadavg():Array<Float>;
 
 	/**
 		Returns the machine type as a string, such as `arm`, `arm64`, `aarch64`, `mips`, `mips64`, `ppc64`, `ppc64le`, `s390x`, `i386`, `i686`, `x86_64`.
 
-		@see https://nodejs.org/api/os.html#osmachine
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#osmachine
 	**/
 	static function machine():String;
 
 	/**
 		The `os.networkInterfaces()` method returns an object containing only network interfaces that have been assigned a network address.
 
-		@see https://nodejs.org/api/os.html#os_os_networkinterfaces
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_networkinterfaces
 	**/
 	static function networkInterfaces():haxe.DynamicAccess<NetworkInterface>;
 
 	/**
 		The `os.platform()` method returns a string identifying the operating system platform as set during compile time of Node.js.
 
-		@see https://nodejs.org/api/os.html#os_os_platform
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_platform
 	**/
 	static function platform():String;
 
 	/**
 		The `os.release()` method returns a string identifying the operating system release.
 
-		@see https://nodejs.org/api/os.html#os_os_release
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_release
 	**/
 	static function release():String;
 
 	/**
-		The `os.setPriority()` method attempts to set the scheduling priority for the process specified by `pid`. If `pid` is not provided, or is `0`, the priority of the current process is used.
+		The `os.setPriority()` method attempts to set the scheduling priority for the process specified by `pid`.
+		If `pid` is not provided, or is `0`, the priority of the current process is used.
 
-		@see https://nodejs.org/api/os.html#os_os_setpriority_pid_priority
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_setpriority_pid_priority
 	**/
-	static function setPriority(?pid:Int, priority:Int):Void;
+	@:overload(function(priority:Int):Void {})
+	static function setPriority(pid:Int, priority:Int):Void;
 
 	/**
 		The `os.tmpdir()` method returns a string specifying the operating system's default directory for temporary files.
 
-		@see https://nodejs.org/api/os.html#os_os_tmpdir
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_tmpdir
 	**/
 	static function tmpdir():String;
 
 	/**
-		The `os.totalmem()` method returns the total amount of system memory in bytes as an integer.
+		The `os.totalmem()` method returns the total amount of system memory in bytes.
 
-		@see https://nodejs.org/api/os.html#os_os_totalmem
+		Typed as `Float` because values commonly exceed signed 32-bit range.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_totalmem
 	**/
-	static function totalmem():Int;
+	static function totalmem():Float;
 
 	/**
 		The `os.type()` method returns a string identifying the operating system name as returned by uname(3). For example, `'Linux'` on Linux, `'Darwin'` on macOS, and `'Windows_NT'` on Windows.
 
-		@see https://nodejs.org/api/os.html#os_os_type
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_type
 	**/
 	static function type():String;
 
 	/**
 		The `os.uptime()` method returns the system uptime in number of seconds.
 
-		@see https://nodejs.org/api/os.html#os_os_uptime
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_uptime
 	**/
-	static function uptime():Int;
+	static function uptime():Float;
 
 	/**
 		The `os.userInfo()` method returns information about the currently effective user — on POSIX platforms, this is typically a subset of the password file. The returned object includes the `username`, `uid`, `gid`, `shell`, and `homedir`. On Windows, the `uid` and `gid` fields are `-1`, and `shell` is `null`.
 
-		@see https://nodejs.org/api/os.html#os_os_userinfo_options
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_userinfo_options
 	**/
-	static function userInfo(?options:{encoding:String}):OsUserInfo;
+	static function userInfo(?options:OsUserInfoOptions):OsUserInfo;
 
 	/**
 		Returns a string identifying the kernel version.
 
 		On POSIX systems, the operating system release is determined by calling uname(3). On Windows, `RtlGetVersion()` is used, and if it is not available, `GetVersionExW()` will be used.
 
-		@see https://nodejs.org/api/os.html#osversion
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#osversion
 	**/
 	static function version():String;
+}
+
+/**
+	Options for `Os.userInfo`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_userinfo_options
+**/
+typedef OsUserInfoOptions = {
+	/**
+		Character encoding used to interpret resulting strings. If `buffer`, `username`, `shell`, and `homedir` values will be `Buffer` instances. Default: `'utf8'`.
+	**/
+	@:optional var encoding:String;
 }
 
 /**
@@ -202,7 +221,7 @@ extern class Os {
 
 	On POSIX platforms, this is typically a subset of the password file.
 
-	@see https://nodejs.org/api/os.html#os_os_userinfo_options
+	@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_userinfo_options
 **/
 typedef OsUserInfo = {
 	var username:EitherType<String, Buffer>;
@@ -233,7 +252,7 @@ typedef OsUserInfo = {
 /**
 	Object containing the number of milliseconds the CPU/core spent in: `user`, `nice`, `sys`, `idle`, and `irq`
 
-	@see https://nodejs.org/api/os.html#os_os_cpus
+	@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_cpus
 **/
 typedef CPUTime = {
 	/**
@@ -265,7 +284,7 @@ typedef CPUTime = {
 /**
 	Object containing information about each CPU/core installed. Returned by `Os.cpus` method.
 
-	@see https://nodejs.org/api/os.html#os_os_cpus
+	@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_cpus
 **/
 typedef CPU = {
 	/**
@@ -289,7 +308,7 @@ typedef CPU = {
 /**
 	Objects containing information about network interface addresses.
 
-	@see https://nodejs.org/api/os.html#os_os_networkinterfaces
+	@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_networkinterfaces
 **/
 typedef NetworkInterface = Array<NetworkInterfaceAddressInfo>;
 
@@ -338,13 +357,13 @@ enum abstract Endianness(String) to String {
 /**
 	Constants object returned by `Os.constants`.
 
-	@see https://nodejs.org/api/os.html#os_os_constants_1
+	@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_os_constants_1
 **/
 typedef OsConstants = {
 	/**
 		The following signal constants are exported by os.constants.signals:
 
-		@see https://nodejs.org/api/os.html#os_signal_constants
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_signal_constants
 	**/
 	var signals:{
 		/**
@@ -531,7 +550,7 @@ typedef OsConstants = {
 	/**
 		The following error constants are exported by os.constants.errno:
 
-		@see https://nodejs.org/api/os.html#os_error_constants
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_error_constants
 	**/
 	var errno:{
 		/**
@@ -1223,7 +1242,7 @@ typedef OsConstants = {
 	/**
 		If available on the operating system, the following constants are exported in os.constants.dlopen. See dlopen(3) for detailed information.
 
-		@see https://nodejs.org/api/os.html#os_dlopen_constants
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_dlopen_constants
 	**/
 	var dlopen:{
 		/**
@@ -1255,7 +1274,7 @@ typedef OsConstants = {
 	/**
 		The following process scheduling constants are exported by os.constants.priority:
 
-		@see https://nodejs.org/api/os.html#os_priority_constants
+		@see https://nodejs.org/docs/latest-v24.x/api/os.html#os_priority_constants
 	**/
 	var priority:{
 		/**

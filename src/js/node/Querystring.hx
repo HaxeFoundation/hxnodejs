@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -44,7 +44,7 @@ extern class Querystring {
 	/**
 		The `querystring.encode()` function is an alias for `querystring.stringify()`.
 
-		@see https://nodejs.org/api/querystring.html#querystring_querystring_decode
+		@see https://nodejs.org/api/querystring.html#querystring_querystring_encode
 	**/
 	@:overload(function(obj:{}):String {})
 	static function encode(obj:{}, ?sep:String, ?eq:String, ?options:QuerystringStringifyOptions):String;
@@ -83,6 +83,8 @@ extern class Querystring {
 		The `querystring.unescapeBuffer()` method performs decoding of URL percent-encoded characters
 		on a `Buffer` of bytes, returning a new `Buffer`.
 
+		Present in Node.js but not covered by the public `querystring` documentation.
+
 		@see https://nodejs.org/api/querystring.html
 	**/
 	static function unescapeBuffer(buffer:Buffer, ?decodeSpaces:Bool):Buffer;
@@ -97,7 +99,7 @@ typedef QuerystringParseOptions = {
 	/**
 		The function to use when decoding percent-encoded characters in the query string. Default: `querystring.unescape()`.
 	**/
-	@:optional var decodeURIComponent:String->String;
+	@:optional var decodeURIComponent:(str:String) -> String;
 
 	/**
 		Specifies the maximum number of keys to parse. Specify `0` to remove key counting limitations. Default: `1000`.
@@ -124,5 +126,5 @@ typedef QuerystringStringifyOptions = {
 	/**
 		The function to use when converting URL-unsafe characters to percent-encoding in the query string. Default: `querystring.escape()`.
 	**/
-	@:optional var encodeURIComponent:String->String;
+	@:optional var encodeURIComponent:(str:String) -> String;
 }

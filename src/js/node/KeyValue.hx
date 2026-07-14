@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,7 @@
 package js.node;
 
 /**
-	Key/value access helper.
+	Key/value pair helper for tuple-like `[key, value]` arrays (for example Map entries).
 **/
 abstract KeyValue<K, V>(Array<Any>) {
 	public var key(get, never):K;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,38 +28,52 @@ import js.node.web.AbortSignal;
 /**
 	The `timers/promises` API provides an alternative set of timer functions that return `Promise` objects.
 
-	@see https://nodejs.org/api/timers.html#timers-promises-api
+	Accessible via `require('node:timers/promises')` or `require('node:timers').promises`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/timers.html#timers-promises-api
 **/
 @:jsRequire("timers/promises")
 extern class TimersPromises {
 	/**
 		Returns a Promise that is fulfilled with `value` after `delay` milliseconds.
+		Default `delay`: `1`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/timers.html#timerspromisessettimeoutdelay-value-options
 	**/
 	@:overload(function():Promise<Dynamic> {})
-	@:overload(function(delay:Int):Promise<Dynamic> {})
-	@:overload(function<T>(delay:Int, value:T):Promise<T> {})
-	static function setTimeout<T>(delay:Int, value:T, options:TimersPromisesOptions):Promise<T>;
+	@:overload(function(delay:Float):Promise<Dynamic> {})
+	@:overload(function<T>(delay:Float, value:T):Promise<T> {})
+	static function setTimeout<T>(delay:Float, value:T, ?options:TimersPromisesOptions):Promise<T>;
 
 	/**
 		Returns a Promise that is fulfilled with `value` in the next iteration of the event loop
 		(after I/O events' callbacks).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/timers.html#timerspromisessetimmediatevalue-options
 	**/
 	@:overload(function():Promise<Dynamic> {})
 	@:overload(function<T>(value:T):Promise<T> {})
-	static function setImmediate<T>(value:T, options:TimersPromisesOptions):Promise<T>;
+	static function setImmediate<T>(value:T, ?options:TimersPromisesOptions):Promise<T>;
 
 	/**
 		Returns an async iterator that generates values in an interval of `delay` ms.
+		Default `delay`: `1`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/timers.html#timerspromisessetintervaldelay-value-options
 	**/
 	@:overload(function():TimersPromisesAsyncIterator<Dynamic> {})
-	@:overload(function(delay:Int):TimersPromisesAsyncIterator<Dynamic> {})
-	@:overload(function<T>(delay:Int, value:T):TimersPromisesAsyncIterator<T> {})
-	static function setInterval<T>(delay:Int, value:T, options:TimersPromisesOptions):TimersPromisesAsyncIterator<T>;
+	@:overload(function(delay:Float):TimersPromisesAsyncIterator<Dynamic> {})
+	@:overload(function<T>(delay:Float, value:T):TimersPromisesAsyncIterator<T> {})
+	static function setInterval<T>(delay:Float, value:T, ?options:TimersPromisesOptions):TimersPromisesAsyncIterator<T>;
 
 	/**
 		Experimental Scheduling APIs draft helpers (`scheduler.wait` / `scheduler.yield`).
+
+		Stability: 1 - Experimental.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/timers.html#timerspromisesschedulerwaitdelay-options
 	**/
-	static var scheduler(default, null):TimersPromisesScheduler;
+	static final scheduler:TimersPromisesScheduler;
 }
 
 /**
@@ -87,13 +101,15 @@ typedef TimersPromisesAsyncIterator<T> = {
 
 /**
 	Experimental `scheduler` helpers from `timers/promises`.
+
+	Stability: 1 - Experimental.
 **/
 typedef TimersPromisesScheduler = {
 	/**
 		Wait `delay` milliseconds before resolving.
 		Equivalent to `setTimeout(delay, undefined, options)`.
 	**/
-	function wait(delay:Int, ?options:TimersPromisesOptions):Promise<Void>;
+	function wait(delay:Float, ?options:TimersPromisesOptions):Promise<Void>;
 
 	/**
 		Yield to the event loop.

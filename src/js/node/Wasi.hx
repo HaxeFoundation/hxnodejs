@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2025 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -65,7 +65,7 @@ extern class Wasi {
 		An object that implements the WASI system call API.
 		// TODO(section-5): WASI import object field typing
 	**/
-	var wasiImport(default, null):DynamicAccess<Dynamic>;
+	final wasiImport:DynamicAccess<Dynamic>;
 }
 
 enum abstract WasiVersion(String) from String to String {

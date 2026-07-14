@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,16 +22,20 @@
 
 package js.node;
 
-@:deprecated("Use Url.domainToASCII / Url.domainToUnicode instead")
+@:deprecated("The punycode module is deprecated in Node.js; use Url.domainToASCII / Url.domainToUnicode instead")
 @:jsRequire("punycode")
 extern class Punycode {
 	/**
 		Converts a Punycode string of ASCII code points to a string of Unicode code points.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/punycode.html#punycodedecodestring
 	**/
 	static function decode(string:String):String;
 
 	/**
 		Converts a string of Unicode code points to a Punycode string of ASCII code points.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/punycode.html#punycodeencodestring
 	**/
 	static function encode(string:String):String;
 
@@ -40,6 +44,8 @@ extern class Punycode {
 
 		Only the Punycoded parts of the domain name will be converted, i.e. it doesn't matter
 		if you call it on a string that has already been converted to Unicode.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/punycode.html#punycodetounicodedomain
 	**/
 	static function toUnicode(domain:String):String;
 
@@ -48,15 +54,22 @@ extern class Punycode {
 
 		Only the non-ASCII parts of the domain name will be converted, i.e. it doesn't matter
 		if you call it with a domain that's already in ASCII.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/punycode.html#punycodetoasciidomain
 	**/
 	static function toASCII(domain:String):String;
 
-	static var ucs2(default, null):PunycodeUcs2;
+	/**
+		UCS-2 encode/decode helpers.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/punycode.html#punycodeucs2
+	**/
+	static final ucs2:PunycodeUcs2;
 
 	/**
 		The current Punycode.js version number.
 	**/
-	static var version(default, null):String;
+	static final version:String;
 }
 
 @:deprecated("Use String.fromCodePoint / codePointAt instead")
