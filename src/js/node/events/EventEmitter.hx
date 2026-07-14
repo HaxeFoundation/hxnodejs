@@ -26,6 +26,7 @@ import haxe.Constraints.Function;
 import haxe.extern.EitherType;
 import haxe.extern.Rest;
 import js.lib.Symbol;
+import js.node.async_hooks.AsyncResource;
 
 /**
 	Enumeration of events emitted by all `EventEmitter` instances.
@@ -293,9 +294,8 @@ extern class EventEmitterAsyncResource extends EventEmitter<EventEmitterAsyncRes
 
 	/**
 		The underlying `AsyncResource`.
-		// TODO(section-7): type as async_hooks.AsyncResource once that package is externed.
 	**/
-	var asyncResource(default, null):Dynamic;
+	var asyncResource(default, null):AsyncResource;
 }
 
 /**
