@@ -23,11 +23,9 @@
 package js.node.events;
 
 import haxe.Constraints.Function;
-import haxe.extern.Rest;
-#if haxe4
 import haxe.extern.EitherType;
+import haxe.extern.Rest;
 import js.lib.Symbol;
-#end
 
 /**
 	Enumeration of events emitted by all `EventEmitter` instances.
@@ -39,22 +37,14 @@ enum abstract EventEmitterEvent<T:Function>(Event<T>) to Event<T> {
 
 		@see https://nodejs.org/api/events.html#events_event_newlistener
 	**/
-	#if haxe4
 	var NewListener:EventEmitterEvent<(eventName:EitherType<String, Symbol>, listener:Function) -> Void> = "newListener";
-	#else
-	var NewListener:EventEmitterEvent<String->Function->Void> = "newListener";
-	#end
 
 	/**
 		The `'removeListener'` event is emitted after the `listener` is removed.
 
 		@see https://nodejs.org/api/events.html#events_event_removelistener
 	**/
-	#if haxe4
 	var RemoveListener:EventEmitterEvent<(eventName:EitherType<String, Symbol>, listener:Function) -> Void> = "removeListener";
-	#else
-	var RemoveListener:EventEmitterEvent<String->Function->Void> = "removeListener";
-	#end
 }
 
 /**
@@ -64,7 +54,7 @@ enum abstract EventEmitterEvent<T:Function>(Event<T>) to Event<T> {
 **/
 @:jsRequire("events", "EventEmitter")
 extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
-	function new();
+	function new(?options:EventEmitterOptions);
 
 	/**
 		By default, a maximum of `10` listeners can be registered for any single
@@ -85,22 +75,21 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 
 		@see https://nodejs.org/api/events.html#eventserrormonitor
 	**/
-	#if haxe4
 	static final errorMonitor:Symbol;
-	#else
-	static var errorMonitor(default, never):Dynamic;
-	#end
 
 	/**
 		Value: `Symbol.for('nodejs.rejection')`
 
 		@see https://nodejs.org/api/events.html#eventscapturerejectionsymbol
 	**/
-	#if haxe4
 	static final captureRejectionSymbol:Symbol;
-	#else
-	static var captureRejectionSymbol(default, never):Dynamic;
-	#end
+
+	/**
+		Change the default `captureRejections` option on all new `EventEmitter` objects.
+
+		@see https://nodejs.org/api/events.html#eventscapturerejections
+	**/
+	static var captureRejections:Bool;
 
 	/**
 		Returns a copy of the array of listeners for the event named `name`.
@@ -154,11 +143,7 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 
 		@see https://nodejs.org/api/events.html#events_emitter_eventnames
 	**/
-	#if haxe4
 	function eventNames():Array<EitherType<String, Symbol>>;
-	#else
-	function eventNames():Array<String>;
-	#end
 
 	/**
 		Returns the current max listener value for the `EventEmitter` which is either
@@ -170,10 +155,13 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 	function getMaxListeners():Int;
 
 	/**
-		Returns the number of listeners listening to the event named `eventName`.
+		Returns the number of listeners listening for the event named `eventName`.
+		If `listener` is provided, it will return how many times the listener is
+		found in the list of the listeners of the event.
 
 		@see https://nodejs.org/api/events.html#events_emitter_listenercount_eventname
 	**/
+	@:overload(function<T:Function>(eventName:Event<T>, listener:T):Int {})
 	function listenerCount<T:Function>(eventName:Event<T>):Int;
 
 	/**
@@ -266,6 +254,74 @@ extern class EventEmitter<TSelf:EventEmitter<TSelf>> implements IEventEmitter {
 }
 
 /**
+	`EventEmitter` constructor options.
+**/
+typedef EventEmitterOptions = {
+	/**
+		Enables automatic capturing of promise rejection.
+	**/
+	@:optional var captureRejections:Bool;
+}
+
+/**
+	Integrates `EventEmitter` with `AsyncResource` for `EventEmitter`s that
+	require manual async tracking.
+
+	@see https://nodejs.org/api/events.html#class-eventemitterasyncresource
+**/
+@:jsRequire("events", "EventEmitterAsyncResource")
+extern class EventEmitterAsyncResource extends EventEmitter<EventEmitterAsyncResource> {
+	function new(?options:EventEmitterAsyncResourceOptions);
+
+	/**
+		Call all `destroy` hooks. This should only ever be called once. An error will
+		be thrown if it is called more than once. This must be manually called. If
+		the resource is left to be collected by the GC then the `destroy` hooks will
+		never be called.
+	**/
+	function emitDestroy():Void;
+
+	/**
+		The unique `asyncId` assigned to the resource.
+	**/
+	var asyncId(default, null):Float;
+
+	/**
+		The same `triggerAsyncId` that is passed to the `AsyncResource` constructor.
+	**/
+	var triggerAsyncId(default, null):Float;
+
+	/**
+		The underlying `AsyncResource`.
+		// TODO(section-7): type as async_hooks.AsyncResource once that package is externed.
+	**/
+	var asyncResource(default, null):Dynamic;
+}
+
+/**
+	Options for `EventEmitterAsyncResource`.
+**/
+typedef EventEmitterAsyncResourceOptions = {
+	> EventEmitterOptions,
+
+	/**
+		The type of async event. Default: `new.target.name` if instantiated using `new`, else `'EventEmitterAsyncResource'`.
+	**/
+	@:optional var name:String;
+
+	/**
+		The ID of the execution context that created this async event. Default: `executionAsyncId()`.
+	**/
+	@:optional var triggerAsyncId:Float;
+
+	/**
+		Disables automatic `emitDestroy` when the object is garbage collected.
+		Default: `false`.
+	**/
+	@:optional var requireManualDestroy:Bool;
+}
+
+/**
 	`IEventEmitter` interface is used as "any EventEmitter".
 
 	See `EventEmitter` for actual class documentation.
@@ -276,11 +332,7 @@ extern interface IEventEmitter {
 
 	function emit<T:Function>(eventName:Event<T>, args:Rest<Dynamic>):Bool;
 
-	#if haxe4
 	function eventNames():Array<EitherType<String, Symbol>>;
-	#else
-	function eventNames():Array<String>;
-	#end
 
 	function getMaxListeners():Int;
 
@@ -311,8 +363,4 @@ extern interface IEventEmitter {
 	Abstract type for events. Its type parameter is a signature
 	of a listener for a concrete event.
 **/
-#if haxe4
 abstract Event<T:Function>(Dynamic) from String to String from Symbol to Symbol {}
-#else
-abstract Event<T:Function>(Dynamic) from String to String {}
-#end

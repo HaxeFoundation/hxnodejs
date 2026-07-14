@@ -26,11 +26,7 @@ import haxe.extern.EitherType;
 import js.node.events.EventEmitter.Event;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Writable streams are an abstraction for a destination to which data is written.
@@ -303,6 +299,30 @@ extern class Duplex<TSelf:Duplex<TSelf>> extends Readable<TSelf> implements IDup
 
 	// This field is defined in super class.
 	// var isTTY(default, null):Bool;
+
+	/**
+		A utility method for creating duplex streams from various sources.
+		// TODO(section-6): refine Blob / web stream input types once available.
+
+		@see https://nodejs.org/api/stream.html#streamduplexfromsrc
+	**/
+	static function from(src:Any):IDuplex;
+
+	/**
+		Creates a Node.js `Duplex` from a pair of web streams.
+		// TODO(section-6): type web stream pair once available.
+
+		@see https://nodejs.org/api/stream.html#streamduplexfromwebpair-options
+	**/
+	static function fromWeb(pair:Any, ?options:DuplexNewOptions):IDuplex;
+
+	/**
+		Creates a pair of web streams from a Node.js `Duplex`.
+		// TODO(section-6): return typed web stream pair once available.
+
+		@see https://nodejs.org/api/stream.html#streamduplextowebstreamduplex-options
+	**/
+	static function toWeb(streamDuplex:IDuplex):Any;
 }
 
 /**

@@ -72,14 +72,14 @@ Node.js event emitters take strings as event names and don't check listener sign
 
 If you provide an instance of `Event<T>` abstract string type where an event name is expected in any `EventEmitter` method, then the listener type will be unified with `T` and thus provide type checking and inference for the listener function.
 
-We provide [@:enum abstract types](http://haxe.org/manual/types-abstract-enum.html) that enumerate possible event names for a given event emitter. They are implicitly castable to `Event<T>` and can be used for type-checking listener functions as described above. For each `EventEmitter` subclass, an `@:enum abstract` type must be created with a `Event` postfix in its name. For example, if we have a `Process` class which is an `EventEmitter`, it should have a pairing `ProcessEvent` type in its module, i.e.:
+We provide [enum abstract types](https://haxe.org/manual/types-abstract-enum.html) that enumerate possible event names for a given event emitter. They are implicitly castable to `Event<T>` and can be used for type-checking listener functions as described above. For each `EventEmitter` subclass, an `enum abstract` type must be created with a `Event` postfix in its name. For example, if we have a `Process` class which is an `EventEmitter`, it should have a pairing `ProcessEvent` type in its module, i.e.:
 
 ```haxe
 extern class Process extends EventEmitter {
     // ...
 }
 
-@:enum abstract ProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
+enum abstract ProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
     var Exit : ProcessEvent<Int->Void> = "exit";
 }
 ```
@@ -96,7 +96,7 @@ TODO (describe the difference of overloading/optional argument concepts and advi
 
 The whole idea of haxe externs is provide a fully type-checked access to external API. Considering that, we must avoid the need for use `Dynamic` type or `cast` and think of a way to properly express type restrictions.
 
-On the other hand, we want developers to be able to copy-paste node.js code into haxe with minimal modification and have it compiling. For that reason we have to weaken some typing restrictions, for example adding implicit cast `from String` for our `@:enum abstract` types.
+On the other hand, we want developers to be able to copy-paste node.js code into haxe with minimal modification and have it compiling. For that reason we have to weaken some typing restrictions, for example adding implicit cast `from String` for our `enum abstract` types.
 
 ### Multiple inheritance
 
@@ -147,12 +147,12 @@ If a type can be of 3 and more types, nested `EitherType` can be used.
 
 ### Constant enumeration
 
-If there's a finite set of posible values for a function argument or object field, [@:enum abstract types](http://haxe.org/manual/types-abstract-enum.html) are used to enumerate those values.
+If there's a finite set of posible values for a function argument or object field, [enum abstract types](https://haxe.org/manual/types-abstract-enum.html) are used to enumerate those values.
 
 Example:
 
 ```haxe
-@:enum abstract SymlinkType(String) from String to String {
+enum abstract SymlinkType(String) from String to String {
     var File = "file";
     var Dir = "dir";
     var Junction = "junction";
@@ -164,10 +164,10 @@ The `to` and `from` implicit cast must be added so user can use both enumeration
 Constant names are `UpperCamelCase` and their values are actual values expected by native API.
 
 
-Note that combined with `haxe.EitherType` (described above), `@:enum abstract`s can handle even complicated cases where a value can be of different types, e.g.
+Note that combined with `haxe.EitherType` (described above), `enum abstract`s can handle even complicated cases where a value can be of different types, e.g.
 
 ```haxe
-@:enum abstract ListeningEventAddressType(haxe.EitherType<Int,String>) to haxe.EitherType<Int,String> {
+enum abstract ListeningEventAddressType(haxe.EitherType<Int,String>) to haxe.EitherType<Int,String> {
 	var TCPv4 = 4;
 	var TCPv6 = 6;
 	var Unix = -1;
@@ -213,4 +213,4 @@ extern class NotSoDeprecated {
 
 ## Tricks and hints
 
-TODO (dealing with keywords, `untyped __js__`, inline methods and properties on extern classes)
+TODO (dealing with keywords, `js.Syntax.code`, inline methods and properties on extern classes)

@@ -4,7 +4,7 @@
     "description": "Extern definitions for node.js",
     "license": "MIT",
     "version": "12.2.0",
-    "releasenote": "Update some API, fix some deprecation warnings.",
+    "releasenote": "Node.js 24 Active LTS audit ongoing; Haxe 4.0+ only.",
     "classPath": "src",
     "contributors": ["nadako", "Simn", "Gama11", "HaxeFoundation"],
     "tags": ["js", "nodejs", "async", "net", "web", "extern"]

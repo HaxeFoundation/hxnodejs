@@ -25,16 +25,10 @@ package js.node.buffer;
 import haxe.extern.EitherType;
 import haxe.io.Bytes;
 import haxe.io.UInt8Array;
-#if haxe4
 import js.lib.ArrayBuffer;
 import js.lib.ArrayBufferView;
 import js.lib.Object;
 import js.lib.Uint8Array;
-#else
-import js.html.ArrayBuffer;
-import js.html.ArrayBufferView;
-import js.html.Uint8Array;
-#end
 
 /**
 	The `Buffer` class is a global type for dealing with binary data directly. It can be constructed in a variety of ways.
@@ -94,18 +88,14 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_bytelength_string_encoding
 	**/
-	#if (haxe_ver >= 3.3)
 	// it need extern SharedArrayBuffer for Node
 	// @:overload(function(string:SharedArrayBuffer):Int {})
 	@:overload(function(string:String, ?encoding:String):Int {})
 	@:overload(function(string:ArrayBufferView):Int {})
 	@:overload(function(string:ArrayBuffer):Int {})
 	static function byteLength(string:Buffer):Int;
-	#end
 
-	#if (haxe_ver >= 3.3)
-	@:deprecated("In haxe 3.3+, use Buffer.byteLength instead!")
-	#end
+	@:deprecated("Use Buffer.byteLength instead")
 	inline static function _byteLength(string:String, ?encoding:String):Int
 		return untyped Buffer['byteLength'](string, encoding);
 
@@ -124,6 +114,13 @@ extern class Buffer extends Uint8Array {
 		@see https://nodejs.org/api/buffer.html#buffer_class_method_buffer_concat_list_totallength
 	**/
 	static function concat<T:Uint8Array>(list:Array<T>, ?totalLength:Int):Buffer;
+
+	/**
+		Copies the underlying memory of `view` into a new `Buffer`.
+
+		@see https://nodejs.org/api/buffer.html#static-method-buffercopybytesfromview-offset-length
+	**/
+	static function copyBytesFrom(view:js.lib.ArrayBufferView, ?offset:Int, ?length:Int):Buffer;
 
 	/**
 		Allocates a new `Buffer`.
@@ -167,14 +164,8 @@ extern class Buffer extends Uint8Array {
 	// buf[index]
 	// var buffer:ArrayBuffer;
 
-	/**
-		When setting `byteOffset` in `Buffer.from(ArrayBuffer, byteOffset, length)`
-		or sometimes when allocating a buffer smaller than `Buffer.poolSize` the
-		buffer doesn't start from a zero offset on the underlying `ArrayBuffer`.
-
-		@see https://nodejs.org/api/buffer.html#buffer_buf_byteoffset
-	**/
-	static var byteOffset(default, null):Int;
+	// `buf.byteOffset` is inherited from `Uint8Array`.
+	// see https://nodejs.org/api/buffer.html#buffer_buf_byteoffset
 
 	/**
 		Compares `buf` with `target` and returns a number indicating whether `buf` comes before, after,
@@ -414,11 +405,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_subarray_start_end
 	**/
-	#if haxe4
 	function subarray(?start:Int, ?end:Int):Buffer;
-	#else
-	override function subarray(start:Int, ?end:Int):Buffer;
-	#end
 
 	/**
 		Returns a new `Buffer` that references the same memory as the original,
@@ -460,7 +447,7 @@ extern class Buffer extends Uint8Array {
 
 		@see https://nodejs.org/api/buffer.html#buffer_buf_tojson
 	**/
-	function toJSON():Dynamic;
+	function toJSON():BufferJson;
 
 	/**
 		Decodes `buf` to a string according to the specified character encoding in `encoding`.
@@ -683,6 +670,17 @@ extern class Buffer extends Uint8Array {
 	}
 
 	/**
+		An alias for `buffer.constants.MAX_STRING_LENGTH`.
+
+		@see https://nodejs.org/api/buffer.html#bufferkstringmaxlength
+	**/
+	static var kStringMaxLength(get, never):Int;
+
+	private static inline function get_kStringMaxLength():Int {
+		return BufferModule.kStringMaxLength;
+	}
+
+	/**
 		Re-encodes the given `Buffer` or `Uint8Array` instance from one character encoding to another.
 		Returns a new `Buffer` instance.
 
@@ -739,6 +737,16 @@ extern class Buffer extends Uint8Array {
 	}
 
 	/**
+		Resolves a `'blob:nodedata:...'` URL to the associated Blob.
+		// TODO(section-6): return typed Blob once web Blob externs are available.
+
+		@see https://nodejs.org/api/buffer.html#bufferresolveobjecturlid
+	**/
+	static inline function resolveObjectURL(id:String):Dynamic {
+		return BufferModule.resolveObjectURL(id);
+	}
+
+	/**
 		`buffer.constants` is a property on the `buffer` module returned by `require('buffer')`,
 		not on the `Buffer` global or a `Buffer` instance.
 
@@ -787,11 +795,13 @@ private class Helper {
 private extern class BufferModule {
 	static var INSPECT_MAX_BYTES:Int;
 	static var kMaxLength(default, never):Int;
+	static var kStringMaxLength(default, never):Int;
 	static function transcode(source:Uint8Array, fromEnc:String, toEnc:String):Buffer;
 	static function isUtf8(input:EitherType<ArrayBufferView, ArrayBuffer>):Bool;
 	static function isAscii(input:EitherType<ArrayBufferView, ArrayBuffer>):Bool;
 	static function atob(data:String):String;
 	static function btoa(data:String):String;
+	static function resolveObjectURL(id:String):Dynamic;
 	static var constants(default, never):BufferConstants;
 }
 
@@ -811,4 +821,12 @@ typedef BufferConstants = {
 		@see https://nodejs.org/api/buffer.html#buffer_buffer_constants_max_string_length
 	**/
 	var MAX_STRING_LENGTH(default, never):Int;
+}
+
+/**
+	JSON representation produced by `Buffer.toJSON`.
+**/
+typedef BufferJson = {
+	type:String,
+	data:Array<Int>
 }

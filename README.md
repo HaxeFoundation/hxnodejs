@@ -8,6 +8,7 @@
 [![Haxelib License](https://badgen.net/haxelib/license/hxnodejs)](LICENSE.md)
 
 Extern type definitions for Node.JS. Haxe **4.0** or newer is required.
+Targeted at **Node.js 24** Active LTS APIs (bindings may lag behind edge cases).
 
 Haxe-generated API documentation is available at http://haxefoundation.github.io/hxnodejs/js/Node.html.
 

@@ -22,12 +22,8 @@
 
 package js.node;
 
-import js.node.web.AbortSignal;
-#if haxe4
 import js.lib.Promise;
-#else
-import js.Promise;
-#end
+import js.node.web.AbortSignal;
 
 /**
 	The `timers/promises` API provides an alternative set of timer functions that return `Promise` objects.

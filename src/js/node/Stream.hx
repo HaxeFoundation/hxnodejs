@@ -23,17 +23,13 @@
 package js.node;
 
 import haxe.extern.Rest;
-import js.html.AbortSignal;
-import js.node.events.EventEmitter;
-import js.node.stream.Readable.IReadable;
-import js.node.stream.Writable.IWritable;
-#if haxe4
 import js.lib.Error;
 import js.lib.Promise;
-#else
-import js.Error;
-import js.Promise;
-#end
+import js.node.events.EventEmitter;
+import js.node.stream.Duplex.IDuplex;
+import js.node.stream.Readable.IReadable;
+import js.node.stream.Writable.IWritable;
+import js.node.web.AbortSignal;
 
 /**
 	Base class for all streams.
@@ -41,6 +37,13 @@ import js.Promise;
 @:jsRequire("stream") // the module itself is also a class
 extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements IStream {
 	private function new();
+
+	/**
+		Promise-based stream helpers (`stream/promises`).
+
+		@see https://nodejs.org/api/stream.html#streams-promises-api
+	**/
+	static var promises(default, never):StreamPromises;
 
 	/**
 		A module method to pipe between streams forwarding errors and properly cleaning up
@@ -76,13 +79,53 @@ extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements 
 	static function finished(stream:IStream, ?options:StreamFinishedOptions):Promise<Void>;
 
 	/**
+		Combines two or more streams into a `Duplex` stream that writes to the first
+		stream and reads from the last.
+
+		Pass `StreamComposeOptions` (for example `{signal: ...}`) as the last argument when needed.
+
+		@see https://nodejs.org/api/stream.html#streamcomposestreams
+	**/
+	static function compose(streams:Rest<Any>):IDuplex;
+
+	/**
+		Returns a pair of connected Duplex streams where data written to either side
+		appears on the other.
+
+		@see https://nodejs.org/api/stream.html#streamduplexpairoptions
+	**/
+	static function duplexPair(?options:js.node.stream.Duplex.DuplexNewOptions):Array<IDuplex>;
+
+	/**
+		Attaches an AbortSignal to a readable or writable stream so destroying
+		the stream when the signal is aborted.
+
+		@see https://nodejs.org/api/stream.html#streamaddabortsignalsignal-stream
+	**/
+	static function addAbortSignal(signal:AbortSignal, stream:IStream):IStream;
+
+	/**
+		Returns the default highWaterMark used by streams.
+
+		@see https://nodejs.org/api/stream.html#streamgetdefaulthighwatermarkobjectmode
+	**/
+	static function getDefaultHighWaterMark(objectMode:Bool):Int;
+
+	/**
+		Sets the default highWaterMark used by streams.
+
+		@see https://nodejs.org/api/stream.html#streamsetdefaulthighwatermarkobjectmode-value
+	**/
+	static function setDefaultHighWaterMark(objectMode:Bool, value:Int):Void;
+
+	/**
 		Returns whether the stream is readable.
 
 		Returns `null` if `stream` is not a valid readable stream.
 
 		@see https://nodejs.org/api/stream.html#streamisreadablestream
 	**/
-	static function isReadable(stream:Dynamic):Null<Bool>;
+	static function isReadable(stream:Any):Null<Bool>;
 
 	/**
 		Returns whether the stream is writable.
@@ -91,14 +134,14 @@ extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements 
 
 		@see https://nodejs.org/api/stream.html#streamiswritablestream
 	**/
-	static function isWritable(stream:Dynamic):Null<Bool>;
+	static function isWritable(stream:Any):Null<Bool>;
 
 	/**
 		Returns whether the stream has been destroyed.
 
 		Exported by the `stream` module (undocumented helper; available since Node 16+).
 	**/
-	static function isDestroyed(stream:Dynamic):Bool;
+	static function isDestroyed(stream:Any):Bool;
 
 	/**
 		Returns whether the stream has been read from or cancelled.
@@ -107,14 +150,14 @@ extern class Stream<TSelf:Stream<TSelf>> extends EventEmitter<TSelf> implements 
 
 		@see https://nodejs.org/api/stream.html#streamreadableisdisturbedstream
 	**/
-	static function isDisturbed(stream:Dynamic):Bool;
+	static function isDisturbed(stream:Any):Bool;
 
 	/**
 		Returns whether the stream has encountered an error.
 
 		@see https://nodejs.org/api/stream.html#streamiserroredstream
 	**/
-	static function isErrored(stream:Dynamic):Bool;
+	static function isErrored(stream:Any):Bool;
 }
 
 /**
@@ -167,6 +210,16 @@ typedef StreamPipelineOptions = {
 		End the destination stream when the source stream ends. Default: `true`.
 	**/
 	@:optional var end:Bool;
+}
+
+/**
+	Options for `Stream.compose`.
+**/
+typedef StreamComposeOptions = {
+	/**
+		Allows destroying the stream if the signal is aborted.
+	**/
+	@:optional var signal:AbortSignal;
 }
 
 /**

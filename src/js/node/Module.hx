@@ -22,6 +22,7 @@
 
 package js.node;
 
+import haxe.extern.EitherType;
 import js.node.url.URL;
 
 /**
@@ -42,66 +43,60 @@ extern class Module {
 
 	/**
 		The `module.exports` object is created by the Module system.
-		Sometimes this is not acceptable; many want their module to be an instance of some class.
-		To do this, assign the desired export object to `module.exports`.
-		Assigning the desired object to `exports` will simply rebind the local `exports` variable, which is probably not
-		what is desired.
-
-		@see https://nodejs.org/api/modules.html#modules_module_exports
 	**/
 	var exports:Dynamic;
 
 	/**
 		The fully resolved filename of the module.
-
-		@see https://nodejs.org/api/modules.html#modules_module_filename
 	**/
 	var filename(default, null):String;
 
 	/**
 		The identifier for the module.
 		Typically this is the fully resolved filename.
-
-		@see https://nodejs.org/api/modules.html#modules_module_id
 	**/
 	var id(default, null):String;
 
 	/**
 		Whether or not the module is done loading, or is in the process of loading.
-
-		@see https://nodejs.org/api/modules.html#modules_module_loaded
 	**/
 	var loaded(default, null):Bool;
 
 	/**
 		The module that first required this one.
-
-		@see https://nodejs.org/api/modules.html#modules_module_parent
 	**/
 	var parent(default, null):Module;
 
 	/**
 		The search paths for the module.
-
-		@see https://nodejs.org/api/modules.html#modules_module_paths
 	**/
 	var paths(default, null):Array<String>;
 
 	/**
+		True if the module is running during the Node.js bootstrap process.
+	**/
+	var isPreloading(default, null):Bool;
+
+	/**
+		The directory name of the module.
+	**/
+	var path(default, null):String;
+
+	/**
 		The `module.require()` method provides a way to load a module as if `require()` was called from the original
 		module.
-
-		@see https://nodejs.org/api/modules.html#modules_module_require_id
 	**/
 	function require(id:String):Dynamic;
 
 	/**
 		A list of the names of all modules provided by Node.js.
-		Can be used to verify if a module is maintained by a third party or not.
-
-		@see https://nodejs.org/api/modules.html#modules_module_builtinmodules
 	**/
 	static var builtinModules(default, null):Array<String>;
+
+	/**
+		Returns `true` if the module is a core/built-in module.
+	**/
+	static function isBuiltin(moduleName:String):Bool;
 
 	/**
 		@see https://nodejs.org/api/modules.html#modules_module_createrequire_filename
@@ -112,9 +107,87 @@ extern class Module {
 	/**
 		The `module.syncBuiltinESMExports()` method updates all the live bindings for builtin ES Modules to match the
 		properties of the CommonJS exports.
-		It does not add or remove exported names from the ES Modules.
-
-		@see https://nodejs.org/api/modules.html#modules_module_syncbuiltinesmexports
 	**/
 	static function syncBuiltinESMExports():Void;
+
+	/**
+		`findSourceMap` finds the corresponding source map for a given file path.
+		// TODO(section-5): refine SourceMap type when vm/module source-map types are audited.
+	**/
+	static function findSourceMap(path:String):Null<Dynamic>;
+
+	/**
+		Removes TypeScript type annotations from `code`.
+	**/
+	static function stripTypeScriptTypes(code:String, ?options:ModuleStripTypeScriptTypesOptions):String;
+
+	/**
+		Register synchronous customization hooks.
+		// TODO(section-5): refine hook option types when the module loader API is audited.
+	**/
+	static function registerHooks(options:Dynamic):Void;
+
+	/**
+		Finds the closest `package.json` for the given specifier.
+
+		@see https://nodejs.org/api/module.html#modulefindpackagejsonspecifier-base
+	**/
+	@:overload(function(specifier:URL, ?base:EitherType<String, URL>):Null<String> {})
+	static function findPackageJSON(specifier:String, ?base:EitherType<String, URL>):Null<String>;
+
+	/**
+		Register a module that exports hooks that customize Node.js module resolution and loading.
+		// TODO(section-5): refine register options / return types when the loader API is audited.
+
+		@see https://nodejs.org/api/module.html#moduleregisterspecifier-parenturl-options
+	**/
+	@:overload(function(specifier:String, parentURL:EitherType<String, URL>, ?options:Dynamic):Void {})
+	static function register(specifier:String, ?options:Dynamic):Void;
+
+	/**
+		Enable the module compile cache.
+
+		@see https://nodejs.org/api/module.html#moduleenablecompilecachecachedir
+	**/
+	static function enableCompileCache(?cacheDir:String):Dynamic;
+
+	/**
+		Flush the module compile cache to disk.
+	**/
+	static function flushCompileCache():Void;
+
+	/**
+		Return the directory where the module compile cache is stored, if enabled.
+	**/
+	static function getCompileCacheDir():Null<String>;
+
+	/**
+		Enable or disable Source Map v3 support for stack traces.
+	**/
+	static function setSourceMapsSupport(enabled:Bool, ?options:Dynamic):Void;
+
+	/**
+		Return whether Source Map support is enabled and related options.
+	**/
+	static function getSourceMapsSupport():Dynamic;
+}
+
+/**
+	Options for `Module.stripTypeScriptTypes`.
+**/
+typedef ModuleStripTypeScriptTypesOptions = {
+	/**
+		Mode of stripping. Default: `'strip'`.
+	**/
+	@:optional var mode:String;
+
+	/**
+		Whether to produce source maps. Default: `false`.
+	**/
+	@:optional var sourceMap:Bool;
+
+	/**
+		The filename used when generating source maps.
+	**/
+	@:optional var sourceUrl:String;
 }
