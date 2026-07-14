@@ -46,9 +46,9 @@ extern class Zlib extends js.node.stream.Transform<Zlib> {
 	/**
 		Flush pending data.
 
-		`kind` defaults to `Zlib.constants.Z_FULL_FLUSH` for zlib-based streams,
-		`Zlib.constants.BROTLI_OPERATION_FLUSH` for Brotli-based streams, and
-		`Zlib.constants.ZSTD_e_flush` for Zstd-based streams.
+		`kind` defaults to `js.node.Zlib.constants.Z_FULL_FLUSH` for zlib-based streams,
+		`js.node.Zlib.constants.BROTLI_OPERATION_FLUSH` for Brotli-based streams, and
+		`js.node.Zlib.constants.ZSTD_e_flush` for Zstd-based streams.
 
 		Don't call this frivolously; premature flushes negatively impact the
 		effectiveness of the compression algorithm.
