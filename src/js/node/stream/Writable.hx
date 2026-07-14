@@ -256,19 +256,17 @@ extern class Writable<TSelf:Writable<TSelf>> extends Stream<TSelf> implements IW
 
 	/**
 		Creates a Node.js `Writable` from a web `WritableStream`.
-		// TODO(section-6): type `writableStream` as web `WritableStream` once available.
 
 		@see https://nodejs.org/api/stream.html#streamwritablefromwebwritablestream-options
 	**/
-	static function fromWeb(writableStream:Any, ?options:WritableNewOptions):IWritable;
+	static function fromWeb(writableStream:js.node.web.WritableStream, ?options:WritableNewOptions):IWritable;
 
 	/**
 		Creates a web `WritableStream` from a Node.js `Writable`.
-		// TODO(section-6): return typed web `WritableStream` once available.
 
 		@see https://nodejs.org/api/stream.html#streamwritabletowebstreamwritable
 	**/
-	static function toWeb(streamWritable:IWritable):Any;
+	static function toWeb(streamWritable:IWritable):js.node.web.WritableStream;
 }
 
 /**

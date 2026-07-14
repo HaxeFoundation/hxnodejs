@@ -27,6 +27,8 @@ import haxe.Constraints.Function;
 import haxe.extern.EitherType;
 import haxe.extern.Rest;
 import js.lib.Error;
+import js.node.child_process.ChildProcess.ChildProcessChannel;
+import js.node.child_process.ChildProcess.ChildProcessSendHandle;
 import js.node.child_process.ChildProcess.ChildProcessSendOptions;
 import js.node.events.EventEmitter;
 import js.node.process.ProcessFinalization;
@@ -84,7 +86,7 @@ enum abstract ProcessEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when a message is received over IPC. Available for child processes.
 	**/
-	var Message:ProcessEvent<(message:Dynamic, sendHandle:Dynamic) -> Void> = "message";
+	var Message:ProcessEvent<(message:Dynamic, sendHandle:Null<ChildProcessSendHandle>) -> Void> = "message";
 
 	/**
 		Emitted after calling `process.disconnect()` in a child process.
@@ -243,9 +245,8 @@ extern class Process extends EventEmitter<Process> {
 
 	/**
 		IPC channel reference for the process, if present.
-		// TODO(section-5): refine IPC channel type when child_process IPC is audited.
 	**/
-	var channel(default, null):Null<Dynamic>;
+	var channel(default, null):Null<ChildProcessChannel>;
 
 	/**
 		The debugger port of the Node.js process.
@@ -409,10 +410,9 @@ extern class Process extends EventEmitter<Process> {
 	/**
 		Send a message to the parent process.
 		Only available for child processes. See `ChildProcess.send`.
-		// TODO(section-5): type `sendHandle` with net.Socket / net.Server / dgram.Socket.
 	**/
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, options:ChildProcessSendOptions, ?callback:Null<Error>->Void):Bool {})
-	@:overload(function(message:Dynamic, sendHandle:Dynamic, ?callback:Null<Error>->Void):Bool {})
+	@:overload(function(message:Dynamic, sendHandle:ChildProcessSendHandle, options:ChildProcessSendOptions, ?callback:Null<Error>->Void):Bool {})
+	@:overload(function(message:Dynamic, sendHandle:ChildProcessSendHandle, ?callback:Null<Error>->Void):Bool {})
 	function send(message:Dynamic, ?callback:Null<Error>->Void):Bool;
 
 	/**

@@ -22,6 +22,9 @@
 
 package js.node.web;
 
+import haxe.extern.EitherType;
+import js.lib.ArrayBuffer;
+
 /**
 	One end of a two-way communication channel created by `MessageChannel`.
 
@@ -36,11 +39,9 @@ extern class MessagePort extends EventTarget {
 
 	/**
 		Posts a message through the channel. `transfer` is a list of transferable objects
-		to transfer ownership of.
-
-		TODO(section-5): tighten `transfer` once worker_threads transferable types are externed.
+		to transfer ownership of (ArrayBuffer, MessagePort, AbortSignal, or web streams).
 	**/
-	function postMessage(message:Any, ?transfer:Array<Any>):Void;
+	function postMessage(message:Any, ?transfer:Array<MessagePortTransferable>):Void;
 
 	/**
 		Starts dispatching messages received on this port. (Implicit when `onmessage` is set.)
@@ -56,3 +57,10 @@ extern class MessagePort extends EventTarget {
 	function unref():MessagePort;
 	function hasRef():Bool;
 }
+
+/**
+	Transferable objects accepted by the web `MessagePort.postMessage` transfer list
+	in Node (matches the practical subset already externed — no invented types).
+**/
+typedef MessagePortTransferable = EitherType<ArrayBuffer, EitherType<MessagePort, EitherType<AbortSignal, EitherType<ReadableStream, EitherType<WritableStream, TransformStream>>>>>;
+

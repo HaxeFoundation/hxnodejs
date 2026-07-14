@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2025 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -20,42 +20,25 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package js.node.web;
+package js.node.worker_threads;
 
-import js.lib.Uint8Array;
-
-/**
-	WHATWG Encoding Standard `TextEncoder` (global).
-
-	Also available via `js.node.util.TextEncoder` (`require("util").TextEncoder`),
-	which mirrors this `encode` / `encodeInto` surface.
-
-	@see https://nodejs.org/api/globals.html#class-textencoder
-**/
-@:native("TextEncoder")
-extern class TextEncoder {
-	/**
-		Always `'utf-8'`.
-	**/
-	var encoding(default, null):String;
-
-	function new():Void;
-
-	/**
-		UTF-8 encodes `input` and returns a `Uint8Array` of the encoded bytes.
-	**/
-	function encode(?input:String):Uint8Array;
-
-	/**
-		Encodes `source` into `destination` and returns how many code units / bytes were written.
-	**/
-	function encodeInto(source:String, destination:Uint8Array):TextEncoderEncodeIntoResult;
-}
+import haxe.extern.EitherType;
+import js.lib.ArrayBuffer;
+import js.node.fs.FileHandle;
+import js.node.web.AbortSignal;
+import js.node.web.ReadableStream;
+import js.node.web.TransformStream;
+import js.node.web.WritableStream;
 
 /**
-	Result of `TextEncoder.encodeInto`.
+	Objects accepted in a `worker_threads` `transferList` / structured-clone transfer list.
+
+	Matches the Node.js transferable set that already has externs in this repo
+	(`ArrayBuffer`, `MessagePort`, `AbortSignal`, `FileHandle`, and web streams).
+	Does not invent types such as `SharedArrayBuffer` that are not yet externed.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/worker_threads.html#portpostmessagevalue-transferlist
 **/
-typedef TextEncoderEncodeIntoResult = {
-	var read:Int;
-	var written:Int;
-}
+typedef Transferable = EitherType<ArrayBuffer,
+	EitherType<MessagePort,
+		EitherType<AbortSignal, EitherType<FileHandle, EitherType<ReadableStream, EitherType<WritableStream, TransformStream>>>>>>;

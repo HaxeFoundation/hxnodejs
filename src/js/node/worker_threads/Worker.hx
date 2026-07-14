@@ -57,9 +57,9 @@ extern class Worker extends EventEmitter<Worker> {
 
 	/**
 		Send a message to the worker that will be received via `require('worker_threads').parentPort.on('message')`.
-		// TODO(section-5): transferList / value typing for structured clone
+		// TODO(section-5): value typing for structured clone remains application-defined Dynamic
 	**/
-	function postMessage(value:Dynamic, ?transferList:Array<Dynamic>):Void;
+	function postMessage(value:Dynamic, ?transferList:Array<Transferable>):Void;
 
 	/**
 		Opposite of `unref()`. Calls will take effect if the Worker previously was `unref`ed.
@@ -129,7 +129,7 @@ typedef WorkerOptions = {
 	/**
 		List of transferable objects to pass alongside `workerData`.
 	**/
-	@:optional var transferList:Array<Dynamic>;
+	@:optional var transferList:Array<Transferable>;
 
 	@:optional var stdin:Bool;
 	@:optional var stdout:Bool;

@@ -44,9 +44,10 @@ enum abstract MessagePortEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T
 extern class MessagePort extends EventEmitter<MessagePort> {
 	/**
 		Sends a JavaScript value to the receiving end of the channel.
-		// TODO(section-5): transferList / value typing for structured clone
+		`transferList` may include ArrayBuffer, MessagePort, AbortSignal, FileHandle, or web streams.
+		// TODO(section-5): value typing for structured clone remains application-defined Dynamic
 	**/
-	function postMessage(value:Dynamic, ?transferList:Array<Dynamic>):Void;
+	function postMessage(value:Dynamic, ?transferList:Array<Transferable>):Void;
 
 	/**
 		Disables further sending of messages from either port. Once done, no further messages can be received.
