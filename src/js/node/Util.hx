@@ -111,7 +111,7 @@ extern class Util {
 
 		@see https://nodejs.org/api/util.html#util_util_inherits_constructor_superconstructor
 	**/
-	@:deprecated
+	@:deprecated("Use class extends instead")
 	static function inherits(constructor:Class<Dynamic>, superConstructor:Class<Dynamic>):Void;
 
 	/**
@@ -245,97 +245,97 @@ extern class Util {
 	/**
 		Returns true if the given "object" is an Array. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use Std.isOfType(value, Array) instead")
 	static function isArray(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is a Bool. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use (value is Bool) instead")
 	static function isBoolean(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is a Buffer. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use Buffer.isBuffer instead")
 	static function isBuffer(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is a Date. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use js.node.util.Types.isDate instead")
 	static function isDate(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is an Error. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use js.node.util.Types.isNativeError instead")
 	static function isError(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is a Function. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use Reflect.isFunction instead")
 	static function isFunction(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is strictly null. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use (value == null) instead")
 	static function isNull(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is null or undefined. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use (value == null) instead")
 	static function isNullOrUndefined(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is a Float. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use (value is Float) instead")
 	static function isNumber(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is strictly an Object and not a Function. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use value != null && js.Syntax.typeof(value) == \"object\" instead")
 	static function isObject(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is a primitive type. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use (js.Syntax.typeof(value) != \"object\" && js.Syntax.typeof(value) != \"function\") || value == null instead")
 	static function isPrimitive(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is a RegExp. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use js.node.util.Types.isRegExp instead")
 	static function isRegExp(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is a String. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use (value is String) instead")
 	static function isString(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is a Symbol. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use js.Syntax.typeof(value) == \"symbol\" instead")
 	static function isSymbol(object:Any):Bool;
 
 	/**
 		Returns true if the given "object" is undefined. false otherwise.
 	**/
-	@:deprecated
+	@:deprecated("Use js.Syntax.typeof(value) == \"undefined\" instead")
 	static function isUndefined(object:Any):Bool;
 
 	/**
 		Output with timestamp on stdout.
 	**/
-	@:deprecated
+	@:deprecated("Use js.Node.console.log instead")
 	static function log(args:Rest<Any>):Void;
 
 	/**

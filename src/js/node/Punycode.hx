@@ -22,7 +22,7 @@
 
 package js.node;
 
-@:deprecated("In a future major version of Node.js punycode module will be removed")
+@:deprecated("Use Url.domainToASCII / Url.domainToUnicode instead")
 @:jsRequire("punycode")
 extern class Punycode {
 	/**
@@ -59,7 +59,7 @@ extern class Punycode {
 	static var version(default, null):String;
 }
 
-@:deprecated
+@:deprecated("Use String.fromCodePoint / codePointAt instead")
 extern class PunycodeUcs2 {
 	/**
 		Creates an array containing the decimal code points of each Unicode character in the string.

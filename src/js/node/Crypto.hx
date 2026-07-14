@@ -83,7 +83,7 @@ extern class Crypto {
 
 		Note that new programs will probably expect buffers, so only use this as a temporary measure.
 	**/
-	@:deprecated
+	@:deprecated("Use explicitly set encoding on crypto streams instead")
 	static var DEFAULT_ENCODING:String;
 
 	/**
@@ -92,7 +92,7 @@ extern class Crypto {
 
 		Deprecated since Node.js v10.0.0. Use `getFips` / `setFips` instead.
 	**/
-	@:deprecated
+	@:deprecated("Use crypto.setFips() / getFips() instead")
 	static var fips:Bool;
 
 	/**

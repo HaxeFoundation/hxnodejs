@@ -87,8 +87,8 @@ typedef Http2StreamState = {
 	@:optional var state:Int;
 	@:optional var localClose:Int;
 	@:optional var remoteClose:Int;
-	@:deprecated @:optional var sumDependencyWeight:Int;
-	@:deprecated @:optional var weight:Int;
+	@:deprecated("Priority signaling is no longer supported in Node.js") @:optional var sumDependencyWeight:Int;
+	@:deprecated("Priority signaling is no longer supported in Node.js") @:optional var weight:Int;
 }
 
 /**

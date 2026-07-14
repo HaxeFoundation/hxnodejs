@@ -404,7 +404,7 @@ extern class Process extends EventEmitter<Process> {
 		Alternate way to retrieve require.main.
 		@deprecated Use `Require.main` instead.
 	**/
-	@:deprecated
+	@:deprecated("Use Require.main instead")
 	var mainModule(default, null):Module;
 
 	/**

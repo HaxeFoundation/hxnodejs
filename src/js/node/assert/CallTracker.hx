@@ -30,7 +30,7 @@ import js.lib.Error;
 
 	@see https://nodejs.org/api/assert.html#class-assertcalltracker
 **/
-@:deprecated("assert.CallTracker is deprecated and may be removed in a future major release")
+@:deprecated("Use custom call tracking instead")
 @:jsRequire("assert", "CallTracker")
 extern class CallTracker {
 	function new();

@@ -244,6 +244,6 @@ typedef StructuredCloneOptions = {
 	@:optional var transfer:Array<Dynamic>;
 }
 
-@:deprecated typedef TimeoutObject = js.node.Timers.Timeout;
-@:deprecated typedef IntervalObject = js.node.Timers.Timeout;
-@:deprecated typedef ImmediateObject = js.node.Timers.Immediate;
+@:deprecated("Use Timeout instead") typedef TimeoutObject = js.node.Timers.Timeout;
+@:deprecated("Use Timeout instead") typedef IntervalObject = js.node.Timers.Timeout;
+@:deprecated("Use Immediate instead") typedef ImmediateObject = js.node.Timers.Immediate;

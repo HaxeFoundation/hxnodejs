@@ -56,7 +56,7 @@ extern class Require {
 		Since the `Module` system is locked, this feature will probably never go away. However, it may have subtle bugs
 		and complexities that are best left untouched.
 	**/
-	@:deprecated
+	@:deprecated("Use compiling to JavaScript ahead of time instead")
 	static var extensions(default, null):DynamicAccess<Dynamic>;
 
 	/**
