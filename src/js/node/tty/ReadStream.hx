@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,24 +23,42 @@
 package js.node.tty;
 
 /**
-	A net.Socket subclass that represents the readable portion of a tty.
-	In normal circumstances, process.stdin will be the only tty.ReadStream instance
-	in any node program (only when isatty(0) is true).
+	Represents the readable side of a TTY. In normal circumstances `process.stdin`
+	will be the only `tty.ReadStream` instance in a Node.js process and there should
+	be no reason to create additional instances.
+
+	`isTTY` is always `true` for `tty.ReadStream` instances (inherited from the stream hierarchy).
+
+	@see https://nodejs.org/api/tty.html#class-ttyreadstream
 **/
 @:jsRequire("tty", "ReadStream")
 extern class ReadStream extends js.node.net.Socket {
+	/**
+		Creates a `ReadStream` for `fd` associated with a TTY.
+
+		@see https://nodejs.org/api/tty.html#new-ttyreadstreamfd-options
+	**/
 	function new(fd:Int, ?options:js.node.net.Socket.SocketOptions);
 
 	/**
-		A boolean that is initialized to false.
-		It represents the current "raw" state of the tty.ReadStream instance.
+		A `Bool` that is `true` if the TTY is currently configured to operate as a raw device.
+
+		This flag is always `false` when a process starts, even if the terminal is operating
+		in raw mode. Its value will change with subsequent calls to `setRawMode`.
+
+		@see https://nodejs.org/api/tty.html#readstreamisraw
 	**/
 	var isRaw(default, null):Bool;
 
 	/**
-		`mode` should be true or false.
-		This sets the properties of the tty.ReadStream to act either as a raw device or default.
-		`isRaw` will be set to the resulting mode.
+		Allows configuration of `tty.ReadStream` so that it operates as a raw device.
+
+		When in raw mode, input is always available character-by-character, not including
+		modifiers. Additionally, all special processing of characters by the terminal is
+		disabled, including echoing input characters. Ctrl+C will no longer cause a `SIGINT`
+		when in this mode.
+
+		@see https://nodejs.org/api/tty.html#readstreamsetrawmodemode
 	**/
 	function setRawMode(mode:Bool):ReadStream;
 }

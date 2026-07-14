@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,20 +23,31 @@
 package js.node;
 
 /**
-	The tty module houses the tty.ReadStream and tty.WriteStream classes.
-	In most cases, you will not need to use this module directly.
+	The `node:tty` module provides the `tty.ReadStream` and `tty.WriteStream` classes.
+	In most cases, it will not be necessary or possible to use this module directly.
 
-	When node detects that it is being run inside a TTY context, then process.stdin will be a tty.ReadStream
-	instance and process.stdout will be a tty.WriteStream instance. The preferred way to check if node is being
-	run in a TTY context is to check process.stdout.isTTY.
+	When Node.js detects that it is being run with a text terminal ("TTY") attached,
+	`process.stdin` will, by default, be initialized as an instance of `tty.ReadStream`
+	and both `process.stdout` and `process.stderr` will, by default, be instances of
+	`tty.WriteStream`. The preferred method of determining whether Node.js is being run
+	within a TTY context is to check that the value of the `process.stdout.isTTY`
+	property is `true`.
+
+	@see https://nodejs.org/api/tty.html
 **/
 @:jsRequire("tty")
 extern class Tty {
 	/**
-		Returns true or false depending on if the `fd` is associated with a terminal.
+		Returns `true` if the given `fd` is associated with a TTY and `false` if it is not,
+		including whenever `fd` is not a non-negative integer.
+
+		@see https://nodejs.org/api/tty.html#ttyisattyfd
 	**/
 	static function isatty(fd:Int):Bool;
 
-	@:deprecated("Use tty.ReadStream#setRawMode() instead.")
+	/**
+		Removed from Node.js. Use `js.node.tty.ReadStream.setRawMode` instead.
+	**/
+	@:deprecated("Use js.node.tty.ReadStream.setRawMode instead")
 	static function setRawMode(mode:Bool):Void;
 }
