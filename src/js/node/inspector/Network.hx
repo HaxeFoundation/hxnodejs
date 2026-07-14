@@ -44,7 +44,7 @@ extern class Network {
 	/**
 		Enables `Network.getRequestPostData` command to retrieve the request data.
 	**/
-	static function dataSent(?params:Dynamic):Void;
+	static function dataSent(?params:NetworkDataSentParams):Void;
 
 	/**
 		Broadcasts the `Network.requestWillBeSent` event to connected frontends.
@@ -182,6 +182,16 @@ typedef NetworkDataReceivedParams = {
 	var timestamp:Float;
 	var dataLength:Int;
 	var encodedDataLength:Int;
+	@:optional var data:String;
+}
+
+/**
+	Parameters for `Network.dataSent`.
+**/
+typedef NetworkDataSentParams = {
+	var requestId:String;
+	@:optional var timestamp:Float;
+	@:optional var dataLength:Int;
 	@:optional var data:String;
 }
 

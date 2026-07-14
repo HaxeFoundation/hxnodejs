@@ -37,6 +37,8 @@ extern class Histogram {
 
 	/**
 		The number of samples recorded by the histogram (as a BigInt).
+
+		// TODO: type as BigInt when hxnodejs provides one.
 	**/
 	var countBigInt(default, null):Dynamic;
 
@@ -92,10 +94,12 @@ extern class Histogram {
 	/**
 		Returns a `Map` object detailing the accumulated percentile distribution.
 	**/
-	var percentiles(default, null):Dynamic;
+	var percentiles(default, null):js.lib.Map<Float, Float>;
 
 	/**
 		Returns a `Map` object detailing the accumulated percentile distribution (BigInt keys/values).
+
+		// TODO: type as Map<BigInt, BigInt> when hxnodejs provides BigInt.
 	**/
 	var percentilesBigInt(default, null):Dynamic;
 

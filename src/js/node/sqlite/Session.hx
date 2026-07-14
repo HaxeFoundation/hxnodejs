@@ -20,31 +20,31 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package js.node.perf_hooks;
+package js.node.sqlite;
 
-import haxe.extern.EitherType;
+import js.lib.Uint8Array;
 
 /**
-	A `Histogram` that can record values.
+	Tracks changes for later changeset / patchset application.
 
-	@see https://nodejs.org/api/perf_hooks.html#class-recordablehistogram-extends-histogram
+	Created via `DatabaseSync.createSession()`.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/sqlite.html#class-session
 **/
-extern class RecordableHistogram extends Histogram {
+@:jsRequire("node:sqlite", "Session")
+extern class Session {
 	/**
-		Adds the values from `other` to this histogram.
+		Binary changeset of all tracked changes.
 	**/
-	function add(other:RecordableHistogram):Void;
+	function changeset():Uint8Array;
 
 	/**
-		Records `val` in the histogram.
-
-		// TODO: allow BigInt when hxnodejs gains a BigInt type (Node accepts number | bigint).
+		More compact binary patchset of tracked changes.
 	**/
-	function record(val:EitherType<Float, Dynamic>):Void;
+	function patchset():Uint8Array;
 
 	/**
-		Calculates the amount of time (in nanoseconds) that has passed since the previous call
-		to `recordDelta()` and records that amount in the histogram.
+		Closes the session.
 	**/
-	function recordDelta():Void;
+	function close():Void;
 }

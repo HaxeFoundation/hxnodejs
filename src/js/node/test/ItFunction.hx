@@ -24,11 +24,7 @@ package js.node.test;
 
 import js.node.Test.TestCallback;
 import js.node.Test.TestOptions;
-#if haxe4
 import js.lib.Promise;
-#else
-import js.Promise;
-#end
 
 /**
 	Callable test entry used by `it`, with suite-style shorthands plus `expectFailure`.

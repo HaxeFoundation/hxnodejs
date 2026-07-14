@@ -24,12 +24,8 @@ package js.node.test;
 
 import haxe.Constraints.Function;
 import haxe.extern.EitherType;
-#if haxe4
 import js.lib.Error;
 import js.lib.Symbol;
-#else
-import js.Error;
-#end
 
 /**
 	Manages mocking functionality.
@@ -54,27 +50,17 @@ extern class MockTracker {
 
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#mockgetterobject-methodname-implementation-options
 	**/
-	#if haxe4
-	@:overload(function(object:{}, methodName:EitherType<String, Symbol>, ?options:MockMethodOptions):MockedFunction {})
+		@:overload(function(object:{}, methodName:EitherType<String, Symbol>, ?options:MockMethodOptions):MockedFunction {})
 	function getter(object:{}, methodName:EitherType<String, Symbol>, ?implementation:Function, ?options:MockMethodOptions):MockedFunction;
-	#else
-	@:overload(function(object:{}, methodName:String, ?options:MockMethodOptions):MockedFunction {})
-	function getter(object:{}, methodName:String, ?implementation:Function, ?options:MockMethodOptions):MockedFunction;
-	#end
-
+	
 	/**
 		Create a mock on an existing object method.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#mockmethodobject-methodname-implementation-options
 	**/
-	#if haxe4
-	@:overload(function(object:{}, methodName:EitherType<String, Symbol>, ?options:MockMethodOptions):MockedFunction {})
+		@:overload(function(object:{}, methodName:EitherType<String, Symbol>, ?options:MockMethodOptions):MockedFunction {})
 	function method(object:{}, methodName:EitherType<String, Symbol>, ?implementation:Function, ?options:MockMethodOptions):MockedFunction;
-	#else
-	@:overload(function(object:{}, methodName:String, ?options:MockMethodOptions):MockedFunction {})
-	function method(object:{}, methodName:String, ?implementation:Function, ?options:MockMethodOptions):MockedFunction;
-	#end
-
+	
 	/**
 		Mock exports of an ESM, CommonJS, JSON, or builtin module.
 
@@ -91,12 +77,8 @@ extern class MockTracker {
 
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#mockpropertyobject-propertyname-value
 	**/
-	#if haxe4
-	function property(object:{}, propertyName:EitherType<String, Symbol>, ?value:Dynamic):MockedProperty;
-	#else
-	function property(object:{}, propertyName:String, ?value:Dynamic):MockedProperty;
-	#end
-
+		function property(object:{}, propertyName:EitherType<String, Symbol>, ?value:Dynamic):MockedProperty;
+	
 	/**
 		Restore default behavior of all mocks created by this tracker and
 		disassociate them from the tracker.
@@ -117,14 +99,9 @@ extern class MockTracker {
 
 		@see https://nodejs.org/docs/latest-v24.x/api/test.html#mocksetterobject-methodname-implementation-options
 	**/
-	#if haxe4
-	@:overload(function(object:{}, methodName:EitherType<String, Symbol>, ?options:MockMethodOptions):MockedFunction {})
+		@:overload(function(object:{}, methodName:EitherType<String, Symbol>, ?options:MockMethodOptions):MockedFunction {})
 	function setter(object:{}, methodName:EitherType<String, Symbol>, ?implementation:Function, ?options:MockMethodOptions):MockedFunction;
-	#else
-	@:overload(function(object:{}, methodName:String, ?options:MockMethodOptions):MockedFunction {})
-	function setter(object:{}, methodName:String, ?implementation:Function, ?options:MockMethodOptions):MockedFunction;
-	#end
-
+	
 	/**
 		Mock timers APIs (`setTimeout`, `setInterval`, `setImmediate`, `Date`, …).
 

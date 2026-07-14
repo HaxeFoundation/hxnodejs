@@ -23,11 +23,7 @@
 package js.node.inspector.promises;
 
 import js.node.events.EventEmitter;
-#if haxe4
 import js.lib.Promise;
-#else
-import js.Promise;
-#end
 
 /**
 	Promise-based `inspector.Session` from `inspector/promises`.

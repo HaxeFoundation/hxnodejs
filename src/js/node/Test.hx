@@ -25,22 +25,16 @@ package js.node;
 import haxe.Constraints.Function;
 import haxe.DynamicAccess;
 import haxe.extern.EitherType;
-import js.html.AbortSignal;
+import js.node.web.AbortSignal;
 import js.node.test.ItFunction;
 import js.node.test.MockTracker;
 import js.node.test.SuiteContext;
 import js.node.test.SuiteFunction;
 import js.node.test.TestContext;
 import js.node.test.TestsStream;
-#if haxe4
 import js.lib.Error;
 import js.lib.Promise;
 import js.lib.RegExp;
-#else
-import js.Error;
-import js.Promise;
-import js.RegExp;
-#end
 
 /**
 	The `node:test` module facilitates the creation of JavaScript tests.

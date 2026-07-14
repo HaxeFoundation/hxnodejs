@@ -29,7 +29,7 @@ import js.node.inspector.InspectorConsole;
 
 	Related types live under `js.node.inspector` (`Session`, `Network`, `NetworkResources`, `DomStorage`).
 
-	@see https://nodejs.org/api/inspector.html
+	@see https://nodejs.org/docs/latest-v24.x/api/inspector.html
 **/
 @:jsRequire("inspector")
 extern class Inspector {
@@ -41,7 +41,8 @@ extern class Inspector {
 		and flow control has been passed to the debugger client.
 
 		Returns a Disposable (`{ [Symbol.dispose](): void }`) that calls `inspector.close()`.
-		Typed as `Dynamic` because hxnodejs does not yet model the Web IDL `Disposable` interface.
+
+		// TODO: model Web IDL `Disposable` / `Symbol.dispose` instead of `Dynamic`.
 	**/
 	static function open(?port:Int, ?host:String, ?wait:Bool):Dynamic;
 

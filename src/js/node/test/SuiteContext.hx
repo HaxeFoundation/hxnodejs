@@ -22,7 +22,7 @@
 
 package js.node.test;
 
-import js.html.AbortSignal;
+import js.node.web.AbortSignal;
 
 /**
 	Passed to each suite function to interact with the test runner.

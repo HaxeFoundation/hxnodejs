@@ -23,11 +23,7 @@
 package js.node.inspector;
 
 import js.node.events.EventEmitter;
-#if haxe4
 import js.lib.Error;
-#else
-import js.Error;
-#end
 
 /**
 	Enumeration of events emitted by `inspector.Session`.
