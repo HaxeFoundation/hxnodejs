@@ -24,6 +24,7 @@ package js.node;
 
 import haxe.extern.EitherType;
 import js.node.Dns;
+import js.node.dns.PromisesResolver as PromisesResolverObject;
 #if haxe4
 import js.lib.Promise;
 #else
@@ -34,14 +35,12 @@ import js.Promise;
 	The `dns/promises` API provides an alternative set of asynchronous DNS methods
 	that return `Promise` objects rather than using callbacks.
 
-	This binding covers the common promise-based lookup/resolve helpers.
-	It does not yet include `Resolver`, `resolveAny` / `resolveCaa` / `resolveNaptr` /
-	`resolveTlsa`, or `setDefaultResultOrder`.
+	The API is accessible via `require('dns/promises')` or `require('dns').promises`.
 
-	`ADDRCONFIG` and `V4MAPPED` are not exported by `dns/promises` (they are `undefined`
-	there). For lookup `hints`, use `Dns.ADDRCONFIG` and `Dns.V4MAPPED`.
+	`ADDRCONFIG`, `V4MAPPED`, and `ALL` are not exported by `dns/promises` (they are `undefined`
+	there). For lookup `hints`, use `Dns.ADDRCONFIG`, `Dns.V4MAPPED`, and `Dns.ALL`.
 
-	@see https://nodejs.org/api/dns.html#dns-promises-api
+	@see https://nodejs.org/docs/latest-v22.x/api/dns.html#dns-promises-api
 **/
 @:jsRequire("dns/promises")
 extern class DnsPromises {
@@ -59,7 +58,7 @@ extern class DnsPromises {
 	**/
 	@:overload(function(hostname:String):Promise<DnsPromisesLookupResult> {})
 	@:overload(function(hostname:String, options:DnsAddressFamily):Promise<DnsPromisesLookupResult> {})
-	@:overload(function(hostname:String, options:{family:DnsAddressFamily, ?hints:Int, all:Bool}):Promise<Array<DnsLookupCallbackAllEntry>> {})
+	@:overload(function(hostname:String, options:{family:EitherType<DnsAddressFamily, String>, ?hints:Int, all:Bool, ?order:DnsResultOrder, ?verbatim:Bool}):Promise<Array<DnsLookupCallbackAllEntry>> {})
 	static function lookup(hostname:String, options:EitherType<DnsAddressFamily, DnsLookupOptions>):Promise<EitherType<DnsPromisesLookupResult, Array<DnsLookupCallbackAllEntry>>>;
 
 	/**
@@ -75,13 +74,34 @@ extern class DnsPromises {
 
 	/**
 		Uses the DNS protocol to resolve IPv4 addresses (`A` records) for the `hostname`.
+
+		When `options.ttl` is `true`, each entry is `{ address, ttl }` instead of a string.
 	**/
+	@:overload(function(hostname:String, options:DnsResolveOptions):Promise<EitherType<Array<String>, Array<DnsRecordWithTtl>>> {})
 	static function resolve4(hostname:String):Promise<Array<String>>;
 
 	/**
 		Uses the DNS protocol to resolve IPv6 addresses (`AAAA` records) for the `hostname`.
+
+		When `options.ttl` is `true`, each entry is `{ address, ttl }` instead of a string.
 	**/
+	@:overload(function(hostname:String, options:DnsResolveOptions):Promise<EitherType<Array<String>, Array<DnsRecordWithTtl>>> {})
 	static function resolve6(hostname:String):Promise<Array<String>>;
+
+	/**
+		Uses the DNS protocol to resolve all records (also known as `ANY` or `*` query).
+	**/
+	static function resolveAny(hostname:String):Promise<Array<DnsAnyRecord>>;
+
+	/**
+		Uses the DNS protocol to resolve `CAA` records for the `hostname`.
+	**/
+	static function resolveCaa(hostname:String):Promise<Array<DnsResolvedAddressCAA>>;
+
+	/**
+		Uses the DNS protocol to resolve `CNAME` records for the `hostname`.
+	**/
+	static function resolveCname(hostname:String):Promise<Array<String>>;
 
 	/**
 		Uses the DNS protocol to resolve mail exchange records (`MX` records) for the `hostname`.
@@ -89,14 +109,14 @@ extern class DnsPromises {
 	static function resolveMx(hostname:String):Promise<Array<DnsResolvedAddressMX>>;
 
 	/**
-		Uses the DNS protocol to resolve text queries (`TXT` records) for the `hostname`.
+		Uses the DNS protocol to resolve regular expression-based records (`NAPTR` records) for the `hostname`.
 	**/
-	static function resolveTxt(hostname:String):Promise<Array<Array<String>>>;
+	static function resolveNaptr(hostname:String):Promise<Array<DnsResolvedAddressNAPTR>>;
 
 	/**
-		Uses the DNS protocol to resolve service records (`SRV` records) for the `hostname`.
+		Uses the DNS protocol to resolve name server records (`NS` records) for the `hostname`.
 	**/
-	static function resolveSrv(hostname:String):Promise<Array<DnsResolvedAddressSRV>>;
+	static function resolveNs(hostname:String):Promise<Array<String>>;
 
 	/**
 		Uses the DNS protocol to resolve pointer records (`PTR` records) for the `hostname`.
@@ -109,14 +129,19 @@ extern class DnsPromises {
 	static function resolveSoa(hostname:String):Promise<DnsResolvedAddressSOA>;
 
 	/**
-		Uses the DNS protocol to resolve name server records (`NS` records) for the `hostname`.
+		Uses the DNS protocol to resolve service records (`SRV` records) for the `hostname`.
 	**/
-	static function resolveNs(hostname:String):Promise<Array<String>>;
+	static function resolveSrv(hostname:String):Promise<Array<DnsResolvedAddressSRV>>;
 
 	/**
-		Uses the DNS protocol to resolve `CNAME` records for the `hostname`.
+		Uses the DNS protocol to resolve certificate associations (`TLSA` records) for the `hostname`.
 	**/
-	static function resolveCname(hostname:String):Promise<Array<String>>;
+	static function resolveTlsa(hostname:String):Promise<Array<DnsResolvedAddressTLSA>>;
+
+	/**
+		Uses the DNS protocol to resolve text queries (`TXT` records) for the `hostname`.
+	**/
+	static function resolveTxt(hostname:String):Promise<Array<Array<String>>>;
 
 	/**
 		Performs a reverse DNS query that resolves an IPv4 or IPv6 address to an array of hostnames.
@@ -127,6 +152,23 @@ extern class DnsPromises {
 		Sets the IP address and port of servers to be used when performing DNS resolution.
 	**/
 	static function setServers(servers:Array<String>):Void;
+
+	/**
+		Get the default value for `order` in `Dns.lookup` and `DnsPromises.lookup`.
+	**/
+	static function getDefaultResultOrder():DnsResultOrder;
+
+	/**
+		Set the default value of `order` in `Dns.lookup` and `DnsPromises.lookup`.
+	**/
+	static function setDefaultResultOrder(order:DnsResultOrder):Void;
+
+	/**
+		`Resolver` class constructor for an independent promise-based DNS resolver.
+
+		@see https://nodejs.org/docs/latest-v22.x/api/dns.html#class-dnspromisesresolver
+	**/
+	static var Resolver:Class<PromisesResolverObject>;
 }
 
 /**
