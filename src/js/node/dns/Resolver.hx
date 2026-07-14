@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -46,33 +46,45 @@ extern class Resolver {
 	/**
 		The resolver instance will send its requests from the specified IP address.
 		This allows programs to specify outbound interfaces when used on multi-homed systems.
+
+		Uses the v4 local address when making requests to IPv4 DNS servers,
+		and the v6 local address when making requests to IPv6 DNS servers.
 	**/
 	function setLocalAddress(?ipv4:String, ?ipv6:String):Void;
 
+	/**
+		Returns an array of IP address strings, formatted according to RFC 5952,
+		that are currently configured for this resolver.
+	**/
 	function getServers():Array<String>;
+
+	/**
+		Sets the IP address and port of servers to be used by this resolver.
+		The `servers` argument is an array of RFC 5952 formatted addresses.
+	**/
 	function setServers(servers:Array<String>):Void;
 
-	@:overload(function(hostname:String, callback:DnsError->Array<DnsResolvedAddress>->Void):Void {})
-	function resolve(hostname:String, rrtype:DnsRrtype, callback:DnsError->Array<DnsResolvedAddress>->Void):Void;
+	@:overload(function(hostname:String, callback:DnsResolveCallback<Array<DnsResolvedAddress>>):Void {})
+	function resolve(hostname:String, rrtype:DnsRrtype, callback:DnsResolveCallback<Array<DnsResolvedAddress>>):Void;
 
 	@:overload(function(hostname:String, options:DnsResolveOptions,
-		callback:DnsError->EitherType<Array<String>, Array<DnsRecordWithTtl>>->Void):Void {})
-	function resolve4(hostname:String, callback:DnsError->Array<String>->Void):Void;
+		callback:DnsResolveCallback<EitherType<Array<String>, Array<DnsRecordWithTtl>>>):Void {})
+	function resolve4(hostname:String, callback:DnsResolveCallback<Array<String>>):Void;
 
 	@:overload(function(hostname:String, options:DnsResolveOptions,
-		callback:DnsError->EitherType<Array<String>, Array<DnsRecordWithTtl>>->Void):Void {})
-	function resolve6(hostname:String, callback:DnsError->Array<String>->Void):Void;
+		callback:DnsResolveCallback<EitherType<Array<String>, Array<DnsRecordWithTtl>>>):Void {})
+	function resolve6(hostname:String, callback:DnsResolveCallback<Array<String>>):Void;
 
-	function resolveAny(hostname:String, callback:DnsError->Array<DnsAnyRecord>->Void):Void;
-	function resolveCaa(hostname:String, callback:DnsError->Array<DnsResolvedAddressCAA>->Void):Void;
-	function resolveCname(hostname:String, callback:DnsError->Array<String>->Void):Void;
-	function resolveMx(hostname:String, callback:DnsError->Array<DnsResolvedAddressMX>->Void):Void;
-	function resolveNaptr(hostname:String, callback:DnsError->Array<DnsResolvedAddressNAPTR>->Void):Void;
-	function resolveNs(hostname:String, callback:DnsError->Array<String>->Void):Void;
-	function resolvePtr(hostname:String, callback:DnsError->Array<String>->Void):Void;
-	function resolveSoa(hostname:String, callback:DnsError->DnsResolvedAddressSOA->Void):Void;
-	function resolveSrv(hostname:String, callback:DnsError->Array<DnsResolvedAddressSRV>->Void):Void;
-	function resolveTlsa(hostname:String, callback:DnsError->Array<DnsResolvedAddressTLSA>->Void):Void;
-	function resolveTxt(hostname:String, callback:DnsError->Array<Array<String>>->Void):Void;
-	function reverse(ip:String, callback:DnsError->Array<String>->Void):Void;
+	function resolveAny(hostname:String, callback:DnsResolveCallback<Array<DnsAnyRecord>>):Void;
+	function resolveCaa(hostname:String, callback:DnsResolveCallback<Array<DnsResolvedAddressCAA>>):Void;
+	function resolveCname(hostname:String, callback:DnsResolveCallback<Array<String>>):Void;
+	function resolveMx(hostname:String, callback:DnsResolveCallback<Array<DnsResolvedAddressMX>>):Void;
+	function resolveNaptr(hostname:String, callback:DnsResolveCallback<Array<DnsResolvedAddressNAPTR>>):Void;
+	function resolveNs(hostname:String, callback:DnsResolveCallback<Array<String>>):Void;
+	function resolvePtr(hostname:String, callback:DnsResolveCallback<Array<String>>):Void;
+	function resolveSoa(hostname:String, callback:DnsResolveCallback<DnsResolvedAddressSOA>):Void;
+	function resolveSrv(hostname:String, callback:DnsResolveCallback<Array<DnsResolvedAddressSRV>>):Void;
+	function resolveTlsa(hostname:String, callback:DnsResolveCallback<Array<DnsResolvedAddressTLSA>>):Void;
+	function resolveTxt(hostname:String, callback:DnsResolveCallback<Array<Array<String>>>):Void;
+	function reverse(ip:String, callback:DnsResolveCallback<Array<String>>):Void;
 }

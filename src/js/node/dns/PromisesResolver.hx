@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,8 +23,8 @@
 package js.node.dns;
 
 import haxe.extern.EitherType;
-import js.node.Dns;
 import js.lib.Promise;
+import js.node.Dns;
 
 /**
 	Promise-based independent resolver for DNS requests (`dns/promises.Resolver`).
@@ -44,10 +44,22 @@ extern class PromisesResolver {
 	/**
 		The resolver instance will send its requests from the specified IP address.
 		This allows programs to specify outbound interfaces when used on multi-homed systems.
+
+		Uses the v4 local address when making requests to IPv4 DNS servers,
+		and the v6 local address when making requests to IPv6 DNS servers.
 	**/
 	function setLocalAddress(?ipv4:String, ?ipv6:String):Void;
 
+	/**
+		Returns an array of IP address strings, formatted according to RFC 5952,
+		that are currently configured for this resolver.
+	**/
 	function getServers():Array<String>;
+
+	/**
+		Sets the IP address and port of servers to be used by this resolver.
+		The `servers` argument is an array of RFC 5952 formatted addresses.
+	**/
 	function setServers(servers:Array<String>):Void;
 
 	@:overload(function(hostname:String):Promise<Array<DnsResolvedAddress>> {})

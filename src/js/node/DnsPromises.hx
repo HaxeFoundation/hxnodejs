@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,9 +23,9 @@
 package js.node;
 
 import haxe.extern.EitherType;
+import js.lib.Promise;
 import js.node.Dns;
 import js.node.dns.PromisesResolver as PromisesResolverObject;
-import js.lib.Promise;
 
 /**
 	The `dns/promises` API provides an alternative set of asynchronous DNS methods
@@ -36,6 +36,8 @@ import js.lib.Promise;
 	`ADDRCONFIG`, `V4MAPPED`, and `ALL` are not exported by `dns/promises` (they are `undefined`
 	there). For lookup `hints`, use `Dns.ADDRCONFIG`, `Dns.V4MAPPED`, and `Dns.ALL`.
 
+	Error codes (`NODATA`, `NOTFOUND`, …) are also exported by this module; their values match `DnsErrorCode`.
+
 	@see https://nodejs.org/docs/latest-v24.x/api/dns.html#dns-promises-api
 **/
 @:jsRequire("dns/promises")
@@ -43,6 +45,7 @@ extern class DnsPromises {
 	/**
 		Returns an array of IP address strings, formatted according to
 		[RFC 5952](https://tools.ietf.org/html/rfc5952), that are currently configured for DNS resolution.
+		A string will include a port section if a custom port is used.
 	**/
 	static function getServers():Array<String>;
 
@@ -54,8 +57,9 @@ extern class DnsPromises {
 	**/
 	@:overload(function(hostname:String):Promise<DnsPromisesLookupResult> {})
 	@:overload(function(hostname:String, options:DnsAddressFamily):Promise<DnsPromisesLookupResult> {})
-	@:overload(function(hostname:String, options:{family:EitherType<DnsAddressFamily, String>, ?hints:Int, all:Bool, ?order:DnsResultOrder, ?verbatim:Bool}):Promise<Array<DnsLookupCallbackAllEntry>> {})
-	static function lookup(hostname:String, options:EitherType<DnsAddressFamily, DnsLookupOptions>):Promise<EitherType<DnsPromisesLookupResult, Array<DnsLookupCallbackAllEntry>>>;
+	@:overload(function(hostname:String, options:DnsLookupAllOptions):Promise<Array<DnsLookupCallbackAllEntry>> {})
+	static function lookup(hostname:String,
+		options:EitherType<DnsAddressFamily, DnsLookupOptions>):Promise<EitherType<DnsPromisesLookupResult, Array<DnsLookupCallbackAllEntry>>>;
 
 	/**
 		Resolves the given `address` and `port` into a hostname and service using `getnameinfo`.
@@ -86,6 +90,8 @@ extern class DnsPromises {
 
 	/**
 		Uses the DNS protocol to resolve all records (also known as `ANY` or `*` query).
+
+		DNS server operators may choose not to respond to `ANY` queries; prefer specific `resolve*` methods when possible.
 	**/
 	static function resolveAny(hostname:String):Promise<Array<DnsAnyRecord>>;
 
@@ -146,6 +152,8 @@ extern class DnsPromises {
 
 	/**
 		Sets the IP address and port of servers to be used when performing DNS resolution.
+		The `servers` argument is an array of RFC 5952 formatted addresses.
+		If the port is the IANA default DNS port (53) it can be omitted.
 	**/
 	static function setServers(servers:Array<String>):Void;
 
@@ -156,15 +164,136 @@ extern class DnsPromises {
 
 	/**
 		Set the default value of `order` in `Dns.lookup` and `DnsPromises.lookup`.
+		The default is `verbatim`. This call has higher priority than `--dns-result-order`.
 	**/
 	static function setDefaultResultOrder(order:DnsResultOrder):Void;
+
+	/**
+		DNS server returned answer with no data.
+	**/
+	static final NODATA:DnsErrorCode;
+
+	/**
+		DNS server claims query was misformatted.
+	**/
+	static final FORMERR:DnsErrorCode;
+
+	/**
+		DNS server returned general failure.
+	**/
+	static final SERVFAIL:DnsErrorCode;
+
+	/**
+		Domain name not found.
+	**/
+	static final NOTFOUND:DnsErrorCode;
+
+	/**
+		DNS server does not implement requested operation.
+	**/
+	static final NOTIMP:DnsErrorCode;
+
+	/**
+		DNS server refused query.
+	**/
+	static final REFUSED:DnsErrorCode;
+
+	/**
+		Misformatted DNS query.
+	**/
+	static final BADQUERY:DnsErrorCode;
+
+	/**
+		Misformatted domain name.
+	**/
+	static final BADNAME:DnsErrorCode;
+
+	/**
+		Unsupported address family.
+	**/
+	static final BADFAMILY:DnsErrorCode;
+
+	/**
+		Misformatted DNS reply.
+	**/
+	static final BADRESP:DnsErrorCode;
+
+	/**
+		Could not contact DNS servers.
+	**/
+	static final CONNREFUSED:DnsErrorCode;
+
+	/**
+		Timeout while contacting DNS servers.
+	**/
+	static final TIMEOUT:DnsErrorCode;
+
+	/**
+		End of file.
+	**/
+	static final EOF:DnsErrorCode;
+
+	/**
+		Error reading file.
+	**/
+	static final FILE:DnsErrorCode;
+
+	/**
+		Out of memory.
+	**/
+	static final NOMEM:DnsErrorCode;
+
+	/**
+		Channel is being destroyed.
+	**/
+	static final DESTRUCTION:DnsErrorCode;
+
+	/**
+		Misformatted string.
+	**/
+	static final BADSTR:DnsErrorCode;
+
+	/**
+		Illegal flags specified.
+	**/
+	static final BADFLAGS:DnsErrorCode;
+
+	/**
+		Given hostname is not numeric.
+	**/
+	static final NONAME:DnsErrorCode;
+
+	/**
+		Illegal hints flags specified.
+	**/
+	static final BADHINTS:DnsErrorCode;
+
+	/**
+		c-ares library initialization not yet performed.
+	**/
+	static final NOTINITIALIZED:DnsErrorCode;
+
+	/**
+		Error loading iphlpapi.dll.
+	**/
+	static final LOADIPHLPAPI:DnsErrorCode;
+
+	/**
+		Could not find GetNetworkParams function.
+	**/
+	static final ADDRGETNETWORKPARAMS:DnsErrorCode;
+
+	/**
+		DNS query cancelled.
+	**/
+	static final CANCELLED:DnsErrorCode;
 
 	/**
 		`Resolver` class constructor for an independent promise-based DNS resolver.
 
 		@see https://nodejs.org/docs/latest-v24.x/api/dns.html#class-dnspromisesresolver
 	**/
-	static var Resolver:Class<PromisesResolverObject>;
+	static final Resolver:Class<PromisesResolverObject>;
 }
 
 /**
