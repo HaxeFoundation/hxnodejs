@@ -251,7 +251,7 @@ extern class Crypto {
 	/**
 		An alias for `getDiffieHellman`.
 	**/
-	static function createDiffieHellmanGroup(name:DiffieHellmanGroupName):IDiffieHellman;
+	static function createDiffieHellmanGroup(name:DiffieHellmanGroupName):DiffieHellmanGroup;
 
 	/**
 		Creates an Elliptic Curve (EC) Diffie-Hellman key exchange object using a predefined curve

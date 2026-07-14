@@ -2,7 +2,7 @@
  * Copyright (C)2014-2020 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation documents (the "Software"),
+ * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
  * and/or sell copies of the Software, and to permit persons to whom the
@@ -22,6 +22,8 @@
 
 package js.node.crypto;
 
+import js.node.Buffer;
+
 /**
 	Predefined Diffie-Hellman group object returned by
 	`Crypto.getDiffieHellman` / `Crypto.createDiffieHellmanGroup`.
@@ -29,23 +31,23 @@ package js.node.crypto;
 	Unlike `DiffieHellman`, keys cannot be set with `setPublicKey` / `setPrivateKey`.
 **/
 @:jsRequire("crypto", "DiffieHellmanGroup")
-extern class DiffieHellmanGroup implements IDiffieHellman {
-	@:overload(function():js.node.Buffer {})
+extern class DiffieHellmanGroup {
+	@:overload(function():Buffer {})
 	function generateKeys(encoding:String):String;
 
-	@:overload(function(other_public_key:js.node.Buffer):js.node.Buffer {})
-	@:overload(function(other_public_key:String, input_encoding:String):js.node.Buffer {})
+	@:overload(function(other_public_key:Buffer):Buffer {})
+	@:overload(function(other_public_key:String, input_encoding:String):Buffer {})
 	function computeSecret(other_public_key:String, input_encoding:String, output_encoding:String):String;
 
-	@:overload(function():js.node.Buffer {})
+	@:overload(function():Buffer {})
 	function getPrime(encoding:String):String;
 
-	@:overload(function():js.node.Buffer {})
+	@:overload(function():Buffer {})
 	function getGenerator(encoding:String):String;
 
-	@:overload(function():js.node.Buffer {})
+	@:overload(function():Buffer {})
 	function getPublicKey(encoding:String):String;
 
-	@:overload(function():js.node.Buffer {})
+	@:overload(function():Buffer {})
 	function getPrivateKey(encoding:String):String;
 }
