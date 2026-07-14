@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,6 +22,8 @@
 
 package js.node.module;
 
+import haxe.extern.EitherType;
+
 /**
 	Raw Source Map v3 payload used to construct a `SourceMap`.
 
@@ -29,7 +31,7 @@ package js.node.module;
 **/
 typedef SourceMapPayload = {
 	var file:String;
-	var version:Float;
+	var version:Int;
 	var sources:Array<String>;
 	var sourcesContent:Array<String>;
 	var names:Array<String>;
@@ -44,28 +46,35 @@ typedef SourceMapConstructorOptions = {
 	/**
 		Optional line lengths used when the payload omits them.
 	**/
-	@:optional var lineLengths:Array<Float>;
+	@:optional var lineLengths:Array<Int>;
 }
 
 /**
-	Zero-indexed Source Map range in the original file.
+	Zero-indexed Source Map range in the original file, as returned by
+	`SourceMap.findEntry` when a mapping is found.
 **/
 typedef SourceMapping = {
-	var generatedLine:Float;
-	var generatedColumn:Float;
+	var generatedLine:Int;
+	var generatedColumn:Int;
 	var originalSource:String;
-	var originalLine:Float;
-	var originalColumn:Float;
+	var originalLine:Int;
+	var originalColumn:Int;
+
+	/**
+		Name of the range in the source map, when provided.
+	**/
+	@:optional var name:String;
 }
 
 /**
-	1-indexed call-site location in the original source.
+	1-indexed call-site location in the original source, as returned by
+	`SourceMap.findOrigin` when a mapping is found.
 **/
 typedef SourceOrigin = {
 	var name:Null<String>;
 	var fileName:String;
-	var lineNumber:Float;
-	var columnNumber:Float;
+	var lineNumber:Int;
+	var columnNumber:Int;
 }
 
 /**
@@ -75,22 +84,33 @@ typedef SourceOrigin = {
 **/
 @:jsRequire("module", "SourceMap")
 extern class SourceMap {
+	/**
+		Creates a new `SourceMap` instance from a Source Map v3 payload.
+
+		@see https://nodejs.org/api/module.html#new-sourcemappayload-linelengths
+	**/
 	function new(payload:SourceMapPayload, ?options:SourceMapConstructorOptions);
 
 	/**
 		Payload used to construct this `SourceMap` instance.
+
+		@see https://nodejs.org/api/module.html#sourcemappayload
 	**/
 	var payload(default, null):SourceMapPayload;
 
 	/**
 		Given zero-indexed offsets in the generated source, returns the corresponding
 		Source Map range, or an empty object when not found.
+
+		@see https://nodejs.org/api/module.html#sourcemapfindentrylineoffset-columnoffset
 	**/
-	function findEntry(lineOffset:Float, columnOffset:Float):Dynamic;
+	function findEntry(lineOffset:Int, columnOffset:Int):EitherType<SourceMapping, {}>;
 
 	/**
 		Given 1-indexed line/column from a call site in the generated source, returns
 		the corresponding original location, or an empty object when not found.
+
+		@see https://nodejs.org/api/module.html#sourcemapfindorigallinenumber-columnnumber
 	**/
-	function findOrigin(lineNumber:Float, columnNumber:Float):Dynamic;
+	function findOrigin(lineNumber:Int, columnNumber:Int):EitherType<SourceOrigin, {}>;
 }
