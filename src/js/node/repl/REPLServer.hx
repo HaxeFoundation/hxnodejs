@@ -26,7 +26,7 @@ import haxe.DynamicAccess;
 import haxe.extern.EitherType;
 import js.lib.Error;
 import js.node.Repl.ReplOptions;
-import js.node.events.EventEmitter;
+import js.node.events.EventEmitter.Event;
 import js.node.readline.Interface;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
@@ -38,6 +38,8 @@ enum abstract REPLServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T>
 	/**
 		The `'exit'` event is emitted when the REPL is exited either by receiving the `.exit` command as input,
 		the user pressing Ctrl+C twice to signal `SIGINT`, or by pressing Ctrl+D to signal `'end'` on the input stream.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/repl.html#event-exit
 	**/
 	var Exit:REPLServerEvent<() -> Void> = "exit";
 
@@ -47,6 +49,8 @@ enum abstract REPLServerEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T>
 		and the `REPLServer` instance was created with the `useGlobal` option set to `true`.
 
 		// TODO(section-5): type context beyond DynamicAccess<Dynamic>
+
+		@see https://nodejs.org/docs/latest-v24.x/api/repl.html#event-reset
 	**/
 	var Reset:REPLServerEvent<(context:DynamicAccess<Dynamic>) -> Void> = "reset";
 }

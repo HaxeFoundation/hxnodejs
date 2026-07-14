@@ -25,6 +25,7 @@ package js.node;
 import haxe.DynamicAccess;
 import js.lib.Error;
 import js.lib.Symbol;
+import js.node.Util.InspectOptions;
 import js.node.repl.REPLServer;
 import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
@@ -32,6 +33,8 @@ import js.node.stream.Writable.IWritable;
 /**
 	The `node:repl` module provides a Read-Eval-Print-Loop (REPL) implementation that is available both as a standalone
 	program or includible in other applications.
+
+	Related types: `js.node.repl.REPLServer`, `js.node.repl.Recoverable`.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/repl.html
 **/
@@ -41,6 +44,8 @@ extern class Repl {
 		The `repl.start()` method creates and starts a `repl.REPLServer` instance.
 
 		If `options` is a string, then it specifies the input prompt.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/repl.html#replstartoptions
 	**/
 	@:overload(function(prompt:String):REPLServer {})
 	static function start(?options:ReplOptions):REPLServer;
@@ -48,15 +53,20 @@ extern class Repl {
 	/**
 		Default function used to format each command's output before writing to `output`.
 		A wrapper for `util.inspect()`; may be overridden by a custom `writer` option.
+		Inspect defaults are available via `writer.options`.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/repl.html#customizing-repl-output
 	**/
-	static final writer:(obj:Dynamic) -> String;
+	static final writer:ReplWriter;
 
 	/**
 		A list of the names of some Node.js modules, e.g. `'http'`.
 
-		Deprecated since: v24.0.0.
+		Deprecated since: v24.0.0. Use `js.node.Module.builtinModules` instead.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/repl.html#replbuiltinmodules
 	**/
-	@:deprecated("Use Module.builtinModules instead")
+	@:deprecated("Use js.node.Module.builtinModules instead")
 	static var builtinModules(default, null):Array<String>;
 
 	/**
@@ -159,4 +169,23 @@ typedef ReplOptions = {
 		If `terminal` is falsy, there are no previews and this value has no effect.
 	**/
 	@:optional var preview:Bool;
+}
+
+/**
+	Default REPL writer: callable formatter with `util.inspect`-compatible `options`.
+**/
+@:callable
+abstract ReplWriter((obj:Dynamic) -> String) from((obj:Dynamic) -> String) to((obj:Dynamic) -> String) {
+	/**
+		Inspection options used by the default writer.
+	**/
+	public var options(get, set):InspectOptions;
+
+	inline function get_options():InspectOptions
+		return Reflect.field(this, "options");
+
+	inline function set_options(value:InspectOptions):InspectOptions {
+		Reflect.setField(this, "options", value);
+		return value;
+	}
 }
