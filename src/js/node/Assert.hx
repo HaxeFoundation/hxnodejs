@@ -26,6 +26,7 @@ import haxe.Constraints.Function;
 import js.lib.Error;
 import js.lib.Promise;
 import js.lib.RegExp;
+import js.node.assert.AssertMethods;
 
 /**
 	The `assert module` provides a set of assertion functions for verifying invariants.
@@ -41,7 +42,7 @@ extern class Assert {
 
 		@see https://nodejs.org/api/assert.html#assert_strict_mode
 	**/
-	static var strict(default, never):Assert;
+	static var strict(default, never):AssertMethods;
 
 	/**
 		An alias of `Assert.ok()`.

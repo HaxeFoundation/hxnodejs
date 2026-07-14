@@ -23,9 +23,12 @@
 package js.node.util;
 
 import js.lib.Uint8Array;
+import js.node.web.TextEncoder.TextEncoderEncodeIntoResult;
 
 /**
 	An implementation of the WHATWG Encoding Standard `TextEncoder` API.
+
+	Aligned with the web global `js.node.web.TextEncoder` (`encode` / `encodeInto`).
 
 	@see https://nodejs.org/api/util.html#util_class_util_textencoder
 **/
@@ -39,6 +42,13 @@ extern class TextEncoder {
 		@see https://nodejs.org/api/util.html#util_textencoder_encode_input
 	**/
 	function encode(?input:String):Uint8Array;
+
+	/**
+		Encodes `source` into `destination` and returns how many code units / bytes were written.
+
+		@see https://nodejs.org/api/util.html#util_textencoder_encodeinto_src_dest
+	**/
+	function encodeInto(source:String, destination:Uint8Array):TextEncoderEncodeIntoResult;
 
 	/**
 		The encoding supported by the `TextEncoder` instance.
