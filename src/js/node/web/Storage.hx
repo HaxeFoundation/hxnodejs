@@ -23,44 +23,23 @@
 package js.node.web;
 
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	Web Storage API `Storage` interface used by `localStorage` / `sessionStorage`.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
+	Stability: 1.2 - Release candidate. Enable with `--experimental-webstorage`.
+	`localStorage` persists to the file given by `--localstorage-file`.
 
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	// TODO(section-1): expose `localStorage` / `sessionStorage` / `Storage` on `js.Node`.
+
+	@see https://nodejs.org/api/globals.html#class-storage
+	@see https://nodejs.org/api/globals.html#localstorage
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
+@:native("Storage")
+extern class Storage {
+	var length(default, null):Int;
 
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
-
-/**
-	Options passed to the `CustomEvent` constructor.
-**/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
-
-	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
-	**/
-	@:optional var cancelable:Bool;
-
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+	function key(index:Int):Null<String>;
+	function getItem(key:String):Null<String>;
+	function setItem(key:String, value:String):Void;
+	function removeItem(key:String):Void;
+	function clear():Void;
 }

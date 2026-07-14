@@ -23,44 +23,9 @@
 package js.node.web;
 
 /**
-	A browser-compatible implementation of `CustomEvent`.
-
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
-
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	Result of `ReadableStreamDefaultReader.read()` / BYOB `read()`.
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
-
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
-
-/**
-	Options passed to the `CustomEvent` constructor.
-**/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
-
-	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
-	**/
-	@:optional var cancelable:Bool;
-
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+typedef ReadableStreamReadResult = {
+	var done:Bool;
+	@:optional var value:Any;
 }

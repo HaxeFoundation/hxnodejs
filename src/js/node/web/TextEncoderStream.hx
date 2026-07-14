@@ -23,44 +23,20 @@
 package js.node.web;
 
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	A transform stream that encodes strings into UTF-8 bytes.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
-
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	@see https://nodejs.org/api/globals.html#class-textencoderstream
+	@see https://nodejs.org/api/webstreams.html#class-textencoderstream
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
+@:native("TextEncoderStream")
+extern class TextEncoderStream {
 	/**
-		Custom data passed when initializing the event.
+		Always `"utf-8"`.
 	**/
-	var detail(default, null):Any;
+	var encoding(default, null):String;
 
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
+	var readable(default, null):ReadableStream;
+	var writable(default, null):WritableStream;
 
-/**
-	Options passed to the `CustomEvent` constructor.
-**/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
-
-	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
-	**/
-	@:optional var cancelable:Bool;
-
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+	function new():Void;
 }

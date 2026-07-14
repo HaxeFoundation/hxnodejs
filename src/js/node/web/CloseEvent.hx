@@ -23,44 +23,38 @@
 package js.node.web;
 
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	An event that fires when a `WebSocket` connection closes.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
-
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	@see https://nodejs.org/api/globals.html#class-closeevent
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
+@:native("CloseEvent")
+extern class CloseEvent extends Event {
 	/**
-		Custom data passed when initializing the event.
+		Whether the connection closed cleanly.
 	**/
-	var detail(default, null):Any;
+	var wasClean(default, null):Bool;
 
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
+	/**
+		The WebSocket connection close code.
+	**/
+	var code(default, null):Int;
+
+	/**
+		The reason the WebSocket connection closed.
+	**/
+	var reason(default, null):String;
+
+	function new(type:String, ?eventInitDict:CloseEventInit):Void;
 }
 
 /**
-	Options passed to the `CustomEvent` constructor.
+	Options for the `CloseEvent` constructor.
 **/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
+typedef CloseEventInit = {
 	@:optional var bubbles:Bool;
-
-	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
-	**/
 	@:optional var cancelable:Bool;
-
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
 	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+	@:optional var wasClean:Bool;
+	@:optional var code:Int;
+	@:optional var reason:String;
 }

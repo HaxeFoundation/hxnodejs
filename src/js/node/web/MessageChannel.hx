@@ -23,44 +23,23 @@
 package js.node.web;
 
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	Creates a pair of connected `MessagePort` objects.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
+	Also available via `worker_threads` (see section 5); this is the web global form.
 
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	@see https://nodejs.org/api/globals.html#class-messagechannel
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
+@:native("MessageChannel")
+extern class MessageChannel {
 	/**
-		Custom data passed when initializing the event.
+		A `MessagePort` for receiving/sending messages.
 	**/
-	var detail(default, null):Any;
-
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
-
-/**
-	Options passed to the `CustomEvent` constructor.
-**/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
+	var port1(default, null):MessagePort;
 
 	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
+		The other end of the channel.
 	**/
-	@:optional var cancelable:Bool;
+	var port2(default, null):MessagePort;
 
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+	function new():Void;
 }

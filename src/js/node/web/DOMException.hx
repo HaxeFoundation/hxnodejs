@@ -22,13 +22,17 @@
 
 package js.node.web;
 
+import js.lib.Error;
+
 /**
 	The WHATWG `DOMException` class.
+
+	// TODO(section-1): wire `DOMException` on `js.Node` / `globalThis` facade if desired.
 
 	@see https://nodejs.org/api/globals.html#class-domexception
 **/
 @:native("DOMException")
-extern class DOMException {
+extern class DOMException extends Error {
 	static inline var INDEX_SIZE_ERR:Int = 1;
 	static inline var DOMSTRING_SIZE_ERR:Int = 2;
 	static inline var HIERARCHY_REQUEST_ERR:Int = 3;
@@ -56,18 +60,10 @@ extern class DOMException {
 	static inline var DATA_CLONE_ERR:Int = 25;
 
 	/**
-		One of the strings associated with an error name.
-	**/
-	var name(default, null):String;
-
-	/**
-		A message or description associated with the given error name.
-	**/
-	var message(default, null):String;
-
-	/**
 		One of the legacy error codes, or `0` if none match.
 		New DOM exceptions put this info in `name` instead.
+
+		`name` / `message` are inherited from `js.lib.Error`.
 	**/
 	var code(default, null):Int;
 

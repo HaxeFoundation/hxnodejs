@@ -24,16 +24,10 @@ package js.node.web;
 
 import haxe.DynamicAccess;
 import haxe.extern.EitherType;
-import js.node.web.Request.BodyInit;
-#if haxe4
 import js.lib.ArrayBuffer;
 import js.lib.Promise;
 import js.lib.Uint8Array;
-#else
-import js.html.ArrayBuffer;
-import js.Promise;
-import js.html.Uint8Array;
-#end
+import js.node.web.Request.BodyInit;
 
 /**
 	The Fetch API `Response` interface (undici).
@@ -55,7 +49,7 @@ extern class Response {
 	/**
 		Creates a new response with a JSON body.
 	**/
-	static function json(data:Dynamic, ?init:ResponseInit):Response;
+	static function json(data:Any, ?init:ResponseInit):Response;
 
 	var type(default, null):String;
 	var url(default, null):String;
@@ -67,9 +61,8 @@ extern class Response {
 
 	/**
 		A `ReadableStream` of the body contents, or `null`.
-		Typed as `Dynamic` until web streams externs are added.
 	**/
-	var body(default, null):Dynamic;
+	var body(default, null):Null<ReadableStream>;
 
 	var bodyUsed(default, null):Bool;
 
@@ -80,7 +73,7 @@ extern class Response {
 	function blob():Promise<Blob>;
 	function bytes():Promise<Uint8Array>;
 	function formData():Promise<FormData>;
-	function json():Promise<Dynamic>;
+	function json():Promise<Any>;
 	function text():Promise<String>;
 }
 

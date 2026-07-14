@@ -22,45 +22,17 @@
 
 package js.node.web;
 
-/**
-	A browser-compatible implementation of `CustomEvent`.
-
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
-
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
-**/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
-
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
+import js.lib.ArrayBufferView;
 
 /**
-	Options passed to the `CustomEvent` constructor.
+	A pull-into request associated with a `ReadableByteStreamController`.
+
+	@see https://nodejs.org/api/globals.html#class-readablestreambyobrequest
 **/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
+@:native("ReadableStreamBYOBRequest")
+extern class ReadableStreamBYOBRequest {
+	var view(default, null):Null<ArrayBufferView>;
 
-	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
-	**/
-	@:optional var cancelable:Bool;
-
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+	function respond(bytesWritten:Int):Void;
+	function respondWithNewView(view:ArrayBufferView):Void;
 }

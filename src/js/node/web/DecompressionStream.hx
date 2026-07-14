@@ -23,44 +23,18 @@
 package js.node.web;
 
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	A transform stream that performs decompression (`gzip`, `deflate`, or `deflate-raw`).
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
-
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	@see https://nodejs.org/api/globals.html#class-decompressionstream
+	@see https://nodejs.org/api/webstreams.html#class-decompressionstream
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
-
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
-
-/**
-	Options passed to the `CustomEvent` constructor.
-**/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
+@:native("DecompressionStream")
+extern class DecompressionStream {
+	var readable(default, null):ReadableStream;
+	var writable(default, null):WritableStream;
 
 	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
+		@param format One of `'gzip'`, `'deflate'`, or `'deflate-raw'`.
 	**/
-	@:optional var cancelable:Bool;
-
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+	function new(format:String):Void;
 }

@@ -28,6 +28,8 @@ import haxe.extern.EitherType;
 /**
 	A browser-compatible implementation of the `EventTarget` class.
 
+	// TODO(section-1): wire `EventTarget` on `js.Node` / `globalThis` facade if desired.
+
 	@see https://nodejs.org/api/events.html#class-eventtarget
 	@see https://nodejs.org/api/globals.html#class-eventtarget
 **/
@@ -99,9 +101,6 @@ typedef AddEventListenerOptions = {
 
 	/**
 		The listener will be removed when the given `AbortSignal` object's `abort()` method is called.
-
-		Typed as `Dynamic` so this module does not hard-depend on the AbortSignal externs;
-		use `js.node.web.AbortSignal` when that module is available.
 	**/
-	@:optional var signal:Dynamic;
+	@:optional var signal:AbortSignal;
 }

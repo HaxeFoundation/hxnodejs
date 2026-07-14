@@ -23,44 +23,43 @@
 package js.node.web;
 
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	A partial browser-compatible `Navigator` implementation exposed as the
+	`navigator` global in Node.js.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
+	TODO(section-1): expose `Node.navigator` alias in `js.Node` if desired.
 
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	@see https://nodejs.org/api/globals.html#class-navigator
+	@see https://nodejs.org/api/globals.html#navigator
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
+@:native("Navigator")
+extern class Navigator {
 	/**
-		Custom data passed when initializing the event.
+		The number of logical processors available.
 	**/
-	var detail(default, null):Any;
-
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
-
-/**
-	Options passed to the `CustomEvent` constructor.
-**/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
+	var hardwareConcurrency(default, null):Int;
 
 	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
+		The Web Locks API interface.
 	**/
-	@:optional var cancelable:Bool;
+	var locks(default, null):LockManager;
 
 	/**
-		Not used in Node.js. Default: `false`.
+		Preferred language of the Node.js instance.
 	**/
-	@:optional var composed:Bool;
+	var language(default, null):String;
 
 	/**
-		Custom data exposed as `detail`.
+		An array of preferred languages.
 	**/
-	@:optional var detail:Any;
+	var languages(default, null):Array<String>;
+
+	/**
+		The user agent of this Node.js instance.
+	**/
+	var userAgent(default, null):String;
+
+	/**
+		The platform of this Node.js instance.
+	**/
+	var platform(default, null):String;
 }

@@ -22,8 +22,6 @@
 
 package js.node.web;
 
-import haxe.Constraints.Function;
-
 /**
 	Used to notify observers when `AbortController.abort()` is called.
 
@@ -37,7 +35,7 @@ extern class AbortSignal extends EventTarget {
 	/**
 		Returns a new already aborted `AbortSignal`.
 	**/
-	static function abort(?reason:Dynamic):AbortSignal;
+	static function abort(?reason:Any):AbortSignal;
 
 	/**
 		Returns a new `AbortSignal` which will be aborted in `delay` milliseconds.
@@ -58,13 +56,13 @@ extern class AbortSignal extends EventTarget {
 	/**
 		An optional reason specified when the `AbortSignal` was triggered.
 	**/
-	var reason(default, null):Dynamic;
+	var reason(default, null):Any;
 
 	/**
 		An optional callback function that may be set by user code to be notified
 		when `AbortController.abort()` has been called.
 	**/
-	var onabort:Function;
+	var onabort:Null<Event->Void>;
 
 	/**
 		If `aborted` is `true`, throws `reason`.

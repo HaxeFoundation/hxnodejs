@@ -22,18 +22,16 @@
 
 package js.node.web;
 
-import haxe.extern.EitherType;
-import js.node.web.Request.RequestInit;
-#if haxe4
 import js.lib.Promise;
-#else
-import js.Promise;
-#end
+import js.node.url.URL;
+import js.node.web.Request.RequestInit;
 
 /**
 	Browser-compatible `fetch()` (undici), exposed as a static on `globalThis`.
 
 	Usage: `Fetch.fetch(url)` / `Fetch.fetch(url, init)`.
+
+	TODO(section-1): wire `Node.fetch` / global aliases in `js.Node` if desired.
 
 	@see https://nodejs.org/api/globals.html#fetch
 **/
@@ -43,5 +41,6 @@ extern class Fetch {
 		Starts the process of fetching a resource from the network.
 	**/
 	@:overload(function(input:Request, ?init:RequestInit):Promise<Response> {})
+	@:overload(function(input:URL, ?init:RequestInit):Promise<Response> {})
 	static function fetch(input:String, ?init:RequestInit):Promise<Response>;
 }

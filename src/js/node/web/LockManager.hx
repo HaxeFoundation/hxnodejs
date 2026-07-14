@@ -22,45 +22,50 @@
 
 package js.node.web;
 
+import js.lib.Promise;
+
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	Web Locks API (`navigator.locks`). Node.js exposes a partial implementation.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
+	Not constructed as a global class; obtained via `navigator.locks`.
 
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	@see https://nodejs.org/api/globals.html#navigatorlocks
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
+extern class LockManager {
 	/**
-		Custom data passed when initializing the event.
+		Requests a lock and runs `callback` while holding it.
 	**/
-	var detail(default, null):Any;
+	@:overload(function(name:String, options:LockOptions, callback:Lock->Any):Promise<Any> {})
+	function request(name:String, callback:Lock->Any):Promise<Any>;
 
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
+	/**
+		Returns a promise for a snapshot of held and pending locks.
+	**/
+	function query():Promise<LockManagerSnapshot>;
 }
 
 /**
-	Options passed to the `CustomEvent` constructor.
+	Options for `LockManager.request`.
 **/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
+typedef LockOptions = {
+	@:optional var mode:String;
+	@:optional var ifAvailable:Bool;
+	@:optional var steal:Bool;
+	@:optional var signal:AbortSignal;
+}
 
-	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
-	**/
-	@:optional var cancelable:Bool;
+/**
+	A held lock passed to the `LockManager.request` callback.
+**/
+typedef Lock = {
+	var name(default, null):String;
+	var mode(default, null):String;
+}
 
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+/**
+	Result of `LockManager.query()`.
+**/
+typedef LockManagerSnapshot = {
+	var held:Array<Lock>;
+	var pending:Array<Lock>;
 }

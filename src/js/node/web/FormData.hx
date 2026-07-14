@@ -70,5 +70,5 @@ extern class FormData {
 	function entries():Iterator<KeyValue<String, EitherType<String, EitherType<Blob, File>>>>;
 	function keys():Iterator<String>;
 	function values():Iterator<EitherType<String, EitherType<Blob, File>>>;
-	function forEach(callback:EitherType<String, EitherType<Blob, File>>->String->FormData->Void, ?thisArg:Dynamic):Void;
+	function forEach(callback:EitherType<String, EitherType<Blob, File>>->String->FormData->Void, ?thisArg:Any):Void;
 }

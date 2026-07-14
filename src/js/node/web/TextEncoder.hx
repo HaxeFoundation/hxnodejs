@@ -22,45 +22,42 @@
 
 package js.node.web;
 
+import js.lib.Uint8Array;
+
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	WHATWG Encoding Standard `TextEncoder` (global).
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
+	Also available via `js.node.util.TextEncoder` (`require("util").TextEncoder`).
 
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	// TODO(section-1): wire on `js.Node` / `globalThis` facade if desired.
+	// TODO(section-4): consider aligning `js.node.util.TextEncoder` with `encodeInto`.
+
+	@see https://nodejs.org/api/globals.html#class-textencoder
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
+@:native("TextEncoder")
+extern class TextEncoder {
 	/**
-		Custom data passed when initializing the event.
+		Always `'utf-8'`.
 	**/
-	var detail(default, null):Any;
+	var encoding(default, null):String;
 
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
+	function new():Void;
+
+	/**
+		UTF-8 encodes `input` and returns a `Uint8Array` of the encoded bytes.
+	**/
+	function encode(?input:String):Uint8Array;
+
+	/**
+		Encodes `source` into `destination` and returns how many code units / bytes were written.
+	**/
+	function encodeInto(source:String, destination:Uint8Array):TextEncoderEncodeIntoResult;
 }
 
 /**
-	Options passed to the `CustomEvent` constructor.
+	Result of `TextEncoder.encodeInto`.
 **/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
-
-	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
-	**/
-	@:optional var cancelable:Bool;
-
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var composed:Bool;
-
-	/**
-		Custom data exposed as `detail`.
-	**/
-	@:optional var detail:Any;
+typedef TextEncoderEncodeIntoResult = {
+	var read:Int;
+	var written:Int;
 }

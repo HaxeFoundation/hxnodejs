@@ -23,44 +23,36 @@
 package js.node.web;
 
 /**
-	A browser-compatible implementation of `CustomEvent`.
+	One end of a two-way communication channel created by `MessageChannel`.
 
-	// TODO(section-1): wire `CustomEvent` on `js.Node` / `globalThis` facade if desired.
+	Also available via `worker_threads` (see section 5); this is the web global form.
 
-	@see https://nodejs.org/api/events.html#class-customevent
-	@see https://nodejs.org/api/globals.html#class-customevent
+	@see https://nodejs.org/api/globals.html#class-messageport
 **/
-@:native("CustomEvent")
-extern class CustomEvent extends Event {
-	/**
-		Custom data passed when initializing the event.
-	**/
-	var detail(default, null):Any;
-
-	function new(type:String, ?eventInitDict:CustomEventInit):Void;
-}
-
-/**
-	Options passed to the `CustomEvent` constructor.
-**/
-typedef CustomEventInit = {
-	/**
-		Not used in Node.js. Default: `false`.
-	**/
-	@:optional var bubbles:Bool;
+@:native("MessagePort")
+extern class MessagePort extends EventTarget {
+	var onmessage:Null<MessageEvent->Void>;
+	var onmessageerror:Null<MessageEvent->Void>;
 
 	/**
-		When `true`, `preventDefault()` can cancel the event. Default: `false`.
+		Posts a message through the channel. `transfer` is a list of transferable objects
+		to transfer ownership of.
+
+		TODO(section-5): tighten `transfer` once worker_threads transferable types are externed.
 	**/
-	@:optional var cancelable:Bool;
+	function postMessage(message:Any, ?transfer:Array<Any>):Void;
 
 	/**
-		Not used in Node.js. Default: `false`.
+		Starts dispatching messages received on this port. (Implicit when `onmessage` is set.)
 	**/
-	@:optional var composed:Bool;
+	function start():Void;
 
 	/**
-		Custom data exposed as `detail`.
+		Disconnects the port and stops receiving messages.
 	**/
-	@:optional var detail:Any;
+	function close():Void;
+
+	function ref():MessagePort;
+	function unref():MessagePort;
+	function hasRef():Bool;
 }
