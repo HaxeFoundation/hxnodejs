@@ -126,7 +126,8 @@ typedef ReadlinePromisesOptions = {
 /**
 	The `readline/promises` API provides an alternative set of interfaces that return promises.
 
-	Stability: Stable since Node.js v24.0.0.
+	Accessible via `require('readline/promises')` or `require('readline').promises`.
+	Stability: 2 - Stable (since Node.js v24.0.0).
 
 	@see https://nodejs.org/docs/latest-v24.x/api/readline.html#promises-api
 **/

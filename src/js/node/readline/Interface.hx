@@ -228,5 +228,5 @@ typedef InterfaceWriteKey = {
 	/**
 		The name of the key.
 	**/
-	var name:String;
+	@:optional var name:String;
 }

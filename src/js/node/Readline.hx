@@ -38,6 +38,13 @@ import js.node.web.AbortSignal;
 @:jsRequire("readline")
 extern class Readline {
 	/**
+		Promise-based readline helpers (`readline/promises`).
+
+		@see https://nodejs.org/docs/latest-v24.x/api/readline.html#promises-api
+	**/
+	static var promises(default, never):ReadlinePromises;
+
+	/**
 		The `readline.clearLine()` method clears the current line of given `TTY` stream
 		in a specified direction identified by `dir`.
 	**/
