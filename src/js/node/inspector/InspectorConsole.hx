@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,9 +27,10 @@ import haxe.extern.Rest;
 /**
 	Object used to send messages to the remote inspector console.
 
-	The inspector console does not have API parity with Node.js console.
+	Exposed by the V8 inspector console API; method signatures deliberately differ
+	from (and are more permissive than) the Node.js `console` API.
 
-	@see https://nodejs.org/api/inspector.html#inspectorconsole
+	@see https://nodejs.org/docs/latest-v24.x/api/inspector.html#inspectorconsole
 **/
 extern class InspectorConsole {
 	function debug(data:Rest<Dynamic>):Void;
@@ -51,6 +52,12 @@ extern class InspectorConsole {
 	function profile(?label:Dynamic):Void;
 	function profileEnd(?label:Dynamic):Void;
 	function time(?label:Dynamic):Void;
+	function timeEnd(?label:Dynamic):Void;
 	function timeLog(?label:Dynamic):Void;
 	function timeStamp(?label:Dynamic):Void;
+
+	/**
+		Creates a new inspector console context with the given name.
+	**/
+	function context(name:Dynamic):Void;
 }

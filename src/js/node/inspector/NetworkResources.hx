@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,11 +26,15 @@ package js.node.inspector;
 	Provides responses for `Network.loadNetworkResource` CDP requests
 	(e.g. source maps requested by a DevTools frontend).
 
+	Stability: 1.1 - Active development.
+
 	Requires the `--experimental-inspector-network-resource` flag.
 
 	Usage: `NetworkResources.put(url, data)` (maps to `inspector.NetworkResources` in Node.js).
 
-	@see https://nodejs.org/api/inspector.html#inspectornetworkresourcesput
+	Added in: v24.5.0.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/inspector.html#inspectornetworkresourcesput
 **/
 @:jsRequire("inspector", "NetworkResources")
 extern class NetworkResources {

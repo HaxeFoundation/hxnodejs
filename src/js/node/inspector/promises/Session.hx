@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,8 +22,8 @@
 
 package js.node.inspector.promises;
 
-import js.node.events.EventEmitter;
 import js.lib.Promise;
+import js.node.events.EventEmitter;
 
 /**
 	Promise-based `inspector.Session` from `inspector/promises`.
@@ -33,7 +33,10 @@ import js.lib.Promise;
 	Emits the same notification events as callback `inspector.Session`;
 	use `js.node.inspector.SessionEvent` with `on` / `once` / `off`.
 
-	@see https://nodejs.org/api/inspector.html#promises-api
+	When using `Session`, objects outputted by the console API will not be released
+	unless `Runtime.DiscardConsoleEntries` is posted manually.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/inspector.html#promises-api
 **/
 @:jsRequire("inspector/promises", "Session")
 extern class Session extends EventEmitter<Session> {
@@ -65,6 +68,9 @@ extern class Session extends EventEmitter<Session> {
 	/**
 		Posts a message to the inspector back-end and returns a Promise that resolves
 		with the message-specific result object.
+
+		Protocol method names and parameter/result shapes follow the Chrome DevTools Protocol;
+		they are typed as `String` / `Dynamic` rather than enumerating the full CDP schema.
 	**/
 	function post(method:String, ?params:Dynamic):Promise<Dynamic>;
 }

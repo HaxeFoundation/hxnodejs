@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,12 +25,14 @@ package js.node.inspector;
 /**
 	Helpers that broadcast Chrome DevTools Protocol `DOMStorage` events to connected frontends.
 
+	Stability: 1.1 - Active development.
+
 	Added in: v24.16.0 (Active LTS). Not available on Maintenance LTS 22.x.
 	Only available with the `--experimental-storage-inspection` flag enabled.
 
 	Haxe type is `DomStorage` (acronyms are not uppercased); the Node.js export name is `DOMStorage`.
 
-	@see https://nodejs.org/api/inspector.html#inspectordomstoragedomstorageitemadded
+	@see https://nodejs.org/docs/latest-v24.x/api/inspector.html#inspectordomstoragedomstorageitemadded
 **/
 @:jsRequire("inspector", "DOMStorage")
 extern class DomStorage {

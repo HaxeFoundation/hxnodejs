@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,9 @@ package js.node;
 import js.node.inspector.InspectorConsole;
 
 /**
-	The `inspector` module provides an API for interacting with the V8 inspector.
+	The `node:inspector` module provides an API for interacting with the V8 inspector.
+
+	Stability: 2 - Stable.
 
 	Related types live under `js.node.inspector` (`Session`, `Network`, `NetworkResources`, `DomStorage`).
 	Use those types directly (e.g. `js.node.inspector.Network.requestWillBeSent(...)`) — they map to
@@ -42,9 +44,12 @@ extern class Inspector {
 		If `wait` is `true`, will block until a client has connected to the inspect port
 		and flow control has been passed to the debugger client.
 
-		Returns a Disposable (`{ [Symbol.dispose](): void }`) that calls `inspector.close()`.
+		See the Node.js security warning regarding the `host` parameter (binding the inspector
+		to a public IP/port combination is insecure).
 
-		// TODO: model Web IDL `Disposable` / `Symbol.dispose` instead of `Dynamic`.
+		Returns a Disposable (`{ [Symbol.dispose](): void }`) that calls `inspector.close()`.
+		Typed as `Dynamic` because the returned object only exposes `Symbol.dispose` (no named
+		`dispose()` method) and hxnodejs does not yet model Web IDL `Disposable`.
 	**/
 	static function open(?port:Int, ?host:String, ?wait:Bool):Dynamic;
 

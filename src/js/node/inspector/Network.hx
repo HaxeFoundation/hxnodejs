@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,11 +27,13 @@ import haxe.DynamicAccess;
 /**
 	Broadcast helpers for Chrome DevTools Protocol `Network.*` events.
 
+	Stability: 1.1 - Active development.
+
 	These APIs require the `--experimental-network-inspection` flag.
 
 	Usage: `Network.requestWillBeSent({ ... })` (maps to `inspector.Network` in Node.js).
 
-	@see https://nodejs.org/api/inspector.html#integration-with-devtools
+	@see https://nodejs.org/docs/latest-v24.x/api/inspector.html#integration-with-devtools
 **/
 @:jsRequire("inspector", "Network")
 extern class Network {
@@ -40,11 +42,15 @@ extern class Network {
 		`Network.streamResourceContent` command was not invoked for the given request yet.
 
 		Also enables `Network.getResponseBody` command to retrieve the response data.
+
+		Added in: v24.2.0.
 	**/
 	static function dataReceived(?params:NetworkDataReceivedParams):Void;
 
 	/**
 		Enables `Network.getRequestPostData` command to retrieve the request data.
+
+		Added in: v24.3.0.
 	**/
 	static function dataSent(?params:NetworkDataSentParams):Void;
 
@@ -123,14 +129,14 @@ typedef NetworkResponse = {
 /**
 	Pragmatic subset of CDP request initiator.
 
-	// TODO: model CDP `StackTrace` for `stack` instead of `Dynamic`.
+	`stack` remains `Any` pending a CDP `StackTrace` model in hxnodejs.
 **/
 typedef NetworkInitiator = {
 	var type:String;
 	@:optional var url:String;
 	@:optional var lineNumber:Float;
 	@:optional var columnNumber:Float;
-	@:optional var stack:Dynamic;
+	@:optional var stack:Any;
 }
 
 /**

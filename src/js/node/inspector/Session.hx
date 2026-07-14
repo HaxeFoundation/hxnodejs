@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,8 +22,8 @@
 
 package js.node.inspector;
 
-import js.node.events.EventEmitter;
 import js.lib.Error;
+import js.node.events.EventEmitter;
 
 /**
 	Enumeration of events emitted by `inspector.Session`.
@@ -35,22 +35,22 @@ enum abstract SessionEvent<T:haxe.Constraints.Function>(Event<T>) to Event<T> {
 	/**
 		Emitted when any notification from the V8 Inspector is received.
 	**/
-	var InspectorNotification:SessionEvent<InspectorNotificationMessage->Void> = "inspectorNotification";
+	var InspectorNotification:SessionEvent<(message:InspectorNotificationMessage) -> Void> = "inspectorNotification";
 
 	/**
 		Emitted when an inspector notification is received with method `Debugger.paused`.
 	**/
-	var DebuggerPaused:SessionEvent<InspectorNotificationMessage->Void> = "Debugger.paused";
+	var DebuggerPaused:SessionEvent<(message:InspectorNotificationMessage) -> Void> = "Debugger.paused";
 
 	/**
 		Emitted when an inspector notification is received with method `Debugger.resumed`.
 	**/
-	var DebuggerResumed:SessionEvent<InspectorNotificationMessage->Void> = "Debugger.resumed";
+	var DebuggerResumed:SessionEvent<(message:InspectorNotificationMessage) -> Void> = "Debugger.resumed";
 
 	/**
 		Emitted when an inspector notification is received with method `HeapProfiler.addHeapSnapshotChunk`.
 	**/
-	var HeapProfilerAddHeapSnapshotChunk:SessionEvent<InspectorNotificationMessage->Void> = "HeapProfiler.addHeapSnapshotChunk";
+	var HeapProfilerAddHeapSnapshotChunk:SessionEvent<(message:InspectorNotificationMessage) -> Void> = "HeapProfiler.addHeapSnapshotChunk";
 }
 
 /**
@@ -67,7 +67,10 @@ typedef InspectorNotificationMessage = {
 	The `inspector.Session` is used for dispatching messages to the V8 inspector
 	back-end and receiving message responses and notifications.
 
-	@see https://nodejs.org/api/inspector.html#class-inspectorsession
+	When using `Session`, objects outputted by the console API will not be released
+	unless `Runtime.DiscardConsoleEntries` is posted manually.
+
+	@see https://nodejs.org/docs/latest-v24.x/api/inspector.html#class-inspectorsession
 **/
 @:jsRequire("inspector", "Session")
 extern class Session extends EventEmitter<Session> {
@@ -105,6 +108,6 @@ extern class Session extends EventEmitter<Session> {
 		Protocol method names and parameter/result shapes follow the Chrome DevTools Protocol;
 		they are typed as `String` / `Dynamic` rather than enumerating the full CDP schema.
 	**/
-	@:overload(function(method:String, ?callback:Null<Error>->Dynamic->Void):Void {})
-	function post(method:String, ?params:Dynamic, ?callback:Null<Error>->Dynamic->Void):Void;
+	@:overload(function(method:String, ?callback:(error:Null<Error>, result:Dynamic) -> Void):Void {})
+	function post(method:String, ?params:Dynamic, ?callback:(error:Null<Error>, result:Dynamic) -> Void):Void;
 }
