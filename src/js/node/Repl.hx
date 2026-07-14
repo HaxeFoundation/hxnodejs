@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -30,7 +30,7 @@ import js.node.stream.Readable.IReadable;
 import js.node.stream.Writable.IWritable;
 
 /**
-	The `repl` module provides a Read-Eval-Print-Loop (REPL) implementation that is available both as a standalone
+	The `node:repl` module provides a Read-Eval-Print-Loop (REPL) implementation that is available both as a standalone
 	program or includible in other applications.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/repl.html
@@ -39,9 +39,25 @@ import js.node.stream.Writable.IWritable;
 extern class Repl {
 	/**
 		The `repl.start()` method creates and starts a `repl.REPLServer` instance.
+
+		If `options` is a string, then it specifies the input prompt.
 	**/
 	@:overload(function(prompt:String):REPLServer {})
 	static function start(?options:ReplOptions):REPLServer;
+
+	/**
+		Default function used to format each command's output before writing to `output`.
+		A wrapper for `util.inspect()`; may be overridden by a custom `writer` option.
+	**/
+	static final writer:(obj:Dynamic) -> String;
+
+	/**
+		A list of the names of some Node.js modules, e.g. `'http'`.
+
+		Deprecated since: v24.0.0.
+	**/
+	@:deprecated("Use Module.builtinModules instead")
+	static var builtinModules(default, null):Array<String>;
 
 	/**
 		Evaluates expressions in sloppy mode.
@@ -56,7 +72,7 @@ extern class Repl {
 }
 
 /**
-	Options object used by `Repl.start`.
+	Options object used by `Repl.start` / `new REPLServer`.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/repl.html#replstartoptions
 **/
@@ -78,6 +94,7 @@ typedef ReplOptions = {
 
 	/**
 		If `true`, specifies that the `output` should be treated as a TTY terminal.
+		Default: checking the value of the `isTTY` property on the `output` stream upon instantiation.
 	**/
 	@:optional var terminal:Bool;
 
@@ -85,33 +102,38 @@ typedef ReplOptions = {
 		The function to be used when evaluating each given line of input.
 		Default: an async wrapper for the JavaScript `eval()` function.
 
+		An `eval` function can error with `repl.Recoverable` to indicate the input was incomplete
+		and prompt for additional lines.
+
 		// TODO(section-5): replace DynamicAccess<Dynamic>/Dynamic result with a typed REPL context model
 	**/
 	@:optional var eval:(code:String, context:DynamicAccess<Dynamic>, file:String, cb:(error:Null<Error>, ?result:Dynamic) -> Void) -> Void;
 
 	/**
 		If `true`, specifies that the default `writer` function should include ANSI color styling to REPL output.
+		If a custom `writer` is provided then this has no effect.
+		Default: checking color support on the `output` stream if the REPL instance's `terminal` value is `true`.
 	**/
 	@:optional var useColors:Bool;
 
 	/**
-		If `true`, specifies that the default evaluation function will use the JavaScript `global` as the context.
+		If `true`, specifies that the default evaluation function will use the JavaScript `global` as the context
+		as opposed to creating a new separate context for the REPL instance.
+		The node CLI REPL sets this value to `true`. Default: `false`.
 	**/
 	@:optional var useGlobal:Bool;
 
 	/**
 		If `true`, specifies that the default writer will not output the return value of a command if it evaluates to
-		`undefined`.
+		`undefined`. Default: `false`.
 	**/
 	@:optional var ignoreUndefined:Bool;
 
 	/**
 		The function to invoke to format the output of each command before writing to `output`.
-		Default: `util.inspect()`.
-
-		// TODO(section-5): type writer as (value:Dynamic) -> String
+		Default: `util.inspect()` / `repl.writer`.
 	**/
-	@:optional var writer:Dynamic->Dynamic;
+	@:optional var writer:(obj:Dynamic) -> String;
 
 	/**
 		An optional function used for custom Tab auto completion.
@@ -127,12 +149,14 @@ typedef ReplOptions = {
 
 	/**
 		Stop evaluating the current piece of code when `SIGINT` is received, i.e. `Ctrl+C` is pressed.
-		This cannot be used together with a custom `eval` function.
+		This cannot be used together with a custom `eval` function. Default: `false`.
 	**/
 	@:optional var breakEvalOnSigint:Bool;
 
 	/**
-		If `true`, show preview of the results when inputting. Default depends on Node version / terminal.
+		Defines if the REPL prints autocomplete and output previews.
+		Default: `true` with the default eval function and `false` when a custom eval function is used.
+		If `terminal` is falsy, there are no previews and this value has no effect.
 	**/
 	@:optional var preview:Bool;
 }
