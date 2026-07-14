@@ -25,63 +25,63 @@ package js.node.util;
 /**
 	`util.types` provides a number of type checks for different kinds of built-in objects.
 
-	@see https://nodejs.org/api/util.html#util_util_types
+	@see https://nodejs.org/api/util.html#utiltypes
 **/
 @:jsRequire("util", "types")
 extern class Types {
 	/**
 		Returns `true` if the value is a built-in `ArrayBuffer` or `SharedArrayBuffer` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isanyarraybuffer_value
+		@see https://nodejs.org/api/util.html#utiltypesisanyarraybuffervalue
 	**/
 	static function isAnyArrayBuffer(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an `arguments` object.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isargumentsobject_value
+		@see https://nodejs.org/api/util.html#utiltypesisargumentsobjectvalue
 	**/
 	static function isArgumentsObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `ArrayBuffer` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isarraybuffer_value
+		@see https://nodejs.org/api/util.html#utiltypesisarraybuffervalue
 	**/
 	static function isArrayBuffer(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an `ArrayBufferView` (TypedArray or DataView).
 
-		@see https://nodejs.org/api/util.html#util_util_types_isarraybufferview_value
+		@see https://nodejs.org/api/util.html#utiltypesisarraybufferviewvalue
 	**/
 	static function isArrayBufferView(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an async function.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isasyncfunction_value
+		@see https://nodejs.org/api/util.html#utiltypesisasyncfunctionvalue
 	**/
 	static function isAsyncFunction(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a `BigInt64Array` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isbigint64array_value
+		@see https://nodejs.org/api/util.html#utiltypesisbigint64arrayvalue
 	**/
 	static function isBigInt64Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a `BigUint64Array` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isbiguint64array_value
+		@see https://nodejs.org/api/util.html#utiltypesisbiguint64arrayvalue
 	**/
 	static function isBigUint64Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a boolean object, e.g. created by `new Boolean()`.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isbooleanobject_value
+		@see https://nodejs.org/api/util.html#utiltypesisbooleanobjectvalue
 	**/
 	static function isBooleanObject(value:Any):Bool;
 
@@ -89,217 +89,217 @@ extern class Types {
 		Returns `true` if the value is any boxed primitive object, e.g. created by `new Boolean()`, `new String()` or
 		`Object(Symbol())`.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isboxedprimitive_value
+		@see https://nodejs.org/api/util.html#utiltypesisboxedprimitivevalue
 	**/
 	static function isBoxedPrimitive(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `DataView` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isdataview_value
+		@see https://nodejs.org/api/util.html#utiltypesisdataviewvalue
 	**/
 	static function isDataView(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Date` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isdate_value
+		@see https://nodejs.org/api/util.html#utiltypesisdatevalue
 	**/
 	static function isDate(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a native `External` value.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isexternal_value
+		@see https://nodejs.org/api/util.html#utiltypesisexternalvalue
 	**/
 	static function isExternal(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Float32Array` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isfloat32array_value
+		@see https://nodejs.org/api/util.html#utiltypesisfloat32arrayvalue
 	**/
 	static function isFloat32Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Float64Array` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isfloat64array_value
+		@see https://nodejs.org/api/util.html#utiltypesisfloat64arrayvalue
 	**/
 	static function isFloat64Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a generator function.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isgeneratorfunction_value
+		@see https://nodejs.org/api/util.html#utiltypesisgeneratorfunctionvalue
 	**/
 	static function isGeneratorFunction(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a generator object as returned from a built-in generator function.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isgeneratorobject_value
+		@see https://nodejs.org/api/util.html#utiltypesisgeneratorobjectvalue
 	**/
 	static function isGeneratorObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Int8Array` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isint8array_value
+		@see https://nodejs.org/api/util.html#utiltypesisint8arrayvalue
 	**/
 	static function isInt8Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Int16Array` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isint16array_value
+		@see https://nodejs.org/api/util.html#utiltypesisint16arrayvalue
 	**/
 	static function isInt16Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Int32Array` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isint32array_value
+		@see https://nodejs.org/api/util.html#utiltypesisint32arrayvalue
 	**/
 	static function isInt32Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Map` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_ismap_value
+		@see https://nodejs.org/api/util.html#utiltypesismapvalue
 	**/
 	static function isMap(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an iterator returned for a built-in `Map` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_ismapiterator_value
+		@see https://nodejs.org/api/util.html#utiltypesismapiteratorvalue
 	**/
 	static function isMapIterator(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an instance of a Module Namespace Object.
 
-		@see https://nodejs.org/api/util.html#util_util_types_ismodulenamespaceobject_value
+		@see https://nodejs.org/api/util.html#utiltypesismodulenamespaceobjectvalue
 	**/
 	static function isModuleNamespaceObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an instance of a built-in `Error` type.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isnativeerror_value
+		@see https://nodejs.org/api/util.html#utiltypesisnativeerrorvalue
 	**/
 	static function isNativeError(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a number object, e.g. created by `new Number()`.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isnumberobject_value
+		@see https://nodejs.org/api/util.html#utiltypesisnumberobjectvalue
 	**/
 	static function isNumberObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Promise`.
 
-		@see https://nodejs.org/api/util.html#util_util_types_ispromise_value
+		@see https://nodejs.org/api/util.html#utiltypesispromisevalue
 	**/
 	static function isPromise(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a `Proxy` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isproxy_value
+		@see https://nodejs.org/api/util.html#utiltypesisproxyvalue
 	**/
 	static function isProxy(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a regular expression object.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isregexp_value
+		@see https://nodejs.org/api/util.html#utiltypesisregexpvalue
 	**/
 	static function isRegExp(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Set` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isset_value
+		@see https://nodejs.org/api/util.html#utiltypesissetvalue
 	**/
 	static function isSet(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is an iterator returned for a built-in `Set` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_issetiterator_value
+		@see https://nodejs.org/api/util.html#utiltypesissetiteratorvalue
 	**/
 	static function isSetIterator(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `SharedArrayBuffer` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_issharedarraybuffer_value
+		@see https://nodejs.org/api/util.html#utiltypesissharedarraybuffervalue
 	**/
 	static function isSharedArrayBuffer(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a string object, e.g. created by `new String()`.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isstringobject_value
+		@see https://nodejs.org/api/util.html#utiltypesisstringobjectvalue
 	**/
 	static function isStringObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a symbol object, created by calling `Object()` on a `Symbol` primitive.
 
-		@see https://nodejs.org/api/util.html#util_util_types_issymbolobject_value
+		@see https://nodejs.org/api/util.html#utiltypesissymbolobjectvalue
 	**/
 	static function isSymbolObject(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `TypedArray` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_istypedarray_value
+		@see https://nodejs.org/api/util.html#utiltypesistypedarrayvalue
 	**/
 	static function isTypedArray(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Uint8Array` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isuint8array_value
+		@see https://nodejs.org/api/util.html#utiltypesisuint8arrayvalue
 	**/
 	static function isUint8Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Uint8ClampedArray` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isuint8clampedarray_value
+		@see https://nodejs.org/api/util.html#utiltypesisuint8clampedarrayvalue
 	**/
 	static function isUint8ClampedArray(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Uint16Array` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isuint16array_value
+		@see https://nodejs.org/api/util.html#utiltypesisuint16arrayvalue
 	**/
 	static function isUint16Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `Uint32Array` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isuint32array_value
+		@see https://nodejs.org/api/util.html#utiltypesisuint32arrayvalue
 	**/
 	static function isUint32Array(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `WeakMap` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isweakmap_value
+		@see https://nodejs.org/api/util.html#utiltypesisweakmapvalue
 	**/
 	static function isWeakMap(value:Any):Bool;
 
 	/**
 		Returns `true` if the value is a built-in `WeakSet` instance.
 
-		@see https://nodejs.org/api/util.html#util_util_types_isweakset_value
+		@see https://nodejs.org/api/util.html#utiltypesisweaksetvalue
 	**/
 	static function isWeakSet(value:Any):Bool;
 

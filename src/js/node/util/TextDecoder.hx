@@ -29,42 +29,42 @@ import js.lib.ArrayBufferView;
 /**
 	An implementation of the WHATWG Encoding Standard `TextDecoder` API.
 
-	@see https://nodejs.org/api/util.html#util_class_util_textdecoder
+	@see https://nodejs.org/api/util.html#class-utiltextdecoder
 **/
 @:jsRequire("util", "TextDecoder")
 extern class TextDecoder {
 	/**
 		Creates an new `TextDecoder` instance.
 
-		@see https://nodejs.org/api/util.html#util_new_textdecoder_encoding_options
+		@see https://nodejs.org/api/util.html#new-textdecoderencoding-options
 	**/
 	function new(?encoding:String, ?options:TextDecoderOptions);
 
 	/**
 		Decodes the `input` and returns a string.
 
-		@see https://nodejs.org/api/util.html#util_textdecoder_decode_input_options
+		@see https://nodejs.org/api/util.html#textdecoderdecodeinput-options
 	**/
 	function decode(?input:EitherType<ArrayBuffer, ArrayBufferView>, ?options:TextDecodeOptions):String;
 
 	/**
 		The encoding supported by the `TextDecoder` instance.
 
-		@see https://nodejs.org/api/util.html#util_textdecoder_encoding
+		@see https://nodejs.org/api/util.html#textdecoderencoding
 	**/
 	var encoding(default, null):String;
 
 	/**
 		The value will be `true` if decoding errors result in a `TypeError` being thrown.
 
-		@see https://nodejs.org/api/util.html#util_textdecoder_fatal
+		@see https://nodejs.org/api/util.html#textdecoderfatal
 	**/
 	var fatal(default, null):Bool;
 
 	/**
 		The value will be `true` if the decoding result will include the byte order mark.
 
-		@see https://nodejs.org/api/util.html#util_textdecoder_ignorebom
+		@see https://nodejs.org/api/util.html#textdecoderignorebom
 	**/
 	var ignoreBOM(default, null):Bool;
 }
@@ -72,7 +72,7 @@ extern class TextDecoder {
 /**
 	Options object used by `new TextDecoder()`.
 
-	@see https://nodejs.org/api/util.html#util_new_textdecoder_encoding_options
+	@see https://nodejs.org/api/util.html#new-textdecoderencoding-options
 **/
 typedef TextDecoderOptions = {
 	/**

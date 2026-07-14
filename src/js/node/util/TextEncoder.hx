@@ -30,7 +30,7 @@ import js.node.web.TextEncoder.TextEncoderEncodeIntoResult;
 
 	Aligned with the web global `js.node.web.TextEncoder` (`encode` / `encodeInto`).
 
-	@see https://nodejs.org/api/util.html#util_class_util_textencoder
+	@see https://nodejs.org/api/util.html#class-utiltextencoder
 **/
 @:jsRequire("util", "TextEncoder")
 extern class TextEncoder {
@@ -39,21 +39,21 @@ extern class TextEncoder {
 	/**
 		UTF-8 encodes the `input` string and returns a `Uint8Array` containing the encoded bytes.
 
-		@see https://nodejs.org/api/util.html#util_textencoder_encode_input
+		@see https://nodejs.org/api/util.html#textencoderencodeinput
 	**/
 	function encode(?input:String):Uint8Array;
 
 	/**
 		Encodes `source` into `destination` and returns how many code units / bytes were written.
 
-		@see https://nodejs.org/api/util.html#util_textencoder_encodeinto_src_dest
+		@see https://nodejs.org/api/util.html#textencoderencodeintosrc-dest
 	**/
 	function encodeInto(source:String, destination:Uint8Array):TextEncoderEncodeIntoResult;
 
 	/**
 		The encoding supported by the `TextEncoder` instance.
 
-		@see https://nodejs.org/api/util.html#util_textencoder_encoding
+		@see https://nodejs.org/api/util.html#textencoderencoding
 	**/
 	var encoding(default, null):String;
 }
