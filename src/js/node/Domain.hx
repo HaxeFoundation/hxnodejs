@@ -42,6 +42,13 @@ import js.node.domain.Domain as DomainObject;
 @:jsRequire("domain")
 extern class Domain {
 	/**
+		The currently active domain, if any.
+
+		@see https://nodejs.org/docs/latest-v24.x/api/domain.html#domainenter
+	**/
+	static var active:Null<DomainObject>;
+
+	/**
 		Returns a new `Domain` object.
 	**/
 	static function create():DomainObject;

@@ -30,6 +30,8 @@ import js.node.events.EventEmitter;
 	Enumeration of events emitted by `Domain` objects.
 
 	Stability: 0 - Deprecated. Prefer `AsyncLocalStorage` / `async_hooks`.
+
+	Note: the former `'dispose'` event was removed with `Domain.dispose()` (DEP0012, End-of-Life in Node.js v9.0.0).
 **/
 @:deprecated("The domain module is deprecated. Use AsyncLocalStorage / async_hooks instead.")
 enum abstract DomainEvent<T:Function>(Event<T>) to Event<T> {
