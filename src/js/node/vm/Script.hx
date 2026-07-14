@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,124 +23,170 @@
 package js.node.vm;
 
 import haxe.extern.EitherType;
+import js.lib.ArrayBufferView;
 import js.node.Buffer;
+import js.node.Vm.VmCodeGenerationOptions;
 import js.node.Vm.VmContext;
+import js.node.Vm.VmMicrotaskMode;
 
+/**
+	Options for compiling a `Script` (constructor / `compileFunction` / `runIn*` compile path).
+**/
 typedef ScriptOptions = {
 	/**
 		Specifies the filename used in stack traces produced by this script.
+		Default: `'evalmachine.<incremental_id>'` for `Script`, `''` for some other APIs.
 	**/
 	@:optional var filename:String;
 
 	/**
 		Specifies the line number offset that is displayed in stack traces produced by this script.
+		Default: `0`.
 	**/
 	@:optional var lineOffset:Int;
 
 	/**
 		Specifies the column number offset that is displayed in stack traces produced by this script.
+		Default: `0`.
 	**/
 	@:optional var columnOffset:Int;
 
 	/**
-		Whether or not to print any errors to stderr, with the line of code that caused them highlighted,
-		before throwing an exception.
-		Deprecated alias kept for older Node docs; prefer omitting and relying on engine defaults.
+		Optional V8 code cache data for the supplied source (`Buffer`, `TypedArray`, or `DataView`).
+		When supplied, `cachedDataRejected` on the resulting `Script` is set to `true` or `false`.
 	**/
-	@:optional var displayErrors:Bool;
+	@:optional var cachedData:EitherType<Buffer, ArrayBufferView>;
 
 	/**
-		Provides an optional data with V8's code cache data for the supplied source.
-	**/
-	@:optional var cachedData:Buffer;
-
-	/**
-		V8-specific option; when `true`, produces cached data used for faster compilation next time.
-		Deprecated in favor of `createCachedData()`.
+		When `true` and no `cachedData` is present, V8 attempts to produce code cache data for `code`.
+		Deprecated in favor of `createCachedData()`. Default: `false`.
 	**/
 	@:deprecated("Use createCachedData() instead")
 	@:optional var produceCachedData:Bool;
 
 	/**
-		Used to specify how the modules should be loaded during evaluation.
-		Passed to the experimental `importModuleDynamically` hook.
+		How modules should be loaded during evaluation when `import()` is called.
+		Part of the experimental modules API; may also be `Vm.constants.USE_MAIN_CONTEXT_DEFAULT_LOADER`.
 
-		// TODO(section-5): type importModuleDynamically callback
+		// TODO(vm): type importModuleDynamically callback
 	**/
 	@:optional var importModuleDynamically:Dynamic;
 }
 
+/**
+	Options for running a compiled script (`runInThisContext` / `runInContext`).
+**/
 typedef ScriptRunOptions = {
 	/**
-		Whether or not to print any errors to stderr, with the line of code that caused them highlighted,
-		before throwing an exception.
+		When `true`, if an `Error` occurs while compiling or running the code, the line of code
+		causing the error is attached to the stack trace. Default: `true`.
 	**/
 	@:optional var displayErrors:Bool;
 
 	/**
 		Number of milliseconds to execute code before terminating execution.
-		If execution is terminated, an Error will be thrown.
+		If execution is terminated, an `Error` is thrown. Must be a strictly positive integer.
 	**/
 	@:optional var timeout:Int;
 
 	/**
-		If `true`, the execution will be terminated when `SIGINT` (`Ctrl+C`) is received.
-		Existing handlers for the event that have been attached via `process.on('SIGINT')` will be disabled during
-		script execution, but will continue to work after that. Default: `false`.
+		If `true`, receiving `SIGINT` (`Ctrl+C`) terminates execution and throws an `Error`.
+		Existing handlers attached via `process.on('SIGINT')` are disabled during script execution
+		but continue to work afterward. Default: `false`.
 	**/
 	@:optional var breakOnSigint:Bool;
 }
 
 /**
-	A class for holding precompiled scripts, and running them in specific sandboxes.
+	Options for `runInNewContext` (script or `Vm.runInNewContext`).
+**/
+typedef ScriptRunInNewContextOptions = {
+	> ScriptRunOptions,
+
+	/**
+		Human-readable name of the newly created context.
+		Default: `'VM Context i'`, where `i` is an ascending numerical index of the created context.
+	**/
+	@:optional var contextName:String;
+
+	/**
+		Origin corresponding to the newly created context for display purposes.
+		Default: `''`.
+	**/
+	@:optional var contextOrigin:String;
+
+	/**
+		Controls `eval` / function constructors and WebAssembly compilation in the new context.
+	**/
+	@:optional var contextCodeGeneration:VmCodeGenerationOptions;
+
+	/**
+		If set to `afterEvaluate`, microtasks run immediately after the script has run.
+		They are included in the `timeout` and `breakOnSigint` scopes in that case.
+	**/
+	@:optional var microtaskMode:VmMicrotaskMode;
+}
+
+/**
+	A class for holding precompiled scripts and running them in specific contexts.
 
 	@see https://nodejs.org/docs/latest-v24.x/api/vm.html#class-vmscript
 **/
 @:jsRequire("vm", "Script")
 extern class Script {
 	/**
-		Creating a new `Script` compiles `code` but does not run it. Instead, the created `Script` object
-		represents this compiled code.
+		Creates a new `Script` by compiling `code` without running it.
+		If `options` is a string, it specifies the filename.
 	**/
 	function new(code:String, ?options:EitherType<String, ScriptOptions>);
 
 	/**
-		When producing cached data with `--produce_cached_data`, this value becomes `true` if the produced
-		cached data was rejected by V8.
+		When `cachedData` was supplied to the constructor, `true` if V8 rejected the data,
+		`false` if it was accepted; otherwise `null`/`undefined`.
 	**/
 	var cachedDataRejected(default, null):Null<Bool>;
 
 	/**
-		When the script is compiled using `cachedData` this value will be `true` if the data was accepted by V8.
+		When `produceCachedData` was used, `true`/`false` depending on whether cache data was produced.
+		Prefer `createCachedData()` instead of `produceCachedData`.
 	**/
 	var cachedDataProduced(default, null):Null<Bool>;
 
 	/**
-		When `cachedData` is supplied, the rejected or produced status is reflected here.
+		V8 code cache buffer associated with this script when produced or supplied.
 	**/
 	var cachedData(default, null):Null<Buffer>;
 
 	/**
-		Creates a code cache that can be used with `Script` constructor's `cachedData` option
-		to avoid recompilation next time.
+		When the script source contains a source map magic comment, the URL of that source map;
+		otherwise `null`/`undefined`.
+	**/
+	var sourceMapURL(default, null):Null<String>;
+
+	/**
+		Creates a code cache that can be passed as `cachedData` to a later `Script` constructor
+		to avoid recompilation.
 	**/
 	function createCachedData():Buffer;
 
 	/**
-		Similar to `Vm.runInThisContext` but a method of a precompiled `Script` object.
+		Runs this script in the current `global` context.
 
-		// TODO(section-5): Dynamic is intentional for arbitrary JS eval results
+		// TODO(vm): Dynamic is intentional for arbitrary JS eval results
 	**/
 	function runInThisContext(?options:ScriptRunOptions):Dynamic;
 
 	/**
-		Similar to `Vm.runInContext` but a method of a precompiled `Script` object.
+		Runs this script in `contextifiedObject` (from `Vm.createContext`).
 	**/
-	function runInContext(contextifiedSandbox:VmContext<Dynamic>, ?options:ScriptRunOptions):Dynamic;
+	function runInContext(contextifiedObject:VmContext<Dynamic>, ?options:ScriptRunOptions):Dynamic;
 
 	/**
-		Similar to `Vm.runInNewContext` but a method of a precompiled `Script` object.
+		Creates a new context (optionally from `contextObject`), runs this script in it, and returns the result.
+
+		`contextObject` may be an object to contextify, omitted/`undefined` for a fresh contextified object,
+		or `Vm.constants.DONT_CONTEXTIFY`.
 	**/
-	@:overload(function(sandbox:{}, ?options:ScriptRunOptions):Dynamic {})
-	function runInNewContext(?sandbox:{}):Dynamic;
+	@:overload(function(?contextObject:Dynamic):Dynamic {})
+	function runInNewContext(contextObject:Dynamic, ?options:ScriptRunInNewContextOptions):Dynamic;
 }

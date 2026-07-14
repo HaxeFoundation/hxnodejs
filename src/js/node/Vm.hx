@@ -1,5 +1,5 @@
 /*
- * Copyright (C)2014-2020 Haxe Foundation
+ * Copyright (C)2014-2026 Haxe Foundation
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,16 +22,21 @@
 
 package js.node;
 
+import haxe.Constraints.Function;
 import haxe.DynamicAccess;
 import haxe.extern.EitherType;
+import js.lib.Promise;
 import js.node.vm.Script;
 
 /**
 	Options object used by `Vm.run*` methods.
+
+	Includes fields used by `runInNewContext` (`contextName`, `contextOrigin`, …);
+	those are ignored by methods that compile and run in an existing context.
 **/
 typedef VmRunOptions = {
 	> ScriptOptions,
-	> ScriptRunOptions,
+	> ScriptRunInNewContextOptions,
 }
 
 /**
@@ -39,38 +44,51 @@ typedef VmRunOptions = {
 **/
 typedef VmCreateContextOptions = {
 	/**
-		Human-readable name of the newly created context. Default: `'VM Context i'`, where `i` is an ascending
-		numerical index of the created context.
+		Human-readable name of the newly created context.
+		Default: `'VM Context i'`, where `i` is an ascending numerical index of the created context.
 	**/
 	@:optional var name:String;
 
 	/**
-		Origin corresponding to the newly created context for display purposes. The origin should be formatted like a
-		URL, but with only scheme, host, and port (if necessary). Default: `''`.
+		Origin corresponding to the newly created context for display purposes.
+		The origin should be formatted like a URL, but with only the scheme, host, and port (if necessary),
+		like the value of the `url.origin` property of a `URL` object.
+		Most notably, this string should omit the trailing slash, as that denotes a path.
+		Default: `''`.
 	**/
 	@:optional var origin:String;
 
 	/**
-		If set to `true` any wrappers corresponding to `contextObject` properties may be invoked. Default: `false`.
+		Controls whether `eval` / function constructors and WebAssembly compilation are allowed
+		inside the context. See `VmCodeGenerationOptions`.
 	**/
 	@:optional var codeGeneration:VmCodeGenerationOptions;
 
 	/**
 		If set to `afterEvaluate`, microtasks will be run immediately after evaluating code on the context
-		(before returning from e.g. `runInContext`). Default: `undefined`.
+		(before returning from e.g. `runInContext`).
 	**/
-	@:optional var microtaskMode:String;
+	@:optional var microtaskMode:VmMicrotaskMode;
+
+	/**
+		How modules should be loaded when `import()` is called in this context without a referrer script
+		or module. Part of the experimental modules API.
+
+		May also be `Vm.constants.USE_MAIN_CONTEXT_DEFAULT_LOADER`.
+		// TODO(vm): type importModuleDynamically callback
+	**/
+	@:optional var importModuleDynamically:Dynamic;
 }
 
 typedef VmCodeGenerationOptions = {
 	/**
-		If set to `false` any calls to `eval` or function constructors (`Function`, `GeneratorFunction`, etc) will throw
-		an `EvalError`. Default: `true`.
+		If set to `false`, any calls to `eval` or function constructors (`Function`, `GeneratorFunction`, etc)
+		will throw an `EvalError`. Default: `true`.
 	**/
 	@:optional var strings:Bool;
 
 	/**
-		If set to `false` any attempt to compile a WebAssembly module will throw a `WebAssembly.CompileError`.
+		If set to `false`, any attempt to compile a WebAssembly module will throw a `WebAssembly.CompileError`.
 		Default: `true`.
 	**/
 	@:optional var wasm:Bool;
@@ -81,14 +99,15 @@ typedef VmCodeGenerationOptions = {
 **/
 typedef VmCompileFunctionOptions = {
 	> ScriptOptions,
+
 	/**
-		Provides an optional data with V8's code cache data for the supplied source.
+		The contextified object in which the function should be compiled.
 	**/
 	@:optional var parsingContext:VmContext<Dynamic>;
 
 	/**
-		An array containing context extension objects. Modules and wrappers used in `code` will be available as if
-		they were referenced from these objects.
+		An array containing context extension objects. Modules and wrappers used in `code` will be
+		available as if they were referenced from these objects. Default: `[]`.
 	**/
 	@:optional var contextExtensions:Array<DynamicAccess<Dynamic>>;
 }
@@ -100,12 +119,44 @@ typedef VmMeasureMemoryOptions = {
 	/**
 		`'summary'` or `'detailed'`. Default: `'summary'`.
 	**/
-	@:optional var mode:String;
+	@:optional var mode:VmMeasureMemoryMode;
 
 	/**
-		`'self'` or `'all'`. Default: `'self'`.
+		`'default'` or `'eager'`. Default: `'default'`.
 	**/
-	@:optional var execution:String;
+	@:optional var execution:VmMeasureMemoryExecution;
+}
+
+/**
+	Result shape for `Vm.measureMemory` (V8-specific; additional fields may appear).
+**/
+typedef VmMemoryMeasurement = {
+	var total:VmMemoryInfo;
+	@:optional var current:VmMemoryInfo;
+	@:optional var other:Array<VmMemoryInfo>;
+	@:optional var WebAssembly:Dynamic;
+}
+
+/**
+	Per-context memory estimate returned by `Vm.measureMemory`.
+**/
+typedef VmMemoryInfo = {
+	var jsMemoryEstimate:Float;
+	var jsMemoryRange:Array<Float>;
+}
+
+enum abstract VmMeasureMemoryMode(String) from String to String {
+	var Summary = "summary";
+	var Detailed = "detailed";
+}
+
+enum abstract VmMeasureMemoryExecution(String) from String to String {
+	var Default = "default";
+	var Eager = "eager";
+}
+
+enum abstract VmMicrotaskMode(String) from String to String {
+	var AfterEvaluate = "afterEvaluate";
 }
 
 /**
@@ -113,54 +164,61 @@ typedef VmMeasureMemoryOptions = {
 
 	@see https://nodejs.org/docs/latest-v24.x/api/vm.html
 
-	// TODO(section-5): add vm.Module / SourceTextModule / SyntheticModule externs (large experimental surface)
+	Experimental module APIs live under `js.node.vm` (`Module`, `SourceTextModule`, `SyntheticModule`)
+	and require `--experimental-vm-modules`.
 **/
 @:jsRequire("vm")
 extern class Vm {
 	/**
-		Compiles `code`, runs it and returns the result.
+		Compiles `code`, runs it in the current `global`, and returns the result.
 		Running code does not have access to local scope.
 
-		// TODO(section-5): Dynamic is intentional for arbitrary JS eval results; refine per-call sites when possible
+		// TODO(vm): Dynamic is intentional for arbitrary JS eval results; refine per-call sites when possible
 	**/
 	static function runInThisContext(code:String, ?options:EitherType<String, VmRunOptions>):Dynamic;
 
 	/**
-		Compiles `code`, contextifies `sandbox` if passed or creates a new contextified sandbox if it's omitted,
-		and then runs the code with the sandbox as the global object and returns the result.
+		Compiles `code`, contextifies `contextObject` if passed (or creates a new contextified object if omitted),
+		runs the code with that object as the global, and returns the result.
+
+		`contextObject` may also be `Vm.constants.DONT_CONTEXTIFY`.
 	**/
-	@:overload(function(code:String, ?sandbox:{}):Dynamic {})
-	static function runInNewContext(code:String, sandbox:{}, ?options:VmRunOptions):Dynamic;
+	@:overload(function(code:String, ?contextObject:Dynamic):Dynamic {})
+	static function runInNewContext(code:String, contextObject:Dynamic, ?options:VmRunOptions):Dynamic;
 
 	/**
-		Compiles `code`, then runs it in `contextifiedSandbox` and returns the result.
+		Compiles `code`, then runs it in `contextifiedObject` and returns the result.
+		`contextifiedObject` must previously have been contextified via `createContext`.
 	**/
-	static function runInContext(code:String, contextifiedSandbox:VmContext<Dynamic>, ?options:EitherType<String, VmRunOptions>):Dynamic;
+	static function runInContext(code:String, contextifiedObject:VmContext<Dynamic>,
+		?options:EitherType<String, VmRunOptions>):Dynamic;
 
 	/**
-		If given a sandbox object, will "contextify" that sandbox so that it can be used in calls to `runInContext`
-		or `Script.runInContext`.
+		Prepares `contextObject` so it can be used in `runInContext` / `Script.runInContext`, and returns it.
+
+		If `contextObject` is omitted, an empty contextified object is created.
+		Pass `Vm.constants.DONT_CONTEXTIFY` to create a context without contextifying quirks.
 	**/
 	@:overload(function():VmContext<Dynamic> {})
-	static function createContext<T:{}>(sandbox:T, ?options:VmCreateContextOptions):VmContext<T>;
+	@:overload(function(contextObject:Dynamic, ?options:VmCreateContextOptions):VmContext<Dynamic> {})
+	static function createContext<T:{}>(contextObject:T, ?options:VmCreateContextOptions):VmContext<T>;
 
 	/**
-		Returns whether or not a sandbox object has been contextified by calling `createContext` on it.
+		Returns `true` if `object` has been contextified via `createContext`, or if it is the global
+		object of a context created with `Vm.constants.DONT_CONTEXTIFY`.
 	**/
-	static function isContext(sandbox:{}):Bool;
+	static function isContext(object:{}):Bool;
 
 	/**
-		Compiles the given `code` into a function object that may use the provided `params` as formal parameters
-		and may use the objects in `options.contextExtensions` as its local scope.
+		Compiles `code` into a function that may use `params` as formal parameters
+		and may use objects in `options.contextExtensions` as its local scope.
 	**/
-	static function compileFunction(code:String, ?params:Array<String>, ?options:VmCompileFunctionOptions):haxe.Constraints.Function;
+	static function compileFunction(code:String, ?params:Array<String>, ?options:VmCompileFunctionOptions):Function;
 
 	/**
-		Measure the known V8 heap memory attributed to this context / all contexts (experimental).
-
-		// TODO(section-5): type Promise result of measureMemory
+		Measure V8 heap memory attributed to the main context or all known contexts (experimental).
 	**/
-	static function measureMemory(?options:VmMeasureMemoryOptions):js.lib.Promise<Dynamic>;
+	static function measureMemory(?options:VmMeasureMemoryOptions):Promise<VmMemoryMeasurement>;
 
 	/**
 		Compiles and executes `code` inside the V8 debug context.
@@ -173,7 +231,7 @@ extern class Vm {
 	static function createScript(code:String, ?options:EitherType<String, ScriptOptions>):Script;
 
 	/**
-		Returns an object containing commonly used constants for VM operations.
+		Commonly used constants for VM operations.
 	**/
 	static var constants(default, null):VmConstants;
 }
@@ -183,16 +241,14 @@ extern class Vm {
 **/
 typedef VmConstants = {
 	/**
-		A constant that can be used as the `importModuleDynamically` option to `vm.Script`
-		or `vm.compileFunction` so that Node.js uses the default ESM loader from the main context
-		to load the requested module.
+		Pass as `importModuleDynamically` to `Script` / `compileFunction` so Node.js uses the default
+		ESM loader from the main context to load the requested module.
 	**/
 	var USE_MAIN_CONTEXT_DEFAULT_LOADER:Dynamic;
 
 	/**
-		When passed as `contextObject` to `vm.createContext()`, this constant creates an empty context
-		with an object wrapper that allows code running in that context to see the outer context's Object
-		prototype methods, but also has its own independent Object/Array prototypes and builtins.
+		Pass as `contextObject` to `createContext` / `runInNewContext` to create a context whose global
+		is an ordinary object (without contextifying quirks such as inability to freeze).
 	**/
 	var DONT_CONTEXTIFY:Dynamic;
 }
