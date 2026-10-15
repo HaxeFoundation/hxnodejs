@@ -136,9 +136,9 @@ private class FileOutput extends haxe.io.Output {
 		Fs.writeSync(fd, s);
 	}
 
-	override public function flush() {
-		Fs.fsyncSync(fd);
-	}
+	// No flush override: writeSync already hands the bytes to the kernel, so
+	// nothing is buffered. fsync is not flush, and it returns EINVAL on a
+	// pipe or a terminal.
 
 	override public function close() {
 		Fs.closeSync(fd);
